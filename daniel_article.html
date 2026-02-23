@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daniel: God's Provision in Exile — Whosoever</title>
+  <meta name="description" content="An overview of the Book of Daniel addressing how God's people ought to live in expectation of His deliverance during the time of the Gentiles." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:           #0d1117;
+      --surface:      #131922;
+      --glass:        rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.09);
+      --navy:         #0d1117;
+      --navy-mid:     #1a2540;
+      --gold:         #c9a84c;
+      --gold-light:   #e5c97a;
+      --gold-faint:   rgba(201,168,76,0.15);
+      --blue:         #3d6cc0;
+      --blue-glow:    rgba(61,108,192,0.25);
+      --rule:         rgba(255,255,255,0.08);
+      --text:         #e8e6e0;
+      --text-mid:     #a89f8c;
+      --text-faint:   #6a6358;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.45;
+    }
+
+    .site-wrapper {
+      max-width: 940px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      padding: 5rem 2.5rem 4rem;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(170deg, #0f1b2e 0%, #0d1117 60%);
+      animation: fadeIn 0.8s ease both;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      margin: 2rem auto 0;
+    }
+
+    .site-greek {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+      opacity: 0.8;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .site-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #ffffff;
+      text-transform: uppercase;
+      line-height: 1;
+      animation: fadeUp 0.8s 0.2s ease both;
+      background: linear-gradient(90deg, #fff 30%, var(--gold-light) 50%, #fff 70%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .site-title a {
+      text-decoration: none;
+      color: inherit;
+      -webkit-text-fill-color: inherit;
+    }
+
+    .site-tagline {
+      margin-top: 0.9rem;
+      font-style: italic;
+      color: var(--text-mid);
+      font-size: 1.05rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .header-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+      animation: fadeUp 0.8s 0.35s ease both;
+    }
+    .header-ornament span {
+      display: block;
+      height: 1px;
+      width: 80px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    .header-ornament em {
+      color: var(--gold);
+      font-style: normal;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 17, 23, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: 0 2rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--text-mid);
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; right: 50%;
+      height: 2px;
+      background: var(--gold);
+      transition: left 0.2s, right 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--gold-light);
+    }
+
+    nav a:hover::after {
+      left: 1.25rem;
+      right: 1.25rem;
+    }
+
+    /* ── ARTICLE ── */
+    .article-header {
+      padding: 3rem 2.5rem 2rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--rule);
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .back-link {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      opacity: 0.7;
+      margin-bottom: 1.5rem;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+      opacity: 1;
+    }
+
+    .article-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-subtitle {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      color: var(--text-mid);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .article-body {
+      padding: 2.5rem;
+      background: var(--surface);
+    }
+
+    .article-body p {
+      color: var(--text);
+      line-height: 1.85;
+      margin-bottom: 1.4rem;
+      max-width: 720px;
+    }
+
+    .article-body h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      margin-top: 3rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .article-body h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      letter-spacing: 0.02em;
+      margin-top: 2.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .article-body h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .article-body blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-style: italic;
+      line-height: 1.7;
+      color: var(--text);
+      border-left: 2px solid var(--gold);
+      padding: 1rem 1.5rem;
+      background: var(--glass);
+      border-radius: 0 4px 4px 0;
+      margin: 1.5rem 0;
+    }
+
+    /* ── BIBLIOGRAPHY ── */
+    .bibliography {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .bibliography h2 {
+      margin-top: 0;
+    }
+
+    .bibliography p {
+      font-size: 0.92rem;
+      color: var(--text-mid);
+      padding-left: 2rem;
+      text-indent: -2rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--rule);
+      padding: 2.5rem;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--text-faint);
+      line-height: 1.9;
+    }
+
+    .greek {
+      display: block;
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--gold);
+      opacity: 0.6;
+      margin-bottom: 0.3rem;
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="site-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <p class="site-greek">πᾶς ὁ πιστεύων</p>
+    <h1 class="site-title"><a href="index.html">Whosoever</a></h1>
+    <p class="site-tagline">Free Grace Theology &amp; Biblical Studies</p>
+    <div class="header-ornament">
+      <span></span>
+      <em>Faith Alone · Christ Alone</em>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html#articles">Articles</a>
+    <a href="index.html#research">Research</a>
+    <a href="index.html#resources">Resources</a>
+    <a href="index.html#authors">Authors</a>
+    <a href="index.html#about">About</a>
+  </nav>
+
+  <!-- ARTICLE HEADER -->
+  <div class="article-header">
+    <a class="back-link" href="index.html#articles">&larr; Back to Articles</a>
+    <h2 class="article-title">Daniel: God's Provision in Exile</h2>
+    <p class="article-subtitle">An overview of the Book of Daniel and God's redemptive plan for Israel during the time of the Gentiles</p>
+  </div>
+
+  <!-- ARTICLE BODY -->
+  <article class="article-body">
+
+    <p>Daniel wrote during the exile of the Jewish people primarily addressing how they ought to live in expectation of God's deliverance during the "time of the Gentiles" (Luke 21:24). He recorded events of a wide chronological period, from the Babylonian captivity to the Messiah inaugurating the eternal kingdom.</p>
+
+    <p>To this day, the Jewish people are living without a king or a proper kingdom as God promised. Daniel is rich in prophecy detailing God's amazing provision for His people as they live as strangers in this world, much like Hebrews 11:13.</p>
+
+    <p>Commentators generally see a clear division in the text. Chapters 1–6 are mostly historical, addressing examples of godly living and the submission of Gentile kingdoms. Then, chapters 7–12 are primarily predictive outlines of God's redemptive plan for Israel. Daniel makes the break evident by backtracking chronologically in 7:1 and switching to a first-person perspective.</p>
+
+    <p>Moreover, Daniel wrote in Hebrew from 1:1 to 2:4a, Aramaic from 2:4b to 7:28, and then again in Hebrew from 8:1 to the end of the book. According to Irving Jensen, the language shift is likely addressing his Israelite brethren as distinct from Gentile nations.</p>
+
+    <p>Daniel begins by stating the Lord had given Jehoiakim into the hands of Nebuchadnezzar. 2 Chronicles 36:15–21 provides historical context. The dating of Daniel places him in the first deportation of 605 BC. God had severely judged Israel, but He certainly will never abandon them.</p>
+
+    <!-- ═══════════════════════════════════════ -->
+    <h2>The Gentiles Under God's Authority (Daniel 1–6)</h2>
+
+    <p>Chapter 1 deals with how the believing remnant ought to remain pure within a pagan culture. Daniel remained faithful by not eating the king's unclean delicacies. God therefore blessed him and his friends with favor, knowledge, and skill (1:9, 17). Even without a temple and functional priests, the nation could expect God to reward obedience.</p>
+
+    <h3>The Submission of Nebuchadnezzar</h3>
+
+    <p>1:17 distinguishes Daniel from his peers as having the ability to understand all visions and dreams. God purposed Daniel as a witness to the Gentile world.</p>
+
+    <p>Chapter 2 is a narrative surrounding the first of several prophecies in Daniel. Nebuchadnezzar was troubled by a dream. The pagan seers recognize the impossibility of telling a dream and the interpretation. Daniel knew the true God who reveals secrets. His prayer in 2:19–23 is a model for all believers of humble praise.</p>
+
+    <p>The interpretation emphasizes God's sovereignty. He had granted Nebuchadnezzar a kingdom with power and strength, represented by the image's head of gold. Several inferior kingdoms would follow Babylon. Yet, God will ultimately establish an eternal Kingdom that will shatter all other empires.</p>
+
+    <p>Nebuchadnezzar honored Daniel and declared God the God of gods. Although likely sincere faith, the king quickly forgets this truth! By chapter 3, he compels worship to an idol entirely made of gold. God blessed Daniel's friends by persevering them from the fiery furnace.</p>
+
+    <p>The fourth man in the fire, one like the Son of God, served as a witness to the Gentile ruler. Their survival was not an accident but a divine intervention.</p>
+
+    <p>While Nebuchadnezzar again praised God, he failed to act humbly in submission to God's authority. The Lord generously warns the king with a second dream in chapter 4. Daniel implored him to break off sins and show righteousness by caring for the poor (4:27). While God is just, He is known to show mercy and relent judgment.</p>
+
+    <p>Nebuchadnezzar failed to repent, and the judgment came to pass. Only after seven years of losing his sanity did he return to praise God and finally recognize His Kingdom will not end (4:34).</p>
+
+    <h3>Belshazzar's Folly &amp; Babylon's Fall</h3>
+
+    <p>Daniel 5 serves as a transition between empires. The Persians were besieging the city of Babylon, and King Belshazzar pridefully held a feast using the sacred cups of the temple. The divine hand wrote judgment against him.</p>
+
+    <p>Daniel did not offer the possibility of God's mercy. Belshazzar knew of Nebuchadnezzar's faith in God but failed to submit to His authority (5:21–22). That very night Belshazzar was killed, and the kingdom passed to the Darius the Mede.</p>
+
+    <h3>Justice from Ungodly Laws</h3>
+
+    <p>Daniel's reputation preceded him and persuaded Darius to appoint him chief satrap over the whole realm. The rival governors and other satraps conspired to overthrow Daniel.</p>
+
+    <p>Daniel's enemies schemed to create a conflict between his devotion to God's law and the pagan world, hoping to offend the king. As an upright man of faith, he lived honorably in exile.</p>
+
+    <p>2 Timothy 3:12 reminds us that godly living naturally results in persecution. Thus, they made the king sign an injunction forbidding prayer to anyone but himself under penalty of death.</p>
+
+    <p>Daniel knew the law went into effect and yet openly prayed as he had done (6:10). Acting from the principle of Acts 5:29, he would not compromise his faith. Although bound by the law, Darius was confident God could deliver his servant (6:16).</p>
+
+    <p>The next day, Daniel is freed unharmed from the pit of lions, his adversaries killed by the same means, and the king issues a decree all should praise the living God whose dominion shall endure forever (6:26). In the new world empire, God is known through His witness and a government humbled by His omnipotent power.</p>
+
+    <!-- ═══════════════════════════════════════ -->
+    <h2>Israel Restored in God's Timing</h2>
+
+    <p>Chapters 1–6 climax in 7 using a chiastic form. The inner groupings, 3 and 6 deal with godly perseverance under trial, while 4 and 5 center on humbling prideful leaders. The chiasm is anchored by 2 and 7, each containing visions of future kingdoms that culminate into God's eternal dominion. This links a new section concerning God's promises of future redemption for Israel.</p>
+
+    <h3>The Vision of the Four Beasts</h3>
+
+    <p>Chapter 7 differs significantly from chapter 2, adding to the unfolding of God's sovereign designs over history with the purpose to rescuing and restoring His people. Daniel saw four beasts arise out of the Great Sea followed by a heavenly scene of the Son of Man executing judgment and given an everlasting Kingdom.</p>
+
+    <p>The first beast is a winged lion, consistent in Babylonian art for the empire's strength. Perhaps recalling Nebuchadnezzar's insanity and humble submission, the lion's wings were torn off from it before being restored upright as a man.</p>
+
+    <p>Next, a bear appeared raised on one leg with three ribs in its mouth. The unbalanced state could refer to the Persians overshadowing the Medes. The ribs could represent three kingdoms devoured by them (Babylon, Egypt, Assyria). The bear being told to devour even more flesh shows Cyrus' role as a divine appointment, correlating with Isaiah 45:1.</p>
+
+    <p>The third beast was a leopard with great speed and four heads. The Grecian Empire of Alexander the Great defeated Persia after just six years (334–330 BC) yet divided into four parts upon his early death.</p>
+
+    <p>Finally, the fourth beast is without comparison among natural animals. This dreadful creature had 10 horns, of which one would overpower three and spoke arrogantly on behalf of the empire. It will devour everything in its path until judged in a divine court.</p>
+
+    <h3>The Fourth Beast Explained</h3>
+
+    <p>Daniel was immensely troubled by the last beast and requested an angel to explain it. The monster is said to devour the whole earth, and the 10 horns are revealed as 10 kings who arise out of it (he is not told how much time elapses). The angel further explains the arrogant horn after them will speak against God, make war against the saints of Israel, and subdue them for "time, and times, and half a time."</p>
+
+    <p>In Revelation 13:1–7, the Apostle John sees a similar vision of the fourth beast with composite parts of the preceding animals. The time marker equates to 42 months or the latter half of the Tribulation. Premillennialists disagree whether the 10 kings represent current nations that formed out of the Roman Empire or ones that will appear in some future reformed Roman world.</p>
+
+    <p>Unlike Nebuchadnezzar's similar vision, Daniel foresees God's chosen people in conflict. God will deliver them into an eternal Kingdom only after a blasphemous king oppresses them. Yet, God's timing is perfectly suited to demonstrate His glory over the Satanic world.</p>
+
+    <h3>The Vision of the Ram &amp; Goat</h3>
+
+    <p>In chapter 8, Daniel saw another vision of a charging ram with two horns that a flying goat from the west killed. The goat's horn broke into four horns, one of which grew great and removed the burnt offerings.</p>
+
+    <p>Again, an angel came to deliver the interpretation. The Medo-Persian empire would quickly fall to the Greeks, who in turn would split into four kingdoms. In later times, one of their rulers would desecrate the temple for 2,300 days and nights.</p>
+
+    <p>The vision was literally fulfilled though the Seleucid King Antiochus IV's removal of the daily sacrifices. The Maccabean Revolt would restore the temple six years later.</p>
+
+    <h3>The 70 Weeks Prophecy</h3>
+
+    <p>Chapter 9 contains arguably the most important prophecy of Scripture. Daniel remembered God's promise to Jeremiah that Israel would return to their homeland after 70 years of captivity (Jer. 29:10). Now 66 years into exile, Daniel prepared for God's deliverance by offering supplication on behalf of the nation.</p>
+
+    <p>Gabriel appeared to explain the fullness of God's program. Daniel's prayer would be answered well beyond his expectations. It would find consummation after 70 heptads (groups of seven years), or 490 years. God's designs for Israel include six specific goals: finish transgressions, bring an end to sin, atone for wickedness, bring in everlasting righteousness, seal up visions and prophecy, and anoint the Most Holy.</p>
+
+    <p>Each of these promises will find fulfillment in the Millennial Kingdom being anticipated by the Messiah's crucifixion. He would be cut off for others after seven and then 62 heptads. The timeline of 483 years under the Jewish calendar equates to 173,880 days. From the decree of Artaxerxes permitting the Jewish remnant to rebuild the walls of Jerusalem in 444 BC (Neh. 2:1–8), this exactly lands on the Triumphant Entry of Christ.</p>
+
+    <p>The 70th week, the Tribulation, remains to complete God's redemptive plan. The text adds that the little horn of 7:25 would first affirm a covenant between the world and Israel before breaking it by removing sacrifices and continuing destruction until a determined consummation.</p>
+
+    <h3>Vision of The Book of Truth</h3>
+
+    <p>Chapters 10–12 detail a single final vision of Daniel outlining future conflicts in and around Israel, called the Glorious Land. The time of the Gentiles having dominion over God's people will continue under Persia and Greece, into the Tribulation, until He delivers them at last into the Millennium (12:1).</p>
+
+    <p>In the 3rd year of King Cyrus' reign, Daniel mourned and fasted for three weeks. Perhaps he learned of the resistance the returning exiles faced in rebuilding the temple. Then, an angel appeared, explaining they were delayed by the Prince of Persia until Michael assisted. The angel called their message the Book of Truth, the record of God's revelation for His people.</p>
+
+    <p>God designed a message to the prophet that the demonic realm knew to disrupt. It provided hope for Israel in a world of subjection. Satan is certainly still in the business of preventing God's message from reaching people (Luke 8:12, 1 Thess. 2:18). Yet, God's timing is perfect to strengthen His faithful servants (10:19).</p>
+
+    <p>Daniel 11:1–20 is a complex history of wars between the remains of the Grecian Empire. Kings of the north, the Seleucids, will battle several times before defeating the realm of the southern kings, the Ptolemies. Then, the northern kings will conquer Judea, have a failed alliance with the south via marriage, and briefly impose heavy taxes on the land.</p>
+
+    <p>Daniel 11:21–39 shifts to a single ruler who comes to power by treachery, identified historically as Antiochus IV. He returns from a failed campaign in Egypt to take his frustration out on the Jewish people. The king sets up an abomination in the temple and removes sacrifices, foreshadowing the similar wickedness of 9:27. The text continues with clear implications of a near and far fulfillment. The past Antiochus acts as a type of the future Antichrist. Both do as they please and profane God's law.</p>
+
+    <p>However, Daniel 11:40 marks a clear distinction in time by stating, "At the time of the end…" Then, a massive battle from the north and south will commence but fail to defeat the Antichrist. He will preemptively strike nations all over the world and settle his palace in Israel. Nevertheless, God's people will have victory over him.</p>
+
+    <h3>The Sealed Vision</h3>
+
+    <p>Chapter 12 summarizes the Tribulation as a time of trouble for the nation of Israel unlike any before it. Still, God will be faithful to deliver all the believing remnant. The nation will finally have freedom from Gentile oppressors when all believers in the Messiah are resurrected to enjoy His Kingdom.</p>
+
+    <p>Naturally, Daniel wanted to know exactly what would happen beyond the Tribulation. The now elderly prophet anxiously desired to see the glorious fulfillment of God's promises.</p>
+
+    <p>While Daniel needed to trust God with the limited revelation given him, believers today have the completed canon of God's Word. However, we will never know all the answers, certainly not the timing of Christ's return (Acts 1:7). Believers today must likewise trust in God's unfailing promises to save His people.</p>
+
+    <!-- ═══════════════════════════════════════ -->
+    <div class="bibliography">
+      <h2>Bibliography</h2>
+      <p>Arnold, Bill T., and Bryan Beyer. <em>Encountering the Old Testament: A Christian Survey.</em> Third Edition. Grand Rapids: Baker Academic, 2015.</p>
+      <p>Jensen, Irving L. <em>Jensen's Survey of the Old Testament.</em> Chicago: Moody Press, 1978.</p>
+      <p>Walvoord, John F., Roy B. Zuck, and Dallas Theological Seminary, eds. <em>The Bible Knowledge Commentary: Old Testament.</em> Wheaton, Ill: Victor Books, 1983.</p>
+    </div>
+
+  </article>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    "Whosoever believeth in Him should have everlasting life." — John 3:16 (KJV)
+  </footer>
+
+</div>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'fadeUp 0.6s ease both';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(s => {
+    observer.observe(s);
+  });
+</script>
+
+</body>
+</html>
