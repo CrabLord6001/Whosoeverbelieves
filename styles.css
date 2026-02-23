@@ -719,31 +719,33 @@ footer {
 }
 
 
-/* ── FONT SIZE TOGGLE BUTTON ───────────────────────────────────────────── */
+/* ── FONT SIZE GROUP ─────────────────────────────────────────────────────── */
 
-#font-size-toggle {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 500;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  color: var(--text-mid);
-  font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  padding: 0.5rem 0.8rem;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  line-height: 1;
-  user-select: none;
+.font-size-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  padding: 0.5rem 1.25rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
 }
 
-#font-size-toggle:hover {
+.font-size-group button {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.6rem;
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--text-faint);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  border-radius: 2px;
+}
+
+.font-size-group button:hover,
+.font-size-group button.active {
+  color: var(--gold);
   border-color: rgba(201,168,76,0.4);
-  color: var(--gold-light);
-  background: rgba(255,255,255,0.06);
 }
