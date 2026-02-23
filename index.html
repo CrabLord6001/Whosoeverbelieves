@@ -577,10 +577,21 @@
     }
 
     /* ── AUTHORS ── */
-    .authors-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.25rem;
+   .authors-grid {
+      display: flex;
+      justify-content: center;
+    }
+
+    .author-card {
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .author-avatar, a.author-card .author-avatar,
+    a.author-card img {
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .author-card {
