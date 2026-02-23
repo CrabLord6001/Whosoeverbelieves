@@ -34,13 +34,13 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 18px;
 }
 
 body {
   background: var(--bg);
   color: var(--text);
   font-family: 'EB Garamond', Georgia, serif;
-  font-size: 18px;
   line-height: 1.8;
   min-height: 100vh;
   overflow-x: hidden;
@@ -48,8 +48,8 @@ body {
 }
 
 /* Font size toggle states */
-html.font-small body { font-size: 15px; }
-html.font-large  body { font-size: 22px; }
+html.font-small { font-size: 15px; }
+html.font-large  { font-size: 22px; }
 
 
 /* ── GRAIN TEXTURE OVERLAY ─────────────────────────────────────────────── */
