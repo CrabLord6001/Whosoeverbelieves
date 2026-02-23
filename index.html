@@ -23,7 +23,12 @@
       <span></span>
     </div>
   </header>
-
+  <div class="font-size-group">
+    <button onclick="setSize('font-small')">A−</button>
+    <button onclick="setSize('default')">A</button>
+    <button onclick="setSize('font-large')">A+</button>
+  </div>
+  
   <!-- SEARCH -->
   <div class="search-bar">
     <input id="search-input" type="text" placeholder="Search articles, topics, passages…" />
@@ -224,27 +229,18 @@
     observer.observe(s);
   });
 </script>
-<button id="font-size-toggle" title="Toggle font size">A</button>
 <script>
-  (function () {
-    const sizes  = ['default', 'font-small', 'font-large'];
-    const labels = { 'default': 'A', 'font-small': 'A−', 'font-large': 'A+' };
-    let current  = localStorage.getItem('fontPref') || 'default';
-
-    function applySize(size) {
-      sizes.forEach(s => document.documentElement.classList.remove(s));
-      if (size !== 'default') document.documentElement.classList.add(size);
-      document.getElementById('font-size-toggle').textContent = labels[size];
-    }
-
-    applySize(current);
-
-    document.getElementById('font-size-toggle').addEventListener('click', function () {
-      current = sizes[(sizes.indexOf(current) + 1) % sizes.length];
-      localStorage.setItem('fontPref', current);
-      applySize(current);
+  function setSize(size) {
+    const sizes = ['default', 'font-small', 'font-large'];
+    sizes.forEach(s => document.documentElement.classList.remove(s));
+    if (size !== 'default') document.documentElement.classList.add(size);
+    localStorage.setItem('fontPref', size);
+    const labels = { default:'A', 'font-small':'A−', 'font-large':'A+' };
+    document.querySelectorAll('.font-size-group button').forEach(b => {
+      b.classList.toggle('active', b.textContent === labels[size]);
     });
-  })();
+  }
+  setSize(localStorage.getItem('fontPref') || 'default');
 </script>
 </body>
 </html>
