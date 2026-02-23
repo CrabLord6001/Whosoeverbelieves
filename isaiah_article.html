@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Kingdom Presented in Isaiah — Whosoever</title>
+  <meta name="description" content="A synthesis of Kingdom characteristics through the prophet Isaiah — transformed people, restored land, and magnified temple with the Messiah ruling from Jerusalem." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:           #0d1117;
+      --surface:      #131922;
+      --glass:        rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.09);
+      --navy-mid:     #1a2540;
+      --gold:         #c9a84c;
+      --gold-light:   #e5c97a;
+      --blue:         #3d6cc0;
+      --rule:         rgba(255,255,255,0.08);
+      --text:         #e8e6e0;
+      --text-mid:     #a89f8c;
+      --text-faint:   #6a6358;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.8;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.45;
+    }
+
+    .site-wrapper {
+      max-width: 940px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      padding: 5rem 2.5rem 4rem;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(170deg, #0f1b2e 0%, #0d1117 60%);
+      animation: fadeIn 0.8s ease both;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      display: block;
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      margin: 2rem auto 0;
+    }
+
+    .site-greek {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+      opacity: 0.8;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .site-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      line-height: 1;
+      animation: fadeUp 0.8s 0.2s ease both;
+      background: linear-gradient(90deg, #fff 30%, var(--gold-light) 50%, #fff 70%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .site-tagline {
+      margin-top: 0.9rem;
+      font-style: italic;
+      color: var(--text-mid);
+      font-size: 1.05rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .header-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+      animation: fadeUp 0.8s 0.35s ease both;
+    }
+    .header-ornament span {
+      display: block; height: 1px; width: 80px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    .header-ornament em {
+      color: var(--gold);
+      font-style: normal;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 17, 23, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: center;
+      padding: 0 2rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--text-mid);
+      text-decoration: none;
+      padding: 1rem 1.25rem;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; right: 50%;
+      height: 2px;
+      background: var(--gold);
+      transition: left 0.2s, right 0.2s;
+    }
+
+    nav a:hover { color: var(--gold-light); }
+    nav a:hover::after { left: 1.25rem; right: 1.25rem; }
+
+    /* ── ARTICLE ── */
+    article {
+      padding: 4rem 2.5rem 5rem;
+      background: var(--surface);
+      border-top: 1px solid var(--rule);
+    }
+
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      opacity: 0.75;
+      margin-bottom: 3rem;
+      transition: opacity 0.2s, gap 0.2s;
+    }
+    .article-back:hover { opacity: 1; gap: 0.75rem; }
+
+    .article-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 0.75rem;
+    }
+
+    .article-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.01em;
+    }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .article-body {
+      max-width: 700px;
+    }
+
+    .article-body p {
+      margin-bottom: 1.4rem;
+      color: var(--text-mid);
+      line-height: 1.85;
+    }
+
+    .article-body h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--text);
+      margin: 3rem 0 1rem;
+      letter-spacing: 0.02em;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .article-body h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold-light);
+      margin: 2.25rem 0 0.75rem;
+      opacity: 0.9;
+    }
+
+    .article-body sup {
+      font-size: 0.65rem;
+      color: var(--gold);
+      opacity: 0.8;
+      vertical-align: super;
+      line-height: 0;
+    }
+
+    .article-body sup a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    /* ── FOOTNOTES ── */
+    .footnotes {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+      max-width: 700px;
+    }
+
+    .footnotes h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .footnotes ol {
+      padding-left: 1.5rem;
+    }
+
+    .footnotes li {
+      font-size: 0.88rem;
+      color: var(--text-faint);
+      line-height: 1.7;
+      margin-bottom: 0.6rem;
+    }
+
+    .footnotes li em {
+      font-style: italic;
+    }
+
+    /* ── BIBLIOGRAPHY ── */
+    .bibliography {
+      margin-top: 3.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--rule);
+      max-width: 700px;
+    }
+
+    .bibliography h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .bibliography p {
+      font-size: 0.92rem;
+      color: var(--text-faint);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+      padding-left: 2rem;
+      text-indent: -2rem;
+    }
+
+    .bibliography p em { font-style: italic; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--rule);
+      padding: 2.5rem;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--text-faint);
+      line-height: 1.9;
+    }
+
+    .greek {
+      display: block;
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--gold);
+      opacity: 0.6;
+      margin-bottom: 0.3rem;
+    }
+
+    .reveal { opacity: 1; }
+  </style>
+</head>
+<body>
+<div class="site-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <p class="site-greek">πᾶς ὁ πιστεύων</p>
+    <h1 class="site-title">Whosoever</h1>
+    <p class="site-tagline">Free Grace Theology &amp; Biblical Studies</p>
+    <div class="header-ornament">
+      <span></span>
+      <em>Faith Alone · Christ Alone</em>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html">Articles</a>
+    <a href="index.html#resources">Resources</a>
+    <a href="index.html#authors">Authors</a>
+    <a href="index.html#about">About</a>
+  </nav>
+
+  <!-- ARTICLE -->
+  <article>
+
+    <a class="article-back" href="index.html#articles">← Back to Articles</a>
+
+    <p class="article-label">Biblical Studies &nbsp;·&nbsp; Old Testament &nbsp;·&nbsp; Prophecy</p>
+    <h1 class="article-title">The Kingdom Presented in Isaiah</h1>
+    <div class="article-meta">
+      <span>Jonathan Crow</span>
+      <span>2025</span>
+    </div>
+
+    <div class="article-body">
+
+      <p>Many critics of premillennialism mistakenly think Revelation 20:1–6 is the only text to explicitly describe the Kingdom age. While the chronological length of 1000 years is not mentioned elsewhere, the Old Testament is rich in details of the age to come.</p>
+
+      <p>This paper will seek to synthesize a thread of Kingdom characteristics through the prophet Isaiah. Overall, the Bible characterizes the Kingdom through a transformed people, restored land, and magnified temple with the Messiah ruling from Jerusalem. Clear unfulfilled prophecies in the Old Testament provide a basis for a literal future messianic Kingdom.<sup><a href="#fn1">1</a></sup></p>
+
+      <p>Daniel, at the end of his last vision, eagerly desired to know of the age to come (Dan. 12:8). Now, with the completed canon, we should also anticipate the Kingdom with confidence.</p>
+
+      <h2>The Kingdom Promised</h2>
+
+      <p>God promised a blessing through all the nations through Abraham's seed, a singular person in the Messiah's offer of eternal life (Galatians 3:16). As God's narrative is progressively revealed, 2 Samuel 7:12–16 adds the Seed would come from David's line and rule his kingdom forever. God's covenant is a future unconditional blessing.</p>
+
+      <p>Moreover, God promised David that his people would dwell safely in their land without enemies to oppress them (7:10–11). This covenant is with Israel regarding their literal future security in the land. The Messiah King (Jesus) will perfectly rule the household of David.</p>
+
+      <p>The Davidic Covenant only finds fulfillment during the Millennium. Christ does not now rule on David's throne spiritually through the Church. Obviously, many "sons of wickedness" surround Israel! Yet, He will establish an age of peace on earth during the Kingdom for His people.</p>
+
+      <h2>Isaiah: Detailing the Kingdom</h2>
+
+      <p>The promise was certain: one future King would unite and rule from David's throne forever. Thus, there the line of David could not cease. God persevered Israel's theocracy to mediate His glory over creation and spiritually steward the nation under the Law. Out of the remnant chosen to serve God a final King would arrive to fulfill God's designs.<sup><a href="#fn2">2</a></sup></p>
+
+      <p>By the time of Isaiah (740 BC), the kings of Israel had lived in disregard to God's Law, breaking their oath. The prophet Isaiah outlines the outpouring of God's wrath on Israel, the surrounding nations, and ultimately the world in the Tribulation. However, God assures us of hope for His people securely resting in an age of peace. His word will not return void (55:11).</p>
+
+      <h3>Isaiah 2 — God's House Exalted</h3>
+
+      <p>The blessed "latter days" are beautifully pictured in Isaiah 2. First, God will alter the landscape of Jerusalem, such that His temple will be seated on the highest mountain (2:2). Zechariah 14:4–10 provides more details about the geographical transformation of the land. In the Kingdom, Jerusalem will be a place of visible glory.</p>
+
+      <p>God elevating His holy city will cause nations to flow to it and learn His Law. While the kings of Israel failed to instruct the people, during the Millennium the Messiah will teach the world His Law. With His perfect statutes, Christ will arbitrate between all nations. No longer will they learn war (2:3–4).</p>
+
+      <p>With Jerusalem being physically raised, other nations will be humbled and diminished, awed by the glory of the Lord's majesty. Revelation 6:15–16 recalls Isaiah 2:20–21. People of every social class will attempt to flee from God's wrath. While Satan will organize a rebellion against God's designs, people will exalt Yahweh alone during His Kingdom. Despite difficult circumstances, finite man cannot be trusted over God's Word (2:22).</p>
+
+      <h3>Isaiah 9–10 — World Peace Under the Son</h3>
+
+      <p>God commissioned Isaiah as His messenger to announce His judgments with the preincarnate Christ anointing him (Isa. 6:1, John 12:41). God revealed to King Ahaz hints of a son, born of the virgin, who would choose good and begin an age of prosperity for Israel (7:14–25). Then, chapters 9–12 expound on the age of the Son, when a great light will shine upon those who walk in darkness.</p>
+
+      <p>Isaiah 9:6 is typically preached during the Christmas season, but the remainder of the passage details a future period of world peace. All the armor and weapons of war will be burned. Then, the Son will uphold a government on David's throne without end. On that day, He will not have mercy on any who lead His people astray.</p>
+
+      <p>Each title of the Son in 9:6 shows Him preeminent, divine, and ruling with peace all at the announcement of His birth. Of note, His title as Mighty God is repeated in 10:21. He is identified as the ideal king.<sup><a href="#fn3">3</a></sup></p>
+
+      <p>Even with global destruction, God promises a small remnant will escape all of it and remain to return to the land. In that day, when the Son reigns, they will never again lean on other nations for assistance. Then only the Lord will be their comfort (10:20–23). Knowing God has determined victory for His people, they should not fear their enemies now. Therefore, Israel ought to fear God now (9:16, 10:1–3).</p>
+
+      <h3>Isaiah 11–12 — The Final Return of God's People</h3>
+
+      <p>Isaiah 11:1–4 clarifies the Son, of Jesse's lineage, will judge with the counsel of the Spirit, not by external appearances. The Kingdom will have no opportunity for coverups or shady backroom deals. Justice will never depend on fallible witnesses. We can trust in the Kingdom there will be no Watergate scandal.<sup><a href="#fn4">4</a></sup></p>
+
+      <p>The government of the King will even extend peace to the animals (11:6–9). Creation itself now longs for the day it will be redeemed from sin (Romans 8:20–23). The Kingdom God will ensure His people are safeguarded against sin's dominion.</p>
+
+      <p>If there could be any doubt about the timeline of Isaiah 11, verses 11–12 state it will be the second time the Lord would have regathered Israel. God moved Cyrus to return His people to Jerusalem (Ezra 1:1–4), but this later regathering will broaden God's reach to the four corners of the earth. Redeemed Jews in every place of the world will return in safety to serve King Jesus, and they then will never be removed.</p>
+
+      <p>Reminiscent of the Exodus, God will dry up the Nile and divide the Euphrates to facilitate the safe return of His people. Israel's departure from Egypt marked their birth as a nation, but the future regathering will establish them as a permanent world empire ruled by the Son.</p>
+
+      <p>Isaiah 12 is a brief song of praise Israel will sing on the day the Kingdom begins. They will draw water from the wells of salvation, symbolic of physical prosperity. They will proclaim God's goodness as a witness to the nations.<sup><a href="#fn5">5</a></sup></p>
+
+      <h3>Isaiah 25–27 — Songs of the Millennium</h3>
+
+      <p>Isaiah continues with a series of judgments against other nations, including Israel along with Assyria, Babylon, Moab, Egypt, and Tyre. It culminates with an apocalyptic vision encompassing the ends of the earth. All the earth will be shaken, then God will imprison rebellious nations and punish them after "many days."</p>
+
+      <p>In the Tribulation, God will have vengeance on everyone who oppresses His chosen people. Then, the Lord will reign from Zion! (24:21–23). On that day, God's people will rejoice over their salvation, their final deliverance from their foes.</p>
+
+      <p>Isaiah lists several specific items that Israel will sing back in worship of God. First, their enemies will have their fortified cities destroyed and never again rebuilt. Those nations remaining will fear God (25:3–4). The Lord, the reigning King Jesus, will strengthen the needy. All people will enjoy a feast of the best meats and wines (25:4–6).</p>
+
+      <p>Then, at the end of the age, death, the veil covering the nations, will be swallowed up forever and all tears wiped away (25:7–8, Rev. 21:4). The Kingdom may refer to both the Millennial rule and eternal state, so here Isaiah telescopes them together in one song of glorious praise.<sup><a href="#fn6">6</a></sup></p>
+
+      <p>Isaiah continues into chapter 26 praising God for his justice, provision, and the hope He will establish peace in Jerusalem. Israel was experiencing trouble, like a woman in labor. Her pain seemed to only give birth to wind. However, the prophet is confident that the dead in his day would see resurrection in the age to come. In the reign of the King, all believing Israelites will be raised to everlasting life (Dan. 12:2).</p>
+
+      <h3>Isaiah 42–54 — The Servant's Mission</h3>
+
+      <p>Next, God's program of the Kingdom is described in the context of the Lord's Servant suffering to redeem His people from sin and ultimately inaugurate the New Covenant.</p>
+
+      <p>God again reiterates His promise to deliver His people from the ends of the earth (43:6), but now He reveals the agency of a Redeemer. He will bring peace to the land (43:20) and blot out Israel's sin (43:25). Both missions will only find final fulfillment in the Millennium.</p>
+
+      <p>The Redeemer shifts to a Servant, called from before birth to bring light to the Gentile nations (49:6). While Israel failed, King Jesus will fulfill Genesis 12:3. All peoples can find blessing through the Seed of Abraham.</p>
+
+      <p>As the final sin offering, He now brings justification (δικαιῶσαι) to as many that believe (53:11, Rom. 5:1). Although, the world is still under the sway of Satan (1 John 5:19). In the Kingdom, God will subdue the enemy to allow unhindered global blessings. We need to eagerly live in anticipation of this blessed hope, the return of Christ for His people (Titus 2:13).</p>
+
+      <p>In Isaiah 54, Israel is personified as a barren woman whom the Messiah will cause to rejoice. Her descendants will inherit all other nations. The Jews are now a scattered and divided people who are partially hardened in unbelief (Rom. 11:25–26). However, the atoning Servant will also act as the national Redeemer to gather her again and then never withhold His mercy. Statements as these must indicate a Millennial fulfillment.<sup><a href="#fn7">7</a></sup></p>
+
+      <p>God's covenant of peace is as certain as His promise to Noah. Even if the earth was destroyed, God would not withdraw His kindness. Jeremiah 31:35–37 also uses hypothetical language to emphasize the unchanging status of the New Covenant. The text does not allow redefining of the recipients of the promise, nor the conditions or timeline of events.</p>
+
+      <h3>Isaiah 65–66 — All Things New</h3>
+
+      <p>The prophet elaborates that Israel's blessings will overflow to the Gentiles. They should live in response by abandoning idols and proclaiming God's coming salvation to the world (62:10–11).</p>
+
+      <p>Isaiah offers abundant assurances that God will protect His people. Even during the Tribulation, they will have a measure of divine protection. The nourishment promised in 65:8–16 aligns with Revelation 12:6. God will persevere His faithful remnant.<sup><a href="#fn8">8</a></sup></p>
+
+      <p>Then, when Israel finally inherits the nations, God will make all things new in the Kingdom and into eternity. People will have increased longevity, living over 100 and considered still as young as a child. Perhaps the transformed landscape also includes a rejuvenated atmosphere and soil to prolong lifespans. Certainly, we can imagine the Millennium will be an unprecedented time for advances in science and medicine.</p>
+
+      <p>Believers will at last satisfy the Adamic mandate to rule the earth (Gen. 1:28) by planting gardens and building homes without an adversary (65:21–22). The overcomers will even reign under Christ (Rev. 2:26–27).</p>
+
+      <p>In the Kingdom, God will gather all nations, all flesh, to worship Him with offerings. God will make some priests to minister in His glorified temple (66:18–23).</p>
+
+      <p>The last verse of Isaiah seems to foreshadow the rebellion after the 1000-year reign. The aftermath of Satan's uprising will be a visible display of God's awesome righteousness. We can rest assured that God wins. Despite all the destruction and decay in this world, we can expect the best is yet to come.</p>
+
+    </div>
+
+    <!-- FOOTNOTES -->
+    <div class="footnotes">
+      <h2>Footnotes</h2>
+      <ol>
+        <li id="fn1">Arnold Fruchtenbaum, "The Use of the Old Testament in the Book of Revelation," <em>Chafer Theological Seminary</em> 13, no. 1 (2008): 37.</li>
+        <li id="fn2">Johnson Elliott E., <em>A Dispensational Biblical Theology</em> (Allen, TX: Bold Grace Ministries, 2016), 179, 186–87.</li>
+        <li id="fn3">Johnson, 236.</li>
+        <li id="fn4">Charles Caldwell Ryrie, <em>The Best Is Yet to Come</em>, Rev. ed (Chicago: Moody Press, 1981), 136.</li>
+        <li id="fn5">John F. Walvoord, Roy B. Zuck, and Dallas Theological Seminary, eds., <em>The Bible Knowledge Commentary: Old Testament</em> (Wheaton, Ill: Victor Books, 1983), 1057–58.</li>
+        <li id="fn6">Walvoord, Zuck, and Dallas Theological Seminary, 1074.</li>
+        <li id="fn7">Walvoord, Zuck, and Dallas Theological Seminary, 1110.</li>
+        <li id="fn8">Arnold, "The Use of the Old Testament in the Book of Revelation," 35–36.</li>
+      </ol>
+    </div>
+
+    <!-- BIBLIOGRAPHY -->
+    <div class="bibliography">
+      <h2>Bibliography</h2>
+      <p>Fruchtenbaum, Arnold. "The Use of the Old Testament in the Book of Revelation." <em>Chafer Theological Seminary</em> 13, no. 1 (2008): 27–46.</p>
+      <p>Johnson, Elliott E. <em>A Dispensational Biblical Theology.</em> Allen, TX: Bold Grace Ministries, 2016.</p>
+      <p>Ryrie, Charles Caldwell. <em>The Best Is Yet to Come.</em> Rev. ed. Chicago: Moody Press, 1981.</p>
+      <p>Walvoord, John F., Roy B. Zuck, and Dallas Theological Seminary, eds. <em>The Bible Knowledge Commentary: Old Testament.</em> Wheaton, Ill: Victor Books, 1983.</p>
+    </div>
+
+  </article>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    "Whosoever believeth in Him should have everlasting life." — John 3:16 (KJV)
+  </footer>
+
+</div>
+</body>
+</html>
