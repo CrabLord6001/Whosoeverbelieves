@@ -379,23 +379,32 @@
   width: 100%; 
 }
 
-.font-size-group button {
+/* Font size toggle states */
+html.font-small  body { font-size: 15px; }
+html.font-large  body { font-size: 22px; }
+/* default is 18px — no class needed */
+
+/* The toggle button */
+#font-size-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 500;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-mid);
   font-family: 'Cinzel', serif;
   font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  padding: 0.35rem 0.6rem;
-  background: none;
-  border: 1px solid var(--rule);
-  color: var(--text-faint);
+  letter-spacing: 0.1em;
+  padding: 0.5rem 0.75rem;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-  border-radius: 2px;
+  border-radius: 4px;
+  transition: border-color 0.2s, color 0.2s;
+  backdrop-filter: blur(8px);
 }
-
-.font-size-group button:hover,
-.font-size-group button.active {
-  color: var(--gold);
+#font-size-toggle:hover {
   border-color: rgba(201,168,76,0.4);
+  color: var(--gold-light);
 }
   </style>
 </head>
