@@ -1,0 +1,749 @@
+/* ==========================================================================
+   WHOSOEVER — Shared Stylesheet
+   Free Grace Theology & Biblical Studies
+   ========================================================================== */
+
+
+/* ── CSS VARIABLES ─────────────────────────────────────────────────────── */
+
+:root {
+  --bg:           #0d1117;
+  --surface:      #131922;
+  --glass:        rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.09);
+  --navy:         #0d1117;
+  --navy-mid:     #1a2540;
+  --gold:         #c9a84c;
+  --gold-light:   #e5c97a;
+  --gold-faint:   rgba(201,168,76,0.15);
+  --blue:         #3d6cc0;
+  --rule:         rgba(255,255,255,0.08);
+  --text:         #e8e6e0;
+  --text-mid:     #a89f8c;
+  --text-faint:   #6a6358;
+}
+
+
+/* ── RESET & BASE ──────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.8;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: font-size 0.2s ease;
+}
+
+/* Font size toggle states */
+html.font-small body { font-size: 15px; }
+html.font-large  body { font-size: 22px; }
+
+
+/* ── GRAIN TEXTURE OVERLAY ─────────────────────────────────────────────── */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.45;
+}
+
+
+/* ── SITE WRAPPER ──────────────────────────────────────────────────────── */
+
+.site-wrapper {
+  max-width: 940px;
+  margin: 0 auto;
+  position: relative;
+}
+
+
+/* ── ANIMATIONS ────────────────────────────────────────────────────────── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
+/* ── HEADER ────────────────────────────────────────────────────────────── */
+
+header {
+  position: relative;
+  padding: 5rem 2.5rem 4rem;
+  text-align: center;
+  overflow: hidden;
+  background: linear-gradient(170deg, #0f1b2e 0%, #0d1117 60%);
+  animation: fadeIn 0.8s ease both;
+}
+
+/* Radial glow behind title */
+header::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 300px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Decorative vertical rule below header */
+header::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  margin: 2rem auto 0;
+}
+
+.site-greek {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  color: var(--gold);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.75rem;
+  opacity: 0.8;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+.site-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1;
+  animation: fadeUp 0.8s 0.2s ease both;
+  background: linear-gradient(90deg, #fff 30%, var(--gold-light) 50%, #fff 70%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.site-tagline {
+  margin-top: 0.9rem;
+  font-style: italic;
+  color: var(--text-mid);
+  font-size: 1.05rem;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+/* Decorative ornament lines around tagline */
+.header-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  animation: fadeUp 0.8s 0.35s ease both;
+}
+
+.header-ornament span {
+  display: block;
+  height: 1px;
+  width: 80px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+.header-ornament em {
+  color: var(--gold);
+  font-style: normal;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-family: 'Cinzel', serif;
+}
+
+
+/* ── NAVIGATION ────────────────────────────────────────────────────────── */
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13, 17, 23, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 0 2rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: var(--text-mid);
+  text-decoration: none;
+  padding: 1rem 1.25rem;
+  transition: color 0.2s;
+  position: relative;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: var(--gold);
+  transition: left 0.2s, right 0.2s;
+}
+
+nav a:hover {
+  color: var(--gold-light);
+}
+
+nav a:hover::after {
+  left: 1.25rem;
+  right: 1.25rem;
+}
+
+
+/* ── SEARCH BAR ────────────────────────────────────────────────────────── */
+
+.search-bar {
+  padding: 1.25rem 2.5rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search-bar input {
+  flex: 1;
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--rule);
+  background: var(--glass);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 2px;
+}
+
+.search-bar input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+}
+
+.search-bar input::placeholder {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.search-bar button {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.4rem;
+  background: var(--gold);
+  color: #0d1117;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.search-bar button:hover {
+  background: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+#search-results {
+  display: none;
+  padding: 1rem 2.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-faint);
+  font-style: italic;
+  background: var(--surface);
+}
+
+
+/* ── HERO VERSE ────────────────────────────────────────────────────────── */
+
+.hero {
+  padding: 3.5rem 2.5rem 2.5rem;
+  background: var(--surface);
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+
+.hero blockquote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--text);
+  border-left: 2px solid var(--gold);
+  padding: 1.4rem 2rem;
+  background: var(--glass);
+  border-radius: 0 4px 4px 0;
+  margin: 0 0 0.75rem;
+  position: relative;
+}
+
+.hero blockquote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.5rem;
+  left: 1.5rem;
+  font-size: 4rem;
+  color: var(--gold);
+  opacity: 0.18;
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1;
+}
+
+.hero cite {
+  display: block;
+  font-size: 0.78rem;
+  font-style: normal;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  font-family: 'Cinzel', serif;
+  text-align: right;
+  opacity: 0.8;
+}
+
+
+/* ── SECTIONS ──────────────────────────────────────────────────────────── */
+
+.section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+section {
+  padding: 3rem 2.5rem;
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+section:nth-child(even) {
+  background: var(--bg);
+}
+
+section h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 300;
+  margin-bottom: 1.75rem;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+
+/* ── TABS ──────────────────────────────────────────────────────────────── */
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.tab-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.4rem;
+  border: none;
+  background: none;
+  color: var(--text-faint);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover { color: var(--gold-light); }
+
+.tab-btn.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+
+/* ── ARTICLE CARDS ─────────────────────────────────────────────────────── */
+
+.article-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.article-card {
+  display: block;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 2rem 2.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s, background 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.article-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.article-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.12);
+  background: rgba(255,255,255,0.05);
+}
+
+.article-card:hover::before { opacity: 1; }
+
+.article-card-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.75;
+  margin-bottom: 0.6rem;
+}
+
+.article-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+  transition: color 0.2s;
+}
+
+.article-card:hover .article-card-title { color: var(--gold-light); }
+
+.article-card-excerpt {
+  font-size: 0.92rem;
+  color: var(--text-mid);
+  line-height: 1.7;
+  margin-bottom: 1.1rem;
+}
+
+.article-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.article-card-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.article-card-arrow {
+  position: absolute;
+  right: 2.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  opacity: 0;
+  font-size: 1.3rem;
+  transition: opacity 0.2s, right 0.2s;
+}
+
+.article-card:hover .article-card-arrow {
+  opacity: 0.6;
+  right: 2rem;
+}
+
+
+/* ── COMING SOON ───────────────────────────────────────────────────────── */
+
+.coming-soon {
+  background: var(--glass);
+  border: 1px dashed rgba(201,168,76,0.25);
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--text-faint);
+  font-style: italic;
+  font-size: 1rem;
+  border-radius: 4px;
+}
+
+.coming-soon span {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-style: normal;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+
+/* ── RESOURCE LINK CARDS ───────────────────────────────────────────────── */
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 1rem;
+}
+
+.link-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 1.75rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s, background 0.25s;
+  gap: 1rem;
+  text-align: center;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.link-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.link-card:hover {
+  border-color: rgba(201,168,76,0.4);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.15);
+  background: rgba(255,255,255,0.06);
+}
+
+.link-card:hover::before { opacity: 1; }
+
+.link-card img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  transition: transform 0.2s;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+}
+
+.link-card:hover img {
+  transform: scale(1.08);
+}
+
+.link-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-mid);
+  line-height: 1.45;
+  transition: color 0.2s;
+}
+
+.link-card:hover .link-card-title {
+  color: var(--gold-light);
+}
+
+
+/* ── AUTHORS ───────────────────────────────────────────────────────────── */
+
+.authors-grid {
+  display: flex;
+  justify-content: center;
+}
+
+.author-card {
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  padding: 1.75rem;
+  border-radius: 6px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.author-card:hover {
+  border-color: rgba(201,168,76,0.35);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+a.author-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Centers avatar whether it's a div or img */
+.author-avatar,
+a.author-card .author-avatar,
+a.author-card img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Initials-based avatar fallback */
+.author-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy-mid), var(--blue));
+  border: 1px solid rgba(201,168,76,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: var(--gold-light);
+  margin-bottom: 1rem;
+}
+
+.author-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.2rem;
+}
+
+.author-role {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.7;
+  margin-bottom: 0.75rem;
+}
+
+.author-bio {
+  font-size: 0.92rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+
+/* ── ABOUT TEXT ────────────────────────────────────────────────────────── */
+
+.about-text {
+  color: var(--text-mid);
+  max-width: 660px;
+  line-height: 1.85;
+}
+
+
+/* ── FOOTER ────────────────────────────────────────────────────────────── */
+
+footer {
+  background: var(--bg);
+  border-top: 1px solid var(--rule);
+  padding: 2.5rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-faint);
+  line-height: 1.9;
+}
+
+.greek {
+  display: block;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--gold);
+  opacity: 0.6;
+  margin-bottom: 0.3rem;
+}
+
+
+/* ── FONT SIZE TOGGLE BUTTON ───────────────────────────────────────────── */
+
+#font-size-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 500;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-mid);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  line-height: 1;
+  user-select: none;
+}
+
+#font-size-toggle:hover {
+  border-color: rgba(201,168,76,0.4);
+  color: var(--gold-light);
+  background: rgba(255,255,255,0.06);
+}
