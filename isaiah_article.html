@@ -384,6 +384,11 @@
       <span></span>
     </div>
   </header>
+  <div class="font-size-group">
+  <button onclick="setSize('font-small')">A−</button>
+  <button onclick="setSize('default')">A</button>
+  <button onclick="setSize('font-large')">A+</button>
+</div>
 
   <!-- NAV -->
   <nav>
@@ -530,6 +535,19 @@
     "Whosoever believeth in Him should have everlasting life." — John 3:16 (KJV)
   </footer>
 
-</div>
+  </div>
+  <script>
+  function setSize(size) {
+    const sizes = ['default', 'font-small', 'font-large'];
+    sizes.forEach(s => document.documentElement.classList.remove(s));
+    if (size !== 'default') document.documentElement.classList.add(size);
+    localStorage.setItem('fontPref', size);
+    const labels = { default:'A', 'font-small':'A−', 'font-large':'A+' };
+    document.querySelectorAll('.font-size-group button').forEach(b => {
+      b.classList.toggle('active', b.textContent === labels[size]);
+    });
+  }
+  setSize(localStorage.getItem('fontPref') || 'default');
+</script>
 </body>
 </html>
