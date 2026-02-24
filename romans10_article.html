@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="article">
+<body class="page-article"
 <div class="site-wrapper">
 
   <!-- HEADER -->
@@ -31,20 +31,23 @@
     <a href="index.html#authors">Authors</a>
     <a href="index.html#about">About</a>
   </nav>
-
+<div class="font-size-group">
+  <button onclick="setSize('font-small')">A−</button>
+  <button onclick="setSize('default')">A</button>
+  <button onclick="setSize('font-large')">A+</button>
+</div>
   <!-- ARTICLE -->
-  <article>
-
-    <a class="article-back" href="index.html#articles">← Back to Articles</a>
-
-    <p class="article-label">New Testament &nbsp;·&nbsp; Free Grace Theology &nbsp;·&nbsp; Soteriology</p>
-    <h1 class="article-title">The Calling for Salvation in Romans 10:9</h1>
-    <div class="article-meta">
+  <div class="article-header">
+  <a class="back-link" href="index.html#articles">&larr; Back to Articles</a>
+  <h2 class="article-title">The Calling for Salvation in Romans 10:9</h2>
+  <p class="article-subtitle">New Testament · Free Grace Theology · Soteriology</p>
+  </div>
+  <div class="article-meta">
       <span>Jonathan Crow</span>
       <span>2025</span>
     </div>
 
-    <div class="article-body">
+    <article class="article-body">
 
       <p>Many people confuse Romans 10:9–10 with conditioning the reception of eternal life on verbal confession to affirm the death, burial, and resurrection of Christ. This position does not allow for secret believers (contrary to John 19:38). The believer should proclaim their faith to receive blessings and avoid temporal wrath; however, they receive eternal life by simply believing Christ for that gift.</p>
 
@@ -88,5 +91,18 @@
   </footer>
 
 </div>
+  <script>
+  function setSize(size) {
+    const sizes = ['default', 'font-small', 'font-large'];
+    sizes.forEach(s => document.documentElement.classList.remove(s));
+    if (size !== 'default') document.documentElement.classList.add(size);
+    localStorage.setItem('fontPref', size);
+    const labels = { default:'A', 'font-small':'A−', 'font-large':'A+' };
+    document.querySelectorAll('.font-size-group button').forEach(b => {
+      b.classList.toggle('active', b.textContent === labels[size]);
+    });
+  }
+  setSize(localStorage.getItem('fontPref') || 'default');
+</script>
 </body>
 </html>
