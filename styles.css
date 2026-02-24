@@ -963,6 +963,17 @@ a.scripture-ref:hover {
   margin-bottom: 1rem;
 }
 
+.footnotes a {
+  color: var(--gold);
+  text-decoration-color: rgba(201,168,76,0.35);
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.footnotes a:hover {
+  color: var(--gold-light);
+}
+
 
 /* ── SCROLL REVEAL ───────────────────────────────────────────────────────── */
 
