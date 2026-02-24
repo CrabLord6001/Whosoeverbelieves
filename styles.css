@@ -482,6 +482,7 @@ section h2 {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   gap: 1.25rem;
   font-family: 'Cinzel', serif;
   font-size: 0.58rem;
