@@ -480,8 +480,8 @@ section h2 {
 
 .article-card-meta {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   gap: 1.25rem;
   font-family: 'Cinzel', serif;
   font-size: 0.58rem;
