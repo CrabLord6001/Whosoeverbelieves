@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Articles — Whosoever</title>
+  <meta name="description" content="Browse all Free Grace theology articles and biblical studies from Whosoever." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-article">
+<div class="site-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <p class="site-greek">πᾶς ὁ πιστεύων</p>
+    <h1 class="site-title"><a href="index.html">Whosoever</a></h1>
+    <p class="site-tagline">Free Grace Theology &amp; Biblical Studies</p>
+    <div class="header-ornament">
+      <span></span>
+      <em>Faith Alone · Christ Alone</em>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- FONT SIZE GROUP -->
+  <div class="font-size-group">
+    <button onclick="setSize('font-small')">A−</button>
+    <button onclick="setSize('default')">A</button>
+    <button onclick="setSize('font-large')">A+</button>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html#articles">Articles</a>
+    <a href="index.html#resources">Resources</a>
+    <a href="index.html#authors">Authors</a>
+    <a href="index.html#about">About</a>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="article-header">
+    <a class="back-link" href="index.html">&larr; Back to Home</a>
+    <h2 class="article-title">All Articles</h2>
+    <p class="article-subtitle">The complete library of Free Grace theology &amp; biblical studies</p>
+  </div>
+
+  <!-- ARTICLE GRID -->
+  <section style="padding: 2.5rem; background: var(--surface);">
+    <div class="article-grid">
+
+      <a class="article-card" href="new_covenant_Jer31_article.html">
+        <p class="article-card-title">New Covenant Promise to Israel</p>
+        <p class="article-card-excerpt">A brief overview of Jeremiah 31, analyzing God's promise about the land, His people, and their final spiritual renewal.</p>
+        <div class="article-card-meta">
+          <span>Jonathan Crow</span>
+          <span>2/23/26</span>
+        </div>
+        <span class="article-card-arrow">→</span>
+      </a>
+
+      <a class="article-card" href="daniel_article.html">
+        <p class="article-card-title">Synthetic Outline of Daniel</p>
+        <p class="article-card-excerpt">An overview of the Book of Daniel addressing how God's people ought to live in expectation of His deliverance — tracing the narrative from Nebuchadnezzar's court through the great prophetic visions of the Time of the Gentiles and Israel's ultimate restoration.</p>
+        <div class="article-card-meta">
+          <span>Jonathan Crow</span>
+          <span>2/23/26</span>
+        </div>
+        <span class="article-card-arrow">→</span>
+      </a>
+
+      <a class="article-card" href="isaiah_article.html">
+        <p class="article-card-title">The Kingdom in Isaiah</p>
+        <p class="article-card-excerpt">A synthesis of Kingdom characteristics through the prophet Isaiah — tracing the promised Davidic reign through transformed land, restored people, and the Messiah's eternal rule from Jerusalem.</p>
+        <div class="article-card-meta">
+          <span>Jonathan Crow</span>
+          <span>2/23/26</span>
+        </div>
+        <span class="article-card-arrow">→</span>
+      </a>
+
+      <a class="article-card" href="romans10_article.html">
+        <p class="article-card-title">The Calling of Romans 10:9</p>
+        <p class="article-card-excerpt">An examination of Romans 10:9–10 in context — arguing that salvation here refers to temporal deliverance from wrath rather than the reception of eternal life, with implications for how the passage is preached today.</p>
+        <div class="article-card-meta">
+          <span>Jonathan Crow</span>
+          <span>2/23/26</span>
+        </div>
+        <span class="article-card-arrow">→</span>
+      </a>
+
+      <a class="article-card" href="faithful_saying_article.html">
+        <p class="article-card-title">The Faithful Saying in Context</p>
+        <p class="article-card-excerpt">An examination of 2 Timothy 2:11–13 as chiasm — unpacking the unconditional promise of resurrection life and the conditional promise of reigning with Christ in the Kingdom.</p>
+        <div class="article-card-meta">
+          <span>Jonathan Crow</span>
+          <span>2/23/26</span>
+        </div>
+        <span class="article-card-arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    "Whosoever believeth in Him should have everlasting life." — John 3:16 (KJV)
+  </footer>
+
+</div><!-- /.site-wrapper -->
+
+<script>
+  function setSize(size) {
+    const sizes = ['default', 'font-small', 'font-large'];
+    sizes.forEach(s => document.documentElement.classList.remove(s));
+    if (size !== 'default') document.documentElement.classList.add(size);
+    localStorage.setItem('fontPref', size);
+    const labels = { default:'A', 'font-small':'A−', 'font-large':'A+' };
+    document.querySelectorAll('.font-size-group button').forEach(b => {
+      b.classList.toggle('active', b.textContent === labels[size]);
+    });
+  }
+  setSize(localStorage.getItem('fontPref') || 'default');
+</script>
+
+</body>
+</html>
