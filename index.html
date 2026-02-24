@@ -29,12 +29,10 @@
     <button onclick="setSize('font-large')">A+</button>
   </div>
   
-  <!-- SEARCH -->
-  <div class="search-bar">
-    <input id="search-input" type="text" placeholder="Search articles, topics, passages…" />
-    <button onclick="runSearch()">Search</button>
-  </div>
-  <div id="search-results"></div>
+<div class="search-bar">
+  <script async src="https://cse.google.com/cse.js?cx=54127212cac8940ce"></script>
+  <div class="gcse-search"></div>
+</div>
 
   <!-- HERO VERSE -->
   <div class="hero">
@@ -173,55 +171,6 @@
     e.target.classList.add('active');
     document.getElementById(id).classList.add('active');
   }
-
- const articles = [
-    {
-      title: 'Outline of Daniel',
-      excerpt: 'God\'s people living in expectation of His deliverance during the Time of the Gentiles.',
-      tags: 'daniel old testament prophecy biblical studies',
-      url: 'daniel_article.html'
-    },
-    {
-      title: 'The Kingdom Presented in Isaiah',
-      excerpt: 'A synthesis of Kingdom characteristics through Isaiah — transformed people, restored land, Messiah ruling from Jerusalem.',
-      tags: 'isaiah kingdom millennium old testament prophecy premillennialism',
-      url: 'isaiah_article.html'
-    },
-    {
-      title: 'The Calling for Salvation in Romans 10:9',
-      excerpt: 'Romans 10:9-10 examined in context — salvation as temporal deliverance from wrath, not a condition for eternal life.',
-      tags: 'romans salvation confession free grace soteriology new testament',
-      url: 'romans10_article.html'
-    }
-  ];
-
-  function runSearch() {
-    const query = document.getElementById('search-input').value.trim().toLowerCase();
-    const resultsEl = document.getElementById('search-results');
-    if (!query) { resultsEl.style.display = 'none'; return; }
-
-    const matches = articles.filter(a =>
-      a.title.toLowerCase().includes(query) ||
-      a.excerpt.toLowerCase().includes(query) ||
-      a.tags.toLowerCase().includes(query)
-    );
-
-    resultsEl.style.display = 'block';
-    if (matches.length === 0) {
-      resultsEl.innerHTML = '<p style="padding:1rem 0; font-style:italic; color:var(--text-faint);">No results found for "' + query + '".</p>';
-    } else {
-      resultsEl.innerHTML = matches.map(a => `
-        <a href="${a.url}" style="display:block; padding:1rem 0; border-bottom:1px solid var(--rule); text-decoration:none;">
-          <p style="font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.14em; color:var(--gold); margin-bottom:0.3rem; text-transform:uppercase;">${a.title}</p>
-          <p style="font-size:0.92rem; color:var(--text-mid);">${a.excerpt}</p>
-        </a>
-      `).join('');
-    }
-  }
-
-  document.getElementById('search-input').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') runSearch();
-  });
 
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
