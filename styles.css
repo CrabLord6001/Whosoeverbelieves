@@ -980,3 +980,21 @@ a.scripture-ref:hover {
 .reveal {
   opacity: 0;
 }
+
+.read-more-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.35);
+  padding: 0.65rem 1.5rem;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.read-more-btn:hover {
+  color: var(--gold-light);
+  border-color: rgba(201,168,76,0.6);
+}
