@@ -753,6 +753,17 @@ footer {
   border-color: rgba(201,168,76,0.4);
 }
 
+a.scripture-ref {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: rgba(201,168,76,0.35);
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+a.scripture-ref:hover {
+  color: var(--gold-light);
+}
 
 /* ── ARTICLE HEADER ──────────────────────────────────────────────────────── */
 
