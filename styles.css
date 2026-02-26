@@ -864,6 +864,16 @@ a.scripture-ref:hover {
   background: var(--surface);
 }
 
+.article-body a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: rgba(201, 168, 76, 0.4);
+}
+
+.article-body a:hover {
+  color: var(--text-faint);
+}
+
 .article-body p {
   color: var(--text);
   line-height: 1.85;
