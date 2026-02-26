@@ -1039,6 +1039,7 @@ a.scripture-ref:hover {
   flex-wrap: wrap;
   gap: 0.4rem;
   margin-bottom: 0.75rem;
+  justify-content: center;
 }
 
 .tag {
