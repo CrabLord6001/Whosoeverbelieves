@@ -919,6 +919,7 @@ a.scripture-ref:hover {
   color: var(--gold);
   opacity: 0.75;
   margin-bottom: 0.75rem;
+  justify-content: center;
 }
 
 .article-byline {
