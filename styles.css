@@ -1046,21 +1046,3 @@ a.scripture-ref:hover {
   border-radius: 2px;
 }
 
-/* ── DISCORD BUTTON ── */
-.discord-btn {
-  display: inline-block;
-  background: #5865F2;
-  color: #ffffff;
-  font-family: 'Cinzel', serif;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  padding: 10px 24px;
-  border-radius: 6px;
-  border: none;
-  transition: background 0.2s ease;
-}
-
-.discord-btn:hover {
-  background: #4752c4;
-}
