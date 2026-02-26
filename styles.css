@@ -429,11 +429,12 @@ section h2 {
   transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s, background 0.25s;
   position: relative;
   overflow: hidden;
-}
-
-.article-card {
   text-align: center;
 }
+
+
+  
+
 
 .article-card::before {
   content: '';
