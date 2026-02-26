@@ -431,6 +431,10 @@ section h2 {
   overflow: hidden;
 }
 
+.article-card {
+  text-align: center;
+}
+
 .article-card::before {
   content: '';
   position: absolute;
