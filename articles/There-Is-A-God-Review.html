@@ -50,7 +50,44 @@
 
 <p>The book There Is a God is Anthony Flew’s concise record of his journey from atheism to deism in 2004. While he remained skeptical of life after death and a personal God, the text provides astounding resources for grounding faith in reason. His maxim to “Follow the evidence wherever it leads” is instructive for every pursuit of truth.</p>
 
-<p>In short, I highly recommend the book. It’s a short read that’s not too high level for people beginning to develop confidence in Christian apologetics. Plus, it’s a cheap $10 steal on Amazon (as of writing this blog at least).</p> 
+<p>In short, I highly recommend the book. It’s a short read that’s not too high level for people beginning to develop confidence in Christian apologetics. Plus, it’s a cheap $10 steal on Amazon (as of writing this blog at least).</p>
+
+      <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    "Whosoever believeth in Him should have everlasting life." — John 3:16 (KJV)
+  </footer>
+
+</div><!-- /.site-wrapper -->
+
+<!-- FONT SIZE TOGGLE -->
+<script>
+  function setSize(size) {
+    const sizes = ['default', 'font-small', 'font-large'];
+    sizes.forEach(s => document.documentElement.classList.remove(s));
+    if (size !== 'default') document.documentElement.classList.add(size);
+    localStorage.setItem('fontPref', size);
+    const labels = { default:'A', 'font-small':'A−', 'font-large':'A+' };
+    document.querySelectorAll('.font-size-group button').forEach(b => {
+      b.classList.toggle('active', b.textContent === labels[size]);
+    });
+  }
+  setSize(localStorage.getItem('fontPref') || 'default');
+</script>
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'fadeUp 0.6s ease both';
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
 
 <h2>Book Summary & Reflection</h2>
 
