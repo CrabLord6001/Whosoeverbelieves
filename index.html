@@ -23,11 +23,19 @@
       <span></span>
     </div>
   </header>
+
+  <!-- Font Size Toggler -->
   <div class="font-size-group">
     <button onclick="setSize('font-small')">A−</button>
     <button onclick="setSize('default')">A</button>
     <button onclick="setSize('font-large')">A+</button>
   </div>
+
+  <!-- SEARCH BAR -->
+<div class="search-bar">
+  <input type="text" id="site-search" placeholder="Search articles, verses, topics…" oninput="runSearch(this.value)" />
+</div>
+<div id="search-results"></div>
   
   <!-- HERO VERSE -->
 <div class="hero">
@@ -203,5 +211,42 @@
   }
   setSize(localStorage.getItem('fontPref') || 'default');
 </script>
+
+<script src="search-index.js"></script>
+<script>
+  function runSearch(query) {
+    const q = query.trim().toLowerCase();
+    const resultsBox = document.getElementById('search-results');
+
+    // Also filter visible article cards
+    document.querySelectorAll('.article-card').forEach(card => {
+      const title = card.querySelector('.article-card-title')?.textContent.toLowerCase() || '';
+      const excerpt = card.querySelector('.article-card-excerpt')?.textContent.toLowerCase() || '';
+      card.style.display = (!q || (title + excerpt).includes(q)) ? '' : 'none';
+    });
+
+    if (!q) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
+
+    const matches = searchIndex.filter(a =>
+      (a.title + ' ' + a.excerpt + ' ' + a.content + ' ' + a.tags.join(' ')).toLowerCase().includes(q)
+    );
+
+    if (!matches.length) {
+      resultsBox.style.display = 'block';
+      resultsBox.innerHTML = '<p style="padding:0.75rem 2.5rem 1rem; color:var(--text-faint); font-style:italic; font-size:0.9rem;">No results found.</p>';
+      return;
+    }
+
+    resultsBox.style.display = 'block';
+    resultsBox.innerHTML = matches.map(a => `
+      <a href="${a.url}" style="display:block; padding:0.65rem 2.5rem; text-decoration:none; border-bottom:1px solid var(--rule); transition:background 0.15s;"
+         onmouseover="this.style.background='var(--glass)'" onmouseout="this.style.background='none'">
+        <span style="font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--text);">${a.title}</span>
+        <span style="display:block; font-size:0.82rem; color:var(--text-faint); font-style:italic;">${a.excerpt}</span>
+      </a>
+    `).join('');
+  }
+</script>
+  
 </body>
 </html>
