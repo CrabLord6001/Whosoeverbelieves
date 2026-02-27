@@ -24,12 +24,13 @@
     </div>
   </header>
 
-  <!-- Font Size Toggler + Search Bar Box-->
+  <!-- Top Bottons + Search Bar-->
 <div class="font-size-group">
   <button onclick="setSize('font-small')">A−</button>
   <button onclick="setSize('default')">A</button>
   <button onclick="setSize('font-large')">A+</button>
-  <button onclick="toggleTheme()" id="theme-toggle" title="Toggle light/dark mode">☀️</button>
+ <button onclick="setTheme('light')" id="btn-light" title="Light mode">☀️</button>
+ <button onclick="setTheme('dark')" id="btn-dark" title="Dark mode">🌙</button>
   <input type="text" id="site-search" placeholder="Search articles, verses, topics…" oninput="runSearch(this.value)" />
 </div>
 <div id="search-results"></div>
@@ -197,16 +198,18 @@
   });
 </script>
 <script>
-  function toggleTheme() {
-  const isLight = document.documentElement.classList.toggle('light-mode');
-  document.getElementById('theme-toggle').textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('themePref', isLight ? 'light' : 'dark');
+function setTheme(theme) {
+  if (theme === 'light') {
+    document.documentElement.classList.add('light-mode');
+  } else {
+    document.documentElement.classList.remove('light-mode');
+  }
+  localStorage.setItem('themePref', theme);
 }
 
 const savedTheme = localStorage.getItem('themePref');
 if (savedTheme === 'light') {
   document.documentElement.classList.add('light-mode');
-  document.getElementById('theme-toggle').textContent = '🌙';
 }
   function setSize(size) {
     const sizes = ['default', 'font-small', 'font-large'];
