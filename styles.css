@@ -115,6 +115,22 @@ body::before {
   position: relative;
 }
 
+/* ── Mobile Optimization ──────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .font-size-group {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .font-size-group input {
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+}
+
 
 /* ── ANIMATIONS ────────────────────────────────────────────────────────── */
 
