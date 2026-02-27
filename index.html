@@ -211,37 +211,50 @@
 
 <script src="search-index.js"></script>
 <script>
-  function runSearch(query) {
-    const q = query.trim().toLowerCase();
-    const resultsBox = document.getElementById('search-results');
+ function runSearch(query) {
+  const q = query.trim().toLowerCase();
+  const resultsBox = document.getElementById('search-results');
 
-    // Also filter visible article cards
-    document.querySelectorAll('.article-card').forEach(card => {
-      const title = card.querySelector('.article-card-title')?.textContent.toLowerCase() || '';
-      const excerpt = card.querySelector('.article-card-excerpt')?.textContent.toLowerCase() || '';
-      card.style.display = (!q || (title + excerpt).includes(q)) ? '' : 'none';
-    });
+  // Reset all cards to visible
+  document.querySelectorAll('.article-card').forEach(card => {
+    card.style.display = '';
+  });
 
-    if (!q) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
+  if (!q) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
 
-    const matches = searchIndex.filter(a =>
-      (a.title + ' ' + a.excerpt + ' ' + a.content + ' ' + a.tags.join(' ')).toLowerCase().includes(q)
-    );
+  const matches = searchIndex.filter(a =>
+    (a.title + ' ' + a.excerpt + ' ' + a.content + ' ' + a.tags.join(' ')).toLowerCase().includes(q)
+  );
 
-    if (!matches.length) {
-      resultsBox.style.display = 'block';
-      resultsBox.innerHTML = '<p style="padding:0.75rem 2.5rem 1rem; color:var(--text-faint); font-style:italic; font-size:0.9rem;">No results found.</p>';
-      return;
-    }
-
+  if (!matches.length) {
     resultsBox.style.display = 'block';
-    resultsBox.innerHTML = matches.map(a => `
-      <a href="${a.url}" style="display:block; padding:0.65rem 2.5rem; text-decoration:none; border-bottom:1px solid var(--rule); transition:background 0.15s;"
+    resultsBox.innerHTML = '<p style="padding:0.75rem 2.5rem 1rem; color:var(--text-faint); font-style:italic; font-size:0.9rem;">No results found.</p>';
+    return;
+  }
+
+  function getSnippet(content, query) {
+    const index = content.toLowerCase().indexOf(query);
+    if (index === -1) return '';
+    const start = Math.max(0, index - 60);
+    const end = Math.min(content.length, index + query.length + 60);
+    let snippet = (start > 0 ? '…' : '') + content.slice(start, end) + (end < content.length ? '…' : '');
+    const regex = new RegExp(`(${query})`, 'gi');
+    snippet = snippet.replace(regex, `<mark style="background:rgba(201,168,76,0.3); color:var(--gold); border-radius:2px; padding:0 2px;">$1</mark>`);
+    return snippet;
+  }
+
+  resultsBox.style.display = 'block';
+  resultsBox.innerHTML = matches.map(a => {
+    const snippet = getSnippet(a.content, q) || getSnippet(a.excerpt, q);
+    return `
+      <a href="${a.url}" style="display:block; padding:0.75rem 2.5rem; text-decoration:none; border-bottom:1px solid var(--rule); transition:background 0.15s;"
          onmouseover="this.style.background='var(--glass)'" onmouseout="this.style.background='none'">
         <span style="font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--text);">${a.title}</span>
-        <span style="display:block; font-size:0.82rem; color:var(--text-faint); font-style:italic;">${a.excerpt}</span>
+        ${snippet ? `<span style="display:block; font-size:0.82rem; color:var(--text-mid); font-style:italic; margin-top:0.3rem; line-height:1.5;">${snippet}</span>` : ''}
       </a>
-    `).join('');
+    `;
+  }).join('');
+}
   }
 </script>
   
