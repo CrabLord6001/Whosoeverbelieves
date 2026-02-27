@@ -709,6 +709,79 @@ a.author-card {
   color: inherit;
 }
 
+/* ── AUTHOR BIO PAGE ─────────────────────────────────────────────────────── */
+
+.bio-wrapper {
+  padding: 4rem 2.5rem;
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+}
+
+.bio-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+
+.bio-avatar {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy-mid), var(--blue));
+  border: 1px solid rgba(201,168,76,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem;
+  color: var(--gold-light);
+}
+
+.bio-header-text h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.bio-role {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.65;
+  margin-top: 0.4rem;
+}
+
+.bio-rule {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(to right, var(--gold), transparent);
+  margin: 0 0 2.5rem;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+
+.bio-body {
+  max-width: 700px;
+  animation: fadeUp 0.7s 0.3s ease both;
+}
+
+.bio-body p {
+  color: var(--text-mid);
+  margin-bottom: 1.4rem;
+  line-height: 1.85;
+}
+
+.bio-body p:last-child {
+  margin-bottom: 0;
+}
+
 /* Centers avatar whether it's a div or img */
 .author-avatar,
 a.author-card .author-avatar,
