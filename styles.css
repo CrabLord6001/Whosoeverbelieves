@@ -81,7 +81,9 @@ body::before {
 }
 
 :root.light-mode header {
-  background: linear-gradient(170deg, #ddd5c0 0%, #e8e0cc 60%) !important;
+  background: 
+    linear-gradient(170deg, rgba(221,213,192,0.82) 0%, rgba(232,224,204,0.88) 60%),
+    url('images/cross-sunrise.png') center/cover no-repeat !important;
 }
 
 :root.light-mode .site-title {
