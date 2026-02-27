@@ -25,13 +25,17 @@
   </header>
 
   <!-- FONT SIZE GROUP -->
-  <div class="font-size-group">
+  <!-- Top Buttons + Search Bar -->  
+<div class="font-size-group">
   <button onclick="setSize('font-small')">A−</button>
   <button onclick="setSize('default')">A</button>
   <button onclick="setSize('font-large')">A+</button>
+ <button onclick="setTheme('light')" id="btn-light" title="Light mode">☀️</button>
+ <button onclick="setTheme('dark')" id="btn-dark" title="Dark mode">🌙</button>
   <input type="text" id="site-search" placeholder="Search articles, verses, topics…" oninput="runSearch(this.value)" />
 </div>
 <div id="search-results"></div>
+
 
 
     <!-- NAV -->
@@ -175,90 +179,8 @@
 
 </div><!-- /.site-wrapper -->
 
-<script>
-  function switchTab(e, id) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    e.target.classList.add('active');
-    document.getElementById(id).classList.add('active');
-  }
-
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.animation = 'fadeUp 0.6s ease both';
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('section').forEach(s => {
-    s.style.opacity = '1';
-    observer.observe(s);
-  });
-</script>
-<script>
-  function setSize(size) {
-    const sizes = ['default', 'font-small', 'font-large'];
-    sizes.forEach(s => document.documentElement.classList.remove(s));
-    if (size !== 'default') document.documentElement.classList.add(size);
-    localStorage.setItem('fontPref', size);
-    const labels = { default:'A', 'font-small':'A−', 'font-large':'A+' };
-    document.querySelectorAll('.font-size-group button').forEach(b => {
-      b.classList.toggle('active', b.textContent === labels[size]);
-    });
-  }
-  setSize(localStorage.getItem('fontPref') || 'default');
-</script>
-
 <script src="search-index.js"></script>
-<script>
- function runSearch(query) {
-  const q = query.trim().toLowerCase();
-  const resultsBox = document.getElementById('search-results');
-
-  // Reset all cards to visible
-  document.querySelectorAll('.article-card').forEach(card => {
-    card.style.display = '';
-  });
-
-  if (!q) { resultsBox.style.display = 'none'; resultsBox.innerHTML = ''; return; }
-
-  const matches = searchIndex.filter(a =>
-    (a.title + ' ' + a.excerpt + ' ' + a.content + ' ' + a.tags.join(' ')).toLowerCase().includes(q)
-  );
-
-  if (!matches.length) {
-    resultsBox.style.display = 'block';
-    resultsBox.innerHTML = '<p style="padding:0.75rem 2.5rem 1rem; color:var(--text-faint); font-style:italic; font-size:0.9rem;">No results found.</p>';
-    return;
-  }
-
-  function getSnippet(content, query) {
-    const index = content.toLowerCase().indexOf(query);
-    if (index === -1) return '';
-    const start = Math.max(0, index - 60);
-    const end = Math.min(content.length, index + query.length + 60);
-    let snippet = (start > 0 ? '…' : '') + content.slice(start, end) + (end < content.length ? '…' : '');
-    const regex = new RegExp(`(${query})`, 'gi');
-    snippet = snippet.replace(regex, `<mark style="background:rgba(201,168,76,0.3); color:var(--gold); border-radius:2px; padding:0 2px;">$1</mark>`);
-    return snippet;
-  }
-
-  resultsBox.style.display = 'block';
-  resultsBox.innerHTML = matches.map(a => {
-    const snippet = getSnippet(a.content, q) || getSnippet(a.excerpt, q);
-    return `
-      <a href="${a.url}" style="display:block; padding:0.75rem 2.5rem; text-decoration:none; border-bottom:1px solid var(--rule); transition:background 0.15s;"
-         onmouseover="this.style.background='var(--glass)'" onmouseout="this.style.background='none'">
-        <span style="font-family:'Cormorant Garamond',serif; font-size:1.05rem; color:var(--text);">${a.title}</span>
-        ${snippet ? `<span style="display:block; font-size:0.82rem; color:var(--text-mid); font-style:italic; margin-top:0.3rem; line-height:1.5;">${snippet}</span>` : ''}
-      </a>
-    `;
-  }).join('');
-}
-</script>
-
+<script src="scripts.js"></script>
 
 </body>
 </html>
