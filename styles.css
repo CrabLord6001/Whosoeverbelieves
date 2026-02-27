@@ -152,7 +152,7 @@ header {
   padding: 5rem 2.5rem 4rem;
   text-align: center;
   overflow: hidden;
-  background: linear-gradient(170deg, rgba(15,27,46,0.75) 0%, rgba(13,17,23,0.85) 60%), url('cross-sunrise.png') center/cover no-repeat;
+  background: linear-gradient(170deg, rgba(15,27,46,0.75) 0%, rgba(13,17,23,0.85) 60%), url('images/cross-sunrise.png') center/cover no-repeat;
   animation: fadeIn 0.8s ease both;
 }
 
