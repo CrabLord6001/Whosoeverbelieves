@@ -67,33 +67,44 @@ body::before {
 /* ── Light Mode Style ─────────────────────────────────────────────── */
 
 :root.light-mode {
-  --bg: #f5efe0;
-  --bg-card: #fdf8ef;
-  --text: #1a1a1a;
-  --text-mid: #3a3a3a;
-  --text-faint: #888;
-  --gold: #8a6a1f;
-  --rule: #d0c8b0;
-  --glass: rgba(0,0,0,0.05);
+  --bg:           #f5efe0;
+  --surface:      #ede8da;
+  --glass:        rgba(0,0,0,0.04);
+  --glass-border: rgba(0,0,0,0.12);
+  --text:         #1a1a1a;
+  --text-mid:     #4a4035;
+  --text-faint:   #888;
+  --gold:         #8a6a1f;
+  --gold-light:   #a07c25;
+  --gold-faint:   rgba(138,106,31,0.15);
+  --rule:         rgba(0,0,0,0.12);
 }
 
-:root.light-mode body,
-:root.light-mode .site-wrapper,
-:root.light-mode main,
-:root.light-mode .content-band,
-:root.light-mode .font-size-group,
-:root.light-mode .sticky-bar,
+:root.light-mode header {
+  background: linear-gradient(170deg, #ddd5c0 0%, #e8e0cc 60%) !important;
+}
+
+:root.light-mode .site-title {
+  background: linear-gradient(90deg, #2a2a2a 30%, var(--gold) 50%, #2a2a2a 70%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 :root.light-mode nav {
-  background: var(--bg) !important;
+  background: rgba(237,232,218,0.92) !important;
 }
 
-:root.light-mode .article-card {
-  background: var(--bg-card) !important;
-  border-color: var(--rule) !important;
+:root.light-mode .article-card:hover {
+  background: rgba(0,0,0,0.03) !important;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.12), 0 0 0 1px rgba(138,106,31,0.2);
 }
 
-:root.light-mode .hero-verse {
-  background: rgba(0,0,0,0.05) !important;
+:root.light-mode #verse-tooltip {
+  background: #f0e8d4;
+  border-color: rgba(138,106,31,0.3);
+  color: var(--text);
 }
 
 /* ── SITE WRAPPER ──────────────────────────────────────────────────────── */
