@@ -764,6 +764,28 @@ footer {
   border-color: rgba(201,168,76,0.4);
 }
 
+.font-size-group input {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.8rem;
+  background: var(--glass);
+  border: 1px solid var(--rule);
+  color: var(--text);
+  border-radius: 2px;
+  outline: none;
+  width: 220px;
+  transition: border-color 0.2s;
+}
+
+.font-size-group input:focus {
+  border-color: var(--gold);
+}
+
+.font-size-group input::placeholder {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
 /* ── Scripture Reference & Tooltip ─────────────────────────────────────────────────────── */
 
 a.scripture-ref {
