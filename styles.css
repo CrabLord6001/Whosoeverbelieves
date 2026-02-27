@@ -64,6 +64,18 @@ body::before {
   opacity: 0.45;
 }
 
+/* ── Light Mode Style ─────────────────────────────────────────────── */
+
+:root.light-mode {
+  --bg: #f5f0e8;
+  --bg-card: #fffdf8;
+  --text: #1a1a1a;
+  --text-mid: #3a3a3a;
+  --text-faint: #888;
+  --gold: #8a6a1f;
+  --rule: #d0c8b0;
+  --glass: rgba(0,0,0,0.05);
+}
 
 /* ── SITE WRAPPER ──────────────────────────────────────────────────────── */
 
