@@ -29,6 +29,7 @@
   <button onclick="setSize('font-small')">A−</button>
   <button onclick="setSize('default')">A</button>
   <button onclick="setSize('font-large')">A+</button>
+  <button onclick="toggleTheme()" id="theme-toggle" title="Toggle light/dark mode">☀️</button>
   <input type="text" id="site-search" placeholder="Search articles, verses, topics…" oninput="runSearch(this.value)" />
 </div>
 <div id="search-results"></div>
@@ -196,6 +197,17 @@
   });
 </script>
 <script>
+  function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light-mode');
+  document.getElementById('theme-toggle').textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('themePref', isLight ? 'light' : 'dark');
+}
+
+const savedTheme = localStorage.getItem('themePref');
+if (savedTheme === 'light') {
+  document.documentElement.classList.add('light-mode');
+  document.getElementById('theme-toggle').textContent = '🌙';
+}
   function setSize(size) {
     const sizes = ['default', 'font-small', 'font-large'];
     sizes.forEach(s => document.documentElement.classList.remove(s));
