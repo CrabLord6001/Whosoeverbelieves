@@ -1246,15 +1246,34 @@ a.scripture-ref:hover {
 
 /* ── Discord Invite Button ───────────────────────────────────────────────────────── */
 
-.discord-widget {
-  background: #1a1a1a;
-  border: 1px solid var(--gold);
-  border-radius: 8px;
-  padding: 1rem;
-  max-width: 350px;
-  margin: 0 auto;
+.discord-join-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.35);
+  padding: 0.65rem 1.5rem;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s;
 }
 
-.discord-widget iframe {
-  border-radius: 8px;
+.discord-join-btn:hover {
+  color: var(--gold-light);
+  border-color: rgba(201,168,76,0.6);
+}
+
+.discord-join-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: #5865F2;
+  transition: fill 0.2s;
+}
+
+.discord-join-btn:hover svg {
+  fill: #7289da;
 }
