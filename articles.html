@@ -182,5 +182,16 @@
 <script src="search-index.js"></script>
 <script src="scripts.js"></script>
 
+<script>
+  function filterTag(btn, tag) {
+    document.querySelectorAll('.tag-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.article-card').forEach(card => {
+      const tags = Array.from(card.querySelectorAll('.tag')).map(t => t.textContent);
+      card.style.display = (tag === 'all' || tags.includes(tag)) ? '' : 'none';
+    });
+  }
+</script>
+
 </body>
 </html>
