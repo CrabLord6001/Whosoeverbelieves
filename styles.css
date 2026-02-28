@@ -1243,3 +1243,18 @@ a.scripture-ref:hover {
   padding: 0.2rem 0.5rem;
   border-radius: 2px;
 }
+
+/* ── Discord Invite Button ───────────────────────────────────────────────────────── */
+
+.discord-widget {
+  background: #1a1a1a;
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 1rem;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.discord-widget iframe {
+  border-radius: 8px;
+}
