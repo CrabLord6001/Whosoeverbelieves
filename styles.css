@@ -1209,11 +1209,12 @@ a.scripture-ref:hover {
 .tag-filter {
   font-family: 'Cinzel', serif;
   font-size: 0.6rem;
+  font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-faint);
-  border: 1px solid var(--rule);
-  padding: 0.4rem 0.9rem;
+  border: 2px solid rgba(201,168,76,0.4);
+  padding: 0.5rem 1rem;
   background: none;
   cursor: pointer;
   border-radius: 2px;
@@ -1223,7 +1224,7 @@ a.scripture-ref:hover {
 .tag-filter:hover,
 .tag-filter.active {
   color: var(--gold);
-  border-color: rgba(201,168,76,0.4);
+  border-color: rgba(201,168,76,0.8);
 }
 
 .article-card-tags {
@@ -1237,11 +1238,12 @@ a.scripture-ref:hover {
 .tag {
   font-family: 'Cinzel', serif;
   font-size: 0.55rem;
+  font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--gold);
-  border: 1px solid rgba(201,168,76,0.3);
-  padding: 0.2rem 0.5rem;
+  border: 2px solid rgba(201,168,76,0.5);
+  padding: 0.25rem 0.6rem;
   border-radius: 2px;
 }
 
