@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vital Role of the Holy Spirit in the Believer — Whosoever</title>
-  <meta name="description" content="An examination of the Holy Spirit's permanent ministries at justification — regeneration, indwelling, baptism, and sealing — and their implications for eternal security." />
+  <title>Role of the Holy Spirit in Believers</title>
+  <meta name="description" content="Examining the role of the Holy Spirit in securing eternal life" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
@@ -24,12 +24,16 @@
     </div>
   </header>
 
-  <!-- FONT SIZE GROUP -->
-  <div class="font-size-group">
-    <button onclick="setSize('font-small')">A−</button>
-    <button onclick="setSize('default')">A</button>
-    <button onclick="setSize('font-large')">A+</button>
-  </div>
+  <!-- Top Buttons + Search Bar -->  
+<div class="font-size-group">
+  <button onclick="setSize('font-small')">A−</button>
+  <button onclick="setSize('default')">A</button>
+  <button onclick="setSize('font-large')">A+</button>
+ <button onclick="setTheme('light')" id="btn-light" title="Light mode">☀️</button>
+ <button onclick="setTheme('dark')" id="btn-dark" title="Dark mode">🌙</button>
+  <input type="text" id="site-search" placeholder="Search articles, verses, topics…" oninput="runSearch(this.value)" />
+</div>
+<div id="search-results"></div>
 
   <!-- NAV -->
   <nav>
@@ -141,19 +145,8 @@
 
 </div><!-- /.site-wrapper -->
 
-<script>
-  function setSize(size) {
-    const sizes = ['default', 'font-small', 'font-large'];
-    sizes.forEach(s => document.documentElement.classList.remove(s));
-    if (size !== 'default') document.documentElement.classList.add(size);
-    localStorage.setItem('fontPref', size);
-    const labels = { default:'A', 'font-small':'A−', 'font-large':'A+' };
-    document.querySelectorAll('.font-size-group button').forEach(b => {
-      b.classList.toggle('active', b.textContent === labels[size]);
-    });
-  }
-  setSize(localStorage.getItem('fontPref') || 'default');
-</script>
+<script src="../search-index.js"></script>
+<script src="../scripts.js"></script>
 
 </body>
 </html>
