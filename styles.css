@@ -1137,6 +1137,12 @@ a.scripture-ref:hover {
   margin-top: 0.5rem;
 }
 
+.article-body ul,
+.article-body ol {
+  padding-left: 2rem;
+  margin: 1rem 0;
+}
+
 /* ── BIBLIOGRAPHY & FOOTNOTES ────────────────────────────────────────────── */
 
 .bibliography,
