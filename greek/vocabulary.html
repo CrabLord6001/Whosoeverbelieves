@@ -711,24 +711,18 @@ loadVoices();
 
 function speak(text, btnEl) {
   if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
   if (currentAudioBtn) currentAudioBtn.classList.remove('playing');
   if (btnEl) { currentAudioBtn = btnEl; btnEl.classList.add('playing'); }
-  function doSpeak(voices) {
+  window.speechSynthesis.cancel();
+  setTimeout(() => {
     const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = 'el-GR';
-    utt.rate = 0.78;
-    utt.pitch = 1.0;
-    const voice = voices.find(v => v.lang.startsWith('el'))
-                || voices.find(v => v.lang.startsWith('en-'))
-                || voices[0];
-    if (voice) utt.voice = voice;
-    utt.onend  = () => { if (btnEl) btnEl.classList.remove('playing'); currentAudioBtn = null; };
+    utt.rate = 0.8;
+    const greek = _voices.find(v => v.lang.startsWith('el'));
+    if (greek) utt.voice = greek;
+    utt.onend   = () => { if (btnEl) btnEl.classList.remove('playing'); currentAudioBtn = null; };
     utt.onerror = () => { if (btnEl) btnEl.classList.remove('playing'); currentAudioBtn = null; };
     window.speechSynthesis.speak(utt);
-  }
-  if (_voices.length) { doSpeak(_voices); }
-  else { loadVoices().then(doSpeak); }
+  }, 150);
 }
 function speakWord(){
   if(!deck.length) return;
