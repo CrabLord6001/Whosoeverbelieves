@@ -695,23 +695,22 @@ function onDirChange(){
 
 // -- AUDIO (Google Translate TTS) --
 let currentAudioBtn = null;
-let _currentAudio = null;
+
 function speak(text, btnEl) {
-  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  if (!window.responsiveVoice) return;
+  responsiveVoice.cancel();
   if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
   if (btnEl) { currentAudioBtn = btnEl; btnEl.classList.add("playing"); }
-  var url = "https://translate.google.com/translate_tts?ie=UTF-8&q=" + encodeURIComponent(text) + "&tl=el&client=tw-ob";
-  var audio = new Audio(url);
-  audio.playbackRate = 0.9;
-  _currentAudio = audio;
-  audio.onended = function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn=null; _currentAudio=null; };
-  audio.onerror = function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn=null; _currentAudio=null; };
-  audio.play().catch(function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn=null; });
+  responsiveVoice.speak(text, "Greek Female", {
+    rate: 0.85,
+    onend:  function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn = null; },
+    onerror: function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn = null; }
+  });
 }
 function speakWord() { if (!deck.length) return; speak(deck[idx].greek, document.getElementById("fcAudio")); }
 function speakSpeedWord() { if (!spD.length || spI >= spD.length) return; speak(spD[spI].greek, document.getElementById("spAudio")); }
 function speakQuizWord() { if (!qq.length) return; speak(qq[0].greek, document.querySelector(".qbox .audio-btn")); }
-
+  
 // ── STREAK ─────────────────────────────────────────────────
 let streak = 0;
 function updateStreak(correct){
@@ -731,5 +730,6 @@ populateRangeSelects();
 buildChapterPanel();
 initDeck();
 </script>
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 </body>
 </html>
