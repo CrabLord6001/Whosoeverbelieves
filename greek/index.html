@@ -19,6 +19,13 @@
   <link rel="stylesheet" href="../styles.css" />
 
   <style>
+
+    :root.light-mode {
+  --dark: #f5efe0;
+  --navy: #e8e0cc;
+  --txt: #1a1a1a;
+  --txt2: #4a4035;
+}
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -322,6 +329,6 @@
     el.innerHTML = 'Search the full site: <a href="../articles.html" style="color:var(--gold)">browse all articles</a>';
   }
 </script>
-
+<script src="../scripts.js"></script>
 </body>
 </html>
