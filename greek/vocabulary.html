@@ -24,7 +24,7 @@ header{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bott
 .modes{display:flex;gap:.5rem;justify-content:center;margin-bottom:1.1rem;flex-wrap:wrap}
 .mbtn{font-family:'Orbitron',monospace;font-size:.6rem;letter-spacing:.12em;padding:.6rem 1.2rem;border:1px solid rgba(0,212,255,.22);background:rgba(0,212,255,.04);color:var(--txt2);cursor:pointer;border-radius:4px;transition:all .3s;text-transform:uppercase;position:relative;overflow:hidden}
 .mbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.07),rgba(180,79,255,.07));opacity:0;transition:opacity .3s}
-.mbtn:hover::before,.mbtn.on::before{opacity:1} 
+.mbtn:hover::before,.mbtn.on::before{opacity:1}
 .mbtn:hover,.mbtn.on{border-color:var(--cyan);color:#fff;box-shadow:0 0 18px rgba(0,212,255,.22)}
 /* CHAPTER FILTER PANEL */
 .chap-panel{background:rgba(4,8,28,.88);border:1px solid rgba(0,212,255,.2);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1rem;backdrop-filter:blur(12px)}
@@ -160,9 +160,14 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
 
 @keyframes pf{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(0)}}
 .hidden{display:none!important}
+.back-bar{position:relative;z-index:2;padding:.55rem 1.25rem;background:rgba(4,8,28,.92);border-bottom:1px solid rgba(0,212,255,.12);display:flex;align-items:center}
+.back-bar a{font-family:'Orbitron',monospace;font-size:.58rem;letter-spacing:.14em;color:rgba(0,212,255,.6);text-decoration:none;text-transform:uppercase;transition:color .2s;display:flex;align-items:center;gap:.45rem}
+.back-bar a:hover{color:var(--cyan)}
+.back-bar a svg{width:14px;height:14px;fill:currentColor}
 </style>
 </head>
 <body>
+<div class="back-bar"><a href="../index.html"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Whosoever Believes</a></div>
 <canvas id="sf"></canvas>
 <div class="wrap">
 
@@ -690,19 +695,40 @@ function onDirChange(){
 
 // ── AUDIO ──────────────────────────────────────────────────
 let currentAudioBtn = null;
+let _voices = [];
+
+function loadVoices() {
+  return new Promise(resolve => {
+    const v = window.speechSynthesis.getVoices();
+    if (v.length) { _voices = v; resolve(v); return; }
+    window.speechSynthesis.onvoiceschanged = () => {
+      _voices = window.speechSynthesis.getVoices();
+      resolve(_voices);
+    };
+  });
+}
+loadVoices();
+
 function speak(text, btnEl) {
-  if(!window.speechSynthesis) return;
+  if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  if(currentAudioBtn) currentAudioBtn.classList.remove('playing');
-  if(btnEl){ currentAudioBtn = btnEl; btnEl.classList.add('playing'); }
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = 'el-GR'; utt.rate = 0.82; utt.pitch = 1.05;
-  const voices = window.speechSynthesis.getVoices();
-  const v = voices.find(v=>v.lang.startsWith('el')) || voices.find(v=>v.lang.startsWith('en'));
-  if(v) utt.voice = v;
-  utt.onend = () => { if(btnEl) btnEl.classList.remove('playing'); currentAudioBtn=null; };
-  utt.onerror = () => { if(btnEl) btnEl.classList.remove('playing'); currentAudioBtn=null; };
-  window.speechSynthesis.speak(utt);
+  if (currentAudioBtn) currentAudioBtn.classList.remove('playing');
+  if (btnEl) { currentAudioBtn = btnEl; btnEl.classList.add('playing'); }
+  function doSpeak(voices) {
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'el-GR';
+    utt.rate = 0.78;
+    utt.pitch = 1.0;
+    const voice = voices.find(v => v.lang.startsWith('el'))
+                || voices.find(v => v.lang.startsWith('en-'))
+                || voices[0];
+    if (voice) utt.voice = voice;
+    utt.onend  = () => { if (btnEl) btnEl.classList.remove('playing'); currentAudioBtn = null; };
+    utt.onerror = () => { if (btnEl) btnEl.classList.remove('playing'); currentAudioBtn = null; };
+    window.speechSynthesis.speak(utt);
+  }
+  if (_voices.length) { doSpeak(_voices); }
+  else { loadVoices().then(doSpeak); }
 }
 function speakWord(){
   if(!deck.length) return;
