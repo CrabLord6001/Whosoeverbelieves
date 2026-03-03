@@ -151,11 +151,8 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
 .sbig{font-family:'Orbitron',monospace;font-size:3.8rem;font-weight:900;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin:1rem 0 .45rem;filter:drop-shadow(0 0 18px rgba(0,212,255,.28))}
 .rdet{font-family:'Cormorant Garamond',serif;font-size:1rem;font-style:italic;color:var(--txt2);margin-bottom:1.4rem}
 .particle{position:fixed;pointer-events:none;z-index:999;border-radius:50%;animation:pf .85s ease-out forwards}
-.audio-btn{background:none;border:1px solid rgba(0,212,255,.25);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--cyan);transition:all .2s;padding:0;flex-shrink:0}
-.audio-btn:hover{border-color:var(--cyan);box-shadow:0 0 12px rgba(0,212,255,.3);background:rgba(0,212,255,.08)}
-.audio-btn svg{width:16px;height:16px;fill:currentColor}
-.audio-btn.playing{border-color:var(--correct);color:var(--correct);box-shadow:0 0 14px rgba(0,255,136,.35);animation:pulse-ring .6s ease-in-out infinite}
-@keyframes pulse-ring{0%,100%{box-shadow:0 0 8px rgba(0,255,136,.3)}50%{box-shadow:0 0 20px rgba(0,255,136,.55)}}
+
+50%{box-shadow:0 0 20px rgba(0,255,136,.55)}}
 .streak-wrap{display:flex;justify-content:center;margin-bottom:.9rem;min-height:44px;align-items:center}
 .streak-badge{display:flex;align-items:center;gap:.5rem;font-family:'Orbitron',monospace;font-size:.75rem;letter-spacing:.1em;padding:.35rem 1.1rem;border-radius:20px;border:1px solid rgba(255,215,0,.3);background:rgba(255,215,0,.06);color:var(--gold);transition:all .3s;opacity:0;transform:scale(.85)}
 .streak-badge.visible{opacity:1;transform:scale(1)}
@@ -262,7 +259,6 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
       <button class="nbtn" id="pB" onclick="nav(-1)">← PREV</button>
       <div class="ctr" id="ctr">0 / 0</div>
       <button class="nbtn" id="nB" onclick="nav(1)">NEXT →</button>
-      <button class="audio-btn" id="fcAudio" onclick="speakWord()" title="Pronounce"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></button>
     </div>
   </div>
 
@@ -279,7 +275,6 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
       <div class="qword" id="qW2">—</div>
       <div class="qtype" id="qTy">—</div>
     </div>
-      <button class="audio-btn" style="margin-top:.7rem" onclick="speakQuizWord()" title="Pronounce"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></button>
     <div class="cgrid" id="cgrid"></div>
     <div class="fbbox" id="fbbox">
       <div style="color:var(--txt2);font-style:italic;font-family:'Cormorant Garamond',serif;font-size:.95rem;">Choose an answer above</div>
@@ -318,7 +313,6 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
       <div class="sword" id="spW">—</div>
       <div style="display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:.4rem">
         <div class="qtype" id="spTy">—</div>
-        <button class="audio-btn" id="spAudio" onclick="speakSpeedWord()" title="Pronounce"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg></button>
       </div>
       <div class="sstats">
         <div class="si"><span class="sn ok" id="spC2">0</span><span class="sl">Correct</span></div>
@@ -710,23 +704,7 @@ function onDirChange(){
 }
 
 // -- AUDIO (Google Translate TTS) --
-let currentAudioBtn = null;
-let _currentAudio = null;
-function speak(text, btnEl) {
-  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
-  if (currentAudioBtn) currentAudioBtn.classList.remove("playing");
-  if (btnEl) { currentAudioBtn = btnEl; btnEl.classList.add("playing"); }
-  var url = "https://translate.google.com/translate_tts?ie=UTF-8&q=" + encodeURIComponent(text) + "&tl=el&client=tw-ob";
-  var audio = new Audio(url);
-  audio.playbackRate = 0.9;
-  _currentAudio = audio;
-  audio.onended = function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn=null; _currentAudio=null; };
-  audio.onerror = function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn=null; _currentAudio=null; };
-  audio.play().catch(function() { if (btnEl) btnEl.classList.remove("playing"); currentAudioBtn=null; });
-}
-function speakWord() { if (!deck.length) return; speak(deck[idx].greek, document.getElementById("fcAudio")); }
-function speakSpeedWord() { if (!spD.length || spI >= spD.length) return; speak(spD[spI].greek, document.getElementById("spAudio")); }
-function speakQuizWord() { if (!qq.length) return; speak(qq[0].greek, document.querySelector(".qbox .audio-btn")); }
+
 
 // ── STREAK ─────────────────────────────────────────────────
 let streak = 0;
