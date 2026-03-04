@@ -131,6 +131,13 @@ body::before {
   }
 }
 
+@media (max-width: 600px) {
+  nav a {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    padding: 0 0.5rem;
+  }
+}
 
 /* ── ANIMATIONS ────────────────────────────────────────────────────────── */
 
