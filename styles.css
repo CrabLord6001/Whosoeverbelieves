@@ -148,6 +148,22 @@ body::before {
 /* ── HEADER ────────────────────────────────────────────────────────────── */
 
 header {
+  padding: 1.5rem 1rem;
+}
+
+.site-title {
+  font-size: 3rem;
+}
+
+.site-greek {
+  font-size: 0.85rem;
+}
+
+.site-tagline {
+  font-size: 0.9rem;
+}
+
+header {
   position: relative;
   padding: 5rem 2.5rem 4rem;
   text-align: center;
