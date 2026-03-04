@@ -997,6 +997,7 @@ function showQ(){
   choices.forEach(c=>{
     const b=document.createElement('button');
     b.className='choicebtn';
+    b.dataset.label=c;
     b.innerHTML=fmtChoice(c);
     b.onclick=()=>pickQ(b,c,correct,w);
     grid.appendChild(b);
@@ -1021,7 +1022,7 @@ function pickQ(btn,choice,correct,w){
   updateStreak(isOk);
   document.querySelectorAll('.choicebtn').forEach(b=>{
     b.disabled=true;
-    if(b.innerHTML===fmtChoice(correct))b.classList.add('correct');
+    if(b.dataset.label===correct)b.classList.add('correct');
     else if(b===btn&&!isOk)b.classList.add('wrong');
   });
   const fb=document.getElementById('fbbox');
