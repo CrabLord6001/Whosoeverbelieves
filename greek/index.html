@@ -26,116 +26,149 @@
   --txt: #1a1a1a;
   --txt2: #4a4035;
 }
+    /* ── INTRO FIX ── */
+    .greek-intro p strong { color: var(--text-mid); }
+
+    /* ── TOOL GRID ── */
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin-top: 2rem;
     }
+
+    /* ── LAUNCHER CARD ── */
     .tool-card {
       display: flex;
       flex-direction: column;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 6px;
-      padding: 2.25rem 2rem;
+      border-radius: 10px;
+      padding: 0;
       text-decoration: none;
-      color: inherit;
-      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s, background 0.25s;
+      color: #fff;
       position: relative;
       overflow: hidden;
+      transition: transform 0.25s cubic-bezier(.2,0,.2,1), box-shadow 0.25s;
+      min-height: 260px;
     }
+    .tool-card:hover {
+      transform: translateY(-5px) scale(1.015);
+      box-shadow: 0 22px 55px rgba(0,0,0,0.55);
+    }
+
+    .tool-card.card-vocab {
+      background: linear-gradient(135deg, #1a3a6b 0%, #0d2247 40%, #1e1060 100%);
+      border: 1px solid rgba(100,160,255,0.3);
+      box-shadow: 0 8px 32px rgba(30,60,180,0.35);
+    }
+    .tool-card.card-parsing {
+      background: linear-gradient(135deg, #3d1060 0%, #1a0840 40%, #0d2247 100%);
+      border: 1px solid rgba(180,100,255,0.35);
+      box-shadow: 0 8px 32px rgba(120,40,200,0.35);
+    }
+
     .tool-card::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 0% 100%, rgba(201,168,76,0.07) 0%, transparent 65%);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .tool-card:hover {
-      border-color: rgba(201,168,76,0.4);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 36px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,168,76,0.12);
-      background: rgba(255,255,255,0.05);
-    }
-    .tool-card:hover::before { opacity: 1; }
-    .tool-card.coming-soon-card { cursor: default; opacity: 0.65; }
-    .tool-card.coming-soon-card:hover { transform: none; box-shadow: none; border-color: var(--glass-border); background: var(--glass); }
-    .tool-card.coming-soon-card:hover::before { opacity: 0; }
-    .tool-icon {
-      width: 52px;
-      height: 52px;
+      top: -30px;
+      right: -30px;
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
-      background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(61,108,192,0.15));
-      border: 1px solid rgba(201,168,76,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.25rem;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
-      font-style: italic;
-      color: var(--gold-light);
+      opacity: 0.18;
+      transition: opacity 0.3s, transform 0.3s;
     }
+    .card-vocab::before  { background: radial-gradient(circle, #5599ff 0%, transparent 70%); }
+    .card-parsing::before { background: radial-gradient(circle, #bb66ff 0%, transparent 70%); }
+    .tool-card:hover::before { opacity: 0.32; transform: scale(1.15); }
+
+    .tool-glyph {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 5.5rem;
+      line-height: 1;
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      opacity: 0.18;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      user-select: none;
+    }
+    .card-vocab  .tool-glyph { color: #88bbff; }
+    .card-parsing .tool-glyph { color: #cc88ff; }
+    .tool-card:hover .tool-glyph { opacity: 0.3; }
+
+    .tool-card-body {
+      padding: 1.75rem 1.75rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
     .tool-label {
       font-family: 'Cinzel', serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.24em;
+      font-size: 0.52rem;
+      letter-spacing: 0.26em;
       text-transform: uppercase;
-      color: var(--gold);
-      opacity: 0.75;
+      opacity: 0.6;
       margin-bottom: 0.5rem;
     }
+    .card-vocab  .tool-label { color: #88bbff; }
+    .card-parsing .tool-label { color: #cc88ff; }
+
     .tool-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 400;
-      color: var(--text);
-      margin-bottom: 0.75rem;
-      line-height: 1.25;
-      transition: color 0.2s;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 0.65rem;
     }
-    .tool-card:hover .tool-title { color: var(--gold-light); }
+
     .tool-desc {
       font-family: 'EB Garamond', serif;
       font-size: 0.95rem;
-      color: var(--text-mid);
-      line-height: 1.7;
+      line-height: 1.6;
+      opacity: 0.72;
+      color: #e0e8ff;
       flex: 1;
       margin-bottom: 1.25rem;
     }
-    .tool-meta { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1.25rem; }
+
+    .tool-meta { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.4rem; }
     .tool-tag {
       font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.13em;
+      font-size: 0.5rem;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--gold);
-      border: 1px solid rgba(201,168,76,0.35);
-      padding: 0.2rem 0.6rem;
+      padding: 0.18rem 0.55rem;
       border-radius: 2px;
+      opacity: 0.75;
     }
-    .tool-tag-blue { color: var(--blue); border-color: rgba(61,108,192,0.35); }
+    .card-vocab  .tool-tag { color: #aaccff; border: 1px solid rgba(100,160,255,0.35); }
+    .card-parsing .tool-tag { color: #ddaaff; border: 1px solid rgba(180,100,255,0.35); }
+
     .tool-cta {
-      font-family: 'Cinzel', serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      transition: gap 0.2s;
-    }
-    .tool-card:hover .tool-cta { gap: 0.75rem; }
-    .tool-cta-soon {
+      justify-content: space-between;
+      padding: 0.85rem 1.75rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
       font-family: 'Cinzel', serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--text-faint);
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+      transition: background 0.2s;
+      position: relative;
+      z-index: 1;
     }
+    .tool-card:hover .tool-cta { background: rgba(255,255,255,0.13); }
+    .tool-cta-arrow { font-size: 1rem; transition: transform 0.2s; opacity: 0.7; }
+    .tool-card:hover .tool-cta-arrow { transform: translateX(4px); opacity: 1; }
     .greek-intro { padding: 3rem 2.5rem 2.5rem; background: var(--surface); border-top: 1px solid var(--rule); }
     .greek-intro p { color: var(--text-mid); max-width: 100%; line-height: 1.85; margin-bottom: 1.1rem; }
     .greek-intro p:last-child { margin-bottom: 0; }
@@ -235,7 +268,7 @@
       The New Testament was written in <strong>Koine Greek</strong> &#8212; the common language of the first-century Mediterranean world. While faithful English translations convey the meaning of Scripture reliably, studying the original language opens a deeper window into the text: word meanings that carry theological weight, verb tenses that reveal aspect and action, and syntactical structures that shape interpretation.
     </p>
     <p>
-      For students of Free Grace theology in particular, precision in the Greek text matters greatly. Key terms like <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#960;&#953;&#963;&#964;&#949;&#973;&#969;</em> (to believe), <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#950;&#969;&#942; &#945;&#943;&#974;&#957;&#953;&#959;&#962;</em> (eternal life), and <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#963;&#8179;&#950;&#969;</em> (to save) carry precise meanings that inform debates around the gospel, assurance, and sanctification.
+      Key terms like <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#960;&#953;&#963;&#964;&#949;&#973;&#969;</em> (to believe), <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#950;&#969;&#942; &#945;&#943;&#974;&#957;&#953;&#959;&#962;</em> (eternal life), and <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#963;&#8179;&#950;&#969;</em> (to save) carry precise meanings that inform debates around the gospel, assurance, and sanctification.
     </p>
     <div class="bbg-callout">
       <div class="bbg-callout-icon">&#128218;</div>
@@ -256,42 +289,42 @@
     <div class="tools-grid">
 
       <!-- VOCABULARY -->
-      <a class="tool-card" href="vocabulary.html">
-        <div class="tool-icon">&#945;</div>
-        <div class="tool-label">Vocabulary</div>
-        <h3 class="tool-title">NT Greek Vocabulary</h3>
-        <p class="tool-desc">
-          Master all 1,000 words from Mounce&#8217;s BBG vocabulary list through flashcards, multiple-choice quizzes, and timed speed rounds. Filter by chapter to drill exactly what&#8217;s on this week&#8217;s quiz.
-        </p>
-        <div class="tool-meta">
-          <span class="tool-tag">1,000 Words</span>
-          <span class="tool-tag">Flashcards</span>
-          <span class="tool-tag">Quiz Mode</span>
-          <span class="tool-tag">Speed Round</span>
-          <span class="tool-tag">Audio</span>
-          <span class="tool-tag">Ch 4&#8211;36</span>
+      <a class="tool-card card-vocab" href="vocabulary.html">
+        <div class="tool-glyph">&#945;</div>
+        <div class="tool-card-body">
+          <div class="tool-label">Vocabulary</div>
+          <h3 class="tool-title">NT Greek Vocabulary</h3>
+          <p class="tool-desc">1,000 words from Mounce's BBG — flashcards, quizzes, and speed rounds filtered by chapter.</p>
+          <div class="tool-meta">
+            <span class="tool-tag">1,000 Words</span>
+            <span class="tool-tag">Flashcards</span>
+            <span class="tool-tag">Quiz Mode</span>
+            <span class="tool-tag">Speed Round</span>
+            <span class="tool-tag">Audio</span>
+            <span class="tool-tag">Ch 4–36</span>
+          </div>
         </div>
-        <div class="tool-cta">Launch Tool <span>&#8594;</span></div>
+        <div class="tool-cta">Launch Tool <span class="tool-cta-arrow">&#8594;</span></div>
       </a>
 
-<!-- VERB PARSING -->
-<a class="tool-card" href="Verb-Parsing.html">
-  <div class="tool-icon">&#955;&#973;&#969;</div>
-  <div class="tool-label">Parsing</div>
-  <h3 class="tool-title">Verb Parsing Drills</h3>
-  <p class="tool-desc">
-    Drill all five moods of NT Greek verb morphology — Indicative, Subjunctive, Imperative, Infinitive, and Participle — across every tense and voice through flashcards, parsing quizzes, and timed speed rounds.
-  </p>
-  <div class="tool-meta">
-    <span class="tool-tag">387 Forms</span>
-    <span class="tool-tag">Flashcards</span>
-    <span class="tool-tag">Quiz Mode</span>
-    <span class="tool-tag">Speed Round</span>
-    <span class="tool-tag">All Moods</span>
-    <span class="tool-tag">Full Paradigms</span>
-  </div>
-  <div class="tool-cta">Launch Tool <span>&#8594;</span></div>
-</a>
+      <!-- VERB PARSING -->
+      <a class="tool-card card-parsing" href="Verb-Parsing.html">
+        <div class="tool-glyph">&#955;&#973;&#969;</div>
+        <div class="tool-card-body">
+          <div class="tool-label">Parsing</div>
+          <h3 class="tool-title">Verb Parsing Drills</h3>
+          <p class="tool-desc">387 forms across all five moods — Indicative, Subjunctive, Imperative, Infinitive, and Participle.</p>
+          <div class="tool-meta">
+            <span class="tool-tag">387 Forms</span>
+            <span class="tool-tag">Flashcards</span>
+            <span class="tool-tag">Quiz Mode</span>
+            <span class="tool-tag">Speed Round</span>
+            <span class="tool-tag">All Moods</span>
+            <span class="tool-tag">Full Paradigms</span>
+          </div>
+        </div>
+        <div class="tool-cta">Launch Tool <span class="tool-cta-arrow">&#8594;</span></div>
+      </a>
 
     </div>
   </div>
