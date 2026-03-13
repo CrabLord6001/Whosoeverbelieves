@@ -36,7 +36,9 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 16px; scroll-behavior: smooth; }
+  html { font-size: 18px; scroll-behavior: smooth; }
+  html.font-small { font-size: 15px; }
+  html.font-large { font-size: 22px; }
 
   body {
     background: var(--bg);
@@ -54,6 +56,7 @@
     border-bottom: 1px solid var(--rule);
     padding: 0.75rem 2rem;
     display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
   }
   :root.light-mode nav {
     background: rgba(237,232,218,0.92) !important;
@@ -64,6 +67,7 @@
     font-size: 1.05rem;
     letter-spacing: 0.04em;
     text-decoration: none;
+    white-space: nowrap;
   }
   .nav-back {
     font-family: 'Cormorant Garamond', serif;
@@ -74,8 +78,83 @@
     padding: 0.3rem 0.85rem;
     border-radius: 4px;
     transition: all 0.2s;
+    white-space: nowrap;
   }
   .nav-back:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* Nav controls group (right side) */
+  .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.32rem 0.65rem;
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--text-faint);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    color: var(--gold);
+    border-color: rgba(201,168,76,0.45);
+  }
+  .nav-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--rule);
+    flex-shrink: 0;
+  }
+  /* Sign In / Account buttons */
+  #nav-signin-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.32rem 0.9rem;
+    background: var(--gold-faint);
+    border: 1px solid rgba(201,168,76,0.45);
+    color: var(--gold);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  #nav-signin-btn:hover {
+    background: rgba(201,168,76,0.22);
+  }
+  #nav-myplans-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.32rem 0.9rem;
+    background: none;
+    border: 1px solid var(--rule);
+    color: var(--text-faint);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  #nav-myplans-btn:hover {
+    color: var(--gold);
+    border-color: rgba(201,168,76,0.45);
+  }
+  @media (max-width: 600px) {
+    .nav-logo { font-size: 0.85rem; }
+    .nav-back { display: none; }
+    .nav-btn { padding: 0.28rem 0.5rem; font-size: 0.55rem; }
+    #nav-signin-btn, #nav-myplans-btn { padding: 0.28rem 0.6rem; font-size: 0.55rem; }
+  }
 
   /* ── HERO ── */
   .hero {
@@ -727,7 +806,26 @@
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="/">✦ Whosoever Believes</a>
-  <a class="nav-back" href="/">← Return to Site</a>
+
+  <div class="nav-controls">
+    <!-- Font size -->
+    <button class="nav-btn" id="nav-font-small" title="Smaller text" onclick="rpSetSize('font-small')">A−</button>
+    <button class="nav-btn" id="nav-font-default" title="Default text" onclick="rpSetSize('default')">A</button>
+    <button class="nav-btn" id="nav-font-large" title="Larger text" onclick="rpSetSize('font-large')">A+</button>
+
+    <div class="nav-divider"></div>
+
+    <!-- Theme toggle -->
+    <button class="nav-btn" id="nav-theme-btn" title="Toggle light/dark mode" onclick="rpToggleTheme()">☀︎</button>
+
+    <div class="nav-divider"></div>
+
+    <!-- Auth -->
+    <button id="nav-signin-btn" onclick="openAuthModal()" title="Sign in to save plans">Sign In</button>
+    <button id="nav-myplans-btn" style="display:none" onclick="loadSavedPlans()" title="View my saved plans">My Plans</button>
+
+    <a class="nav-back" href="/">← Site</a>
+  </div>
 </nav>
 
 <!-- USER BAR (shown when logged in) -->
@@ -1749,6 +1847,9 @@ async function onSignedIn(user) {
   currentUser = user;
   document.getElementById('user-bar').style.display = 'block';
   document.getElementById('user-email-display').textContent = user.email;
+  // Swap nav buttons: hide Sign In, show My Plans
+  document.getElementById('nav-signin-btn').style.display = 'none';
+  document.getElementById('nav-myplans-btn').style.display = '';
   closeModal();
   await ensureProfile(user);
   await loadSavedPlans();
@@ -1765,6 +1866,9 @@ function onSignedOut() {
   currentPlanId = null;
   document.getElementById('user-bar').style.display = 'none';
   document.getElementById('saved-plans-panel').style.display = 'none';
+  // Swap nav buttons back
+  document.getElementById('nav-signin-btn').style.display = '';
+  document.getElementById('nav-myplans-btn').style.display = 'none';
 }
 
 async function ensureProfile(user) {
@@ -1837,6 +1941,28 @@ function clearAuthErrors() {
   ['signin-error','signup-error','magic-error','signup-success','magic-success']
     .forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
 }
+/* ── NAV: FONT SIZE ── */
+function rpSetSize(size) {
+  const html = document.documentElement;
+  ['font-small', 'font-large'].forEach(c => html.classList.remove(c));
+  if (size !== 'default') html.classList.add(size);
+  localStorage.setItem('fontPref', size);
+  // Update active state on nav buttons
+  document.getElementById('nav-font-small').classList.toggle('active', size === 'font-small');
+  document.getElementById('nav-font-default').classList.toggle('active', size === 'default');
+  document.getElementById('nav-font-large').classList.toggle('active', size === 'font-large');
+}
+
+/* ── NAV: THEME TOGGLE ── */
+function rpToggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light-mode');
+  localStorage.setItem('themePref', isLight ? 'light' : 'dark');
+  document.getElementById('nav-theme-btn').textContent = isLight ? '🌙' : '☀︎';
+}
+
+/* ── NAV: OPEN AUTH MODAL ── */
+function openAuthModal() { document.getElementById('auth-modal').classList.add('open'); }
+
 function showSaveModal() { document.getElementById('auth-modal').classList.add('open'); }
 function closeModal()    { document.getElementById('auth-modal').classList.remove('open'); clearAuthErrors(); }
 
@@ -2458,6 +2584,19 @@ window.saveReflection = function(idx, val) {
 // ══════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════
+
+// Apply persisted font size & theme on load (same keys as scripts.js)
+(function() {
+  const savedFont  = localStorage.getItem('fontPref')  || 'default';
+  const savedTheme = localStorage.getItem('themePref');
+  rpSetSize(savedFont);
+  if (savedTheme === 'light') {
+    document.documentElement.classList.add('light-mode');
+    const btn = document.getElementById('nav-theme-btn');
+    if (btn) btn.textContent = '🌙';
+  }
+})();
+
 renderBookGrid();
 updateGracePreview();
 renderOrderCard();
