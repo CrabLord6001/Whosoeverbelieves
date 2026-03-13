@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
   /* ── TOKENS: mirrors styles.css so file works standalone AND on live site ── */
@@ -171,6 +172,67 @@
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
   .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
   .form-group { display: flex; flex-direction: column; }
+
+  /* ── PLAN TEMPLATES ── */
+  .template-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
+    flex-wrap: wrap;
+  }
+  .template-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .template-select {
+    flex: 1;
+    min-width: 200px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    color: var(--text-mid);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.97rem;
+    padding: 0.45rem 0.85rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a84c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.2rem;
+  }
+  .template-select:focus { border-color: var(--gold); color: var(--text); }
+  .template-select option { font-style: normal; background: var(--surface); color: var(--text); }
+  .template-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--rule);
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .template-divider::after {
+    content: 'or select manually';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--surface);
+    padding: 0 0.75rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
 
   /* ── BOOK SELECTOR TABS ── */
   .testament-tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
@@ -701,6 +763,27 @@
   <div class="card" style="animation-delay:0.05s">
     <div class="card-title">① Select Books</div>
 
+    <!-- Template selector -->
+    <div class="template-row">
+      <span class="template-label">Quick Start</span>
+      <select class="template-select" id="template-select" onchange="applyTemplate(this.value)">
+        <option value="">— Choose a plan template —</option>
+        <optgroup label="New Testament">
+          <option value="gospels">The Four Gospels — 30 days</option>
+          <option value="pauline">Pauline Epistles — 45 days</option>
+          <option value="general">General Epistles — 14 days</option>
+        </optgroup>
+        <optgroup label="Old Testament">
+          <option value="pentateuch">The Pentateuch — 90 days</option>
+          <option value="major-prophets">Major Prophets — 60 days</option>
+          <option value="minor-prophets">Minor Prophets — 30 days</option>
+          <option value="wisdom">Wisdom Literature — 21 days</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="template-divider"></div>
+
     <div class="testament-tabs">
       <button class="tab-btn active" onclick="showTestament('ot')">Old Testament</button>
       <button class="tab-btn" onclick="showTestament('nt')">New Testament</button>
@@ -1125,6 +1208,83 @@ function updateGracePreview() {
   if (gpw === 0) el.textContent = 'No grace days — all days are reading days.';
   else if (gpw === 2) el.textContent = `${gpw} grace days per week (e.g. Saturday & Sunday rest).`;
   else el.textContent = `${gpw} grace day${gpw>1?'s':''} per week evenly distributed.`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// PLAN TEMPLATES
+// ══════════════════════════════════════════════════════════════
+const TEMPLATES = {
+  'gospels': {
+    name:  'The Four Gospels',
+    books: ['Matthew','Mark','Luke','John'],
+    days:  30
+  },
+  'pauline': {
+    name:  'Pauline Epistles',
+    books: ['Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians',
+            'Philippians','Colossians','1 Thessalonians','2 Thessalonians',
+            '1 Timothy','2 Timothy','Titus','Philemon'],
+    days:  45
+  },
+  'general': {
+    name:  'General Epistles',
+    books: ['Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude'],
+    days:  14
+  },
+  'pentateuch': {
+    name:  'The Pentateuch',
+    books: ['Genesis','Exodus','Leviticus','Numbers','Deuteronomy'],
+    days:  90
+  },
+  'major-prophets': {
+    name:  'Major Prophets',
+    books: ['Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel'],
+    days:  60
+  },
+  'minor-prophets': {
+    name:  'Minor Prophets',
+    books: ['Hosea','Joel','Amos','Obadiah','Jonah','Micah',
+            'Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'],
+    days:  30
+  },
+  'wisdom': {
+    name:  'Wisdom Literature',
+    books: ['Job','Psalms','Proverbs','Ecclesiastes','Song of Songs'],
+    days:  21
+  }
+};
+
+function applyTemplate(key) {
+  if (!key) return;
+
+  const tpl = TEMPLATES[key];
+  if (!tpl) return;
+
+  // Clear current selection
+  selectedBooks = [...tpl.books];
+
+  // Set days and plan name
+  document.getElementById('total-days').value = tpl.days;
+  document.getElementById('plan-name').value  = tpl.name;
+
+  // Refresh the book grid chips to reflect selection
+  // Switch to the tab matching the first book's testament
+  const firstTestament = BIBLE[tpl.books[0]]?.t?.toLowerCase() || 'ot';
+  currentTab = firstTestament;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['ot','nt'][i] === currentTab);
+  });
+  renderBookGrid();
+  updateBookSummary();
+  renderOrderCard();
+
+  // Show a confirmation toast
+  showToast(`"${tpl.name}" template applied — ${tpl.days} days`, 'success');
+
+  // Reset dropdown back to placeholder so it feels like a one-shot action
+  setTimeout(() => {
+    document.getElementById('template-select').value = '';
+  }, 300);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1566,7 +1726,7 @@ const SUPABASE_URL  = 'https://tgzsyfmnzagqijjlzxsa.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_gck7v-L2PDbW2JKUoxTHDA_FidLWw8H';
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-  
+
 // ── AUTH STATE ──
 let currentUser    = null;
 let currentPlanId  = null;   // UUID of the saved plan in DB (null if unsaved)
@@ -1924,39 +2084,310 @@ async function deletePlan(planId, evt) {
 // EXPORT / DOWNLOAD
 // ══════════════════════════════════════════════════════════════
 function downloadPDF() {
-  const name = document.getElementById('plan-name').value || 'Reading Plan';
-  let html = `<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>${name}</title>
-  <style>
-    body{font-family:Georgia,serif;max-width:750px;margin:40px auto;color:#1a1a2e;padding:0 20px}
-    h1{font-size:1.6rem;color:#0d1b2e;border-bottom:2px solid #c9a84c;padding-bottom:8px}
-    .day{border:1px solid #ddd;border-radius:4px;padding:12px 14px;margin-bottom:8px;page-break-inside:avoid}
-    .day.grace{background:#fdf5f5;border-color:#e8c0c0}
-    .passage{font-size:1.05rem;color:#1a1a2e;margin:4px 0}
-    .meta{font-size:0.82rem;color:#888;font-style:italic}
-    .url{font-size:0.78rem;color:#555;word-break:break-all}
-    @media print{.day{page-break-inside:avoid}}
-  </style></head><body>
-  <h1>✦ ${name}</h1>
-  <p style="font-style:italic;color:#555">Generated by WhosoeverBelieves.com — ${new Date().toLocaleDateString()}</p>`;
+  if (!currentPlan.length) { showToast('Generate a plan first.', 'error'); return; }
 
-  currentPlan.forEach(day => {
-    const { label, url } = day.isGrace ? { label:'Grace Day', url:'' } : formatPassage(day.chapters);
-    html += `<div class="day${day.isGrace?' grace':''}">
-      <strong>Day ${day.dayNum}${day.date ? ` — ${day.date}` : ''}</strong>
-      <div class="passage">${label}</div>
-      ${!day.isGrace ? `<div class="meta">${day.verseCount} verses</div>` : '<div class="meta">Rest &amp; catch-up day</div>'}
-      ${url ? `<div class="url">${url}</div>` : ''}
-    </div>`;
+  const { jsPDF } = window.jspdf;
+  const doc  = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const name = document.getElementById('plan-name').value || 'My Reading Plan';
+
+  // ── Page dimensions ──
+  const PW   = 210;  // A4 width mm
+  const PH   = 297;  // A4 height mm
+  const ML   = 18;   // margin left
+  const MR   = 18;   // margin right
+  const MT   = 20;   // margin top
+  const MB   = 18;   // margin bottom
+  const CW   = PW - ML - MR; // content width
+
+  // ── Colour palette (cream & gold) ──
+  const CREAM    = [250, 246, 235];
+  const NAVY     = [13,  27,  46];
+  const GOLD     = [180, 140, 50];
+  const GOLD_LT  = [220, 185, 100];
+  const RULE     = [210, 200, 180];
+  const GRACE_BG = [253, 245, 240];
+  const GRACE_BD = [210, 170, 160];
+  const TEXT_MID = [100, 90, 70];
+  const TEXT_DIM = [160, 150, 130];
+
+  let y = MT;  // current Y cursor
+  let pageNum = 1;
+
+  // ── Helper: new page ──
+  function newPage() {
+    drawFooter();
+    doc.addPage();
+    pageNum++;
+    y = MT;
+    drawPageBg();
+  }
+
+  // ── Helper: cream page background ──
+  function drawPageBg() {
+    doc.setFillColor(...CREAM);
+    doc.rect(0, 0, PW, PH, 'F');
+    // subtle top gold rule
+    doc.setDrawColor(...GOLD);
+    doc.setLineWidth(0.6);
+    doc.line(ML, 12, PW - MR, 12);
+    doc.setLineWidth(0.2);
+    doc.line(ML, 13.5, PW - MR, 13.5);
+  }
+
+  // ── Helper: footer ──
+  function drawFooter() {
+    doc.setFontSize(7.5);
+    doc.setTextColor(...TEXT_DIM);
+    doc.setFont('helvetica', 'italic');
+    doc.text('WhosoeverBelieves.com', ML, PH - 8);
+    doc.text(`Page ${pageNum}`, PW - MR, PH - 8, { align: 'right' });
+    doc.setDrawColor(...RULE);
+    doc.setLineWidth(0.3);
+    doc.line(ML, PH - 11, PW - MR, PH - 11);
+  }
+
+  // ── Helper: check page overflow ──
+  function checkOverflow(needed) {
+    if (y + needed > PH - MB - 11) newPage();
+  }
+
+  // ── Helper: draw a horizontal rule ──
+  function rule(yPos, color = RULE, weight = 0.3) {
+    doc.setDrawColor(...color);
+    doc.setLineWidth(weight);
+    doc.line(ML, yPos, PW - MR, yPos);
+  }
+
+  // ════════════════════════════════
+  // COVER / TITLE AREA
+  // ════════════════════════════════
+  drawPageBg();
+
+  // Ornamental top line pair
+  rule(MT, GOLD, 0.7);
+  rule(MT + 1.8, GOLD_LT, 0.25);
+
+  y = MT + 10;
+
+  // Eyebrow
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...GOLD);
+  doc.setCharSpace(2.5);
+  doc.text('FREE GRACE RESOURCES  ·  WHOSOEVERBELIEVES.COM', PW / 2, y, { align: 'center' });
+  doc.setCharSpace(0);
+  y += 9;
+
+  // Plan name — large serif-style via helvetica bold (jsPDF has no embedded serif)
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(...NAVY);
+  const titleLines = doc.splitTextToSize(name, CW - 10);
+  titleLines.forEach(line => {
+    doc.text(line, PW / 2, y, { align: 'center' });
+    y += 9;
   });
 
-  html += '</body></html>';
-  const blob = new Blob([html], { type: 'text/html' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `${name.replace(/[^a-z0-9]/gi,'_')}_reading_plan.html`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  y += 2;
+
+  // Gold divider ornament
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(...GOLD);
+  doc.text('✦', PW / 2, y, { align: 'center' });
+  y += 3;
+  rule(y, GOLD, 0.4);
+  rule(y + 1.5, GOLD_LT, 0.2);
+  y += 8;
+
+  // Scripture tagline
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(9.5);
+  doc.setTextColor(...TEXT_MID);
+  doc.text('"Thy word is a lamp unto my feet, and a light unto my path." — Psalm 119:105', PW / 2, y, { align: 'center' });
+  y += 6;
+
+  // Meta line
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...TEXT_DIM);
+  const readingDayCount = currentPlan.filter(d => !d.isGrace).length;
+  const graceCount      = currentPlan.filter(d => d.isGrace).length;
+  const translation     = document.getElementById('translation').value;
+  const startDate       = currentPlan[0]?.date
+    ? new Date(currentPlan[0].date + 'T00:00:00').toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })
+    : null;
+
+  let meta = `${currentPlan.length} days  ·  ${readingDayCount} reading days`;
+  if (graceCount)  meta += `  ·  ${graceCount} grace days`;
+  if (startDate)   meta += `  ·  begins ${startDate}`;
+  meta += `  ·  ${translation}`;
+  doc.text(meta, PW / 2, y, { align: 'center' });
+  y += 5;
+
+  // Books list
+  if (selectedBooks.length) {
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8);
+    doc.setTextColor(...TEXT_MID);
+    const bookStr = selectedBooks.join('  ·  ');
+    const bookLines = doc.splitTextToSize(bookStr, CW);
+    bookLines.forEach(line => {
+      doc.text(line, PW / 2, y, { align: 'center' });
+      y += 4.5;
+    });
+  }
+
+  y += 6;
+  rule(y, RULE, 0.3);
+  y += 8;
+
+  // ════════════════════════════════
+  // SECTION HEADER helper
+  // ════════════════════════════════
+  function sectionHeader(label) {
+    checkOverflow(14);
+    doc.setFillColor(...GOLD);
+    doc.rect(ML, y, CW, 6.5, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(250, 246, 235);
+    doc.setCharSpace(1.8);
+    doc.text(label.toUpperCase(), ML + 4, y + 4.3);
+    doc.setCharSpace(0);
+    y += 10;
+  }
+
+  // ════════════════════════════════
+  // DAY CARDS
+  // ════════════════════════════════
+  // Group into weeks for section headers
+  let lastWeek = -1;
+
+  currentPlan.forEach((day, idx) => {
+    const week = Math.floor((day.dayNum - 1) / 7) + 1;
+
+    // Week header
+    if (week !== lastWeek) {
+      lastWeek = week;
+      checkOverflow(20);
+      if (y > MT + 20) { y += 2; rule(y, RULE, 0.2); y += 6; }
+      sectionHeader(`Week ${week}`);
+    }
+
+    const { label } = day.isGrace ? { label: 'Grace Day — Rest & Catch Up' } : formatPassage(day.chapters);
+    const isGrace   = day.isGrace;
+    const isDone    = !!checkStates[idx];
+    const hasRefl   = !!(reflections[idx]?.trim());
+
+    // Card height estimate
+    const passageLines = doc.splitTextToSize(label, CW - 40).length;
+    const reflLines    = hasRefl ? doc.splitTextToSize(reflections[idx], CW - 10).length : 0;
+    const cardH = 8 + (passageLines * 5) + (hasRefl ? reflLines * 4 + 8 : 0) + 4;
+
+    checkOverflow(cardH + 3);
+
+    // Card background
+    doc.setFillColor(...(isGrace ? GRACE_BG : CREAM));
+    doc.setDrawColor(...(isGrace ? GRACE_BD : RULE));
+    doc.setLineWidth(0.3);
+    doc.roundedRect(ML, y, CW, cardH, 1.5, 1.5, 'FD');
+
+    // Left gold accent bar
+    doc.setFillColor(...(isGrace ? [200, 140, 130] : GOLD));
+    doc.rect(ML, y, 2.5, cardH, 'F');
+
+    const cx = ML + 6;
+    let cy = y + 5.5;
+
+    // Day number pill
+    doc.setFillColor(...(isGrace ? [200,140,130] : GOLD));
+    doc.roundedRect(cx, cy - 3.8, 16, 5.2, 1, 1, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(7);
+    doc.setTextColor(250, 246, 235);
+    doc.text(`DAY ${day.dayNum}`, cx + 8, cy - 0.2, { align: 'center' });
+
+    // Date badge
+    if (day.date) {
+      const d   = new Date(day.date + 'T00:00:00');
+      const mon = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+      const dn  = d.getDate();
+      const dow = d.toLocaleDateString('en-US', { weekday: 'short' });
+      const bx  = ML + CW - 22;
+      doc.setFillColor(...GOLD);
+      doc.roundedRect(bx, y + 1.5, 18, 13, 1, 1, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(6);
+      doc.setTextColor(250,246,235);
+      doc.text(mon, bx + 9, y + 5.5, { align: 'center' });
+      doc.setFontSize(9);
+      doc.text(String(dn), bx + 9, y + 10.5, { align: 'center' });
+      doc.setFontSize(6);
+      doc.setFont('helvetica', 'italic');
+      doc.text(dow, bx + 9, y + 14, { align: 'center' });
+    }
+
+    cy += 2;
+
+    // Passage text
+    doc.setFont('helvetica', isGrace ? 'italic' : 'normal');
+    doc.setFontSize(isGrace ? 8.5 : 10);
+    doc.setTextColor(...(isGrace ? [160, 100, 90] : NAVY));
+    const pLines = doc.splitTextToSize(label, CW - 40);
+    pLines.forEach(line => {
+      doc.text(line, cx, cy);
+      cy += 5;
+    });
+
+    // Verse count / completion
+    if (!isGrace) {
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...TEXT_DIM);
+      const statusText = isDone
+        ? `✓ Completed  ·  ${day.verseCount} verses`
+        : `${day.verseCount} verses`;
+      doc.text(statusText, cx, cy);
+      if (isDone) {
+        doc.setTextColor(...[80, 140, 90]);
+        doc.text('✓ Completed', cx, cy);
+      }
+      cy += 5;
+    }
+
+    // Reflection
+    if (hasRefl) {
+      cy += 1;
+      doc.setDrawColor(...RULE);
+      doc.setLineWidth(0.2);
+      doc.line(cx, cy, ML + CW - 6, cy);
+      cy += 3.5;
+      doc.setFont('helvetica', 'bolditalic');
+      doc.setFontSize(7);
+      doc.setTextColor(...GOLD);
+      doc.text('Reflection', cx, cy);
+      cy += 4;
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...TEXT_MID);
+      const rLines = doc.splitTextToSize(reflections[idx], CW - 10);
+      rLines.forEach(line => {
+        doc.text(line, cx, cy);
+        cy += 4;
+      });
+    }
+
+    y += cardH + 3;
+  });
+
+  // ── Final footer ──
+  drawFooter();
+
+  // ── Save ──
+  const filename = `${name.replace(/[^a-z0-9]/gi, '_')}_reading_plan.pdf`;
+  doc.save(filename);
+  showToast('PDF downloaded ✓', 'success');
 }
 
 function exportWithNotes() {
