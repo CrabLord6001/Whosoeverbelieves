@@ -1565,8 +1565,8 @@ function updateProgress() {
 const SUPABASE_URL  = 'https://tgzsyfmnzagqijjlzxsa.supabase.co';
 const SUPABASE_ANON = 'sb_publishable_gck7v-L2PDbW2JKUoxTHDA_FidLWw8H';
 
-const _supabase = supabase.createClient(tgzsyfmnzagqijjlzxsa, SUPABASE_ANON);
-
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  
 // ── AUTH STATE ──
 let currentUser    = null;
 let currentPlanId  = null;   // UUID of the saved plan in DB (null if unsaved)
