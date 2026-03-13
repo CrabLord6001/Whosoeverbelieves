@@ -562,6 +562,15 @@
   .saved-plan-meta { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; color: var(--text-mid); }
   .saved-plan-del { background: none; border: none; color: #b84040; font-size: 1rem; cursor: pointer; padding: 0 0.25rem; opacity: 0.55; transition: opacity 0.15s; }
   .saved-plan-del:hover { opacity: 1; }
+  .saved-plan-rename { background: none; border: none; color: var(--text-faint); font-size: 0.85rem; cursor: pointer; padding: 0 0.25rem; opacity: 0.55; transition: opacity 0.15s, color 0.15s; }
+  .saved-plan-rename:hover { opacity: 1; color: var(--gold); }
+  .saved-plan-actions { display: flex; align-items: center; gap: 0.1rem; flex-shrink: 0; }
+  /* Inline rename input */
+  .rename-input {
+    font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text);
+    background: var(--bg); border: 1px solid var(--gold);
+    border-radius: 3px; padding: 0.1rem 0.4rem; outline: none; width: 100%;
+  }
 
   /* ── AUTH MODAL ── */
   .modal-overlay {
@@ -929,7 +938,7 @@
       <div class="form-group">
         <label for="translation">Translation</label>
         <select id="translation">
-          <option value="WEB">WEB</option>
+          <option value="WEB">WEB (World English Bible)</option>
           <option value="NIV">NIV</option>
           <option value="ESV">ESV</option>
           <option value="KJV">KJV</option>
@@ -960,6 +969,7 @@
       line-height: 1.6;
     ">
       Chapters are grouped so each day's reading is approximately equal in length —
+      shorter chapters are clustered together, longer ones stand alone.
       Rest days are distributed evenly as catch-up and Sabbath breaks.
     </p>
 
@@ -2204,13 +2214,66 @@ async function loadSavedPlans() {
     const books = plan.books?.length ? plan.books.slice(0,3).join(', ') + (plan.books.length > 3 ? ` +${plan.books.length-3} more` : '') : '';
 
     row.innerHTML = `
-      <div onclick="loadPlanFromDb('${plan.id}')">
-        <div class="saved-plan-name">${plan.title}</div>
+      <div style="flex:1;min-width:0;" onclick="loadPlanFromDb('${plan.id}')">
+        <div class="saved-plan-name" id="plan-name-${plan.id}">${plan.title}</div>
         <div class="saved-plan-meta">${books} — ${plan.reading_days} reading days · saved ${date}${plan.completed_at ? ' · ✓ Completed' : ''}</div>
       </div>
-      <button class="saved-plan-del" onclick="deletePlan('${plan.id}', event)" title="Delete plan">✕</button>`;
+      <div class="saved-plan-actions">
+        <button class="saved-plan-rename" onclick="startRename('${plan.id}', event)" title="Rename plan">✎</button>
+        <button class="saved-plan-del" onclick="deletePlan('${plan.id}', event)" title="Delete plan">✕</button>
+      </div>`;
     list.appendChild(row);
   });
+}
+
+function startRename(planId, e) {
+  e.stopPropagation(); // prevent row click / plan load
+  const nameEl = document.getElementById(`plan-name-${planId}`);
+  if (!nameEl) return;
+  const current = nameEl.textContent;
+
+  // Replace the name div with an input
+  const input = document.createElement('input');
+  input.className = 'rename-input';
+  input.value = current;
+  nameEl.replaceWith(input);
+  input.focus();
+  input.select();
+
+  const commit = () => renamePlan(planId, input.value.trim() || current, input);
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); }
+    if (ev.key === 'Escape') { input.value = current; input.blur(); }
+  });
+}
+
+async function renamePlan(planId, newTitle, inputEl) {
+  // Restore the name div regardless of outcome
+  const nameEl = document.createElement('div');
+  nameEl.className = 'saved-plan-name';
+  nameEl.id = `plan-name-${planId}`;
+  nameEl.textContent = newTitle;
+  inputEl.replaceWith(nameEl);
+
+  if (!newTitle) return;
+
+  const { error } = await _supabase
+    .from('plans')
+    .update({ title: newTitle })
+    .eq('id', planId)
+    .eq('user_id', currentUser.id);
+
+  if (error) {
+    showToast('Could not rename plan.', 'error');
+  } else {
+    showToast('Plan renamed.', 'success');
+    // If this is the currently loaded plan, update the plan title input too
+    if (planId === currentPlanId) {
+      const titleInput = document.getElementById('plan-name');
+      if (titleInput) titleInput.value = newTitle;
+    }
+  }
 }
 
 async function loadPlanFromDb(planId) {
