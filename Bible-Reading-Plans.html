@@ -1006,6 +1006,7 @@
       <button class="auth-tab active" onclick="switchAuthTab('signin')">Sign In</button>
       <button class="auth-tab" onclick="switchAuthTab('signup')">Create Account</button>
       <button class="auth-tab" onclick="switchAuthTab('magic')">Magic Link</button>
+      <button class="auth-tab" onclick="switchAuthTab('reset')">Forgot Password</button>
     </div>
 
     <!-- SIGN IN -->
@@ -1061,6 +1062,39 @@
       <div class="modal-actions">
         <button class="btn-auth" onclick="sendMagicLink()">Send Link</button>
         <button class="btn-auth secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div class="auth-form" id="auth-form-reset">
+      <div class="auth-error" id="reset-error"></div>
+      <div class="auth-success" id="reset-success"></div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);font-size:0.93rem;margin-bottom:1rem;">
+        Enter your email and we'll send a password reset link.
+      </p>
+      <div class="auth-input-group">
+        <label>Email</label>
+        <input type="email" id="reset-email" placeholder="you@example.com" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-auth" onclick="sendPasswordReset()">Send Reset Link</button>
+        <button class="btn-auth secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- SET NEW PASSWORD (shown after user clicks reset link in email) -->
+    <div class="auth-form" id="auth-form-newpassword">
+      <div class="auth-error" id="newpassword-error"></div>
+      <div class="auth-success" id="newpassword-success"></div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);font-size:0.93rem;margin-bottom:1rem;">
+        Enter your new password below.
+      </p>
+      <div class="auth-input-group">
+        <label>New Password <span style="font-size:0.8em;color:var(--cream-dim)">(min 6 chars)</span></label>
+        <input type="password" id="newpassword-input" placeholder="New password" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-auth" onclick="setNewPassword()">Update Password</button>
       </div>
     </div>
 
@@ -1837,10 +1871,44 @@ async function initAuth() {
   const { data: { session } } = await _supabase.auth.getSession();
   if (session?.user) await onSignedIn(session.user);
 
-  _supabase.auth.onAuthStateChange(async (_event, session) => {
-    if (session?.user) await onSignedIn(session.user);
-    else onSignedOut();
+  _supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      // User clicked the reset link in their email — open modal to set new password
+      openAuthModal();
+      switchAuthTab('newpassword');
+    } else if (session?.user) {
+      await onSignedIn(session.user);
+    } else {
+      onSignedOut();
+    }
   });
+}
+
+async function sendPasswordReset() {
+  const email = document.getElementById('reset-email').value.trim();
+  const err   = document.getElementById('reset-error');
+  const ok    = document.getElementById('reset-success');
+  err.textContent = ''; ok.textContent = '';
+  if (!email) { err.textContent = 'Please enter your email address.'; return; }
+  const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://whosoeverbelieves.com/Bible-Reading-Plans.html'
+  });
+  if (error) { err.textContent = error.message; }
+  else { ok.textContent = 'Reset link sent — check your inbox.'; }
+}
+
+async function setNewPassword() {
+  const pass = document.getElementById('newpassword-input').value;
+  const err  = document.getElementById('newpassword-error');
+  const ok   = document.getElementById('newpassword-success');
+  err.textContent = ''; ok.textContent = '';
+  if (pass.length < 6) { err.textContent = 'Password must be at least 6 characters.'; return; }
+  const { error } = await _supabase.auth.updateUser({ password: pass });
+  if (error) { err.textContent = error.message; }
+  else {
+    ok.textContent = 'Password updated! You are now signed in.';
+    setTimeout(() => closeModal(), 2000);
+  }
 }
 
 async function onSignedIn(user) {
@@ -1928,17 +1996,18 @@ async function signOut() {
 
 // ── MODAL HELPERS ──
 function switchAuthTab(tab) {
+  const tabs  = ['signin','signup','magic','reset','newpassword'];
   document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', ['signin','signup','magic'][i] === tab);
+    t.classList.toggle('active', tabs[i] === tab);
   });
   document.querySelectorAll('.auth-form').forEach((f, i) => {
-    f.classList.toggle('active', ['signin','signup','magic'][i] === tab);
+    f.classList.toggle('active', tabs[i] === tab);
   });
   clearAuthErrors();
 }
 function showAuthError(form, msg) { document.getElementById(`${form}-error`).textContent = msg; }
 function clearAuthErrors() {
-  ['signin-error','signup-error','magic-error','signup-success','magic-success']
+  ['signin-error','signup-error','magic-error','signup-success','magic-success','reset-error','reset-success','newpassword-error','newpassword-success']
     .forEach(id => { const el = document.getElementById(id); if (el) el.textContent = ''; });
 }
 /* ── NAV: FONT SIZE ── */
