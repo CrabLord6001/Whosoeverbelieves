@@ -436,10 +436,11 @@
   .plan-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
   .plan-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: flex-start; }
   .plan-actions-col { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-end; }
+  .btn-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .save-hint {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 0.75rem; color: var(--text-faint); text-align: center;
-    line-height: 1.4; padding-left: 8px;
+    font-size: 0.72rem; color: var(--text-faint); text-align: center;
+    line-height: 1.3;
   }
   /* Auto-save toast — subtle, distinct from success/error toasts */
   #autosave-toast {
@@ -1048,11 +1049,19 @@
       </div>
       <div class="plan-actions-col">
         <div class="plan-actions">
-          <button class="btn-sm" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
-          <button class="btn-sm gold" onclick="downloadPDF()">⬇ Download PDF</button>
-          <button class="btn-sm" onclick="exportWithNotes()">📄 Export with Notes</button>
+          <div class="btn-col">
+            <button class="btn-sm" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
+            <div class="save-hint">Creates a new named plan</div>
+          </div>
+          <div class="btn-col">
+            <button class="btn-sm gold" onclick="downloadPDF()">⬇ Download PDF</button>
+            <div class="save-hint">Saves a printable copy</div>
+          </div>
+          <div class="btn-col">
+            <button class="btn-sm" onclick="exportWithNotes()">📄 Export with Notes</button>
+            <div class="save-hint">Plain text with reflections</div>
+          </div>
         </div>
-        <div class="save-hint">Progress saves automatically · Save creates a new named plan · Export includes your notes</div>
       </div>
     </div>
     <div class="calendar-grid" id="calendar-grid"></div>
@@ -2264,7 +2273,7 @@ async function savePlanToDb() {
 
     showToast('Plan saved ✓', 'success');
     btn.textContent = '✓ Saved';
-    setTimeout(() => { btn.textContent = currentPlanId ? '💾 Save New Plan' : '💾 Save Plan'; btn.disabled = false; }, 2000);
+    setTimeout(() => { btn.textContent = currentPlanId ? '💾 Save as New Plan' : '💾 Save Plan'; btn.disabled = false; }, 2000);
 
   } catch (err) {
     console.error('Save error:', err);
@@ -2459,7 +2468,7 @@ async function loadPlanFromDb(planId) {
   document.getElementById('progress-section').scrollIntoView({ behavior:'smooth' });
   // Update save button label to reflect this is an existing plan
   const saveBtn = document.getElementById('save-plan-btn');
-  if (saveBtn) saveBtn.textContent = '💾 Save New Plan';
+  if (saveBtn) saveBtn.textContent = '💾 Save as New Plan';
 }
 
 async function deletePlan(planId, evt) {
@@ -2674,7 +2683,7 @@ function downloadPDF() {
     // Card height estimate
     const passageLines = doc.splitTextToSize(label, CW - 40).length;
     const reflLines    = hasRefl ? doc.splitTextToSize(reflections[idx], CW - 10).length : 0;
-    const cardH = 8 + (passageLines * 5) + (hasRefl ? reflLines * 4 + 8 : 0) + 4;
+    const cardH = 12 + (passageLines * 5) + (hasRefl ? reflLines * 4 + 8 : 0) + 4;
 
     checkOverflow(cardH + 3);
 
@@ -2719,7 +2728,7 @@ function downloadPDF() {
       doc.text(dow, bx + 9, y + 14, { align: 'center' });
     }
 
-    cy += 2;
+    cy += 6;
 
     // Passage text
     doc.setFont('helvetica', isGrace ? 'italic' : 'normal');
