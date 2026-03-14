@@ -434,28 +434,31 @@
   #plan-section { display: none; }
   .plan-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
   .plan-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
-  .autosave-indicator {
-    font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 0.78rem; color: var(--text-faint);
-    display: flex; align-items: center; gap: 0.35rem; opacity: 0;
-    transition: opacity 0.4s;
-  }
-  .autosave-indicator.visible { opacity: 1; }
-  .autosave-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: #3a7d44; flex-shrink: 0;
-  }
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
-  }
-  .autosave-dot.saving { animation: pulse-dot 0.8s ease infinite; }
   .plan-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: flex-start; }
   .plan-actions-col { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-end; }
   .save-hint {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
     font-size: 0.75rem; color: var(--text-faint); text-align: right;
-    max-width: 220px; line-height: 1.4;
+    line-height: 1.4;
   }
+  /* Auto-save toast — subtle, distinct from success/error toasts */
+  #autosave-toast {
+    position: fixed; bottom: 5rem; right: 2rem;
+    background: var(--surface); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px; padding: 0.55rem 1rem;
+    font-family: 'Cormorant Garamond', serif; font-size: 0.88rem; font-style: italic;
+    color: var(--text-faint); z-index: 500;
+    display: flex; align-items: center; gap: 0.5rem;
+    transform: translateY(6px); opacity: 0;
+    transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+  }
+  #autosave-toast.show { opacity: 1; transform: translateY(0); }
+  #autosave-toast-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #3a7d44; flex-shrink: 0;
+  }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  #autosave-toast-dot.saving { animation: pulse-dot 0.8s ease infinite; }
   .plan-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--text); }
   .plan-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
@@ -889,6 +892,11 @@
 
 <!-- TOAST -->
 <div id="toast"></div>
+<!-- AUTOSAVE TOAST -->
+<div id="autosave-toast">
+  <div id="autosave-toast-dot"></div>
+  <span id="autosave-toast-text">Auto-saved</span>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -1037,10 +1045,6 @@
     <div class="plan-header">
       <div class="plan-header-left">
         <div class="plan-title" id="plan-title-display">Your Reading Plan</div>
-        <div class="autosave-indicator" id="autosave-indicator">
-          <div class="autosave-dot" id="autosave-dot"></div>
-          <span id="autosave-text">Auto-saved</span>
-        </div>
       </div>
       <div class="plan-actions-col">
         <div class="plan-actions">
@@ -1048,7 +1052,7 @@
           <button class="btn-sm gold" onclick="downloadPDF()">⬇ Download PDF</button>
           <button class="btn-sm" onclick="exportWithNotes()">📄 Export with Notes</button>
         </div>
-        <div class="save-hint" id="save-hint">Progress &amp; notes save automatically. Use Save to snapshot a new named plan.</div>
+        <div class="save-hint">Progress saves automatically · Save creates a new named plan · Export includes your notes</div>
       </div>
     </div>
     <div class="calendar-grid" id="calendar-grid"></div>
@@ -2166,18 +2170,18 @@ async function handleSavePlan() {
 
 // Flash the auto-save indicator
 function flashAutosave(text = 'Auto-saved') {
-  const indicator = document.getElementById('autosave-indicator');
-  const dot       = document.getElementById('autosave-dot');
-  const label     = document.getElementById('autosave-text');
-  if (!indicator) return;
+  const toast = document.getElementById('autosave-toast');
+  const dot   = document.getElementById('autosave-toast-dot');
+  const label = document.getElementById('autosave-toast-text');
+  if (!toast) return;
   label.textContent = text;
   dot.classList.add('saving');
-  indicator.classList.add('visible');
-  setTimeout(() => {
+  toast.classList.add('show');
+  clearTimeout(flashAutosave._t);
+  flashAutosave._t = setTimeout(() => {
+    toast.classList.remove('show');
     dot.classList.remove('saving');
-    label.textContent = 'Auto-saved';
-  }, 1000);
-  setTimeout(() => indicator.classList.remove('visible'), 3500);
+  }, 2500);
 }
 
 async function savePlanToDb() {
