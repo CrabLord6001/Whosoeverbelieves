@@ -75,6 +75,29 @@
 
 <h2>Book Summary & Reflection</h2>
 
+<audio id="player" src="/audio/flew-article-audio.mp3"></audio>
+<div style="display: flex; align-items: center; gap: 10px; margin: 1rem 0;">
+  <button onclick="togglePlay()" id="playBtn" style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #b8963e; background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+    <svg id="playIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e"><polygon points="2,1 11,6 2,11"/></svg>
+    <svg id="pauseIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e" style="display:none;"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7" y="1" width="3.5" height="10" rx="1"/></svg>
+  </button>
+  <span style="font-size: 12px; color: #888; white-space: nowrap;">🎧 Listen to this article</span>
+  <input type="range" id="progress" value="0" min="0" max="100" step="0.1" style="flex: 1; accent-color: #b8963e; cursor: pointer;" oninput="seek(this.value)"/>
+  <span id="currentTime" style="font-size: 11px; color: #888; white-space: nowrap;">0:00</span>
+</div>
+<script>
+const a = document.getElementById('player');
+const pi = document.getElementById('playIcon');
+const pa = document.getElementById('pauseIcon');
+const pr = document.getElementById('progress');
+const ct = document.getElementById('currentTime');
+function fmt(s){const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec;}
+function togglePlay(){if(a.paused){a.play();pi.style.display='none';pa.style.display='block';}else{a.pause();pi.style.display='block';pa.style.display='none';}}
+function seek(v){if(a.duration)a.currentTime=(v/100)*a.duration;}
+a.addEventListener('timeupdate',()=>{if(a.duration){pr.value=(a.currentTime/a.duration)*100;ct.textContent=fmt(a.currentTime);}});
+a.addEventListener('ended',()=>{pi.style.display='block';pa.style.display='none';pr.value=0;ct.textContent='0:00';});
+</script>
+
 <p>After witnessing the rise of Nazism, the problem of evil presented a serious issue for Flew as to God’s perfect goodness. Yet, by the end, he settled with God’s existence as independent from unwarranted evil. He ends the book with two solutions: (1) the Aristotelian God who does not intervene or (2) the traditional free will argument. However, the theistic terms to define free will depend on the possibility of revelation.</p> 
 
 <p>Flew rightly clarified theistic thought. In his 1950 paper “Theology and Falsification” he was correct to argue that we must conceptualize God in meaningful language with noncontradictory terms. The Christian might also agree with his 1971 “Presumption of Atheism” where he considered the burden of proof on the theists. We certainly have the responsibility to always be ready to give a defense to everyone who asks for the reason for our hope (1 Pet. 3:15).</p> 
