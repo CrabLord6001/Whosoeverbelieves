@@ -77,6 +77,18 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://whosoeverbelieves.com/Bible-Reading-Plans</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/jonathan_crow</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <!-- ══ GREEK STUDIES ═══════════════════════════════════════════════ -->
 
   <url>
