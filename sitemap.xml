@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- ══ CORE PAGES ══════════════════════════════════════════════════ -->
+
+  <url>
+    <loc>https://whosoeverbelieves.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ══ ARTICLES ════════════════════════════════════════════════════ -->
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/free-grace-gospel</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/Holy-Spirit-Role-in-Believers</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/There-Is-A-God-Review</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/Davidic-Covenant-Overview</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/New-Covenant-Jeremiah-31</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/Book-Of-Daniel-Outline</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/Millennial-Kingdom-Isaiah</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/Call-On-The-Lord-Romans-10</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/articles/Faithful-Saying-2-Timothy-211-13</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ══ GREEK STUDIES ═══════════════════════════════════════════════ -->
+
+  <url>
+    <loc>https://whosoeverbelieves.com/greek/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://whosoeverbelieves.com/greek/vocabulary</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
