@@ -136,6 +136,44 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+/* ── SCRIPTURE TOOLTIP — MOBILE TAP ───────────────────────────────────── */
+
+document.addEventListener('DOMContentLoaded', () => {
+  const isTorch = () => window.matchMedia('(hover: none)').matches;
+  if (!isTorch()) return;
+
+  document.querySelectorAll('.scripture-ref').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+
+      // Remove any other open inline boxes first
+      document.querySelectorAll('.scripture-inline').forEach(el => el.remove());
+
+      // Build the inline box
+      const box = document.createElement('div');
+      box.className = 'scripture-inline';
+      box.innerHTML = `
+        <div class="tt-ref">${link.dataset.ref || ''}</div>
+        <div class="tt-text">${link.dataset.verse || ''}</div>
+        <div class="tt-version">World English Bible</div>
+      `;
+
+      // Insert it after the link's parent paragraph or directly after the link
+      link.insertAdjacentElement('afterend', box);
+
+      // Tap outside to dismiss
+      setTimeout(() => {
+        document.addEventListener('click', function dismiss(ev) {
+          if (!box.contains(ev.target)) {
+            box.remove();
+            document.removeEventListener('click', dismiss);
+          }
+        });
+      }, 10);
+    });
+  });
+});
+
 
 /* ── SCROLL REVEAL ─────────────────────────────────────────────────────── */
 
