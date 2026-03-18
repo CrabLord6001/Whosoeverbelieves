@@ -97,6 +97,7 @@ function runSearch(query) {
 document.addEventListener('DOMContentLoaded', () => {
   const tooltip = document.getElementById('verse-tooltip');
   if (!tooltip) return;
+  if (window.matchMedia('(hover: none)').matches) return;
 
   const ttRef  = document.getElementById('tt-ref');
   const ttText = document.getElementById('tt-text');
