@@ -988,6 +988,26 @@ a.scripture-ref:hover {
   opacity: 0.6;
 }
 
+/* ── Scripture Inline Box (Mobile) ─────────────────────────────────── */
+
+.scripture-inline {
+  display: block;
+  margin: 0.75rem 0;
+  padding: 0.85rem 1rem;
+  background: #1a2233;
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 6px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--text);
+  animation: fadeIn 0.2s ease;
+}
+
+:root.light-mode .scripture-inline {
+  background: #f0e8d4;
+  border-color: rgba(138,106,31,0.3);
+}
+
 /* ── ARTICLE HEADER ──────────────────────────────────────────────────────── */
 
 .article-header {
