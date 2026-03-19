@@ -2051,7 +2051,7 @@ async function initAuth() {
 async function signInWithGoogle() {
   const { error } = await _supabase.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://whosoeverbelieves.com/Bible-Reading-Plans.html' }
+    options: { redirectTo: 'https://whosoeverbelieves.com/bible-reading-plans.html' }
   });
   if (error) showAuthError('signin', error.message);
 }
@@ -2059,7 +2059,7 @@ async function signInWithGoogle() {
 async function signInWithDiscord() {
   const { error } = await _supabase.auth.signInWithOAuth({
     provider: 'discord',
-    options: { redirectTo: 'https://whosoeverbelieves.com/Bible-Reading-Plans.html' }
+    options: { redirectTo: 'https://whosoeverbelieves.com/bible-reading-plans.html' }
   });
   if (error) showAuthError('signin', error.message);
 }
@@ -2071,7 +2071,7 @@ async function sendPasswordReset() {
   err.textContent = ''; ok.textContent = '';
   if (!email) { err.textContent = 'Please enter your email address.'; return; }
   const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://whosoeverbelieves.com/Bible-Reading-Plans.html'
+    redirectTo: 'https://whosoeverbelieves.com/bible-reading-plans.html'
   });
   if (error) { err.textContent = error.message; }
   else { ok.textContent = 'Reset link sent — check your inbox.'; }
