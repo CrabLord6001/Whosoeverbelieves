@@ -1798,6 +1798,69 @@ function renderPlan() {
         </div>`;
     }
 
+// Only show reminder settings on reading days, not grace days
+        if (!day.isGrace) {
+          inner += `
+          <div class="reminder-settings" style="margin-top:0.75rem;">
+            <button class="reminder-toggle-btn" onclick="toggleReminderPanel(this)" style="
+              font-family:'Cormorant Garamond',serif; font-style:italic;
+              font-size:0.82rem; color:var(--text-faint); background:none;
+              border:none; cursor:pointer; padding:0; transition:color 0.15s;
+            ">⏰ Reminder Settings</button>
+
+            <div class="reminder-panel" style="display:none; margin-top:0.6rem; padding:0.75rem;
+              border:1px solid var(--rule); border-radius:4px; background:var(--bg);">
+              <p style="font-family:'Cormorant Garamond',serif;font-style:italic;
+                color:var(--text-mid);font-size:0.88rem;margin-bottom:0.6rem;">
+                Get a daily email when today's reading is ready.
+              </p>
+
+              <div style="margin-bottom:0.5rem;">
+                <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                  <input type="checkbox" class="reminder-enabled-chk">
+                  <span style="font-family:'Cormorant Garamond',serif;font-size:0.92rem;color:var(--text);">
+                    Enable email reminders for this plan
+                  </span>
+                </label>
+              </div>
+
+              <div class="reminder-time-row" style="display:flex;flex-wrap:wrap;align-items:center;
+                gap:0.75rem;margin-bottom:0.75rem;">
+                <label style="font-size:0.85rem;color:var(--text-mid);margin:0;">Remind me at:</label>
+                <input type="time" class="reminder-time-input" value="08:00"
+                  style="width:auto;padding:0.3rem 0.5rem;font-size:0.9rem;">
+
+                <label style="font-size:0.85rem;color:var(--text-mid);margin:0;">Timezone:</label>
+                <select class="reminder-tz-select" style="width:auto;padding:0.3rem 0.5rem;font-size:0.9rem;">
+                  <option value="America/New_York">Eastern (ET)</option>
+                  <option value="America/Chicago">Central (CT)</option>
+                  <option value="America/Denver">Mountain (MT)</option>
+                  <option value="America/Los_Angeles">Pacific (PT)</option>
+                  <option value="America/Anchorage">Alaska (AKT)</option>
+                  <option value="Pacific/Honolulu">Hawaii (HT)</option>
+                  <option value="Europe/London">London (GMT/BST)</option>
+                  <option value="Europe/Paris">Central Europe (CET)</option>
+                  <option value="Asia/Kolkata">India (IST)</option>
+                  <option value="Asia/Tokyo">Japan (JST)</option>
+                  <option value="Australia/Sydney">Sydney (AEST)</option>
+                </select>
+              </div>
+
+              <button onclick="saveReminderSettings(this)" style="
+                font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.12em;
+                text-transform:uppercase; padding:0.4rem 1rem;
+                background:var(--gold-faint); border:1px solid rgba(201,168,76,0.5);
+                color:var(--gold); border-radius:2px; cursor:pointer; transition:all 0.2s;
+              ">Save</button>
+              <span class="reminder-saved-msg" style="display:none;
+                margin-left:0.75rem; color:var(--gold);
+                font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.9rem;">
+                ✓ Saved!
+              </span>
+            </div>
+          </div>`;
+        }
+    
     inner += `<button class="toggle-grace-btn" onclick="toggleGrace(${idx})"
       title="${day.isGrace ? 'Convert to reading day' : 'Set as grace day'}">
       ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
@@ -2467,6 +2530,10 @@ async function loadPlanFromDb(planId) {
   });
 
   renderPlan();
+    // Pre-fill reminder settings on every day card that has the panel
+  document.querySelectorAll('.day-card[id]').forEach(cardEl => {
+    loadReminderSettings(currentPlanId, cardEl);
+  });
   updateProgress();
   showToast(`"${plan.title}" loaded ✓`, 'success');
   document.getElementById('progress-section').scrollIntoView({ behavior:'smooth' });
@@ -2859,6 +2926,62 @@ window.saveReflection = function(idx, val) {
   saveDebounce = setTimeout(() => persistReflection(idx, val), 1200);
 };
 
+// ══════════════════════════════════════════════════════════════
+// REMINDER SETTINGS
+// ══════════════════════════════════════════════════════════════
+
+function toggleReminderPanel(btn) {
+  const panel = btn.nextElementSibling;
+  const isOpen = panel.style.display === 'block';
+  panel.style.display = isOpen ? 'none' : 'block';
+  btn.style.color = isOpen ? 'var(--text-faint)' : 'var(--gold)';
+}
+
+function loadReminderSettings(planId, cardEl) {
+  _supabase
+    .from('plans')
+    .select('reminder_enabled, reminder_time, reminder_timezone')
+    .eq('id', planId)
+    .single()
+    .then(({ data, error }) => {
+      if (error || !data) return;
+      const chk      = cardEl.querySelector('.reminder-enabled-chk');
+      const timeInput = cardEl.querySelector('.reminder-time-input');
+      const tzSelect  = cardEl.querySelector('.reminder-tz-select');
+      if (!chk) return; // grace-day cards won't have these
+      chk.checked = data.reminder_enabled;
+      if (data.reminder_time)     timeInput.value = data.reminder_time.slice(0, 5);
+      if (data.reminder_timezone) tzSelect.value  = data.reminder_timezone;
+    });
+}
+
+async function saveReminderSettings(btn) {
+  if (!currentUser)   { showToast('Sign in to save reminder settings.', 'error'); return; }
+  if (!currentPlanId) { showToast('Save your plan first, then set a reminder.', 'error'); return; }
+
+  const panel   = btn.closest('.reminder-panel');
+  const enabled = panel.querySelector('.reminder-enabled-chk').checked;
+  const time    = panel.querySelector('.reminder-time-input').value;
+  const tz      = panel.querySelector('.reminder-tz-select').value;
+
+  const { error } = await _supabase
+    .from('plans')
+    .update({
+      reminder_enabled:  enabled,
+      reminder_time:     time,
+      reminder_timezone: tz
+    })
+    .eq('id', currentPlanId);
+
+  if (!error) {
+    const msg = panel.querySelector('.reminder-saved-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  } else {
+    showToast('Could not save reminder settings.', 'error');
+  }
+}
+  
 // ══════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════
