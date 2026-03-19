@@ -132,10 +132,25 @@ body::before {
 }
 
 @media (max-width: 600px) {
+  nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 0 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+
   nav a {
     font-size: 0.6rem;
     letter-spacing: 0.1em;
-    padding: 0 0.5rem;
+    padding: 0.85rem 0.6rem;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 }
 
