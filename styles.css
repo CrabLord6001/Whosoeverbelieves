@@ -1078,7 +1078,6 @@ a.scripture-ref:hover {
   color: var(--text);
   line-height: 1.85;
   margin-bottom: 1.4rem;
-  max-width: 720px;
 }
 
 .article-body h2 {
@@ -1125,10 +1124,6 @@ a.scripture-ref:hover {
   background: var(--glass);
   border-radius: 0 4px 4px 0;
   margin: 1.5rem 0;
-}
-
-.article-content {
-  max-width: 720px;
 }
 
 .article-tag {
