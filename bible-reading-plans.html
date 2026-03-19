@@ -1778,8 +1778,24 @@ function renderPlan() {
         align-items:center;gap:0.75rem;margin-bottom:0.9rem;">
         <label style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;
           color:var(--text-mid);margin:0;">Remind me at:</label>
-        <input type="time" id="plan-reminder-time" value="08:00"
-          style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
+        <select id="plan-reminder-hour" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
+  <option value="01">1</option>
+  <option value="02">2</option>
+  <option value="03">3</option>
+  <option value="04">4</option>
+  <option value="05">5</option>
+  <option value="06">6</option>
+  <option value="07">7</option>
+  <option value="08" selected>8</option>
+  <option value="09">9</option>
+  <option value="10">10</option>
+  <option value="11">11</option>
+  <option value="12">12</option>
+</select>
+<select id="plan-reminder-ampm" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
+  <option value="AM" selected>AM</option>
+  <option value="PM">PM</option>
+</select>
         <label style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;
           color:var(--text-mid);margin:0;">Timezone:</label>
         <select id="plan-reminder-tz" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
@@ -2953,11 +2969,17 @@ function loadPlanReminderSettings() {
     .then(({ data, error }) => {
       if (error || !data) return;
       const chk  = document.getElementById('plan-reminder-enabled');
-      const time = document.getElementById('plan-reminder-time');
       const tz   = document.getElementById('plan-reminder-tz');
       if (!chk) return;
       chk.checked = data.reminder_enabled;
-      if (data.reminder_time)     time.value = data.reminder_time.slice(0, 5);
+      if (data.reminder_time) {
+  const [hStr, mStr] = data.reminder_time.slice(0, 5).split(':');
+  let h = parseInt(hStr);
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  document.getElementById('plan-reminder-hour').value = String(h).padStart(2, '0');
+  document.getElementById('plan-reminder-ampm').value = ampm;
+}
       if (data.reminder_timezone) tz.value   = data.reminder_timezone;
       document.getElementById('plan-reminder-time-row').style.display
         = data.reminder_enabled ? 'flex' : 'none';
@@ -2969,8 +2991,11 @@ async function savePlanReminderSettings() {
   if (!currentPlanId) { showToast('Save your plan first, then set a reminder.', 'error'); return; }
 
   const enabled = document.getElementById('plan-reminder-enabled').checked;
-  const time    = document.getElementById('plan-reminder-time').value;
-  const tz      = document.getElementById('plan-reminder-tz').value;
+let h = parseInt(document.getElementById('plan-reminder-hour').value);
+const ampm = document.getElementById('plan-reminder-ampm').value;
+if (ampm === 'PM' && h !== 12) h += 12;
+if (ampm === 'AM' && h === 12) h = 0;
+const time = String(h).padStart(2, '0') + ':00';  const tz      = document.getElementById('plan-reminder-tz').value;
 
   const { error } = await _supabase
     .from('plans')
