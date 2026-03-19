@@ -1127,6 +1127,10 @@ a.scripture-ref:hover {
   margin: 1.5rem 0;
 }
 
+.article-content {
+  max-width: 720px;
+}
+
 .article-tag {
   font-family: 'Cinzel', serif;
   font-size: 0.6rem;
