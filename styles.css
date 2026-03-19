@@ -1078,6 +1078,7 @@ a.scripture-ref:hover {
   color: var(--text);
   line-height: 1.85;
   margin-bottom: 1.4rem;
+  max-width: 740px; 
 }
 
 .article-body h2 {
