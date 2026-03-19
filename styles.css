@@ -136,6 +136,8 @@ body::before {
     font-size: 0.6rem;
     letter-spacing: 0.1em;
     padding: 0 0.5rem;
+     .article-card-title {
+    text-wrap: balance;
   }
 }
 
