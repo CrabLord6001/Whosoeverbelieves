@@ -317,6 +317,111 @@ nav a:hover::after {
   right: 1.25rem;
 }
 
+/* ── DROPDOWN NAV ──────────────────────────────────────────────────────── */
+
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-btn {
+  color: var(--text-mid);
+  text-decoration: none;
+  padding: 1rem 1.25rem;
+  transition: color 0.2s;
+  position: relative;
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.nav-dropdown-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: var(--gold);
+  transition: left 0.2s, right 0.2s;
+}
+
+.nav-dropdown:hover .nav-dropdown-btn,
+.nav-dropdown-btn:focus,
+.nav-dropdown.open .nav-dropdown-btn {
+  color: var(--gold-light);
+}
+
+.nav-dropdown:hover .nav-dropdown-btn::after,
+.nav-dropdown.open .nav-dropdown-btn::after {
+  left: 1.25rem;
+  right: 1.25rem;
+}
+
+.nav-dropdown-arrow {
+  font-size: 0.5rem;
+  opacity: 0.6;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.nav-dropdown.open .nav-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(13, 17, 23, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--rule);
+  border-top: 2px solid var(--gold);
+  min-width: 180px;
+  z-index: 200;
+  flex-direction: column;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown.open .nav-dropdown-menu {
+  display: flex;
+}
+
+.nav-dropdown-menu a {
+  color: var(--text-mid);
+  text-decoration: none;
+  padding: 0.85rem 1.4rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--rule);
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.nav-dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+.nav-dropdown-menu a:hover {
+  color: var(--gold-light);
+  background: var(--glass);
+}
+
+/* Light mode overrides */
+:root.light-mode .nav-dropdown-menu {
+  background: rgba(237, 232, 218, 0.97);
+}
 
 /* ── SEARCH BAR ────────────────────────────────────────────────────────── */
 
