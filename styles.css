@@ -1420,6 +1420,14 @@ a.scripture-ref:hover {
   border-color: rgba(201,168,76,0.8);
 }
 
+@media (min-width: 768px) {
+  .tag-filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
+  }
+}
+
 .article-card-tags {
   display: flex;
   flex-wrap: wrap;
