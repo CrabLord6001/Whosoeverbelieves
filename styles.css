@@ -1437,6 +1437,9 @@ a.scripture-ref:hover {
   border: 2px solid rgba(201,168,76,0.5);
   padding: 0.25rem 0.6rem;
   border-radius: 2px;
+  flex-shrink: 0;
+  min-width: 80px;              /* forces a decent width even for short tags */
+  text-align: center;
 }
 
 /* ── Discord Invite Button ───────────────────────────────────────────────────────── */
