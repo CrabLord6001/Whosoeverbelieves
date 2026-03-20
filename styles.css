@@ -1399,6 +1399,14 @@ a.scripture-ref:hover {
   display: none;
 }
 
+@media (min-width: 768px) {
+  .tag-filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
+  }
+}
+
 .tag-filter {
   font-family: 'Cinzel', serif;
   font-size: 0.6rem;
@@ -1418,14 +1426,6 @@ a.scripture-ref:hover {
 .tag-filter.active {
   color: var(--gold);
   border-color: rgba(201,168,76,0.8);
-}
-
-@media (min-width: 768px) {
-  .tag-filters {
-    flex-wrap: wrap;
-    overflow-x: visible;
-    justify-content: center;
-  }
 }
 
 .article-card-tags {
