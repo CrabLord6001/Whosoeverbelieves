@@ -1438,7 +1438,6 @@ a.scripture-ref:hover {
   padding: 0.25rem 0.6rem;
   border-radius: 2px;
   flex-shrink: 0;
-  min-width: 80px;              /* forces a decent width even for short tags */
   text-align: center;
 }
 
