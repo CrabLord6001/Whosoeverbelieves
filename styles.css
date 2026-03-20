@@ -991,7 +991,35 @@ footer {
   font-size: 1rem;
   color: var(--gold);
   opacity: 0.6;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.footer-nav {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.footer-nav a {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-nav a:hover {
+  color: var(--gold);
+}
+
+.footer-nav span {
+  color: var(--rule);
+  font-size: 0.7rem;
 }
 
 
