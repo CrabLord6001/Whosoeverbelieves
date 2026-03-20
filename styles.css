@@ -1393,7 +1393,8 @@ a.scripture-ref:hover {
   margin-bottom: 2rem;
   scrollbar-width: none;
   padding-bottom: 4px;
-
+}
+   
 .tag-filters::-webkit-scrollbar {
   display: none;
 }
