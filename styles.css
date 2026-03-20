@@ -1211,7 +1211,7 @@ a.scripture-ref:hover {
   color: var(--text);
   line-height: 1.85;
   margin-bottom: 1.4rem;
-  max-width: 740px; 
+  max-width: 740px;
 }
 
 .article-body h2 {
@@ -1383,20 +1383,78 @@ a.scripture-ref:hover {
   border-color: rgba(201,168,76,1);
 }
 
+/* ── Collapsible Filter Panel ─────────────────────────────────────────── */
+
+.filter-panel {
+  margin-bottom: 2rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--glass);
+}
+
+.filter-panel-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.1rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.filter-panel-toggle:hover {
+  background: rgba(201,168,76,0.04);
+}
+
+.filter-panel-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.filter-panel-count {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.filter-panel-chevron {
+  color: var(--gold);
+  opacity: 0.6;
+  transition: transform 0.25s ease, opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.filter-panel-chevron.open {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.filter-panel-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 1.1rem;
+}
+
+.filter-panel-body.open {
+  max-height: 200px;
+  padding: 0 1.1rem 1rem;
+}
+
 /* ── Tag Button Styles ───────────────────────────────────────────────────────── */
 
 .tag-filters {
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 2rem;
-  scrollbar-width: none;
+  margin-bottom: 0;
   padding-bottom: 4px;
-}
-   
-.tag-filters::-webkit-scrollbar {
-  display: none;
 }
 
 .tag-filter {
