@@ -1,0 +1,43 @@
+# Whosoever Believes
+
+> Whosoever Believes is a Free Grace theology website offering articles, Bible study tools, and discipleship resources. The site teaches that eternal life is received by faith alone in Christ alone, apart from works — consistent with the theology of the Grace Evangelical Society (GES). It is authored by Jonathan Crow, a seminary student, and serves as a resource hub for the Crab Bible Study community.
+
+The site name comes from John 3:16 — the Greek phrase πᾶς ὁ πιστεύων ("everyone who believes") — emphasizing that anyone who believes in Jesus Christ receives the free gift of eternal life. The theological position is Free Grace, which holds:
+
+- Eternal life is received the moment a person believes in Jesus Christ for it (John 3:16; 5:24; 6:47).
+- Faith alone is the sole condition; no works, commitment, or perseverance is required to receive or keep eternal life.
+- Assurance of salvation is of the essence of saving faith — a believer can and should know they have eternal life (1 John 5:13).
+- Justification and sanctification are distinct. Believers can and do sin, but their eternal destiny is secure.
+- The Bible is interpreted through a consistent literal-grammatical-historical hermeneutic, affirming premillennial dispensationalism.
+
+The site is aligned with the Grace Evangelical Society (https://faithalone.org/) and the theological legacy of Zane C. Hodges and Robert N. Wilkin.
+
+## Articles
+
+- [The Hermeneutical Spiral](https://whosoeverbelieves.com/articles/osborne-hermeneutical-spiral): Osborne's ten-step method from text to sermon for biblical interpretation
+- [Holy Spirit's Role in Salvation](https://whosoeverbelieves.com/articles/Holy-Spirit-Role-in-Believers): The Spirit's permanent ministries at justification and their implications for eternal security
+- [There is a God — Book Review](https://whosoeverbelieves.com/articles/There-Is-A-God-Review): Review of Anthony Flew's journey from atheism to deism and its apologetic value
+- [The Kingdom in Isaiah](https://whosoeverbelieves.com/articles/Millennial-Kingdom-Isaiah): Tracing the future messianic Kingdom through the prophet Isaiah, supporting premillennialism
+- [The Calling of Romans 10:9](https://whosoeverbelieves.com/articles/Call-On-The-Lord-Romans-10): Romans 10:9–10 in context — arguing salvation refers to temporal deliverance, not the reception of eternal life
+- [The Faithful Saying in Context](https://whosoeverbelieves.com/articles/Faithful-Saying-2-Timothy-211-13): Examination of 2 Timothy 2:11–13 as a chiastic structure
+- [The Davidic Covenant](https://whosoeverbelieves.com/articles/Davidic-Covenant-Overview): God's unconditional promise to David of an eternal throne, yet to be fulfilled in the Millennium
+- [New Covenant Promise to Israel](https://whosoeverbelieves.com/articles/New-Covenant-Jeremiah-31): Overview of Jeremiah 31 and the New Covenant
+- [Synthetic Outline of Daniel](https://whosoeverbelieves.com/articles/Book-Of-Daniel-Outline): The Book of Daniel overviewed from a dispensational perspective
+
+## Bible Study Tools
+
+- [NT Greek Vocabulary](https://whosoeverbelieves.com/greek/vocabulary): Interactive flashcards, quizzes, and speed rounds for all 1,000 words from Mounce's Basics of Biblical Greek, filterable by chapter
+- [Bible Reading Plan Generator](https://whosoeverbelieves.com/bible-reading-plans): Create, save, and track customizable Bible reading plans with user accounts
+
+## Key Pages
+
+- [Home](https://whosoeverbelieves.com/): Main landing page with recent articles and featured links
+- [All Articles](https://whosoeverbelieves.com/articles): Full article library filterable by theological category
+- [Greek Studies](https://whosoeverbelieves.com/greek/): Landing page for NT Greek study tools built around Mounce's BBG
+- [About](https://whosoeverbelieves.com/about): The story behind the site and its theological convictions
+
+## Optional
+
+- [Grace Evangelical Society](https://faithalone.org/): Primary theological partner — Free Grace resources, Journal of the Grace Evangelical Society, and the ministry of Bob Wilkin
+- [Pre-Trib Research Center](https://www.pre-trib.org/): Pretribulational rapture and premillennial eschatology resources
+- [Constable Notes (Sonic Light)](https://www.planobiblechapel.org/soniclight/): Free expository notes on every book of the Bible by Dr. Thomas Constable
