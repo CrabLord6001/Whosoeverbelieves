@@ -194,3 +194,23 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(s);
   });
 });
+
+/* ── DROPDOWN NAV (touch support) ─────────────────────────────────────── */
+
+document.querySelectorAll('.nav-dropdown').forEach(function(dropdown) {
+  dropdown.addEventListener('click', function(e) {
+    // Only handle touch/click on the button itself, not hover-opened menus
+    if (e.target.closest('.nav-dropdown-menu')) return;
+    const isOpen = dropdown.classList.contains('open');
+    // Close all other dropdowns first
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+    if (!isOpen) dropdown.classList.add('open');
+  });
+});
+
+// Close dropdown when clicking anywhere outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.nav-dropdown')) {
+    document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
