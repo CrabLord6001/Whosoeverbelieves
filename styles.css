@@ -1386,13 +1386,13 @@ a.scripture-ref:hover {
 /* ── Tag Button Styles ───────────────────────────────────────────────────────── */
 
 .tag-filters {
-display: flex;              /* or inline-flex */
-  flex-wrap: nowrap;          /* prevents wrapping to new lines */
-  overflow-x: auto;           /* enables horizontal scrolling when needed */
-  gap: 0.75rem;               /* space between buttons – adjust to your design */
-  padding: 0.5rem 1rem;       /* optional inner padding for comfort */
-  scroll-behavior: smooth;    /* nice smooth scrolling on click/jump */
-  -webkit-overflow-scrolling: touch;  /* smooth momentum scrolling on iOS */
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 6px;
+  margin-bottom: 2rem;
+  scrollbar-width: none;
+  padding-bottom: 4px;
 
 .tag-filters::-webkit-scrollbar {
   display: none;
@@ -1467,55 +1467,4 @@ display: flex;              /* or inline-flex */
   width: 22px;
   height: 22px;
   fill: white;
-}
-
-/* ── Mobile Media Rules ───────────────────────────────────────────────────────── */
-
-@media (max-width: 768px) {  /* covers phones + small tablets */
-  section {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-  }
-
-  .article-grid {
-    gap: 1.25rem;          /* slightly tighter for mobile */
-  }
-
-  .article-card {
-    padding: 1.5rem 1.75rem;   /* reduce internal padding */
-    border-radius: 8px;        /* optional: softer on small screens */
-  }
-
-  .article-card-img {
-    height: 180px;             /* slightly shorter hero images on mobile to save space */
-    border-radius: 6px;
-  }
-
-  .article-card-title {
-    font-size: 1.35rem;        /* a touch smaller if it feels cramped */
-  }
-
-  .article-card-excerpt {
-    font-size: 0.9rem;
-  }
-
-  /* Ensure cards take full available width */
-  .article-grid,
-  .article-card {
-    width: 100%;
-    max-width: none;
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
-
-@media (max-width: 480px) {  /* very small phones */
-  section {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .article-card {
-    padding: 1.25rem 1.5rem;
-  }
 }
