@@ -1468,3 +1468,54 @@ display: flex;              /* or inline-flex */
   height: 22px;
   fill: white;
 }
+
+/* ── Mobile Media Rules ───────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {  /* covers phones + small tablets */
+  section {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .article-grid {
+    gap: 1.25rem;          /* slightly tighter for mobile */
+  }
+
+  .article-card {
+    padding: 1.5rem 1.75rem;   /* reduce internal padding */
+    border-radius: 8px;        /* optional: softer on small screens */
+  }
+
+  .article-card-img {
+    height: 180px;             /* slightly shorter hero images on mobile to save space */
+    border-radius: 6px;
+  }
+
+  .article-card-title {
+    font-size: 1.35rem;        /* a touch smaller if it feels cramped */
+  }
+
+  .article-card-excerpt {
+    font-size: 0.9rem;
+  }
+
+  /* Ensure cards take full available width */
+  .article-grid,
+  .article-card {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {  /* very small phones */
+  section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .article-card {
+    padding: 1.25rem 1.5rem;
+  }
+}
