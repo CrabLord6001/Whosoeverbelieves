@@ -86,7 +86,7 @@ body::before {
 
 :root.light-mode body.page-article header {
   background: #c8b99a;
-  padding: 0.85rem 1.75rem;
+  padding: 0.85rem 1.75rem; !important;
 }
 
 :root.light-mode .site-title {
