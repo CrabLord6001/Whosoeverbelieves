@@ -117,7 +117,7 @@ body::before {
 
 /* ── Mobile Optimization ──────────────────────────────────────────────────────── */
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .font-size-group {
     flex-wrap: wrap;
     justify-content: center;
@@ -127,11 +127,12 @@ body::before {
 
   .font-size-group input {
     width: 100%;
+    flex: none;
     margin-top: 0.25rem;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   nav a {
     font-size: 0.6rem;
     letter-spacing: 0.1em;
@@ -1029,6 +1030,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: nowrap;
   gap: 0.15rem;
   padding: 0.5rem 1.25rem;
   background: var(--surface);
@@ -1064,7 +1066,9 @@ footer {
   color: var(--text);
   border-radius: 2px;
   outline: none;
-  width: 220px;
+  width: auto;
+  flex: 1;
+  max-width: 260px;
   transition: border-color 0.2s;
 }
 
@@ -1192,16 +1196,8 @@ a.scripture-ref:hover {
 
 /* ── ARTICLE BODY ────────────────────────────────────────────────────────── */
 
-/* Compact header for article/interior pages */
-body.page-article header {
-  padding: 0.85rem 1.75rem;
-  background: #2a1f14;
-  border-bottom: 1px solid rgba(201,168,76,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: left;
-  animation: none;
+body.page-article .site-title {
+  display: none;
 }
 
 body.page-article header::before,
@@ -1213,16 +1209,6 @@ body.page-article .site-greek,
 body.page-article .site-tagline,
 body.page-article .header-ornament {
   display: none;
-}
-
-body.page-article .site-title {
-  font-size: 0.78rem;
-  letter-spacing: 0.28em;
-  animation: none;
-  background: linear-gradient(90deg, #e5c97a, #c9a84c);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .article-body {
