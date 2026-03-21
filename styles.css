@@ -81,7 +81,12 @@ body::before {
 }
 
 :root.light-mode header {
-  background: linear-gradient(170deg, #ddd5c0 0%, #e8e0cc 60%) !important;
+  background: linear-gradient(170deg, #ddd5c0 0%, #e8e0cc 60%);
+}
+
+:root.light-mode body.page-article header {
+  background: #c8b99a;
+  padding: 0.85rem 1.75rem;
 }
 
 :root.light-mode .site-title {
