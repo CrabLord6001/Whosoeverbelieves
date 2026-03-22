@@ -84,11 +84,6 @@ body::before {
   background: linear-gradient(170deg, #ddd5c0 0%, #e8e0cc 60%);
 }
 
-:root.light-mode body.page-article header {
-  background: #c8b99a;
-  padding: 0.85rem 1.75rem !important;
-}
-
 :root.light-mode .site-title {
   background: linear-gradient(90deg, #2a2a2a 30%, var(--gold) 50%, #2a2a2a 70%);
   background-size: 200% auto;
@@ -1202,16 +1197,7 @@ a.scripture-ref:hover {
 /* ── ARTICLE BODY ────────────────────────────────────────────────────────── */
 
 body.page-article header {
-  padding: 0.85rem 1.75rem !important;
-  background: #0d1117;
-  border-bottom: 1px solid rgba(201,168,76,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: left;
-  animation: none;
-  overflow: hidden;
-}
+  display: none;
 
 body.page-article .site-title {
   display: none;
