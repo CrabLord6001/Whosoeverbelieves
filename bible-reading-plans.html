@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Bible Reading Plan Generator — Free Grace Blog</title>
+<title>Bible Reading Plan Generator — Whosoever Believes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"><meta name="description" content="Build a personalized Bible reading plan. Select any books of the Bible, set your daily pace, and generate a day-by-day schedule — free tool, no login required." />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet">
 
 <style>
   /* ── TOKENS: mirrors styles.css so file works standalone AND on live site ── */
@@ -187,11 +188,7 @@
     max-width: 520px;
     margin: 0 auto;
   }
-<div style="max-width:960px; margin:0 auto; padding:0 1.5rem 1.5rem; font-family:'EB Garamond',serif; color:var(--text-mid); font-size:1rem; line-height:1.8; text-align:center;">
-  <p>Choose any combination of Old or New Testament books, set a daily chapter goal, and generate a day-by-day reading schedule tailored to your pace. Save multiple plans — perfect for separate morning and evening readings like the Major Prophets and Gospels plans shown above.</p>
-</div>
 
-<div class="container">
   /* ── GOLD DIVIDER ── */
   .divider {
     width: 80px; height: 1px;
@@ -697,6 +694,145 @@
     nav { padding: 0.75rem 1rem; }
   }
 
+  /* ── COMPLETED PLAN ROW ── */
+  .saved-plan-row-complete { background: rgba(58,125,68,0.07); border: 1px solid rgba(58,125,68,0.3) !important; }
+  .saved-plan-row-complete:hover { border-color: rgba(58,125,68,0.5) !important; background: rgba(58,125,68,0.12) !important; }
+  .saved-plan-meta-complete { color: rgba(58,125,68,0.75) !important; }
+  .complete-badge {
+    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.1em;
+    padding: 2px 8px; border-radius: 10px;
+    background: rgba(58,125,68,0.12); border: 1px solid rgba(58,125,68,0.3);
+    color: #4a9d58; white-space: nowrap; text-transform: uppercase; flex-shrink: 0;
+  }
+  .redo-btn {
+    background: none; border: none; color: var(--gold); font-size: 1rem;
+    cursor: pointer; padding: 2px 5px; opacity: 0.6; transition: opacity 0.15s;
+  }
+  .redo-btn:hover { opacity: 1; }
+
+  /* ── JOURNAL MODAL ── */
+  .journal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(10,18,30,0.82); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .journal-overlay.open { display: flex; }
+  .journal-modal {
+    background: var(--surface); border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px; width: 100%; max-width: 640px;
+    overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    display: flex; flex-direction: column; max-height: 90vh;
+  }
+  .journal-header {
+    background: var(--bg); padding: 0.85rem 1.25rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--rule); flex-shrink: 0;
+  }
+  .journal-title { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gold); font-style: italic; }
+  .journal-close { background: none; border: none; color: var(--text-faint); font-size: 1.2rem; cursor: pointer; transition: color 0.15s; line-height: 1; }
+  .journal-close:hover { color: var(--text); }
+  .journal-footer {
+    padding: 0.7rem 1.25rem; border-top: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg); flex-shrink: 0;
+  }
+  .journal-hint { font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; font-style: italic; color: var(--text-faint); }
+  .journal-save-btn {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.15em;
+    text-transform: uppercase; background: var(--gold-faint);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold);
+    padding: 6px 18px; border-radius: 2px; cursor: pointer; transition: background 0.15s;
+  }
+  .journal-save-btn:hover { background: rgba(201,168,76,0.2); }
+
+  /* Quill toolbar overrides */
+  .ql-toolbar.ql-snow {
+    background: var(--bg) !important; border: none !important;
+    border-bottom: 1px solid var(--rule) !important; padding: 6px 10px !important; flex-shrink: 0;
+  }
+  .ql-toolbar.ql-snow .ql-formats { margin-right: 8px !important; }
+  .ql-toolbar.ql-snow button .ql-stroke { stroke: var(--text-mid) !important; transition: stroke 0.15s; }
+  .ql-toolbar.ql-snow button:hover .ql-stroke,
+  .ql-toolbar.ql-snow button.ql-active .ql-stroke { stroke: var(--gold) !important; }
+  .ql-toolbar.ql-snow button .ql-fill { fill: var(--text-mid) !important; }
+  .ql-toolbar.ql-snow button:hover .ql-fill,
+  .ql-toolbar.ql-snow button.ql-active .ql-fill { fill: var(--gold) !important; }
+  .ql-toolbar.ql-snow .ql-picker { color: var(--text-mid) !important; }
+  .ql-toolbar.ql-snow .ql-picker-label { color: var(--text-mid) !important; }
+  .ql-toolbar.ql-snow .ql-picker-label:hover { color: var(--gold) !important; }
+  .ql-toolbar.ql-snow .ql-picker-label .ql-stroke { stroke: var(--text-mid) !important; }
+  .ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke { stroke: var(--gold) !important; }
+  .ql-toolbar.ql-snow .ql-picker-options {
+    background: var(--bg) !important; border: 1px solid rgba(201,168,76,0.3) !important;
+    border-radius: 4px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+  }
+  .ql-toolbar.ql-snow .ql-picker-item { color: var(--text-mid) !important; }
+  .ql-toolbar.ql-snow .ql-picker-item:hover { color: var(--gold) !important; background: var(--gold-faint) !important; }
+  .ql-toolbar.ql-snow .ql-color-picker .ql-picker-options { padding: 6px !important; width: 176px !important; }
+  .ql-toolbar.ql-snow .ql-color-picker .ql-picker-item {
+    border-radius: 50% !important; width: 20px !important; height: 20px !important;
+    margin: 2px !important; border: 2px solid transparent !important; transition: none !important;
+  }
+  /* Quill's Snow CSS sets border-color: #000 on hover — neutralise it completely */
+  .ql-snow .ql-color-picker .ql-picker-item:hover,
+  .ql-snow .ql-toolbar .ql-color-picker .ql-picker-item:hover,
+  .ql-toolbar.ql-snow .ql-color-picker .ql-picker-item:hover {
+    border-color: transparent !important;
+    background-color: inherit !important;
+    background: inherit !important;
+    transform: none !important;
+    outline: none !important;
+  }
+  .ql-container.ql-snow { border: none !important; font-family: 'EB Garamond', Georgia, serif !important; flex: 1; overflow-y: auto; }
+  .ql-editor { color: var(--text) !important; line-height: 1.85 !important; padding: 1.25rem 1.5rem !important; min-height: 200px !important; font-size: 1.05rem !important; }
+  .ql-editor.ql-blank::before { color: var(--text-faint) !important; font-style: italic !important; font-family: 'EB Garamond', serif !important; }
+  .ql-editor h1 { font-family: 'Cormorant Garamond', serif !important; font-size: 1.7rem !important; color: var(--text) !important; font-weight: 300 !important; border-bottom: 1px solid rgba(201,168,76,0.2) !important; padding-bottom: 0.3rem !important; margin-bottom: 0.5rem !important; }
+  .ql-editor h2 { font-family: 'Cormorant Garamond', serif !important; font-size: 1.35rem !important; color: var(--gold) !important; font-weight: 400 !important; margin-bottom: 0.4rem !important; }
+  .ql-editor h3 { font-family: 'Cinzel', serif !important; font-size: 0.75rem !important; color: var(--text-mid) !important; letter-spacing: 0.15em !important; text-transform: uppercase !important; margin-bottom: 0.4rem !important; }
+  .ql-editor a { color: var(--gold) !important; text-decoration: underline !important; text-decoration-color: rgba(201,168,76,0.4) !important; }
+  .ql-editor blockquote { border-left: 2px solid rgba(201,168,76,0.4) !important; padding-left: 1rem !important; color: var(--text-mid) !important; font-style: italic !important; margin: 0.5rem 0 !important; }
+
+  /* Day card reflection button */
+  .reflection-open-btn {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(201,168,76,0.65);
+    border: 1px solid rgba(201,168,76,0.3); background: none;
+    border-radius: 2px; padding: 3px 10px; cursor: pointer;
+    margin-top: 0.5rem; transition: all 0.15s; display: inline-block;
+  }
+  .reflection-open-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.6); }
+  .reflection-preview {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.88rem;
+    font-style: italic; color: var(--text-mid);
+    border-left: 2px solid rgba(201,168,76,0.3); padding-left: 0.75rem;
+    margin-top: 0.5rem; line-height: 1.5;
+    /* Strip HTML tags for preview */
+    overflow: hidden; display: -webkit-box;
+    -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  }
+
+  /* ── REDO MODAL ── */
+  .redo-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(10,18,30,0.82); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .redo-overlay.open { display: flex; }
+  .redo-modal {
+    background: var(--surface); border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 8px; width: 90%; max-width: 400px; padding: 1.75rem;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+  }
+  .redo-modal h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--text); font-weight: 300; margin-bottom: 0.4rem; }
+  .redo-modal p { font-family: 'Cormorant Garamond', serif; font-size: 0.92rem; font-style: italic; color: var(--text-mid); margin-bottom: 1.5rem; line-height: 1.6; }
+  .redo-modal label { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); display: block; margin-bottom: 0.4rem; }
+  .redo-modal input[type="date"] { margin-bottom: 1.5rem; }
+  .redo-actions { display: flex; gap: 0.6rem; justify-content: flex-end; }
+  .redo-cancel { background: none; border: 1px solid var(--rule); color: var(--text-faint); font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 16px; border-radius: 2px; cursor: pointer; transition: color 0.15s; }
+  .redo-cancel:hover { color: var(--text); }
+  .redo-confirm { background: var(--gold-faint); border: 1px solid rgba(201,168,76,0.4); color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 16px; border-radius: 2px; cursor: pointer; transition: background 0.15s; }
+  .redo-confirm:hover { background: rgba(201,168,76,0.2); }
+
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
@@ -908,7 +1044,7 @@
   <div class="hero-eyebrow">Free Grace Resources</div>
   <h1>Bible Reading <span>Plan Generator</span></h1>
   <div class="divider"></div>
-  <p><p>Create your own custom Bible reading plan. Sign in to save your progress</p>
+  <p>"Thy word is a lamp unto my feet, and a light unto my path." — Psalm 119:105</p>
 </div>
 
 <!-- MAIN -->
@@ -1743,102 +1879,6 @@ function renderPlan() {
   document.getElementById('plan-section').style.display = 'block';
   document.getElementById('progress-section').style.display = 'block';
 
-// ── Render plan-level reminder card ──
-  let reminderCard = document.getElementById('plan-reminder-card');
-  if (!reminderCard) {
-    reminderCard = document.createElement('div');
-    reminderCard.id = 'plan-reminder-card';
-    reminderCard.style.cssText = `
-      background:var(--surface); border:1px solid var(--rule);
-      border-radius:8px; padding:1.25rem 1.5rem; margin-bottom:1.5rem;
-    `;
-    reminderCard.innerHTML = `
-      <div style="
-        font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.16em;
-        text-transform:uppercase; color:var(--gold); margin-bottom:1rem;
-        display:flex; align-items:center; gap:0.5rem;
-      ">⏰ Email Reminders
-        <span style="flex:1;height:1px;background:var(--rule);display:block;"></span>
-      </div>
-      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;
-        color:var(--text-mid);font-size:0.95rem;margin-bottom:0.9rem;">
-        Get a daily email with a link to today's reading passage for this plan.
-      </p>
-
-      <div style="margin-bottom:0.6rem;">
-        <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;">
-          <input type="checkbox" id="plan-reminder-enabled">
-          <span style="font-family:'EB Garamond',serif;font-size:1rem;color:var(--text);">
-            Send me daily reading reminders
-          </span>
-        </label>
-      </div>
-
-      <div id="plan-reminder-time-row" style="display:none;flex-wrap:wrap;
-        align-items:center;gap:0.75rem;margin-bottom:0.9rem;">
-        <label style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;
-          color:var(--text-mid);margin:0;">Remind me at:</label>
-        <select id="plan-reminder-hour" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
-  <option value="01">1</option>
-  <option value="02">2</option>
-  <option value="03">3</option>
-  <option value="04">4</option>
-  <option value="05">5</option>
-  <option value="06">6</option>
-  <option value="07">7</option>
-  <option value="08" selected>8</option>
-  <option value="09">9</option>
-  <option value="10">10</option>
-  <option value="11">11</option>
-  <option value="12">12</option>
-</select>
-<select id="plan-reminder-ampm" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
-  <option value="AM" selected>AM</option>
-  <option value="PM">PM</option>
-</select>
-        <label style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;
-          color:var(--text-mid);margin:0;">Timezone:</label>
-        <select id="plan-reminder-tz" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
-          <option value="America/New_York">Eastern (ET)</option>
-          <option value="America/Chicago">Central (CT)</option>
-          <option value="America/Denver">Mountain (MT)</option>
-          <option value="America/Los_Angeles">Pacific (PT)</option>
-          <option value="America/Anchorage">Alaska (AKT)</option>
-          <option value="Pacific/Honolulu">Hawaii (HT)</option>
-          <option value="Europe/London">London (GMT/BST)</option>
-          <option value="Europe/Paris">Central Europe (CET)</option>
-          <option value="Asia/Kolkata">India (IST)</option>
-          <option value="Asia/Tokyo">Japan (JST)</option>
-          <option value="Australia/Sydney">Sydney (AEST)</option>
-        </select>
-      </div>
-
-      <button onclick="savePlanReminderSettings()" style="
-        font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.12em;
-        text-transform:uppercase; padding:0.4rem 1rem;
-        background:var(--gold-faint); border:1px solid rgba(201,168,76,0.5);
-        color:var(--gold); border-radius:2px; cursor:pointer; transition:all 0.2s;
-      ">Save Reminder</button>
-      <span id="plan-reminder-saved" style="display:none; margin-left:0.75rem;
-        color:var(--gold); font-family:'Cormorant Garamond',serif;
-        font-style:italic; font-size:0.9rem;">✓ Saved!</span>
-    `;
-
-    // Wire up the toggle
-    reminderCard.querySelector('#plan-reminder-enabled')
-      .addEventListener('change', function() {
-        document.getElementById('plan-reminder-time-row').style.display
-          = this.checked ? 'flex' : 'none';
-      });
-
-    // Insert before the calendar grid
-    const planSection = document.getElementById('plan-section');
-    planSection.insertBefore(reminderCard, planSection.firstChild);
-  }
-
-  // Pre-fill if we have a saved plan loaded
-  if (currentPlanId) loadPlanReminderSettings();
-  
   currentPlan.forEach((day, idx) => {
     const card = document.createElement('div');
     card.className = 'day-card' + (day.isGrace ? ' grace' : '') + (checkStates[idx] ? ' completed' : '');
@@ -1883,15 +1923,10 @@ function renderPlan() {
             ${checkStates[idx] ? '✓ Completed' : 'Mark Complete'}
           </label>
         </div>
-        <button class="reflection-toggle" onclick="toggleReflection(${idx})">
-          ✎ ${reflections[idx] ? 'View / edit reflection' : 'Add reflection…'}
-        </button>
-        <div class="reflection-area" id="refl-${idx}">
-          <textarea placeholder="Your thoughts, prayers, and reflections for today's passage…"
-            oninput="saveReflection(${idx}, this.value)"
-          >${reflections[idx] || ''}</textarea>
-          <div class="reflection-saved" id="saved-${idx}">Saved ✓</div>
-        </div>`;
+        ${reflections[idx] ? `<div class="reflection-preview" id="refl-preview-${idx}">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
+        <button class="reflection-open-btn" onclick="openJournal(${idx})" id="refl-btn-${idx}">
+          ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
+        </button>`;
     }
 
     inner += `<button class="toggle-grace-btn" onclick="toggleGrace(${idx})"
@@ -1996,9 +2031,147 @@ function toggleCheck(idx) {
   updateProgress();
 }
 
+let quillInstance = null;
+let quillDayIdx   = null;
+let quillDebounce = null;
+
+function openJournal(idx) {
+  quillDayIdx = idx;
+  const day = currentPlan[idx];
+  if (!day) return;
+
+  // Set title
+  const { label } = day.isGrace ? { label: 'Rest Day' } : formatPassage(day.chapters);
+  document.getElementById('journal-title').textContent = `Day ${day.dayNum} · ${label} — Reflection`;
+
+  // Open overlay
+  document.getElementById('journal-overlay').classList.add('open');
+
+  // Init Quill once
+  if (!quillInstance) {
+    quillInstance = new Quill('#quill-editor', {
+      theme: 'snow',
+      placeholder: 'Write your reflection here…',
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline'],
+          [{ 'header': [1, 2, 3, false] }],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          [{ 'color': ['#4a90d9','#4a9d58','#f9d776','#f4a460','#e57373','#ba68c8','#f48fb1','#1a1a1a','#ffffff','#4dd0e1'] }],
+          ['link'],
+          ['clean']
+        ]
+      }
+    });
+
+    // Auto-save on text change
+    quillInstance.on('text-change', () => {
+      if (quillDayIdx === null) return;
+      const html = quillInstance.root.innerHTML;
+      const plainText = quillInstance.root.innerText.trim();
+      reflections[quillDayIdx] = plainText ? html : '';
+      clearTimeout(quillDebounce);
+      quillDebounce = setTimeout(() => {
+        persistReflection(quillDayIdx, reflections[quillDayIdx] || '');
+      }, 1200);
+    });
+  }
+
+  // Load existing content
+  const existing = reflections[idx] || '';
+  if (existing && existing.startsWith('<')) {
+    quillInstance.root.innerHTML = existing;
+  } else if (existing) {
+    quillInstance.setText(existing);
+  } else {
+    quillInstance.setText('');
+  }
+
+  setTimeout(() => quillInstance.focus(), 100);
+}
+
+function closeJournal() {
+  document.getElementById('journal-overlay').classList.remove('open');
+  if (quillDayIdx !== null) {
+    const html = quillInstance ? quillInstance.root.innerHTML : '';
+    const plainText = quillInstance ? quillInstance.root.innerText.trim() : '';
+    reflections[quillDayIdx] = plainText ? html : '';
+
+    // Update preview and button on the day card
+    const preview = document.getElementById(`refl-preview-${quillDayIdx}`);
+    const btn     = document.getElementById(`refl-btn-${quillDayIdx}`);
+    if (btn) btn.textContent = reflections[quillDayIdx] ? '✎ Edit Reflection' : '✦ Add Reflection';
+    if (preview) {
+      preview.textContent = plainText.slice(0, 120) + (plainText.length > 120 ? '…' : '');
+      preview.style.display = plainText ? '' : 'none';
+    } else if (plainText) {
+      // Create preview element if it doesn't exist yet
+      const newPreview = document.createElement('div');
+      newPreview.className = 'reflection-preview';
+      newPreview.id = `refl-preview-${quillDayIdx}`;
+      newPreview.textContent = plainText.slice(0, 120) + (plainText.length > 120 ? '…' : '');
+      if (btn) btn.parentNode.insertBefore(newPreview, btn);
+    }
+  }
+  quillDayIdx = null;
+}
+
+// Redo plan
+let redoPlanId = null;
+
+function openRedo(planId, planTitle, e) {
+  e.stopPropagation();
+  redoPlanId = planId;
+  document.getElementById('redo-plan-title').textContent = `Redo — ${planTitle}`;
+  document.getElementById('redo-start-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('redo-overlay').classList.add('open');
+}
+
+function closeRedo() {
+  document.getElementById('redo-overlay').classList.remove('open');
+  redoPlanId = null;
+}
+
+async function confirmRedo() {
+  if (!redoPlanId) return;
+  const newStartDate = document.getElementById('redo-start-date').value;
+
+  // Load the plan
+  const { data: plan } = await _supabase.from('plans').select('*').eq('id', redoPlanId).single();
+  const { data: days } = await _supabase.from('plan_days')
+    .select('*, reflections(body)')
+    .eq('plan_id', redoPlanId)
+    .order('day_number', { ascending: true });
+
+  if (!plan || !days) { showToast('Could not load plan.', 'error'); closeRedo(); return; }
+
+  // Restore books and settings
+  selectedBooks = plan.books || [];
+  document.getElementById('plan-name').value = plan.title;
+  document.getElementById('translation').value = plan.translation || 'WEB';
+  if (newStartDate) document.getElementById('start-date').value = newStartDate;
+  document.getElementById('total-days').value = plan.total_days;
+
+  // Carry over reflections, reset checkboxes
+  checkStates = {};
+  reflections = {};
+  days.forEach((d, idx) => {
+    if (d.reflections?.[0]?.body) reflections[idx] = d.reflections[0].body;
+  });
+
+  // Regenerate plan with new dates
+  currentPlanId = null;
+  renderBookGrid();
+  renderOrderCard();
+  generatePlan();
+
+  closeRedo();
+  showToast('Plan restarted with your notes carried over ✓', 'success');
+}
+
 function toggleReflection(idx) {
-  const area = document.getElementById(`refl-${idx}`);
-  area.classList.toggle('open');
+  // Legacy fallback — now opens journal
+  openJournal(idx);
 }
 
 function saveReflection(idx, val) {
@@ -2052,7 +2225,7 @@ function updateProgress() {
 // ⚠️  REPLACE these two values with your actual Supabase project credentials.
 // Find them in: Supabase Dashboard → Project Settings → API
 const SUPABASE_URL  = 'https://tgzsyfmnzagqijjlzxsa.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_gck7v-L2PDbW2JKUoxTHDA_FidLWw8H';
+const SUPABASE_ANON = 'https://tgzsyfmnzagqijjlzxsa.supabase.co';
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
@@ -2084,7 +2257,7 @@ async function initAuth() {
 async function signInWithGoogle() {
   const { error } = await _supabase.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: 'https://whosoeverbelieves.com/bible-reading-plans.html' }
+    options: { redirectTo: 'https://whosoeverbelieves.com/Bible-Reading-Plans.html' }
   });
   if (error) showAuthError('signin', error.message);
 }
@@ -2092,7 +2265,7 @@ async function signInWithGoogle() {
 async function signInWithDiscord() {
   const { error } = await _supabase.auth.signInWithOAuth({
     provider: 'discord',
-    options: { redirectTo: 'https://whosoeverbelieves.com/bible-reading-plans.html' }
+    options: { redirectTo: 'https://whosoeverbelieves.com/Bible-Reading-Plans.html' }
   });
   if (error) showAuthError('signin', error.message);
 }
@@ -2104,7 +2277,7 @@ async function sendPasswordReset() {
   err.textContent = ''; ok.textContent = '';
   if (!email) { err.textContent = 'Please enter your email address.'; return; }
   const { error } = await _supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://whosoeverbelieves.com/bible-reading-plans.html'
+    redirectTo: 'https://whosoeverbelieves.com/Bible-Reading-Plans.html'
   });
   if (error) { err.textContent = error.message; }
   else { ok.textContent = 'Reset link sent — check your inbox.'; }
@@ -2447,23 +2620,51 @@ async function loadSavedPlans() {
   }
 
   list.innerHTML = '';
-  plans.forEach(plan => {
+
+  const active    = plans.filter(p => !p.completed_at);
+  const completed = plans.filter(p =>  p.completed_at);
+
+  function renderPlanRow(plan) {
     const row = document.createElement('div');
-    row.className = 'saved-plan-row';
+    row.className = 'saved-plan-row' + (plan.completed_at ? ' saved-plan-row-complete' : '');
     const date = new Date(plan.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    const completedDate = plan.completed_at
+      ? new Date(plan.completed_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
+      : null;
     const books = plan.books?.length ? plan.books.slice(0,3).join(', ') + (plan.books.length > 3 ? ` +${plan.books.length-3} more` : '') : '';
+    const meta = plan.completed_at
+      ? `${books} — completed ${completedDate}`
+      : `${books} — ${plan.reading_days} reading days · saved ${date}`;
 
     row.innerHTML = `
       <div style="flex:1;min-width:0;" onclick="loadPlanFromDb('${plan.id}')">
         <div class="saved-plan-name" id="plan-name-${plan.id}">${plan.title}</div>
-        <div class="saved-plan-meta">${books} — ${plan.reading_days} reading days · saved ${date}${plan.completed_at ? ' · ✓ Completed' : ''}</div>
+        <div class="saved-plan-meta ${plan.completed_at ? 'saved-plan-meta-complete' : ''}">${meta}</div>
       </div>
       <div class="saved-plan-actions">
+        ${plan.completed_at ? `<span class="complete-badge">✓ Complete</span>
+        <button class="redo-btn" onclick="openRedo('${plan.id}','${plan.title.replace(/'/g,"\\'")}', event)" title="Redo this plan">↺</button>` : ''}
         <button class="saved-plan-rename" onclick="startRename('${plan.id}', event)" title="Rename plan">✎</button>
         <button class="saved-plan-del" onclick="deletePlan('${plan.id}', event)" title="Delete plan">✕</button>
       </div>`;
     list.appendChild(row);
-  });
+  }
+
+  if (active.length) {
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-bottom:0.4rem;border-bottom:1px solid var(--rule);margin-bottom:0.6rem;';
+    hdr.textContent = 'Active Plans';
+    list.appendChild(hdr);
+    active.forEach(renderPlanRow);
+  }
+
+  if (completed.length) {
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(58,125,68,0.6);padding-bottom:0.4rem;border-bottom:1px solid rgba(58,125,68,0.2);margin:0.75rem 0 0.6rem;';
+    hdr.textContent = 'Completed';
+    list.appendChild(hdr);
+    completed.forEach(renderPlanRow);
+  }
 }
 
 function startRename(planId, e) {
@@ -2943,78 +3144,12 @@ window.toggleCheck = function(idx) {
 };
 
 window.saveReflection = function(idx, val) {
+  // Legacy textarea fallback — Quill uses its own auto-save via text-change event
   reflections[idx] = val;
-  const saved = document.getElementById(`saved-${idx}`);
-  if (saved) {
-    saved.style.display = 'block';
-    clearTimeout(saved._t);
-    saved._t = setTimeout(() => { saved.style.display = 'none'; }, 1800);
-  }
-  // Debounced cloud save
   clearTimeout(saveDebounce);
   saveDebounce = setTimeout(() => persistReflection(idx, val), 1200);
 };
 
-// ══════════════════════════════════════════════════════════════
-// REMINDER SETTINGS (plan-level)
-// ══════════════════════════════════════════════════════════════
-
-function loadPlanReminderSettings() {
-  if (!currentPlanId) return;
-  _supabase
-    .from('plans')
-    .select('reminder_enabled, reminder_time, reminder_timezone')
-    .eq('id', currentPlanId)
-    .single()
-    .then(({ data, error }) => {
-      if (error || !data) return;
-      const chk  = document.getElementById('plan-reminder-enabled');
-      const tz   = document.getElementById('plan-reminder-tz');
-      if (!chk) return;
-      chk.checked = data.reminder_enabled;
-      if (data.reminder_time) {
-  const [hStr, mStr] = data.reminder_time.slice(0, 5).split(':');
-  let h = parseInt(hStr);
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  h = h % 12 || 12;
-  document.getElementById('plan-reminder-hour').value = String(h).padStart(2, '0');
-  document.getElementById('plan-reminder-ampm').value = ampm;
-}
-      if (data.reminder_timezone) tz.value   = data.reminder_timezone;
-      document.getElementById('plan-reminder-time-row').style.display
-        = data.reminder_enabled ? 'flex' : 'none';
-    });
-}
-
-async function savePlanReminderSettings() {
-  if (!currentUser)   { showToast('Sign in to save reminder settings.', 'error'); return; }
-  if (!currentPlanId) { showToast('Save your plan first, then set a reminder.', 'error'); return; }
-
-  const enabled = document.getElementById('plan-reminder-enabled').checked;
-let h = parseInt(document.getElementById('plan-reminder-hour').value);
-const ampm = document.getElementById('plan-reminder-ampm').value;
-if (ampm === 'PM' && h !== 12) h += 12;
-if (ampm === 'AM' && h === 12) h = 0;
-const time = String(h).padStart(2, '0') + ':00';  const tz      = document.getElementById('plan-reminder-tz').value;
-
-  const { error } = await _supabase
-    .from('plans')
-    .update({
-      reminder_enabled:  enabled,
-      reminder_time:     time,
-      reminder_timezone: tz
-    })
-    .eq('id', currentPlanId);
-
-  if (!error) {
-    const msg = document.getElementById('plan-reminder-saved');
-    msg.style.display = 'inline';
-    setTimeout(() => msg.style.display = 'none', 3000);
-  } else {
-    showToast('Could not save reminder settings.', 'error');
-  }
-}
-  
 // ══════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════
@@ -3034,6 +3169,11 @@ const time = String(h).padStart(2, '0') + ':00';  const tz      = document.getEl
 renderBookGrid();
 updateGracePreview();
 renderOrderCard();
+
+// Close journal/redo on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeJournal(); closeRedo(); }
+});
 
 // ── HANDLE PASSWORD RESET / MAGIC LINK REDIRECT ──
 // Supabase puts the session tokens in the URL hash after the user clicks
@@ -3069,6 +3209,36 @@ renderOrderCard();
 
 initAuth();
 </script>
+<!-- JOURNAL MODAL -->
+<div class="journal-overlay" id="journal-overlay">
+  <div class="journal-modal">
+    <div class="journal-header">
+      <span class="journal-title" id="journal-title">Reflection</span>
+      <button class="journal-close" onclick="closeJournal()">✕</button>
+    </div>
+    <div id="quill-editor"></div>
+    <div class="journal-footer">
+      <span class="journal-hint">Formatting and notes save automatically</span>
+      <button class="journal-save-btn" onclick="closeJournal()">Save & Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- REDO MODAL -->
+<div class="redo-overlay" id="redo-overlay">
+  <div class="redo-modal">
+    <h3 id="redo-plan-title">Redo Plan</h3>
+    <p>Your existing notes will carry over. Checkboxes will reset and dates will be recalculated from your new start date.</p>
+    <label>New Start Date</label>
+    <input type="date" id="redo-start-date" />
+    <div class="redo-actions">
+      <button class="redo-cancel" onclick="closeRedo()">Cancel</button>
+      <button class="redo-confirm" onclick="confirmRedo()">↺ Start Fresh</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
 <script src="scripts.js"></script>
 </body>
 </html>
