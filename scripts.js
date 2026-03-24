@@ -91,6 +91,20 @@ function runSearch(query) {
   }).join('');
 }
 
+/* ── INJECT VERSE TOOLTIP ──────────────────────────────────────────────── */
+
+(function() {
+  if (document.getElementById('verse-tooltip')) return;
+  const tooltip = document.createElement('div');
+  tooltip.id = 'verse-tooltip';
+  tooltip.setAttribute('role', 'tooltip');
+  tooltip.innerHTML = `
+    <div class="tt-ref" id="tt-ref"></div>
+    <div class="tt-text" id="tt-text"></div>
+    <div class="tt-version">World English Bible</div>
+  `;
+  document.body.appendChild(tooltip);
+})();
 
 /* ── SCRIPTURE TOOLTIP ─────────────────────────────────────────────────── */
 
