@@ -2002,6 +2002,79 @@ function generatePlan() {
 }
 
 // ══════════════════════════════════════════════════════════════
+// RENDER PLAN
+// ══════════════════════════════════════════════════════════════
+function renderPlan() {
+  const grid  = document.getElementById('calendar-grid');
+  const name  = document.getElementById('plan-name').value || 'My Reading Plan';
+  grid.innerHTML = '';
+
+  document.getElementById('plan-title-display').textContent = name;
+  document.getElementById('plan-section').style.display = 'block';
+  document.getElementById('progress-section').style.display = 'block';
+
+  currentPlan.forEach((day, idx) => {
+    const card = document.createElement('div');
+    card.className = 'day-card' + (day.isGrace ? ' grace' : '') + (checkStates[idx] ? ' completed' : '');
+    card.id = `day-${idx}`;
+    card.style.animationDelay = `${Math.min(idx * 0.025, 0.6)}s`;
+
+    let dateBadge = '';
+    if (day.date) {
+      const d = new Date(day.date + 'T00:00:00');
+      const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+      const dayNum = d.getDate();
+      const dow   = d.toLocaleDateString('en-US', { weekday: 'short' });
+      dateBadge = `<div class="day-date-badge">
+        <span class="day-date-month">${month}</span>
+        <span class="day-date-day">${dayNum}</span>
+        <span class="day-date-dow">${dow}</span>
+      </div>`;
+    }
+
+    let inner = `
+      <div class="day-top">
+        <span class="day-num">Day ${day.dayNum}</span>
+        ${dateBadge}
+      </div>`;
+
+    if (day.isGrace) {
+      inner += `<div class="grace-label">✦ Rest Day</div>
+        <div class="day-verse-count" style="font-style:italic;color:#b84040;">Rest — catch up or reflect today.</div>`;
+    } else {
+      const { label, url } = formatPassage(day.chapters);
+      inner += `
+        <div class="day-passage">
+          ${url ? `<a href="${url}" target="_blank" rel="noopener">${label}</a>` : label}
+        </div>
+        <div class="day-verse-count">${day.verseCount} verse${day.verseCount!==1?'s':''}</div>
+        <div class="day-check-row">
+          <input type="checkbox" class="day-checkbox" id="chk-${idx}"
+            ${checkStates[idx] ? 'checked' : ''}
+            onchange="toggleCheck(${idx})">
+          <label class="day-check-label" for="chk-${idx}">
+            ${checkStates[idx] ? '✓ Completed' : 'Mark Complete'}
+          </label>
+        </div>
+        ${reflections[idx] ? `<div class="reflection-preview" id="refl-preview-${idx}">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
+        <button class="reflection-open-btn" onclick="openJournal(${idx})" id="refl-btn-${idx}">
+          ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
+        </button>`;
+    }
+
+    inner += `<button class="toggle-grace-btn" onclick="toggleGrace(${idx})"
+      title="${day.isGrace ? 'Convert to reading day' : 'Set as grace day'}">
+      ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
+    </button>`;
+
+    card.innerHTML = inner;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+  
+// ══════════════════════════════════════════════════════════════
 // CONFETTI
 // ══════════════════════════════════════════════════════════════
 function launchConfetti(originEl) {
