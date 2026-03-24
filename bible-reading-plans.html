@@ -2901,10 +2901,10 @@ async function loadSavedPlans() {
   const panel = document.getElementById('saved-plans-panel');
   const list = document.getElementById('saved-plans-list');
 
-  // Show the panel immediately
+  // Show the panel
   panel.style.display = 'block';
 
-  // Scroll to the Saved Plans section — this is the fix you needed
+  // Scroll smoothly to the Saved Plans section
   panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   // Load plans from Supabase
