@@ -2897,10 +2897,17 @@ async function persistReflection(idx, body) {
 // ══════════════════════════════════════════════════════════════
 async function loadSavedPlans() {
   if (!currentUser) return;
+
   const panel = document.getElementById('saved-plans-panel');
-  const list  = document.getElementById('saved-plans-list');
+  const list = document.getElementById('saved-plans-list');
+
+  // Show the panel immediately
   panel.style.display = 'block';
 
+  // Scroll to the Saved Plans section — this is the fix you needed
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Load plans from Supabase
   const { data: plans, error } = await _supabase
     .from('plans')
     .select('id, title, books, total_days, reading_days, created_at, completed_at')
@@ -2912,10 +2919,11 @@ async function loadSavedPlans() {
     return;
   }
 
+  // Clear and rebuild the list
   list.innerHTML = '';
 
-  const active    = plans.filter(p => !p.completed_at);
-  const completed = plans.filter(p =>  p.completed_at);
+  const active = plans.filter(p => !p.completed_at);
+  const completed = plans.filter(p => p.completed_at);
 
   function renderPlanRow(plan) {
     const row = document.createElement('div');
@@ -2924,7 +2932,9 @@ async function loadSavedPlans() {
     const completedDate = plan.completed_at
       ? new Date(plan.completed_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
       : null;
-    const books = plan.books?.length ? plan.books.slice(0,3).join(', ') + (plan.books.length > 3 ? ` +${plan.books.length-3} more` : '') : '';
+    const books = plan.books?.length 
+      ? plan.books.slice(0,3).join(', ') + (plan.books.length > 3 ? ` +${plan.books.length-3} more` : '') 
+      : '';
     const meta = plan.completed_at
       ? `${books} — completed ${completedDate}`
       : `${books} — ${plan.reading_days} reading days · saved ${date}`;
@@ -2943,6 +2953,7 @@ async function loadSavedPlans() {
     list.appendChild(row);
   }
 
+  // Active plans section
   if (active.length) {
     const hdr = document.createElement('div');
     hdr.style.cssText = 'font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-bottom:0.4rem;border-bottom:1px solid var(--rule);margin-bottom:0.6rem;';
@@ -2951,6 +2962,7 @@ async function loadSavedPlans() {
     active.forEach(renderPlanRow);
   }
 
+  // Completed plans section
   if (completed.length) {
     const hdr = document.createElement('div');
     hdr.style.cssText = 'font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(58,125,68,0.6);padding-bottom:0.4rem;border-bottom:1px solid rgba(58,125,68,0.2);margin:0.75rem 0 0.6rem;';
