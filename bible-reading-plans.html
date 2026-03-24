@@ -2478,17 +2478,20 @@ function closeCompletion() {
 // Milestone detection — called from updateProgress()
 function checkMilestones(pct) {
   const thresholds = [25, 50, 75, 100];
+  let highest = null;
   for (const t of thresholds) {
     if (pct >= t && lastMilestoneFired < t) {
-      lastMilestoneFired = t;
-      if (t === 100) {
-        showCompletionModal();
-      } else {
-        showMilestoneToast(t);
-      }
-      return; // only fire one milestone per check
+      highest = t;
     }
   }
+  if (highest === null) return;
+  lastMilestoneFired = highest;
+  if (highest === 100) {
+    showCompletionModal();
+  } else {
+    showMilestoneToast(highest);
+  }
+}
 }
   
 function updateProgress() {
