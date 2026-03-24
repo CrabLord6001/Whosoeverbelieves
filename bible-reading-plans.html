@@ -996,6 +996,132 @@
     transition: color 0.2s;
   }
   .day-card.completed .day-check-label { color: var(--gold); }
+
+  /* ── SHARE BUTTON (persistent, in progress header) ── */
+  .share-btn {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.3rem 0.75rem;
+    font-family: 'Cinzel', serif; font-size: 0.6rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-faint); border: 1px solid var(--rule);
+    border-radius: 2px; background: none; cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .share-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.6); }
+  .share-btn svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── SHARE DROPDOWN (appears below share button) ── */
+  .share-dropdown {
+    display: none; gap: 0.5rem; flex-wrap: wrap;
+    margin-top: 0.6rem; padding-top: 0.6rem;
+    border-top: 1px solid var(--rule);
+  }
+  .share-dropdown.open { display: flex; }
+  .share-option {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    font-family: 'Cinzel', serif; font-size: 0.58rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-faint); border: 1px solid var(--rule);
+    border-radius: 2px; background: none; cursor: pointer;
+    transition: all 0.15s; text-decoration: none;
+  }
+  .share-option:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); background: var(--gold-faint); }
+  .share-option svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* ── MILESTONE TOAST (richer than standard toast) ── */
+  #milestone-toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--surface); border: 1px solid rgba(58,125,68,0.5);
+    border-left: 3px solid #3a7d44;
+    border-radius: 6px; padding: 1rem 1.25rem;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--text); z-index: 550;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateY(12px); opacity: 0;
+    transition: all 0.35s ease; pointer-events: none;
+    max-width: 360px;
+  }
+  #milestone-toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .milestone-title {
+    font-family: 'Cinzel', serif; font-size: 0.85rem;
+    color: var(--text); margin-bottom: 0.25rem;
+  }
+  .milestone-sub {
+    font-size: 0.88rem; font-style: italic; color: var(--text-mid);
+    margin-bottom: 0.75rem;
+  }
+  .milestone-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+  .milestone-dismiss {
+    background: none; border: none; color: var(--text-faint);
+    font-family: 'Cormorant Garamond', serif; font-size: 0.82rem;
+    font-style: italic; cursor: pointer; padding: 0.2rem 0.5rem;
+    transition: color 0.15s;
+  }
+  .milestone-dismiss:hover { color: var(--text); }
+
+  /* ── COMPLETION MODAL (100% popup) ── */
+  .completion-overlay {
+    display: none; position: fixed; inset: 0; z-index: 350;
+    background: rgba(10,18,30,0.82); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center; padding: 1rem;
+  }
+  .completion-overlay.open { display: flex; }
+  .completion-modal {
+    background: var(--surface);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px; width: 90%; max-width: 440px;
+    padding: 2.5rem 2rem; text-align: center;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    position: relative;
+    animation: fadeUp 0.4s ease both;
+  }
+  .completion-modal-close {
+    position: absolute; top: 0.75rem; right: 1rem;
+    background: none; border: none; color: var(--text-mid);
+    font-size: 1.3rem; cursor: pointer; transition: color 0.15s;
+  }
+  .completion-modal-close:hover { color: var(--gold); }
+  .completion-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .completion-heading {
+    font-family: 'Cinzel', serif; font-size: 1.3rem;
+    color: var(--text); margin-bottom: 0.4rem;
+  }
+  .completion-sub {
+    font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+    font-style: italic; color: var(--text-mid); margin-bottom: 1.5rem;
+  }
+  .completion-share-row {
+    display: flex; gap: 0.6rem; justify-content: center;
+    flex-wrap: wrap; margin-bottom: 1rem;
+  }
+  .completion-share-btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.55rem 1.2rem;
+    font-family: 'Cinzel', serif; font-size: 0.62rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid var(--rule); border-radius: 3px;
+    background: none; color: var(--text-faint); cursor: pointer;
+    transition: all 0.15s; text-decoration: none;
+  }
+  .completion-share-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); background: var(--gold-faint); }
+  .completion-share-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+  .completion-secondary {
+    display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+  }
+  .completion-action {
+    font-family: 'Cinzel', serif; font-size: 0.6rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-faint); background: none;
+    border: 1px solid var(--rule); border-radius: 2px;
+    padding: 0.45rem 1rem; cursor: pointer; transition: all 0.15s;
+  }
+  .completion-action:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+  .completion-action.gold {
+    color: var(--gold); border-color: rgba(201,168,76,0.4);
+    background: var(--gold-faint);
+  }
+  .completion-action.gold:hover { background: rgba(201,168,76,0.2); }
 </style>
 </head>
 <body>
@@ -1170,8 +1296,15 @@
   <div id="progress-section" class="card" style="animation-delay:0.15s">
     <div class="progress-header">
       <span class="progress-label">Plan Completion</span>
-      <span class="progress-pct" id="progress-pct-text">0%</span>
+      <div style="display:flex;align-items:baseline;gap:0.75rem;">
+        <button class="share-btn" id="progress-share-btn" onclick="toggleShareDropdown()" title="Share your progress">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+        <span class="progress-pct" id="progress-pct-text">0%</span>
+      </div>
     </div>
+    <div class="share-dropdown" id="share-dropdown"></div>
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill" style="width:0%"></div>
     </div>
@@ -1863,83 +1996,9 @@ function generatePlan() {
   checkStates   = {};
   reflections   = {};
   currentPlanId = null;  // new generation = new plan, don't overwrite existing saved plan
-
+  lastMilestoneFired = 0;
   renderPlan();
   updateProgress();
-}
-
-// ══════════════════════════════════════════════════════════════
-// RENDER PLAN
-// ══════════════════════════════════════════════════════════════
-function renderPlan() {
-  const grid  = document.getElementById('calendar-grid');
-  const name  = document.getElementById('plan-name').value || 'My Reading Plan';
-  grid.innerHTML = '';
-
-  document.getElementById('plan-title-display').textContent = name;
-  document.getElementById('plan-section').style.display = 'block';
-  document.getElementById('progress-section').style.display = 'block';
-
-  currentPlan.forEach((day, idx) => {
-    const card = document.createElement('div');
-    card.className = 'day-card' + (day.isGrace ? ' grace' : '') + (checkStates[idx] ? ' completed' : '');
-    card.id = `day-${idx}`;
-    card.style.animationDelay = `${Math.min(idx * 0.025, 0.6)}s`;
-
-    // Build date badge if date assigned
-    let dateBadge = '';
-    if (day.date) {
-      const d = new Date(day.date + 'T00:00:00');
-      const month = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-      const dayNum = d.getDate();
-      const dow   = d.toLocaleDateString('en-US', { weekday: 'short' });
-      dateBadge = `<div class="day-date-badge">
-        <span class="day-date-month">${month}</span>
-        <span class="day-date-day">${dayNum}</span>
-        <span class="day-date-dow">${dow}</span>
-      </div>`;
-    }
-
-    let inner = `
-      <div class="day-top">
-        <span class="day-num">Day ${day.dayNum}</span>
-        ${dateBadge}
-      </div>`;
-
-    if (day.isGrace) {
-      inner += `<div class="grace-label">✦ Rest Day</div>
-        <div class="day-verse-count" style="font-style:italic;color:#b84040;">Rest — catch up or reflect today.</div>`;
-    } else {
-      const { label, url } = formatPassage(day.chapters);
-      inner += `
-        <div class="day-passage">
-          ${url ? `<a href="${url}" target="_blank" rel="noopener">${label}</a>` : label}
-        </div>
-        <div class="day-verse-count">${day.verseCount} verse${day.verseCount!==1?'s':''}</div>
-        <div class="day-check-row">
-          <input type="checkbox" class="day-checkbox" id="chk-${idx}"
-            ${checkStates[idx] ? 'checked' : ''}
-            onchange="toggleCheck(${idx})">
-          <label class="day-check-label" for="chk-${idx}">
-            ${checkStates[idx] ? '✓ Completed' : 'Mark Complete'}
-          </label>
-        </div>
-        ${reflections[idx] ? `<div class="reflection-preview" id="refl-preview-${idx}">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
-        <button class="reflection-open-btn" onclick="openJournal(${idx})" id="refl-btn-${idx}">
-          ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
-        </button>`;
-    }
-
-    inner += `<button class="toggle-grace-btn" onclick="toggleGrace(${idx})"
-      title="${day.isGrace ? 'Convert to reading day' : 'Set as grace day'}">
-      ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
-    </button>`;
-
-    card.innerHTML = inner;
-    grid.appendChild(card);
-  });
-
-  document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2156,6 +2215,7 @@ async function confirmRedo() {
   // Carry over reflections, reset checkboxes
   checkStates = {};
   reflections = {};
+  lastMilestoneFired = 0;
   days.forEach((d, idx) => {
     if (d.reflections?.[0]?.body) reflections[idx] = d.reflections[0].body;
   });
@@ -2165,6 +2225,7 @@ async function confirmRedo() {
   renderBookGrid();
   renderOrderCard();
   generatePlan();
+  lastMilestoneFired = 0;
 
   closeRedo();
   showToast('Plan restarted with your notes carried over ✓', 'success');
@@ -2204,6 +2265,147 @@ function toggleGrace(idx) {
   updateProgress();
 }
 
+  // ══════════════════════════════════════════════════════════════
+// SHARE FEATURES
+// ══════════════════════════════════════════════════════════════
+let lastMilestoneFired = 0; // tracks highest milestone shown this session
+
+function getShareText(pct) {
+  const name = document.getElementById('plan-name').value || 'My Reading Plan';
+  if (pct >= 100) return `I just finished the "${name}" Bible reading plan on WhosoeverBelieves.com! 📖🎉`;
+  if (pct > 0)    return `I'm ${pct}% through the "${name}" Bible reading plan on WhosoeverBelieves.com! 📖`;
+  return `I just started the "${name}" Bible reading plan on WhosoeverBelieves.com! 📖`;
+}
+
+const SHARE_URL = 'https://whosoeverbelieves.com/bible-reading-plans';
+
+function shareToX(pct) {
+  const text = encodeURIComponent(getShareText(pct));
+  const url  = encodeURIComponent(SHARE_URL);
+  window.open(`https://x.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=550,height=420');
+}
+
+function shareToFacebook(pct) {
+  const url = encodeURIComponent(SHARE_URL);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=550,height=420');
+}
+
+function copyShareLink(pct) {
+  const text = getShareText(pct) + '\n' + SHARE_URL;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Copied to clipboard ✓', 'success');
+  }).catch(() => {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Copied to clipboard ✓', 'success');
+  });
+}
+
+// SVG icon strings for share buttons
+const ICON_X = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
+const ICON_FB = '<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>';
+const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+
+function buildShareButtons(pct, context) {
+  // context: 'dropdown' | 'milestone' | 'completion'
+  const cls = context === 'completion' ? 'completion-share-btn' : 'share-option';
+  return `
+    <button class="${cls}" onclick="shareToX(${pct})" title="Share on X">
+      ${ICON_X} Post on X
+    </button>
+    <button class="${cls}" onclick="shareToFacebook(${pct})" title="Share on Facebook">
+      ${ICON_FB} Facebook
+    </button>
+    <button class="${cls}" onclick="copyShareLink(${pct})" title="Copy to clipboard">
+      ${ICON_COPY} Copy Link
+    </button>`;
+}
+
+// Persistent share dropdown in progress bar
+function toggleShareDropdown() {
+  const dd = document.getElementById('share-dropdown');
+  const isOpen = dd.classList.toggle('open');
+  if (isOpen) {
+    const pct = parseInt(document.getElementById('progress-pct-text').textContent) || 0;
+    dd.innerHTML = buildShareButtons(pct, 'dropdown');
+  }
+}
+
+// Milestone toast for 25/50/75%
+let milestoneTimer;
+function showMilestoneToast(pct) {
+  const toast = document.getElementById('milestone-toast');
+  const name  = document.getElementById('plan-name').value || 'your plan';
+  const msgs  = {
+    25: { title: "Great start!", sub: `You're a quarter through ${name}. Keep it up!` },
+    50: { title: "Halfway there!", sub: `You're 50% through ${name}!` },
+    75: { title: "Almost there!", sub: `You're 75% through ${name}. The finish line is in sight!` }
+  };
+  const m = msgs[pct];
+  if (!m) return;
+
+  document.getElementById('milestone-title').textContent = m.title;
+  document.getElementById('milestone-sub').textContent = m.sub;
+  document.getElementById('milestone-actions').innerHTML =
+    buildShareButtons(pct, 'milestone') +
+    '<button class="milestone-dismiss" onclick="dismissMilestone()">Dismiss</button>';
+
+  toast.classList.add('show');
+  clearTimeout(milestoneTimer);
+  milestoneTimer = setTimeout(() => dismissMilestone(), 12000);
+}
+
+function dismissMilestone() {
+  const toast = document.getElementById('milestone-toast');
+  toast.classList.remove('show');
+  clearTimeout(milestoneTimer);
+}
+
+// Completion modal for 100%
+function showCompletionModal() {
+  const name = document.getElementById('plan-name').value || 'your reading plan';
+  const readingDays = currentPlan.filter(d => !d.isGrace);
+  const totalVerses = readingDays.reduce((s, d) => s + d.verseCount, 0);
+
+  document.getElementById('completion-heading').textContent = `You finished ${name}!`;
+  document.getElementById('completion-sub').textContent =
+    `${readingDays.length} readings completed · ${totalVerses.toLocaleString()} verses read`;
+  document.getElementById('completion-share-row').innerHTML = buildShareButtons(100, 'completion');
+  document.getElementById('completion-overlay').classList.add('open');
+
+  // Mark plan as completed in DB if saved
+  if (currentUser && currentPlanId) {
+    _supabase.from('plans').update({ completed_at: new Date().toISOString() }).eq('id', currentPlanId);
+  }
+}
+
+function closeCompletion() {
+  document.getElementById('completion-overlay').classList.remove('open');
+}
+
+// Milestone detection — called from updateProgress()
+function checkMilestones(pct) {
+  const thresholds = [25, 50, 75, 100];
+  for (const t of thresholds) {
+    if (pct >= t && lastMilestoneFired < t) {
+      lastMilestoneFired = t;
+      if (t === 100) {
+        showCompletionModal();
+      } else {
+        showMilestoneToast(t);
+      }
+      return; // only fire one milestone per check
+    }
+  }
+}
+  updateProgress();
+}
+  
 function updateProgress() {
   const readingDays = currentPlan.filter(d => !d.isGrace);
   const done  = readingDays.filter((d,i) => checkStates[currentPlan.indexOf(d)]).length;
@@ -2218,6 +2420,8 @@ function updateProgress() {
   document.getElementById('stat-done').textContent = done;
   document.getElementById('stat-reading').textContent = total;
   document.getElementById('stat-verses').textContent = versesRead.toLocaleString();
+
+  checkMilestones(pct);
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -2735,6 +2939,7 @@ async function loadPlanFromDb(planId) {
   selectedBooks   = plan.books || [];
   checkStates     = {};
   reflections     = {};
+  lastMilestoneFired = 0;
 
   // Re-render book chips and order card
   renderBookGrid();
@@ -3173,7 +3378,7 @@ renderOrderCard();
 
 // Close journal/redo on Escape
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeJournal(); closeRedo(); }
+  if (e.key === 'Escape') { closeJournal(); closeRedo(); closeCompletion(); }
 });
 
 // ── HANDLE PASSWORD RESET / MAGIC LINK REDIRECT ──
@@ -3225,6 +3430,28 @@ initAuth();
   </div>
 </div>
 
+<!-- MILESTONE TOAST -->
+<div id="milestone-toast">
+  <div class="milestone-title" id="milestone-title">Milestone reached!</div>
+  <div class="milestone-sub" id="milestone-sub"></div>
+  <div class="milestone-actions" id="milestone-actions"></div>
+</div>
+
+<!-- COMPLETION MODAL -->
+<div class="completion-overlay" id="completion-overlay">
+  <div class="completion-modal">
+    <button class="completion-modal-close" onclick="closeCompletion()">✕</button>
+    <div class="completion-icon">🎉</div>
+    <div class="completion-heading" id="completion-heading">You finished your plan!</div>
+    <div class="completion-sub" id="completion-sub"></div>
+    <div class="completion-share-row" id="completion-share-row"></div>
+    <div class="completion-secondary">
+      <button class="completion-action gold" onclick="closeCompletion(); document.querySelector('.card').scrollIntoView({behavior:'smooth'});">✦ Start a New Plan</button>
+      <button class="completion-action" onclick="closeCompletion()">Dismiss</button>
+    </div>
+  </div>
+</div>
+  
 <!-- REDO MODAL -->
 <div class="redo-overlay" id="redo-overlay">
   <div class="redo-modal">
