@@ -999,16 +999,15 @@
   .day-card.completed .day-check-label { color: var(--gold); }
 
   /* ── SHARE BUTTON (persistent, in progress header) ── */
-  .share-btn {
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    padding: 0.3rem 0.75rem;
-    font-family: 'Cinzel', serif; font-size: 0.6rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--gold); border: 1px solid rgba(201,168,76,0.45);
-    border-radius: 2px; background: none; cursor: pointer;
-    transition: color 0.2s, border-color 0.2s;
+ .share-btn {
+    display: inline-flex; align-items: center;
+    padding: 0.3rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--gold);
+    opacity: 0.5;
+    transition: opacity 0.2s;
   }
-  .share-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.6); }
+  .share-btn:hover { opacity: 1; }
   .share-btn svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
   /* ── SHARE DROPDOWN (appears below share button) ── */
