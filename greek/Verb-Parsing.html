@@ -18,6 +18,10 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .back-bar{position:relative;z-index:2;padding:.55rem 1.25rem;background:rgba(4,8,28,.92);border-bottom:1px solid rgba(0,212,255,.12);display:flex;align-items:center}
 .back-bar a{font-family:'Orbitron',monospace;font-size:.58rem;letter-spacing:.14em;color:var(--cyan);text-decoration:none;text-transform:uppercase;transition:all .2s;display:flex;align-items:center;gap:.45rem;padding:.38rem .85rem;border:1px solid rgba(0,212,255,.35);border-radius:4px;background:rgba(0,212,255,.06)}
 .back-bar a:hover{color:#fff;border-color:var(--cyan);background:rgba(0,212,255,.14);box-shadow:0 0 14px rgba(0,212,255,.22)}
+.back-bar a svg{width:14px;height:14px;fill:currentColor}
+.music-toggle{margin-left:auto;font-family:'Orbitron',monospace;font-size:.55rem;letter-spacing:.1em;padding:.38rem .85rem;border:1px solid rgba(0,212,255,.25);border-radius:4px;background:rgba(0,212,255,.04);color:var(--txt2);cursor:pointer;transition:all .2s;text-transform:uppercase;display:flex;align-items:center;gap:.4rem}
+.music-toggle:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 10px rgba(0,212,255,.18)}
+.music-toggle.playing{border-color:var(--purple);color:var(--purple);background:rgba(180,79,255,.1);box-shadow:0 0 12px rgba(180,79,255,.2)}
 
 /* HEADER */
 header{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid rgba(0,212,255,.2)}
@@ -174,12 +178,7 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
 </head>
 <body>
 
-<div class="back-bar">
-  <a href="index.html">
-    <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-    Greek Studies
-  </a>
-</div>
+<div class="back-bar"><a href="../index.html"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Whosoever Believes</a><button class="music-toggle" id="musicBtn" onclick="toggleMusic()" title="Toggle ambient music">&#9835; OFF</button></div>
 
 <canvas id="sf"></canvas>
 
@@ -227,11 +226,11 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
   </div>
 
   <!-- ── QUIZ MODE ── -->
-  <div id="qzMode" class="hidden">
+<div id="qzMode" class="hidden">
+    <div class="streak-wrap"><div class="streak-badge" id="streakBadge"><span class="streak-num" id="streakNum">0</span><span class="streak-lbl">STREAK</span></div></div>
     <div class="scorebar">
-      <div class="streak-wrap"><div class="streak-badge" id="streakBadge"><span class="streak-num" id="streakNum">0</span><span class="streak-lbl">STREAK</span></div></div>
       <div class="si"><span class="sn ok" id="qC">0</span><span class="sl">Correct</span></div>
-      <div class="si"><span class="sn bad" id="qW2">0</span><span class="sl">Wrong</span></div>
+      <div class="si"><span class="sn bad" id="qW">0</span><span class="sl">Wrong</span></div>
       <div class="si"><span class="sn rem" id="qR">0</span><span class="sl">Remaining</span></div>
     </div>
     <div class="qbox">
@@ -342,9 +341,21 @@ kbd{background:rgba(0,212,255,.09);border:1px solid rgba(0,212,255,.22);border-r
 // ══════════════════════════════════════════
 (function(){
   const cv=document.getElementById('sf'),ctx=cv.getContext('2d');
-  let W,H,stars=[];
+  let W,H,stars=[],ss=[];
   function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;stars=[];for(let i=0;i<220;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.4+.2,o:Math.random()*.7+.15,sp:Math.random()*.25+.05,tw:Math.random()*Math.PI*2})}
-  function draw(){ctx.clearRect(0,0,W,H);const t=Date.now()/1000;stars.forEach(s=>{s.tw+=s.sp*.016;const a=s.o*(0.55+0.45*Math.sin(s.tw));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(180,210,255,${a})`;ctx.fill()});requestAnimationFrame(draw)}
+  function draw(){ctx.clearRect(0,0,W,H);stars.forEach(s=>{s.tw+=s.sp*.016;const a=s.o*(0.35+0.65*Math.sin(s.tw));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(180,210,255,${a})`;ctx.fill();s.y+=s.sp*.35;if(s.y>H+2){s.y=-2;s.x=Math.random()*W;}});
+    // ── SHOOTING STARS ──
+    for(let i=ss.length-1;i>=0;i--){
+      const s=ss[i];s.x+=s.vx;s.y+=s.vy;s.life-=.02;
+      if(s.life<=0){ss.splice(i,1);continue;}
+      const a=s.life*.8;
+      ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-s.vx*6,s.y-s.vy*6);
+      const g=ctx.createLinearGradient(s.x,s.y,s.x-s.vx*6,s.y-s.vy*6);
+      g.addColorStop(0,`rgba(200,230,255,${a})`);g.addColorStop(1,`rgba(200,230,255,0)`);
+      ctx.strokeStyle=g;ctx.lineWidth=s.r;ctx.stroke();
+    }
+    if(Math.random()<.003){ss.push({x:Math.random()*W*.8,y:Math.random()*H*.3,vx:4+Math.random()*4,vy:2+Math.random()*2,r:Math.random()*1.2+.5,life:1});}
+    requestAnimationFrame(draw)}
   window.addEventListener('resize',resize);resize();draw();
 })();
 
@@ -964,7 +975,7 @@ function startQ(){
   document.getElementById('qzMode').classList.remove('hidden');
   document.getElementById('qzRes').classList.add('hidden');
   document.getElementById('qC').textContent=0;
-  document.getElementById('qW2').textContent=0;
+  document.getElementById('qW').textContent=0;
   document.getElementById('qR').textContent=qData.length;
   updateStreak(null);showQ();
 }
@@ -1018,7 +1029,7 @@ function pickQ(btn,choice,correct,w){
   const isOk=choice===correct;
   if(isOk){qCorrect++;streak++;particle(btn)}else{streak=0;qWrong++;}
   document.getElementById('qC').textContent=qCorrect;
-  document.getElementById('qW2').textContent=qWrong;
+  document.getElementById('qW').textContent=qWrong;
   updateStreak(isOk);
   document.querySelectorAll('.choicebtn').forEach(b=>{
     b.disabled=true;
@@ -1161,6 +1172,23 @@ document.getElementById('filCount').textContent=total;
 buildDots(total);
 shuffled=getOrdered(FORMS);
 showCard();
+// ── AMBIENT MUSIC ──────────────────────────────────────────
+const ambientAudio = new Audio('../audio/space-music-for-toggle.mp3');
+ambientAudio.loop = true;
+ambientAudio.volume = 0.35;
+
+function toggleMusic(){
+  const btn = document.getElementById('musicBtn');
+  if(ambientAudio.paused){
+    ambientAudio.play();
+    btn.textContent = '♫ ON';
+    btn.classList.add('playing');
+  } else {
+    ambientAudio.pause();
+    btn.textContent = '♪ OFF';
+    btn.classList.remove('playing');
+  }
+}
 </script>
 </body>
 </html>
