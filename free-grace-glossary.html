@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Grace Glossary — Whosoever Believes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #131920;
+      --glass: rgba(255,255,255,0.03);
+      --rule: rgba(201,168,76,0.12);
+      --gold: #c9a84c;
+      --gold-light: #e0c070;
+      --text: #e8e0d0;
+      --text-mid: #a89880;
+      --text-faint: #6a5f52;
+    }
+
+    /* ── LIGHT MODE ── */
+    .light-mode {
+      --bg: #f5f0e8;
+      --surface: #ede7da;
+      --glass: rgba(0,0,0,0.03);
+      --rule: rgba(120,90,30,0.18);
+      --gold: #8a6318;
+      --gold-light: #6b4c10;
+      --text: #1e1810;
+      --text-mid: #4a3c28;
+      --text-faint: #7a6a50;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not(.dark-mode) {
+        --bg: #f5f0e8;
+        --surface: #ede7da;
+        --glass: rgba(0,0,0,0.03);
+        --rule: rgba(120,90,30,0.18);
+        --gold: #8a6318;
+        --gold-light: #6b4c10;
+        --text: #1e1810;
+        --text-mid: #4a3c28;
+        --text-faint: #7a6a50;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'EB Garamond', serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      text-align: center;
+      padding: 3rem 2rem 2rem;
+      border-bottom: 1px solid var(--rule);
+      background: linear-gradient(to bottom, rgba(201,168,76,0.04), transparent);
+    }
+
+    .site-greek {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.85rem;
+      color: var(--text-faint);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+
+    .site-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: var(--gold-light);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+
+    .site-tagline {
+      font-size: 0.9rem;
+      color: var(--text-faint);
+      font-style: italic;
+      letter-spacing: 0.05em;
+    }
+
+    .header-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      color: var(--gold);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-family: 'Cinzel', serif;
+    }
+    .header-ornament span {
+      height: 1px;
+      width: 60px;
+      background: linear-gradient(to right, transparent, var(--gold));
+      opacity: 0.4;
+    }
+    .header-ornament span:last-child {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0.6rem 1rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--rule);
+      flex-wrap: wrap;
+    }
+    nav a {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--gold-light); }
+    nav a.active { color: var(--gold); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 2.5rem 2rem 2rem;
+      border-bottom: 1px solid var(--rule);
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .back-link {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 1.2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+    .page-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
+    }
+    .page-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-mid);
+      font-style: italic;
+      line-height: 1.7;
+    }
+
+    /* ── CONTROLS ── */
+    .controls {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      padding: 0.55rem 0.9rem 0.55rem 2.2rem;
+      font-family: 'EB Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input::placeholder { color: var(--text-faint); font-style: italic; }
+    .search-wrap input:focus { border-color: rgba(201,168,76,0.4); }
+    .search-icon {
+      position: absolute;
+      left: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-faint);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .tag-filters {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .tag-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.8rem;
+      border-radius: 2px;
+      border: 1px solid var(--rule);
+      background: transparent;
+      color: var(--text-faint);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tag-btn:hover { border-color: rgba(201,168,76,0.3); color: var(--text-mid); }
+    .tag-btn.active {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.45);
+      color: var(--gold);
+    }
+
+    /* ── RESULTS COUNT ── */
+    .results-bar {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0.6rem 2rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── GLOSSARY LIST ── */
+    .glossary-list {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 4rem;
+    }
+
+    /* Alpha divider */
+    .alpha-divider {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.5;
+      padding: 1.5rem 0 0.5rem;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 0.25rem;
+    }
+
+    /* Accordion item */
+    .glossary-item {
+      border-bottom: 1px solid rgba(201,168,76,0.07);
+      transition: background 0.2s;
+    }
+    .glossary-item.hidden { display: none; }
+
+    .glossary-trigger {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 1.1rem 0.5rem;
+      text-align: left;
+      transition: background 0.15s;
+      border-radius: 3px;
+    }
+    .glossary-trigger:hover { background: rgba(201,168,76,0.03); }
+
+    .term-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--text);
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+    .glossary-item.open .term-name,
+    .glossary-trigger:hover .term-name { color: var(--gold-light); }
+
+    .term-greek {
+      font-family: 'EB Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--text-faint);
+      font-style: italic;
+    }
+
+    .term-snippet {
+      font-size: 0.9rem;
+      color: var(--text-faint);
+      font-style: italic;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .term-tags {
+      display: flex;
+      gap: 0.4rem;
+      flex-shrink: 0;
+    }
+    .term-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 0.52rem;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      border: 1px solid var(--rule);
+      color: var(--text-faint);
+    }
+
+    .term-chevron {
+      color: var(--gold);
+      opacity: 0.4;
+      font-size: 0.75rem;
+      transition: transform 0.25s, opacity 0.2s;
+      flex-shrink: 0;
+    }
+    .glossary-item.open .term-chevron {
+      transform: rotate(180deg);
+      opacity: 0.8;
+    }
+
+    /* Expanded body */
+    .glossary-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .glossary-item.open .glossary-body { max-height: 600px; }
+
+    .glossary-body-inner {
+      padding: 0 0.5rem 1.5rem 0.5rem;
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 1.5rem 2rem;
+    }
+
+    .def-plain {
+      font-size: 1.05rem;
+      color: var(--text);
+      line-height: 1.75;
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .def-depth {
+      font-size: 0.97rem;
+      color: var(--text-mid);
+      line-height: 1.85;
+    }
+
+    .def-depth em { color: var(--text); font-style: italic; }
+
+    .sidebar-block {
+      background: var(--glass);
+      border: 1px solid var(--rule);
+      border-left: 2px solid rgba(201,168,76,0.3);
+      border-radius: 0 4px 4px 0;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .sidebar-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.7;
+      margin-bottom: 0.5rem;
+    }
+    .sidebar-passages a {
+      display: block;
+      font-family: 'EB Garamond', serif;
+      font-size: 0.92rem;
+      color: var(--gold);
+      text-decoration: none;
+      padding: 0.2rem 0;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      transition: color 0.2s;
+    }
+    .sidebar-passages a:last-child { border-bottom: none; }
+    .sidebar-passages a:hover { color: var(--gold-light); }
+
+    .sidebar-related {
+      font-size: 0.88rem;
+      color: var(--text-faint);
+      line-height: 1.8;
+    }
+    .sidebar-related a {
+      color: var(--text-mid);
+      text-decoration: underline;
+      text-decoration-color: rgba(201,168,76,0.2);
+      text-underline-offset: 2px;
+      transition: color 0.2s;
+    }
+    .sidebar-related a:hover { color: var(--gold-light); }
+
+    /* No results */
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-faint);
+      font-style: italic;
+      font-size: 1rem;
+      display: none;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--rule);
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    @media (max-width: 640px) {
+      .glossary-body-inner { grid-template-columns: 1fr; }
+      .term-snippet { display: none; }
+      .term-tags { display: none; }
+      .page-title { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+    <a class="back-link" href="index.html">← Back to Home</a>
+  <h2 class="page-title">Theological Glossary</h2>
+  <p class="page-subtitle">Key terms defined relevent to free grace</p>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="glossary-search" placeholder="Search terms, e.g. "justification"…" oninput="filterGlossary()" />
+  </div>
+  <div style="display:flex;gap:0.4rem;flex-shrink:0;">
+    <button onclick="setTheme('light')" title="Light mode" style="background:none;border:1px solid var(--rule);border-radius:3px;padding:0.35rem 0.6rem;cursor:pointer;font-size:0.85rem;">☀️</button>
+    <button onclick="setTheme('dark')" title="Dark mode" style="background:none;border:1px solid var(--rule);border-radius:3px;padding:0.35rem 0.6rem;cursor:pointer;font-size:0.85rem;">🌙</button>
+  </div>
+  <div class="tag-filters">
+    <button class="tag-btn active" onclick="setTag(this,'all')">All</button>
+    <button class="tag-btn" onclick="setTag(this,'Soteriology')">Soteriology</button>
+    <button class="tag-btn" onclick="setTag(this,'Apologetics')">Apologetics</button>
+    <button class="tag-btn" onclick="setTag(this,'Theology Proper')">Theology Proper</button>
+    <button class="tag-btn" onclick="setTag(this,'Eschatology')">Eschatology</button>
+    <button class="tag-btn" onclick="setTag(this,'Bibliology')">Bibliology</button>
+  </div>
+</div>
+
+<div class="glossary-list" id="glossary-list">
+
+  <!-- ── B ── -->
+  <div class="alpha-divider" data-alpha="B">B</div>
+
+  <div class="glossary-item" data-tags="Soteriology Eschatology" data-term="bema seat judgment">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Bema Seat</span>
+      <span class="term-snippet">The judgment of believers for rewards, not salvation</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span><span class="term-tag">Eschatology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">The Bema Seat (from Greek <em>βῆμα</em>, a raised platform) is the judgment seat of Christ where believers are evaluated after death — not for salvation, but for the quality of their service and faithfulness in this life.</p>
+          <p class="def-depth">The Bible describes two clearly different judgments, the Bema Seat and the Great White Throne Judgment (Rev. 20:11–15). The unbelievers are judged in the latter on the basis of whether their names are in the Book of Life. Meanwhile at the Bema (2 Cor. 5:10; 1 Cor. 3:12–15), believers receive or lose <em>rewards</em> — not eternal life, which was already secured by faith alone. A believer whose works are burned up "will be saved, but only as through fire" (1 Cor. 3:15). This distinction is foundational to the GES view that salvation and discipleship are entirely separate tracks. Conflating the two judgments is a common mistake in Lordship Salvation.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=2+Corinthians+5%3A10&version=WEB" target="_blank">2 Corinthians 5:10</a>
+              <a href="https://www.biblegateway.com/passage/?search=1+Corinthians+3%3A12-15&version=WEB" target="_blank">1 Corinthians 3:12–15</a>
+              <a href="https://www.biblegateway.com/passage/?search=Romans+14%3A10&version=WEB" target="_blank">Romans 14:10</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── D ── -->
+  <div class="alpha-divider" data-alpha="D">D</div>
+
+   <div class="glossary-item" data-tags="Soteriology" data-term="decisionism">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Decisionism</span>
+      <span class="term-snippet">Common misunderstanding that salvation involves ritual decisions</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">The belief that salvation must involve some outward decision, such as praying a prayer, walking an aisle or signing a commitment card.</p>
+          <p class="def-depth">The widespread evangelistic teaching and practice that a person becomes eternally saved from Hell primarily by making a conscious, external “decision” for Christ. Typically this is understood as the "sinner's prayer" or a traditional similar invitation. Making decisions for Christ after faith is not wrong - yet too often the faith is not distinguished from the expression itself. Decisionism produces false assurance by insisting people look at their external responses, rather than the finished work of Christ.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=Acts%2016%3A31&version=WEB" target="_blank">Acts 16:31</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── E ── -->
+  <div class="alpha-divider" data-alpha="E">E</div>
+
+  <div class="glossary-item" data-tags="Soteriology" data-term="eternal conscious torment">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Eternal Conscious Torment (ETC)</span>
+      <span class="term-snippet">Traditional view of Hell</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">ETC is the traditional view of Hell as a place of eternal conscious suffering for those who have rejected Christ.</p>
+          <p class="def-depth">The Bible describes unbelievers being resurrected, judged at the Great White Throne (Revelation 20:11–15), and then cast into the Lake of Fire where they will experience conscious, unending suffering forever, rather than annihilation, reincarnation, or purification. It is based on various biblical passages that describe Hell as a place of unending fire and darkness.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=Luke%2016%3A19%E2%80%9331&version=WEB" target="_blank">Luke 16:19–31</a>
+              <a href="https://www.biblegateway.com/passage/?search=Revelation%2014%3A9%E2%80%9311&version=WEB" target="_blank">Revelation 14:9–11</a>
+              <a href="https://www.biblegateway.com/passage/?search=Matthew%2025%3A46&version=WEB" target="_blank">Matthew 25:46</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glossary-item" data-tags="Soteriology" data-term="eternal life eternal security">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Eternal Security</span>
+      <span class="term-snippet">Once saved, always saved — the biblical basis explained</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">Eternal security is the doctrine that a person who has believed in Jesus Christ for eternal life can never lose that salvation, regardless of subsequent sin or failure of faith.</p>
+          <p class="def-depth">The Scripture grounds eternal security not in the perseverance of the believer but in the promise of God. Jesus said, <em>"I give eternal life to them. They will never perish"</em> (John 10:28). The word <em>eternal</em> (Greek: <em>αἰώνιος</em>) means unending — a life that could be forfeited would not qualify. GES also appeals to the nature of the new birth (John 3:3–7): just as physical birth cannot be undone, neither can spiritual regeneration. This stands in contrast to Arminian views of conditionalism and to Lordship Salvation's implicit conditionalism, where perseverance in obedience becomes the evidence — and thus de facto condition — of genuine faith.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=John+10%3A28-29&version=WEB" target="_blank">John 10:28–29</a>
+              <a href="https://www.biblegateway.com/passage/?search=Romans+8%3A38-39&version=WEB" target="_blank">Romans 8:38–39</a>
+              <a href="https://www.biblegateway.com/passage/?search=John+5%3A24&version=WEB" target="_blank">John 5:24</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── F ── -->
+  <div class="alpha-divider" data-alpha="F">F</div>
+
+  <div class="glossary-item" data-tags="Soteriology" data-term="faith believe pistis pisteuo">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Faith <span class="term-greek">(πίστις / pisteúō)</span></span>
+      <span class="term-snippet">Belief, being persuaded of a truth</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">In Free Grace theology, saving faith is the act of believing — mentally assenting to and trusting in — the promise that Jesus gives eternal life to whoever believes in Him. It is not a commitment, surrender, or lifestyle change.</p>
+          <p class="def-depth">The Greek noun <em>πίστις</em> (pistis) and verb <em>πιστεύω</em> (pisteúō) mean "belief" or "trust," not "submission" or "lordship." GES emphasizes that John's Gospel — written explicitly so that readers "may believe" and "have life" (John 20:31) — never once uses the word <em>repentance</em> as a condition of salvation. Zane Hodges and Bob Wilkin have argued extensively that inserting surrender or commitment into saving faith is a category error that conflates justification with discipleship. The object of saving faith is also significant: one must believe <em>in Jesus</em> as the guarantor of eternal life, not merely believe historical facts about Him.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=John+3%3A16&version=WEB" target="_blank">John 3:16</a>
+              <a href="https://www.biblegateway.com/passage/?search=John+20%3A30-31&version=WEB" target="_blank">John 20:30–31</a>
+              <a href="https://www.biblegateway.com/passage/?search=Ephesians+2%3A8-9&version=WEB" target="_blank">Ephesians 2:8–9</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── J ── -->
+  <div class="alpha-divider" data-alpha="J">J</div>
+
+  <div class="glossary-item" data-tags="Soteriology" data-term="justification justified imputation righteousness">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Justification</span>
+      <span class="term-snippet">God's legal declaration of righteousness by faith alone</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">Justification is God's legal declaration that a sinner is righteous in His sight, based entirely on faith in Christ — not on works, character, or continued obedience.</p>
+          <p class="def-depth">Justification is a forensic (legal) act, not a transformative one — it changes one's standing before God, not one's inner state (that is sanctification). Paul's argument in Romans 3–5 is that Abraham was justified <em>before</em> circumcision (Rom. 4:10) and apart from the law (Rom. 3:21), establishing that the ground of justification is always and only faith. Free Grace theology insists this is a one-time, permanent verdict — not an ongoing process. The imputed righteousness of Christ (2 Cor. 5:21) is credited to the believer the moment they believe. Any teaching that makes justification contingent on future performance or perseverance undermines Paul's entire argument in Galatians.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=Romans+3%3A21-26&version=WEB" target="_blank">Romans 3:21–26</a>
+              <a href="https://www.biblegateway.com/passage/?search=Romans+4%3A1-8&version=WEB" target="_blank">Romans 4:1–8</a>
+              <a href="https://www.biblegateway.com/passage/?search=Galatians+2%3A16&version=WEB" target="_blank">Galatians 2:16</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── L ── -->
+  <div class="alpha-divider" data-alpha="L">L</div>
+
+  <div class="glossary-item" data-tags="Soteriology" data-term="lordship salvation commitment surrender obedience">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Lordship Salvation</span>
+      <span class="term-snippet">The view Free Grace theology directly challenges</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">Lordship Salvation is the teaching that genuine saving faith necessarily includes submission to Christ as Lord, a willingness to obey, and a life marked by perseverance in good works — otherwise the faith was never real.</p>
+          <p class="def-depth">Associated primarily with John MacArthur and Reformed evangelicalism, Lordship Salvation frames repentance and surrender as inseparable components of saving faith. Free Grace theologians — particularly Zane Hodges and Charles Ryrie — argue this view smuggles works into the gospel. If ongoing obedience is the necessary evidence of real faith, then assurance becomes impossible and the gospel is no longer free. GES also challenges the hermeneutical move of reading discipleship passages (Luke 9:23, "take up your cross") as salvation passages. These, Free Grace holds, are addressed to already-believing disciples about <em>rewards</em>, not to unbelievers about the new birth.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=John+6%3A47&version=WEB" target="_blank">John 6:47</a>
+              <a href="https://www.biblegateway.com/passage/?search=Acts+16%3A31&version=WEB" target="_blank">Acts 16:31</a>
+              <a href="https://www.biblegateway.com/passage/?search=Ephesians+2%3A8-9&version=WEB" target="_blank">Ephesians 2:8–9</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── R ── -->
+  <div class="alpha-divider" data-alpha="R">R</div>
+
+  <div class="glossary-item" data-tags="Soteriology" data-term="repentance metanoia turn change mind">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Repentance <span class="term-greek">(μετάνοια / metanoia)</span></span>
+      <span class="term-snippet">A change of mind — not sorrow or behavioral reform</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">Repentance (Greek: <em>μετάνοια</em>, metanoia) literally means a "change of mind." In Free Grace theology, it refers to a mental turning — from unbelief to belief — not necessarily emotional sorrow or a behavioral reformation.</p>
+          <p class="def-depth">The Free Grace view distinguishes sharply between <em>metanoia</em> (change of mind) and <em>metamelomai</em> (feeling remorse). Popular preaching often conflates the two, demanding tearful contrition as a condition of salvation. GES argues this is an unwarranted addition to the gospel. Zane Hodges notes that in Acts, repentance directed at Gentiles (Acts 20:21) involves turning <em>to God</em> from idols — which is functionally equivalent to believing. Repentance is not a second condition alongside faith; when it appears in soteriological contexts, it is either a synonym for belief or a component of it. The critical diagnostic: repentance toward God is not the same as promising behavioral reform.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=Acts+20%3A21&version=WEB" target="_blank">Acts 20:21</a>
+              <a href="https://www.biblegateway.com/passage/?search=2+Corinthians+7%3A10&version=WEB" target="_blank">2 Corinthians 7:10</a>
+              <a href="https://www.biblegateway.com/passage/?search=Luke+24%3A47&version=WEB" target="_blank">Luke 24:47</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S ── -->
+  <div class="alpha-divider" data-alpha="S">S</div>
+
+  <div class="glossary-item" data-tags="Soteriology" data-term="sanctification holiness growth discipleship carnal">
+    <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
+      <span class="term-name">Sanctification</span>
+      <span class="term-snippet">Growth in holiness — distinct from justification</span>
+      <span class="term-tags"><span class="term-tag">Soteriology</span></span>
+      <span class="term-chevron">▼</span>
+    </button>
+    <div class="glossary-body">
+      <div class="glossary-body-inner">
+        <div>
+          <p class="def-plain">Sanctification is the ongoing process of a believer growing in holiness and conformity to Christ after salvation. It is entirely distinct from justification, which is complete and instantaneous at the moment of faith.</p>
+          <p class="def-depth">Free Grace theology is careful to maintain the distinction between justification (positional, complete, the basis of eternal life) and sanctification (progressive, experiential, the basis of rewards at the Bema). Conflating them leads either to works-based assurance or to despair. The "carnal Christian" (1 Cor. 3:1–4) is the Free Grace acknowledgment that a genuine believer can live in persistent carnality — saved but not growing. Lordship Salvation tends to deny this category, arguing that such a person was never truly regenerate. GES holds this denial makes sanctification a hidden condition of justification.</p>
+        </div>
+        <div class="def-sidebar">
+          <div class="sidebar-block">
+            <div class="sidebar-label">Key Passages</div>
+            <div class="sidebar-passages">
+              <a href="https://www.biblegateway.com/passage/?search=1+Corinthians+3%3A1-4&version=WEB" target="_blank">1 Corinthians 3:1–4</a>
+              <a href="https://www.biblegateway.com/passage/?search=Romans+6%3A1-14&version=WEB" target="_blank">Romans 6:1–14</a>
+              <a href="https://www.biblegateway.com/passage/?search=Philippians+2%3A12-13&version=WEB" target="_blank">Philippians 2:12–13</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results" id="no-results">No terms match your search.</div>
+</div>
+
+<footer>
+  &copy; <span id="yr"></span> Whosoever Believes &mdash; Free Grace Theology &amp; Biblical Studies
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // ── THEME (mirrors scripts.js pattern) ──
+  function setTheme(t) {
+    document.documentElement.classList.toggle('light-mode', t === 'light');
+    document.documentElement.classList.toggle('dark-mode', t === 'dark');
+    localStorage.setItem('theme', t);
+  }
+  (function() {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light') document.documentElement.classList.add('light-mode');
+    else if (saved === 'dark') document.documentElement.classList.add('dark-mode');
+  })();
+
+  let activeTag = 'all';
+
+  function toggleItem(item) {
+    item.classList.toggle('open');
+  }
+
+  function setTag(btn, tag) {
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTag = tag;
+    filterGlossary();
+  }
+
+  function filterGlossary() {
+    const query = document.getElementById('glossary-search').value.toLowerCase().trim();
+    const items = document.querySelectorAll('.glossary-item');
+    const dividers = document.querySelectorAll('.alpha-divider');
+    let visibleCount = 0;
+
+    items.forEach(item => {
+      const tags = item.dataset.tags || '';
+      const term = item.dataset.term || '';
+      const tagMatch = activeTag === 'all' || tags.includes(activeTag);
+      const textMatch = !query || term.includes(query) ||
+        item.querySelector('.term-name').textContent.toLowerCase().includes(query);
+      const show = tagMatch && textMatch;
+      item.classList.toggle('hidden', !show);
+      if (show) visibleCount++;
+    });
+
+    // Show/hide alpha dividers based on whether any visible item follows them
+    dividers.forEach(div => {
+      const alpha = div.dataset.alpha;
+      let hasVisible = false;
+      let next = div.nextElementSibling;
+      while (next && !next.classList.contains('alpha-divider')) {
+        if (next.classList.contains('glossary-item') && !next.classList.contains('hidden')) {
+          hasVisible = true;
+          break;
+        }
+        next = next.nextElementSibling;
+      }
+      div.style.display = hasVisible ? '' : 'none';
+    });
+
+    document.getElementById('results-bar').textContent =
+      visibleCount === 1 ? 'Showing 1 term' : `Showing ${visibleCount} terms`;
+    document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+</script>
+</body>
+</html>
