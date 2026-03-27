@@ -1,5 +1,12 @@
 const searchIndex = [
   {
+    title: "Profiting for the Kingdom",
+    excerpt: "Mark 8:35\u201338 is about discipleship and rewards, not conditions for eternal life",
+    url: "articles/Profiting-For-The-Kingdom-Mark-8.html",
+    tags: ["Salvation"],
+    content: `Mark 8:35-38 is one of several problem passages often misused to argue against salvation by faith alone. Lordship writers like John MacArthur interpret save his life as referring to eternal life and view the shame in verse 38 as a denial of entrance into the Kingdom. However there are several significant problems with this reading. First the passage is focused on discipleship conditions not the reception of eternal life. Jesus spoke to the multitudes through the twelve disciples on how they should follow His example. They had already believed in Christ as the Messiah (John 2:11). Luke 9:23 adds that taking up one's cross is a daily exercise. The repeatable act of suffering for Christ is incompatible with the instantaneous reception of eternal life as a free gift. Revelation 3:5 uses similar language in the positive showing that acknowledging Christ brings honor before the Father. Second the Lordship view misunderstands the Greek word psyche or soul in 8:36. Biblically nephesh and psyche refer to the seat of personality and emotion not merely the immaterial spirit. Acts 27:9-11 shows Paul using psyche for physical life. 3 John 1:2 uses soul to refer to spiritual vitality. 1 Corinthians 15:45 quotes Genesis 2:7 to show Adam became a living soul a natural living person. Mark 8:35 is about losing out on the qualitative experience of eternal life and future rewards not losing salvation. Third Christ being ashamed of believers in verse 38 does not mean disowning them. Matthew 16:27 shows Christ rewarding believers based on works. 1 Corinthians 3:14-15 explains that unfaithful work will burn at the Judgment Seat though the believer is still saved. 1 John 2:28 urges abiding in Christ to avoid shame at His coming. God commissions us as stewards to carry out the Kingdom mission. Every believer should long to hear Well done good and faithful servant (Matt. 25:23).`
+  },
+  {
     title: "House, Throne & Kingdom",
     excerpt: `Brief summary of God's promise to David`,
     url: "articles/Davidic-Covenant-Overview.html",
