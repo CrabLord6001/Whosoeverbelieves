@@ -71,6 +71,29 @@
  <!-- ARTICLE Body -->
   <article class="article-body">
 
+<audio id="player" src="../audio/davidic-covenant-audio.mp3"></audio>
+<div style="display: flex; align-items: center; gap: 10px; margin: 1rem 0; max-width: 720px;">
+  <button onclick="togglePlay()" id="playBtn" style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #b8963e; background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+    <svg id="playIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e"><polygon points="2,1 11,6 2,11"/></svg>
+    <svg id="pauseIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e" style="display:none;"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7" y="1" width="3.5" height="10" rx="1"/></svg>
+  </button>
+  <span style="font-size: 12px; color: #888; white-space: nowrap;">🎧 Listen to this article</span>
+  <input type="range" id="progress" value="0" min="0" max="100" step="0.1" style="flex: 1; accent-color: #b8963e; cursor: pointer;" oninput="seek(this.value)"/>
+  <span id="currentTime" style="font-size: 11px; color: #888; white-space: nowrap;">0:00</span>
+</div>
+<script>
+const a = document.getElementById('player');
+const pi = document.getElementById('playIcon');
+const pa = document.getElementById('pauseIcon');
+const pr = document.getElementById('progress');
+const ct = document.getElementById('currentTime');
+function fmt(s){const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec;}
+function togglePlay(){if(a.paused){a.play();pi.style.display='none';pa.style.display='block';}else{a.pause();pi.style.display='block';pa.style.display='none';}}
+function seek(v){if(a.duration)a.currentTime=(v/100)*a.duration;}
+a.addEventListener('timeupdate',()=>{if(a.duration){pr.value=(a.currentTime/a.duration)*100;ct.textContent=fmt(a.currentTime);}});
+a.addEventListener('ended',()=>{pi.style.display='block';pa.style.display='none';pr.value=0;ct.textContent='0:00';});
+</script>
+
 <p>In 2 Samuel 7, God made an unconditional covenant with David that his descendant would forever sit on his throne, rule over his kingdom, and build a temple for God’s dwelling. Only Jesus Christ will perfectly fulfill every element of the promise in His Millennial reign.</p> 
 
 <div style="text-align: center; margin: 2em 0 1em;">
