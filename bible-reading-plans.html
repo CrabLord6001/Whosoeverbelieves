@@ -1124,6 +1124,88 @@
     background: var(--gold-faint);
   }
   .completion-action.gold:hover { background: rgba(201,168,76,0.2); }
+
+  /* ── AUDIO PLAYER ── */
+  .listen-btn {
+    display: inline-flex; align-items: center; gap: 0.3em;
+    margin-top: 0.5rem;
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 0.28rem 0.7rem;
+    background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.35);
+    color: var(--gold); border-radius: 3px; cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .listen-btn:hover { background: rgba(201,168,76,0.18); border-color: var(--gold); }
+  .listen-btn.playing { background: rgba(201,168,76,0.22); border-color: var(--gold); }
+
+  #audio-player-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
+    background: #111827; border-top: 1px solid rgba(201,168,76,0.3);
+    padding: 0.55rem 1.25rem 0.65rem;
+    display: flex; align-items: center; gap: 1rem;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
+  }
+  :root.light-mode #audio-player-bar { background: #e8e3d5; border-top-color: rgba(138,106,31,0.3); }
+  body.audio-active { padding-bottom: 76px; }
+
+  .audio-track-info { flex: 1; min-width: 0; }
+  .audio-track-info span { display: block; }
+  #audio-track-label {
+    font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .audio-queue-label {
+    font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.13em;
+    color: var(--gold); text-transform: uppercase; margin-top: 0.1rem;
+  }
+  .audio-controls { display: flex; align-items: center; gap: 0.35rem; flex-shrink: 0; }
+  .audio-ctrl-btn {
+    background: none; border: 1px solid rgba(201,168,76,0.28); color: var(--text-mid);
+    border-radius: 3px; padding: 0.28rem 0.55rem; font-size: 0.78rem;
+    cursor: pointer; transition: color 0.2s, border-color 0.2s, background 0.2s;
+    white-space: nowrap; line-height: 1.3;
+  }
+  .audio-ctrl-btn:hover { color: var(--gold); border-color: var(--gold); }
+  #audio-play-btn {
+    background: var(--gold-faint); border-color: rgba(201,168,76,0.5);
+    color: var(--gold); font-size: 0.9rem; padding: 0.28rem 0.9rem;
+  }
+  #audio-play-btn:hover { background: rgba(201,168,76,0.22); }
+
+  .audio-scrub-row {
+    display: flex; align-items: center; gap: 0.45rem; flex: 1.4; min-width: 100px;
+  }
+  .audio-scrub-row span {
+    font-family: 'Cinzel', serif; font-size: 0.54rem;
+    color: var(--text-faint); white-space: nowrap;
+  }
+  #audio-scrubber {
+    flex: 1; -webkit-appearance: none; appearance: none;
+    height: 3px; border-radius: 2px; outline: none; cursor: pointer;
+    border: none; padding: 0; width: auto;
+    background: rgba(255,255,255,0.15);
+  }
+  :root.light-mode #audio-scrubber { background: rgba(0,0,0,0.15); }
+  #audio-scrubber::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 11px; height: 11px;
+    border-radius: 50%; background: var(--gold); cursor: pointer; border: none;
+  }
+  #audio-scrubber::-moz-range-thumb {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--gold); cursor: pointer; border: none;
+  }
+  .audio-close-btn {
+    background: none; border: none; color: var(--text-faint); font-size: 0.85rem;
+    cursor: pointer; padding: 0.25rem 0.3rem; line-height: 1;
+    transition: color 0.2s; flex-shrink: 0;
+  }
+  .audio-close-btn:hover { color: var(--text); }
+  @media (max-width: 600px) {
+    #audio-player-bar { flex-wrap: wrap; gap: 0.45rem; padding: 0.5rem 0.85rem 0.6rem; }
+    .audio-scrub-row { flex: 100%; order: 10; }
+    .audio-track-info { flex: 1; }
+    body.audio-active { padding-bottom: 110px; }
+  }
 </style>
 </head>
 <body>
@@ -2060,7 +2142,8 @@ function renderPlan() {
         ${reflections[idx] ? `<div class="reflection-preview" id="refl-preview-${idx}">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
         <button class="reflection-open-btn" onclick="openJournal(${idx})" id="refl-btn-${idx}">
           ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
-        </button>`;
+        </button>
+        <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})">🔊 Listen</button>`;
     }
 
     inner += `<button class="toggle-grace-btn" onclick="toggleGrace(${idx})"
@@ -3513,7 +3596,215 @@ document.addEventListener('keydown', e => {
 })();
 
 initAuth();
+
+/* ═══════════════════════════════════════════════════════════════
+   AUDIO PLAYER  —  AudioTreasure WEB Recording (David Williams)
+   URL pattern: https://www.audiotreasure.com/mp3/{Book}/{Book}{ch}.mp3
+   ═══════════════════════════════════════════════════════════════ */
+
+// Map Bible book names → AudioTreasure directory/file name (spaces removed, etc.)
+const AT_BOOK_MAP = {
+  'Song of Solomon': 'SongofSolomon',
+  '1 Samuel':        '1Samuel',   '2 Samuel':        '2Samuel',
+  '1 Kings':         '1Kings',    '2 Kings':         '2Kings',
+  '1 Chronicles':    '1Chronicles','2 Chronicles':   '2Chronicles',
+  '1 Ezra':          '1Ezra',     '2 Ezra':          '2Ezra',
+  '1 Corinthians':   '1Corinthians','2 Corinthians': '2Corinthians',
+  '1 Thessalonians': '1Thessalonians','2 Thessalonians':'2Thessalonians',
+  '1 Timothy':       '1Timothy',  '2 Timothy':       '2Timothy',
+  '1 Peter':         '1Peter',    '2 Peter':         '2Peter',
+  '1 John':          '1John',     '2 John':          '2John',
+  '3 John':          '3John',
+  '1 Maccabees':     '1Maccabees','2 Maccabees':     '2Maccabees',
+};
+function atBookName(book) {
+  return AT_BOOK_MAP[book] || book.replace(/\s+/g, '');
+}
+function getAudioUrl(book, chapter) {
+  const b = atBookName(book);
+  return `https://www.audiotreasure.com/mp3/${b}/${b}${chapter}.mp3`;
+}
+
+// ── Player state ──────────────────────────────────────────────
+let _audio        = new Audio();
+let _audioQueue   = [];   // [{book, chapter, label}]
+let _audioIdx     = 0;
+let _audioSeeking = false;
+let _activeDayIdx = -1;   // which day card owns the current queue
+
+function _audioFmtTime(sec) {
+  if (!isFinite(sec) || isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function _audioRefreshScrubber() {
+  const scrub = document.getElementById('audio-scrubber');
+  if (!scrub || !_audio.duration) return;
+  const pct = (_audio.currentTime / _audio.duration) * 100;
+  scrub.value = pct;
+  scrub.style.background =
+    `linear-gradient(to right, var(--gold) ${pct}%, rgba(255,255,255,0.15) ${pct}%)`;
+  document.getElementById('audio-time-cur').textContent = _audioFmtTime(_audio.currentTime);
+  document.getElementById('audio-time-dur').textContent = _audioFmtTime(_audio.duration);
+}
+
+function _audioSetListenBtn(dayIdx, playing) {
+  const btn = document.querySelector(`.listen-btn[data-day="${dayIdx}"]`);
+  if (!btn) return;
+  if (playing) { btn.textContent = '🔊 Playing…'; btn.classList.add('playing'); }
+  else         { btn.textContent = '🔊 Listen';   btn.classList.remove('playing'); }
+}
+
+function _audioLoadTrack(idx) {
+  if (idx < 0 || idx >= _audioQueue.length) return;
+  _audioIdx = idx;
+  const track = _audioQueue[idx];
+  _audio.src = getAudioUrl(track.book, track.chapter);
+
+  document.getElementById('audio-track-label').textContent = track.label;
+  document.getElementById('audio-queue-label').textContent =
+    _audioQueue.length > 1 ? `Track ${idx + 1} of ${_audioQueue.length}` : '';
+  document.getElementById('audio-time-cur').textContent = '0:00';
+  document.getElementById('audio-time-dur').textContent = '0:00';
+  const scrub = document.getElementById('audio-scrubber');
+  if (scrub) { scrub.value = 0; scrub.style.background = 'rgba(255,255,255,0.15)'; }
+
+  const bar = document.getElementById('audio-player-bar');
+  bar.style.display = 'flex';
+  document.body.classList.add('audio-active');
+
+  _audio.play().catch(() => {});
+  document.getElementById('audio-play-btn').textContent = '⏸';
+}
+
+// ── Public API ────────────────────────────────────────────────
+function listenDay(dayIdx) {
+  const day = currentPlan[dayIdx];
+  if (!day || day.isGrace) return;
+
+  // Build playlist queue for this day's chapters
+  _audioQueue = day.chapters.map(c => ({
+    book:    c.book,
+    chapter: c.chapter,
+    label:   `${c.book} ${c.chapter}`
+  }));
+
+  // Clear previous active button
+  if (_activeDayIdx >= 0 && _activeDayIdx !== dayIdx) {
+    _audioSetListenBtn(_activeDayIdx, false);
+  }
+  _activeDayIdx = dayIdx;
+  _audioSetListenBtn(dayIdx, true);
+
+  _audioLoadTrack(0);
+}
+
+function audioTogglePlay() {
+  if (_audio.paused) {
+    _audio.play().catch(() => {});
+    document.getElementById('audio-play-btn').textContent = '⏸';
+  } else {
+    _audio.pause();
+    document.getElementById('audio-play-btn').textContent = '▶';
+  }
+}
+
+function audioRewind() {
+  _audio.currentTime = Math.max(0, _audio.currentTime - 10);
+}
+
+function audioGoPrev() {
+  // If >5 s in, restart current track; otherwise go to previous
+  if (_audio.currentTime > 5) {
+    _audio.currentTime = 0;
+  } else if (_audioIdx > 0) {
+    _audioLoadTrack(_audioIdx - 1);
+  }
+}
+
+function audioGoNext() {
+  if (_audioIdx < _audioQueue.length - 1) {
+    _audioLoadTrack(_audioIdx + 1);
+  }
+}
+
+function audioClose() {
+  _audio.pause();
+  document.getElementById('audio-player-bar').style.display = 'none';
+  document.body.classList.remove('audio-active');
+  if (_activeDayIdx >= 0) {
+    _audioSetListenBtn(_activeDayIdx, false);
+    _activeDayIdx = -1;
+  }
+}
+
+// ── Wire up events ────────────────────────────────────────────
+(function initAudioPlayer() {
+  // Auto-advance to next track in queue
+  _audio.addEventListener('ended', () => {
+    if (_audioIdx < _audioQueue.length - 1) {
+      _audioLoadTrack(_audioIdx + 1);
+    } else {
+      document.getElementById('audio-play-btn').textContent = '▶';
+      if (_activeDayIdx >= 0) _audioSetListenBtn(_activeDayIdx, false);
+    }
+  });
+
+  // Live scrubber updates
+  _audio.addEventListener('timeupdate', () => {
+    if (!_audioSeeking) _audioRefreshScrubber();
+  });
+  _audio.addEventListener('loadedmetadata', _audioRefreshScrubber);
+  _audio.addEventListener('pause', () => {
+    document.getElementById('audio-play-btn').textContent = '▶';
+  });
+  _audio.addEventListener('play', () => {
+    document.getElementById('audio-play-btn').textContent = '⏸';
+  });
+
+  // Scrubber seek interaction
+  const scrub = document.getElementById('audio-scrubber');
+  if (scrub) {
+    scrub.addEventListener('mousedown',  () => { _audioSeeking = true; });
+    scrub.addEventListener('touchstart', () => { _audioSeeking = true; }, { passive: true });
+    scrub.addEventListener('input', () => {
+      if (_audio.duration) {
+        const t = (scrub.value / 100) * _audio.duration;
+        document.getElementById('audio-time-cur').textContent = _audioFmtTime(t);
+        scrub.style.background =
+          `linear-gradient(to right, var(--gold) ${scrub.value}%, rgba(255,255,255,0.15) ${scrub.value}%)`;
+      }
+    });
+    scrub.addEventListener('change', () => {
+      if (_audio.duration) _audio.currentTime = (scrub.value / 100) * _audio.duration;
+      _audioSeeking = false;
+    });
+    scrub.addEventListener('mouseup', () => { _audioSeeking = false; });
+  }
+})();
 </script>
+<!-- AUDIO PLAYER BAR -->
+<div id="audio-player-bar" style="display:none;">
+  <div class="audio-track-info">
+    <span id="audio-track-label">—</span>
+    <span class="audio-queue-label" id="audio-queue-label"></span>
+  </div>
+  <div class="audio-controls">
+    <button class="audio-ctrl-btn" title="Previous chapter" onclick="audioGoPrev()">⏮</button>
+    <button class="audio-ctrl-btn" title="Rewind 10 seconds" onclick="audioRewind()">↩ 10s</button>
+    <button class="audio-ctrl-btn" id="audio-play-btn" title="Play / Pause" onclick="audioTogglePlay()">▶</button>
+    <button class="audio-ctrl-btn" title="Next chapter" onclick="audioGoNext()">⏭</button>
+  </div>
+  <div class="audio-scrub-row">
+    <span id="audio-time-cur">0:00</span>
+    <input type="range" id="audio-scrubber" min="0" max="100" value="0" step="0.1">
+    <span id="audio-time-dur">0:00</span>
+  </div>
+  <button class="audio-close-btn" title="Close player" onclick="audioClose()">✕</button>
+</div>
+
 <!-- JOURNAL MODAL -->
 <div class="journal-overlay" id="journal-overlay">
   <div class="journal-modal">
