@@ -224,6 +224,7 @@
     display: flex; align-items: center; gap: 0.5rem;
   }
   .card-title::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  
 
   /* ── FORM ELEMENTS ── */
   label {
@@ -438,8 +439,8 @@
   #plan-section { display: none; }
   .plan-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
   .plan-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
-  .plan-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: flex-start; }
-  .plan-actions-col { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-end; }
+  .plan-actions { display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: flex-start; }
+  .plan-actions-col { display: flex; flex-direction: row; gap: 0.35rem; align-items: flex-end; }
   .btn-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .save-hint {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
@@ -465,7 +466,7 @@
   @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
   #autosave-toast-dot.saving { animation: pulse-dot 0.8s ease infinite; }
   .plan-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--text); }
-  .plan-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .plan-actions { display: flex; gap: 0.5rem; flex-wrap: nowrap; }
 
   /* ── SMALL BUTTONS — matches site tag-filter style ── */
   .btn-sm {
@@ -1345,6 +1346,7 @@
     .audio-track-info { flex: 1; }
     body.audio-active { padding-bottom: 110px; }
   }
+
 </style>
 </head>
 <body>
@@ -1573,15 +1575,15 @@
         <div class="plan-actions">
           <div class="btn-col">
             <button class="btn-sm" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
-            <div class="save-hint">Creates a new named plan</div>
+            <div class="save-hint">Creates new plan</div>
           </div>
           <div class="btn-col">
-            <button class="btn-sm gold" onclick="downloadPDF()">⬇ Download PDF</button>
-            <div class="save-hint">Saves a printable copy</div>
+            <button class="btn-sm gold" onclick="downloadPDF()">🖨️ PDF</button>
+            <div class="save-hint">Saves printable copy</div>
           </div>
           <div class="btn-col">
-            <button class="btn-sm" onclick="exportWithNotes()">📄 Export with Notes</button>
-            <div class="save-hint">Plain text with reflections</div>
+            <button class="btn-sm" onclick="exportWithNotes()">📄 TXT</button>
+            <div class="save-hint">Includes reflections</div>
           </div>
       </div>
       </div>
