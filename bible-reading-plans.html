@@ -486,6 +486,129 @@
 
   /* ── CALENDAR GRID ── */
   .calendar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.75rem; }
+  /* ── VIEW TOGGLE ── */
+  .view-toggle {
+    display: flex; gap: 0.3rem; margin-bottom: 1.1rem;
+  }
+  .view-btn {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 0.35rem 0.85rem;
+    border: 1px solid var(--rule); border-radius: 2px;
+    background: none; color: var(--text-faint); cursor: pointer; transition: all 0.15s;
+  }
+  .view-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+  .view-btn.active { color: var(--gold); border-color: rgba(201,168,76,0.6); background: var(--gold-faint); }
+
+  /* ── CALENDAR SHARED ── */
+  .cal-month-label {
+    font-family: 'Cinzel', serif; font-size: 0.78rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold); margin: 1.4rem 0 0.5rem;
+  }
+  .cal-month-label:first-child { margin-top: 0; }
+  .cal-grid-7 {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+  }
+  .cal-dow {
+    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-faint);
+    text-align: center; padding: 0.3rem 0; border-bottom: 1px solid var(--rule);
+    margin-bottom: 2px;
+  }
+
+  /* ── CALENDAR CELL ── */
+  .cal-cell {
+    min-height: 72px; padding: 0.4rem 0.45rem;
+    border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--surface); cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex; flex-direction: column; gap: 2px;
+    position: relative; overflow: hidden;
+  }
+  .cal-cell:hover { border-color: rgba(201,168,76,0.55); background: rgba(201,168,76,0.05); }
+  .cal-cell.grace {
+    background: rgba(184,64,64,0.07); border-color: rgba(184,64,64,0.25);
+  }
+  .cal-cell.grace:hover { border-color: rgba(184,64,64,0.45); }
+  .cal-cell.completed {
+    border-color: rgba(58,125,68,0.45);
+  }
+  :root:not(.light-mode) .cal-cell.completed { background: rgba(20,55,28,0.25); }
+  :root.light-mode .cal-cell.completed { background: rgba(200,235,205,0.3); }
+  .cal-cell.empty, .cal-cell.out-of-range {
+    background: transparent; border-color: transparent; cursor: default; opacity: 0.35;
+  }
+  .cal-cell.empty:hover, .cal-cell.out-of-range:hover { background: transparent; border-color: transparent; }
+  .cal-cell-num {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; color: var(--gold); letter-spacing: 0.06em;
+    line-height: 1;
+  }
+  .cal-cell.grace .cal-cell-num { color: #b84040; }
+  .cal-cell-passage {
+    font-family: 'EB Garamond', serif; font-size: 0.75rem; color: var(--text);
+    line-height: 1.3; overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  }
+  .cal-cell-verses {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.68rem;
+    color: var(--text-faint); font-style: italic; margin-top: auto;
+  }
+  .cal-cell-grace-lbl {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.08em;
+    color: #b84040; text-transform: uppercase;
+  }
+  .cal-cell-check {
+    position: absolute; top: 4px; right: 5px;
+    font-size: 0.65rem; color: #3a7d44; font-weight: bold;
+  }
+
+  /* ── WEEK VIEW NAV ── */
+  .cal-week-nav {
+    display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;
+  }
+  .cal-nav-btn {
+    font-family: 'Cinzel', serif; font-size: 1rem; color: var(--text-faint);
+    background: none; border: 1px solid var(--rule); border-radius: 2px;
+    padding: 0.15rem 0.5rem; cursor: pointer; transition: all 0.15s; line-height: 1;
+  }
+  .cal-nav-btn:hover:not(:disabled) { color: var(--gold); border-color: rgba(201,168,76,0.6); }
+  .cal-nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .cal-week-label {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.95rem;
+    font-style: italic; color: var(--text-mid); flex: 1;
+  }
+
+  /* ── DAY DETAIL POPOVER ── */
+  .popover-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.5); display: none;
+    backdrop-filter: blur(2px);
+  }
+  .popover-overlay.open { display: block; }
+  .day-popover {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -48%) scale(0.96);
+    opacity: 0; pointer-events: none;
+    z-index: 201; width: min(440px, 92vw);
+    background: var(--surface); border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 8px; padding: 1.4rem 1.5rem 1.2rem;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+    transition: opacity 0.2s, transform 0.2s;
+    max-height: 85vh; overflow-y: auto;
+  }
+  .day-popover.open {
+    opacity: 1; pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .popover-close {
+    display: block; width: 100%;
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em;
+    color: var(--text-faint); background: none; border: none;
+    cursor: pointer; padding: 0 0 0.25rem 0; text-align: right;
+    transition: color 0.15s;
+  }
+  .popover-close:hover { color: var(--gold); }
+
+
 
   .day-card {
     border: 1px solid var(--rule);
@@ -494,6 +617,21 @@
     background: var(--surface);
     transition: border-color 0.2s, background 0.2s;
   }
+  /* ── REST DAY TOGGLES ── */
+  .rest-day-toggles {
+    display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.4rem;
+  }
+  .rest-day-btn {
+    font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.08em;
+    padding: 0.3rem 0.55rem; border: 1px solid var(--rule); border-radius: 2px;
+    background: none; color: var(--text-faint); cursor: pointer; transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .rest-day-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .rest-day-btn.active {
+    background: var(--gold-faint); border-color: var(--gold); color: var(--gold);
+  }
+
   .day-card.grace {
     background: var(--surface);
     border-color: rgba(184,64,64,0.35);
@@ -1343,7 +1481,7 @@
       </div>
       <div class="form-group">
         <label for="start-date">Start Date <span style="font-size:0.8em;color:var(--cream-dim)">(optional)</span></label>
-        <input type="date" id="start-date" />
+        <input type="date" id="start-date" onchange="updateGracePreview()" />
       </div>
     </div>
 
@@ -1353,9 +1491,16 @@
         <input type="number" id="total-days" min="1" max="3650" value="30" />
       </div>
       <div class="form-group">
-        <label for="grace-per-week">Rest Days / Week</label>
-        <input type="number" id="grace-per-week" min="0" max="6" value="0"
-               oninput="updateGracePreview()" />
+        <label>Rest Days</label>
+        <div class="rest-day-toggles">
+          <button class="rest-day-btn" data-day="0" onclick="toggleRestDay(this)">Sun</button>
+          <button class="rest-day-btn" data-day="1" onclick="toggleRestDay(this)">Mon</button>
+          <button class="rest-day-btn" data-day="2" onclick="toggleRestDay(this)">Tue</button>
+          <button class="rest-day-btn" data-day="3" onclick="toggleRestDay(this)">Wed</button>
+          <button class="rest-day-btn" data-day="4" onclick="toggleRestDay(this)">Thu</button>
+          <button class="rest-day-btn" data-day="5" onclick="toggleRestDay(this)">Fri</button>
+          <button class="rest-day-btn" data-day="6" onclick="toggleRestDay(this)">Sat</button>
+        </div>
       </div>
       <div class="form-group">
         <label for="translation">Translation</label>
@@ -1441,9 +1586,20 @@
       </div>
       </div>
     </div>
-    <div class="calendar-grid" id="calendar-grid"></div>
+    <div class="view-toggle">
+      <button class="view-btn active" id="vbtn-month" onclick="setView('month')">Month</button>
+      <button class="view-btn" id="vbtn-week" onclick="setView('week')">Week</button>
+      <button class="view-btn" id="vbtn-list" onclick="setView('list')">List</button>
+    </div>
+    <div id="calendar-grid"></div>
   </div>
 </div><!-- /container -->
+
+<!-- DAY DETAIL POPOVER -->
+<div id="popover-overlay" class="popover-overlay" onclick="closeDayPopover()"></div>
+<div id="day-popover" class="day-popover" role="dialog" aria-modal="true">
+  <div id="popover-body"></div>
+</div>
 
 <!-- AUTH MODAL -->
 <div class="modal-overlay" id="auth-modal">
@@ -1806,12 +1962,30 @@ function moveBook(idx, dir) {
   renderOrderCard();
 }
 
+function getSelectedRestDays() {
+  const btns = document.querySelectorAll('.rest-day-btn.active');
+  return new Set([...btns].map(b => parseInt(b.dataset.day)));
+}
+
+function toggleRestDay(btn) {
+  btn.classList.toggle('active');
+  updateGracePreview();
+}
+
 function updateGracePreview() {
-  const gpw = parseInt(document.getElementById('grace-per-week').value) || 0;
-  const el  = document.getElementById('grace-day-pattern-desc');
-  if (gpw === 0) el.textContent = 'No rest days — all days are reading days.';
-  else if (gpw === 2) el.textContent = `${gpw} rest days per week (e.g. Saturday & Sunday).`;
-  else el.textContent = `${gpw} rest day${gpw>1?'s':''} per week evenly distributed.`;
+  const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const selected  = getSelectedRestDays();
+  const el        = document.getElementById('grace-day-pattern-desc');
+  const hasDate   = !!document.getElementById('start-date').value;
+  if (selected.size === 0) {
+    el.textContent = 'No rest days — all days are reading days.';
+  } else if (!hasDate) {
+    const names = [...selected].sort((a,b)=>a-b).map(d => DAY_NAMES[d]).join(', ');
+    el.textContent = `Rest days: ${names}. Set a start date to apply these to your plan.`;
+  } else {
+    const names = [...selected].sort((a,b)=>a-b).map(d => DAY_NAMES[d]).join(', ');
+    el.textContent = `Rest days: ${names}.`;
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1996,23 +2170,27 @@ function clusterChapters(chapterList, readingDays) {
 
 /**
  * Insert rest days into the plan.
- * graceDaysPerWeek: evenly distribute N days per 7 as rest days.
+ * restDaySet: a Set of weekday numbers (0=Sun … 6=Sat) to mark as rest days.
+ * startDateVal: YYYY-MM-DD string; required for rest days to be applied.
  * Returns a full calendar array where rest days have no chapters.
  */
-function insertGraceDays(readingDayData, totalCalendarDays, graceDaysPerWeek) {
+function insertGraceDays(readingDayData, totalCalendarDays, restDaySet, startDateVal) {
   const calendar = [];
   let rdIdx = 0;
+  const sd = startDateVal ? new Date(startDateVal + 'T00:00:00') : null;
 
-  for (let d = 1; d <= totalCalendarDays; d++) {
-    const weekPos = ((d - 1) % 7) + 1; // 1=Mon ... 7=Sun
-    // Grace days fall at the END of each week (e.g. days 6,7 if gpw=2)
-    const isGrace = graceDaysPerWeek > 0 && weekPos > (7 - graceDaysPerWeek);
+  for (let d = 0; d < totalCalendarDays; d++) {
+    let isGrace = false;
+    if (restDaySet.size > 0 && sd) {
+      const date = new Date(sd); date.setDate(sd.getDate() + d);
+      isGrace = restDaySet.has(date.getDay());
+    }
 
     if (isGrace) {
-      calendar.push({ dayNum: d, isGrace: true, chapters: [], verseCount: 0, checked: false });
+      calendar.push({ dayNum: d + 1, isGrace: true, chapters: [], verseCount: 0, checked: false });
     } else {
       const rd = readingDayData[rdIdx] || { chapters: [], verseCount: 0 };
-      calendar.push({ dayNum: d, isGrace: false, chapters: rd.chapters, verseCount: rd.verseCount, checked: false });
+      calendar.push({ dayNum: d + 1, isGrace: false, chapters: rd.chapters, verseCount: rd.verseCount, checked: false });
       rdIdx++;
     }
   }
@@ -2072,18 +2250,23 @@ function generatePlan() {
   }
 
   const totalDays    = parseInt(document.getElementById('total-days').value) || 30;
-  const gracePW      = parseInt(document.getElementById('grace-per-week').value) || 0;
   const startDateVal = document.getElementById('start-date').value;
+  const restDaySet   = startDateVal ? getSelectedRestDays() : new Set();
 
-  // Calculate reading days
-  const weeksTotal   = Math.floor(totalDays / 7);
-  const remainder    = totalDays % 7;
-  const graceDays    = weeksTotal * gracePW + Math.min(remainder, gracePW);
+  // Calculate reading days (count actual rest days in the date range)
+  let graceDays = 0;
+  if (restDaySet.size > 0 && startDateVal) {
+    const sd = new Date(startDateVal + 'T00:00:00');
+    for (let i = 0; i < totalDays; i++) {
+      const d = new Date(sd); d.setDate(sd.getDate() + i);
+      if (restDaySet.has(d.getDay())) graceDays++;
+    }
+  }
   const readingDays  = Math.max(1, totalDays - graceDays);
 
   const chapters     = buildChapterList();
   const clustered    = clusterChapters(chapters, readingDays);
-  const calendar     = insertGraceDays(clustered, totalDays, gracePW);
+  const calendar     = insertGraceDays(clustered, totalDays, restDaySet, startDateVal);
 
   // Attach dates if start date given
   if (startDateVal) {
@@ -2104,17 +2287,42 @@ function generatePlan() {
 }
 
 // ══════════════════════════════════════════════════════════════
-// RENDER PLAN
+// VIEW STATE
+// ══════════════════════════════════════════════════════════════
+let currentView    = 'month';
+let calWeekOffset  = 0;
+
+function setView(v) {
+  currentView = v;
+  ['month','week','list'].forEach(x => {
+    const btn = document.getElementById('vbtn-' + x);
+    if (btn) btn.classList.toggle('active', x === v);
+  });
+  if (v !== 'week') calWeekOffset = 0;
+  renderPlan();
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER PLAN — dispatches to view
 // ══════════════════════════════════════════════════════════════
 function renderPlan() {
-  const grid  = document.getElementById('calendar-grid');
-  const name  = document.getElementById('plan-name').value || 'My Reading Plan';
+  const grid = document.getElementById('calendar-grid');
+  const name = document.getElementById('plan-name').value || 'My Reading Plan';
   grid.innerHTML = '';
-
   document.getElementById('plan-title-display').textContent = name;
   document.getElementById('plan-section').style.display = 'block';
   document.getElementById('progress-section').style.display = 'block';
 
+  if (currentView === 'month')     renderMonthView(grid);
+  else if (currentView === 'week') renderWeekView(grid);
+  else                             renderListView(grid);
+
+  document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── LIST VIEW (original card layout) ──────────────────────────
+function renderListView(grid) {
+  grid.className = 'calendar-grid';
   currentPlan.forEach((day, idx) => {
     const card = document.createElement('div');
     card.className = 'day-card' + (day.isGrace ? ' grace' : '') + (checkStates[idx] ? ' completed' : '');
@@ -2173,9 +2381,285 @@ function renderPlan() {
     card.innerHTML = inner;
     grid.appendChild(card);
   });
-
-  document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+// ── COMPACT CALENDAR CELL ──────────────────────────────────────
+function renderCalCell(day, idx) {
+  const el = document.createElement('div');
+  el.className = 'cal-cell' + (day.isGrace ? ' grace' : '') + (checkStates[idx] ? ' completed' : '');
+  el.id = `cal-cell-${idx}`;
+  el.onclick = () => openDayPopover(idx);
+
+  // Day number label — date number if we have a date, else plan day number
+  const numLabel = day.date ? new Date(day.date + 'T00:00:00').getDate() : day.dayNum;
+  let html = `<span class="cal-cell-num">${numLabel}</span>`;
+
+  if (checkStates[idx]) html += `<span class="cal-cell-check">✓</span>`;
+
+  if (day.isGrace) {
+    html += `<span class="cal-cell-grace-lbl">✦ Rest</span>`;
+  } else {
+    const { label } = formatPassage(day.chapters);
+    const short = label.length > 22 ? label.slice(0, 20) + '…' : label;
+    html += `<span class="cal-cell-passage">${short}</span>`;
+    html += `<span class="cal-cell-verses">${day.verseCount}v</span>`;
+  }
+
+  el.innerHTML = html;
+  return el;
+}
+
+// ── MONTH VIEW ─────────────────────────────────────────────────
+function renderMonthView(grid) {
+  grid.className = ''; // no card grid class
+  const hasDate = currentPlan.length > 0 && !!currentPlan[0].date;
+
+  if (!hasDate) {
+    // No start date — show in 7-column week groups
+    const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const totalWeeks = Math.ceil(currentPlan.length / 7);
+    for (let w = 0; w < totalWeeks; w++) {
+      const lbl = document.createElement('div');
+      lbl.className = 'cal-month-label';
+      lbl.textContent = `Week ${w + 1}`;
+      grid.appendChild(lbl);
+
+      const cg = document.createElement('div');
+      cg.className = 'cal-grid-7';
+      DOW.forEach(d => {
+        const hdr = document.createElement('div');
+        hdr.className = 'cal-dow'; hdr.textContent = d;
+        cg.appendChild(hdr);
+      });
+      for (let i = 0; i < 7; i++) {
+        const planIdx = w * 7 + i;
+        if (planIdx < currentPlan.length) {
+          cg.appendChild(renderCalCell(currentPlan[planIdx], planIdx));
+        } else {
+          const empty = document.createElement('div');
+          empty.className = 'cal-cell empty';
+          cg.appendChild(empty);
+        }
+      }
+      grid.appendChild(cg);
+    }
+    return;
+  }
+
+  // Build a date→index map
+  const dayMap = {};
+  currentPlan.forEach((day, idx) => { if (day.date) dayMap[day.date] = idx; });
+
+  const firstDate = new Date(currentPlan[0].date + 'T00:00:00');
+  const lastDate  = new Date(currentPlan[currentPlan.length - 1].date + 'T00:00:00');
+
+  // Iterate month by month
+  let monthStart = new Date(firstDate.getFullYear(), firstDate.getMonth(), 1);
+  while (monthStart <= lastDate) {
+    const monthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0);
+
+    const lbl = document.createElement('div');
+    lbl.className = 'cal-month-label';
+    lbl.textContent = monthStart.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    grid.appendChild(lbl);
+
+    const cg = document.createElement('div');
+    cg.className = 'cal-grid-7';
+
+    ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+      const hdr = document.createElement('div');
+      hdr.className = 'cal-dow'; hdr.textContent = d;
+      cg.appendChild(hdr);
+    });
+
+    // Leading empty cells
+    for (let i = 0; i < new Date(monthStart).getDay(); i++) {
+      const e = document.createElement('div'); e.className = 'cal-cell empty';
+      cg.appendChild(e);
+    }
+
+    // Days in month
+    for (let d = new Date(monthStart); d <= monthEnd; d.setDate(d.getDate() + 1)) {
+      const ds = d.toISOString().slice(0, 10);
+      if (ds in dayMap) {
+        cg.appendChild(renderCalCell(currentPlan[dayMap[ds]], dayMap[ds]));
+      } else {
+        const oor = document.createElement('div');
+        oor.className = 'cal-cell out-of-range';
+        oor.innerHTML = `<span class="cal-cell-num" style="opacity:0.3">${d.getDate()}</span>`;
+        cg.appendChild(oor);
+      }
+    }
+
+    grid.appendChild(cg);
+    monthStart = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 1);
+  }
+}
+
+// ── WEEK VIEW ──────────────────────────────────────────────────
+function prevWeek() { if (calWeekOffset > 0) { calWeekOffset--; renderPlan(); } }
+function nextWeek() { calWeekOffset++; renderPlan(); }
+
+function renderWeekView(grid) {
+  grid.className = '';
+  const hasDate    = currentPlan.length > 0 && !!currentPlan[0].date;
+  const totalWeeks = Math.ceil(currentPlan.length / 7);
+
+  // Clamp offset
+  if (calWeekOffset >= totalWeeks) calWeekOffset = totalWeeks - 1;
+
+  // Build nav bar
+  let weekLabel = '';
+  if (hasDate) {
+    const startIdx = Math.min(calWeekOffset * 7, currentPlan.length - 1);
+    const endIdx   = Math.min(startIdx + 6, currentPlan.length - 1);
+    const sd = new Date(currentPlan[startIdx].date + 'T00:00:00');
+    const ed = new Date(currentPlan[endIdx].date   + 'T00:00:00');
+    weekLabel = sd.toLocaleDateString('en-US', { month:'short', day:'numeric' })
+              + ' – '
+              + ed.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+  } else {
+    weekLabel = `Week ${calWeekOffset + 1} of ${totalWeeks}`;
+  }
+
+  const nav = document.createElement('div');
+  nav.className = 'cal-week-nav';
+  nav.innerHTML = `
+    <button class="cal-nav-btn" onclick="prevWeek()" ${calWeekOffset === 0 ? 'disabled' : ''}>‹</button>
+    <span class="cal-week-label">${weekLabel}</span>
+    <button class="cal-nav-btn" onclick="nextWeek()" ${calWeekOffset >= totalWeeks - 1 ? 'disabled' : ''}>›</button>
+  `;
+  grid.appendChild(nav);
+
+  const cg = document.createElement('div');
+  cg.className = 'cal-grid-7';
+  grid.appendChild(cg);
+
+  if (hasDate) {
+    // Anchor to actual calendar week (Sun-Sat) for the first plan day in this week group
+    const anchorIdx = Math.min(calWeekOffset * 7, currentPlan.length - 1);
+    const anchor = new Date(currentPlan[anchorIdx].date + 'T00:00:00');
+    const sunday = new Date(anchor); sunday.setDate(anchor.getDate() - anchor.getDay());
+
+    const dayMap = {};
+    currentPlan.forEach((day, idx) => { if (day.date) dayMap[day.date] = idx; });
+
+    ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+      const hdr = document.createElement('div');
+      hdr.className = 'cal-dow'; hdr.textContent = d;
+      cg.appendChild(hdr);
+    });
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(sunday); d.setDate(sunday.getDate() + i);
+      const ds = d.toISOString().slice(0, 10);
+      if (ds in dayMap) {
+        const cell = renderCalCell(currentPlan[dayMap[ds]], dayMap[ds]);
+        cell.style.minHeight = '120px';
+        cg.appendChild(cell);
+      } else {
+        const oor = document.createElement('div');
+        oor.className = 'cal-cell out-of-range';
+        oor.style.minHeight = '120px';
+        oor.innerHTML = `<span class="cal-cell-num" style="opacity:0.25">${d.getDate()}</span>`;
+        cg.appendChild(oor);
+      }
+    }
+  } else {
+    ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+      const hdr = document.createElement('div');
+      hdr.className = 'cal-dow'; hdr.textContent = d;
+      cg.appendChild(hdr);
+    });
+
+    for (let i = 0; i < 7; i++) {
+      const planIdx = calWeekOffset * 7 + i;
+      if (planIdx < currentPlan.length) {
+        const cell = renderCalCell(currentPlan[planIdx], planIdx);
+        cell.style.minHeight = '120px';
+        cg.appendChild(cell);
+      } else {
+        const e = document.createElement('div');
+        e.className = 'cal-cell empty'; e.style.minHeight = '120px';
+        cg.appendChild(e);
+      }
+    }
+  }
+}
+
+// ── DAY DETAIL POPOVER ─────────────────────────────────────────
+function openDayPopover(idx) {
+  const day  = currentPlan[idx];
+  if (!day) return;
+  const body = document.getElementById('popover-body');
+
+  let dateBadge = '';
+  if (day.date) {
+    const d   = new Date(day.date + 'T00:00:00');
+    const mon = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+    const dn  = d.getDate();
+    const dow = d.toLocaleDateString('en-US', { weekday: 'long' });
+    dateBadge = `<div class="day-date-badge">
+      <span class="day-date-month">${mon}</span>
+      <span class="day-date-day">${dn}</span>
+      <span class="day-date-dow">${dow}</span>
+    </div>`;
+  }
+
+  const rightCol = dateBadge
+    ? `<div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
+        <button class="popover-close" onclick="closeDayPopover()" aria-label="Close">ESC ✕</button>
+        ${dateBadge}
+      </div>`
+    : `<button class="popover-close" style="position:absolute;top:0.5rem;right:0.9rem;" onclick="closeDayPopover()" aria-label="Close">ESC ✕</button>`;
+
+  let html = `<div class="day-top">
+    <span class="day-num">Day ${day.dayNum}</span>
+    ${rightCol}
+  </div>`;
+
+  if (day.isGrace) {
+    html += `<div class="grace-label">✦ Rest Day</div>
+      <div class="day-verse-count" style="font-style:italic;color:#b84040;margin-top:0.4rem;">Rest — catch up or reflect today.</div>`;
+  } else {
+    const { label, url } = formatPassage(day.chapters);
+    html += `
+      <div class="day-passage" style="margin-top:0.5rem;">
+        ${url ? `<a href="${url}" target="_blank" rel="noopener">${label}</a>` : label}
+      </div>
+      <div class="day-verse-count">${day.verseCount} verse${day.verseCount!==1?'s':''}</div>
+      <div class="day-check-row">
+        <input type="checkbox" class="day-checkbox" id="pop-chk-${idx}"
+          ${checkStates[idx] ? 'checked' : ''}
+          onchange="toggleCheck(${idx}); document.querySelector('#pop-chk-${idx} ~ .day-check-label').textContent = checkStates[${idx}] ? '✓ Completed' : 'Mark Complete';">
+        <label class="day-check-label" for="pop-chk-${idx}">
+          ${checkStates[idx] ? '✓ Completed' : 'Mark Complete'}
+        </label>
+      </div>
+      ${reflections[idx] ? `<div class="reflection-preview" style="margin-top:0.4rem;">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
+      <button class="reflection-open-btn" style="margin-top:0.4rem;" onclick="closeDayPopover(); setTimeout(()=>openJournal(${idx}),150);">
+        ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
+      </button>
+      <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})" style="margin-top:0.4rem;">🔊 Listen</button>`;
+  }
+
+  html += `<button class="toggle-grace-btn" style="margin-top:0.6rem;" onclick="closeDayPopover(); setTimeout(()=>toggleGrace(${idx}),100);"
+    title="${day.isGrace ? 'Convert to reading day' : 'Set as grace day'}">
+    ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
+  </button>`;
+
+  body.innerHTML = html;
+  document.getElementById('popover-overlay').classList.add('open');
+  document.getElementById('day-popover').classList.add('open');
+}
+
+function closeDayPopover() {
+  document.getElementById('popover-overlay').classList.remove('open');
+  document.getElementById('day-popover').classList.remove('open');
+}
+
+// Close popover on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDayPopover(); });
   
 // ══════════════════════════════════════════════════════════════
 // CONFETTI
@@ -2258,12 +2742,29 @@ function launchConfetti(originEl) {
 // ══════════════════════════════════════════════════════════════
 function toggleCheck(idx) {
   checkStates[idx] = !checkStates[idx];
+
+  // Update list view card
   const card = document.getElementById(`day-${idx}`);
   const lbl  = document.querySelector(`#day-${idx} .day-check-label`);
   const chk  = document.getElementById(`chk-${idx}`);
   if (card) card.classList.toggle('completed', checkStates[idx]);
   if (lbl)  lbl.textContent = checkStates[idx] ? '✓ Completed' : 'Mark Complete';
   if (checkStates[idx] && chk) launchConfetti(chk);
+
+  // Update calendar cell (month/week view)
+  const cell = document.getElementById(`cal-cell-${idx}`);
+  if (cell) {
+    cell.classList.toggle('completed', checkStates[idx]);
+    let checkEl = cell.querySelector('.cal-cell-check');
+    if (checkStates[idx] && !checkEl) {
+      const sp = document.createElement('span');
+      sp.className = 'cal-cell-check'; sp.textContent = '✓';
+      cell.insertBefore(sp, cell.children[1] || null);
+    } else if (!checkStates[idx] && checkEl) {
+      checkEl.remove();
+    }
+  }
+
   updateProgress();
 }
 
@@ -4002,4 +4503,4 @@ function audioClose() {
 
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
