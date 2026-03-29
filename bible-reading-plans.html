@@ -3598,32 +3598,85 @@ document.addEventListener('keydown', e => {
 initAuth();
 
 /* ═══════════════════════════════════════════════════════════════
-   AUDIO PLAYER  —  AudioTreasure WEB Recording (David Williams)
-   URL pattern: https://www.audiotreasure.com/mp3/{Book}/{Book}{ch}.mp3
+   AUDIO PLAYER  —  eBible.org WEB Recording (Winfred W. Henson)
+   Files hosted on Cloudflare R2.
+   R2 key pattern: {folder}/{folder}_{chapter}.mp3
+   e.g. 01_Genesis/01_Genesis_1.mp3
    ═══════════════════════════════════════════════════════════════ */
 
-// Map Bible book names → AudioTreasure directory/file name (spaces removed, etc.)
-const AT_BOOK_MAP = {
-  'Song of Solomon': 'SongofSolomon',
-  '1 Samuel':        '1Samuel',   '2 Samuel':        '2Samuel',
-  '1 Kings':         '1Kings',    '2 Kings':         '2Kings',
-  '1 Chronicles':    '1Chronicles','2 Chronicles':   '2Chronicles',
-  '1 Ezra':          '1Ezra',     '2 Ezra':          '2Ezra',
-  '1 Corinthians':   '1Corinthians','2 Corinthians': '2Corinthians',
-  '1 Thessalonians': '1Thessalonians','2 Thessalonians':'2Thessalonians',
-  '1 Timothy':       '1Timothy',  '2 Timothy':       '2Timothy',
-  '1 Peter':         '1Peter',    '2 Peter':         '2Peter',
-  '1 John':          '1John',     '2 John':          '2John',
-  '3 John':          '3John',
-  '1 Maccabees':     '1Maccabees','2 Maccabees':     '2Maccabees',
+// Map standard book names → eBible folder prefix (used as R2 key prefix)
+const EBIBLE_FOLDER = {
+  'Genesis':         '01_Genesis',
+  'Exodus':          '02_Exodus',
+  'Leviticus':       '03_Leviticus',
+  'Numbers':         '04_Numbers',
+  'Deuteronomy':     '05_Deuteronomy',
+  'Joshua':          '06_Joshua',
+  'Judges':          '07_Judges',
+  'Ruth':            '08_Ruth',
+  '1 Samuel':        '09_First_Samuel',
+  '2 Samuel':        '10_Second_Samuel',
+  '1 Kings':         '11_First_Kings',
+  '2 Kings':         '12_Second_Kings',
+  '1 Chronicles':    '13_First_Chronicles',
+  '2 Chronicles':    '14_Second_Chronicles',
+  'Ezra':            '15_Ezra',
+  'Nehemiah':        '16_Nehemiah',
+  'Esther':          '17_Esther',
+  'Job':             '18_Job',
+  'Psalms':          '19_Psalms',
+  'Proverbs':        '20_Proverbs',
+  'Ecclesiastes':    '21_Ecclesiastes',
+  'Song of Solomon': '22_Song_of_Solomon',
+  'Isaiah':          '23_Isaiah',
+  'Jeremiah':        '24_Jeremiah',
+  'Lamentations':    '25_Lamentations',
+  'Ezekiel':         '26_Ezekiel',
+  'Daniel':          '27_Daniel',
+  'Hosea':           '28_Hosea',
+  'Joel':            '29_Joel',
+  'Amos':            '30_Amos',
+  'Obadiah':         '31_Obadiah',
+  'Jonah':           '32_Jonah',
+  'Micah':           '33_Micah',
+  'Nahum':           '34_Nahum',
+  'Habakkuk':        '35_Habakkuk',
+  'Zephaniah':       '36_Zephaniah',
+  'Haggai':          '37_Haggai',
+  'Zechariah':       '38_Zechariah',
+  'Malachi':         '39_Malachi',
+  'Matthew':         '40_Matthew',
+  'Mark':            '41_Mark',
+  'Luke':            '42_Luke',
+  'John':            '43_John',
+  'Acts':            '44_Acts',
+  'Romans':          '45_Romans',
+  '1 Corinthians':   '46_First_Corinthians',
+  '2 Corinthians':   '47_Second_Corinthians',
+  'Galatians':       '48_Galatians',
+  'Ephesians':       '49_Ephesians',
+  'Philippians':     '50_Philippians',
+  'Colossians':      '51_Colossians',
+  '1 Thessalonians': '52_First_Thessalonians',
+  '2 Thessalonians': '53_Second_Thessalonians',
+  '1 Timothy':       '54_First_Timothy',
+  '2 Timothy':       '55_Second_Timothy',
+  'Titus':           '56_Titus',
+  'Philemon':        '57_Philemon',
+  'Hebrews':         '58_Hebrews',
+  'James':           '59_James',
+  '1 Peter':         '60_First_Peter',
+  '2 Peter':         '61_Second_Peter',
+  '1 John':          '62_First_John',
+  '2 John':          '63_Second_John',
+  '3 John':          '64_Third_John',
+  'Jude':            '65_Jude',
+  'Revelation':      '66_Revelations',
 };
-function atBookName(book) {
-  return AT_BOOK_MAP[book] || book.replace(/\s+/g, '');
-}
+
 function getAudioUrl(book, chapter) {
-  const b = atBookName(book);
-  const ch = String(chapter).padStart(2, '0');   // 1 → "01", 42 → "42"
-  return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${b}/${b}_${ch}.mp3`;
+  const folder = EBIBLE_FOLDER[book] || ('00_' + book.replace(/\s+/g, '_'));
+  return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${folder}/${folder}_${chapter}.mp3`;
 }
 
 // ── Player state ──────────────────────────────────────────────
@@ -3928,6 +3981,5 @@ function audioClose() {
   </div>
 </div>
 
-<script src="scripts.js"></script>
 </body>
 </html>
