@@ -79,7 +79,7 @@ const searchIndex = [
   {
     title: "The Power to Memorize Scripture",
     excerpt: "How to use the ancient method of loci, or memory rooms, to make Scripture stick",
-    url: "articles/memory-palace-article.html",
+    url: "/articles/bible-memory-rooms.html",
     tags: ["Bibliology"],
     content: `I came to believe through the AWANA program, a children's ministry themed around Bible memorization. The verses I learned stuck with me and laid the foundation for my spiritual growth. The memory palace technique is a system for manufacturing the reasons for any passage you choose. Memorizing is typically taught as a rote mechanical exercise, repeating information over and over to cement it in the mind. The method of loci is another memory technique used since the 6th Century BC by philosophers and orators. Roman senators practiced it to memorize very long speeches. It involves connecting content to parts of a room or scene in your mind. Psalm 119:11 says I have hidden your word in my heart that I might not sin against you. The three steps are compartmentalize the verse, personalize the verse to the objects, and live the Scripture memory room. Choose a room or scene as your memory palace, divide it into stations, and assign verse phrases to each object. Create vivid personal connections between each phrase and its object. Build a habit of walking through the memory room regularly. The memory rooms are a spiritual growth tool, not merely an academic exercise. Memorizing many verses does not earn favor with God. The truth you internalize needs to actualize into active discipleship in serving others. God's Word should reveal who we are so we live consistently in response.`
   }
