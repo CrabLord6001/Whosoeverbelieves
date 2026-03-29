@@ -18,7 +18,7 @@ function setSize(size) {
   sizes.forEach(s => document.documentElement.classList.remove(s));
   if (size !== 'default') document.documentElement.classList.add(size);
   localStorage.setItem('fontPref', size);
-  const labels = { default:'A', 'font-small':'A-', 'font-large':'A+' };
+  const labels = { default:'A', 'font-small':'A\u2212', 'font-large':'A+' };
   document.querySelectorAll('.font-size-group button').forEach(b => {
     b.classList.toggle('active', b.textContent === labels[size]);
   });
@@ -46,13 +46,17 @@ if (savedTheme === 'light') {
 
 /* ── SEARCH ────────────────────────────────────────────────────────────── */
 
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function getSnippet(content, query) {
   const index = content.toLowerCase().indexOf(query);
   if (index === -1) return '';
   const start = Math.max(0, index - 60);
   const end = Math.min(content.length, index + query.length + 60);
   let snippet = (start > 0 ? '…' : '') + content.slice(start, end) + (end < content.length ? '…' : '');
-  const regex = new RegExp(`(${query})`, 'gi');
+  const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
   snippet = snippet.replace(regex, `<mark style="background:rgba(201,168,76,0.3); color:var(--gold); border-radius:2px; padding:0 2px;">$1</mark>`);
   return snippet;
 }

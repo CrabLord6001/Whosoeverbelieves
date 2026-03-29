@@ -2365,7 +2365,7 @@ function renderListView(grid) {
             ${checkStates[idx] ? 'checked' : ''}
             onchange="toggleCheck(${idx})">
           <label class="day-check-label" for="chk-${idx}">
-            ${checkStates[idx] ? '✓ Completed' : 'Mark Complete'}
+            ${checkStates[idx] ? 'Completed' : 'Mark Complete'}
           </label>
         </div>
         ${reflections[idx] ? `<div class="reflection-preview" id="refl-preview-${idx}">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
@@ -2633,9 +2633,9 @@ function openDayPopover(idx) {
       <div class="day-check-row">
         <input type="checkbox" class="day-checkbox" id="pop-chk-${idx}"
           ${checkStates[idx] ? 'checked' : ''}
-          onchange="toggleCheck(${idx}); document.querySelector('#pop-chk-${idx} ~ .day-check-label').textContent = checkStates[${idx}] ? '✓ Completed' : 'Mark Complete';">
+          onchange="toggleCheck(${idx}); document.querySelector('#pop-chk-${idx} ~ .day-check-label').textContent = checkStates[${idx}] ? 'Completed' : 'Mark Complete';">
         <label class="day-check-label" for="pop-chk-${idx}">
-          ${checkStates[idx] ? '✓ Completed' : 'Mark Complete'}
+          ${checkStates[idx] ? 'Completed' : 'Mark Complete'}
         </label>
       </div>
       ${reflections[idx] ? `<div class="reflection-preview" style="margin-top:0.4rem;">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
@@ -2750,7 +2750,7 @@ function toggleCheck(idx) {
   const lbl  = document.querySelector(`#day-${idx} .day-check-label`);
   const chk  = document.getElementById(`chk-${idx}`);
   if (card) card.classList.toggle('completed', checkStates[idx]);
-  if (lbl)  lbl.textContent = checkStates[idx] ? '✓ Completed' : 'Mark Complete';
+  if (lbl)  lbl.textContent = checkStates[idx] ? 'Completed' : 'Mark Complete';
   if (checkStates[idx] && chk) launchConfetti(chk);
 
   // Update calendar cell (month/week view)
@@ -4498,4 +4498,4 @@ function audioClose() {
 
 </body>
 </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
