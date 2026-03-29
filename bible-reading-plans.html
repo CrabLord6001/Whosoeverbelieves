@@ -3622,7 +3622,7 @@ function atBookName(book) {
 }
 function getAudioUrl(book, chapter) {
   const b = atBookName(book);
-  return `https://www.audiotreasure.com/mp3/${b}/${b}${chapter}.mp3`;
+  return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${b}/${b}${chapter}.mp3`;
 }
 
 // ── Player state ──────────────────────────────────────────────
@@ -3631,6 +3631,7 @@ let _audioQueue   = [];   // [{book, chapter, label}]
 let _audioIdx     = 0;
 let _audioSeeking = false;
 let _activeDayIdx = -1;   // which day card owns the current queue
+let _audioLoadId  = 0;    // incremented each load to cancel stale stall-retry handlers
 
 function _audioFmtTime(sec) {
   if (!isFinite(sec) || isNaN(sec)) return '0:00';
@@ -3660,23 +3661,76 @@ function _audioSetListenBtn(dayIdx, playing) {
 function _audioLoadTrack(idx) {
   if (idx < 0 || idx >= _audioQueue.length) return;
   _audioIdx = idx;
-  const track = _audioQueue[idx];
-  _audio.src = getAudioUrl(track.book, track.chapter);
+  const loadId = ++_audioLoadId; // bumped on every new load; lets stale retries self-cancel
+  const track  = _audioQueue[idx];
+  const url    = getAudioUrl(track.book, track.chapter);
 
-  document.getElementById('audio-track-label').textContent = track.label;
+  // ── UI: show loading state ─────────────────────────────────
+  const pb    = document.getElementById('audio-play-btn');
+  const label = document.getElementById('audio-track-label');
+  const scrub = document.getElementById('audio-scrubber');
+  if (label) label.textContent = `${track.label} — loading…`;
   document.getElementById('audio-queue-label').textContent =
     _audioQueue.length > 1 ? `Track ${idx + 1} of ${_audioQueue.length}` : '';
   document.getElementById('audio-time-cur').textContent = '0:00';
   document.getElementById('audio-time-dur').textContent = '0:00';
-  const scrub = document.getElementById('audio-scrubber');
   if (scrub) { scrub.value = 0; scrub.style.background = 'rgba(255,255,255,0.15)'; }
-
-  const bar = document.getElementById('audio-player-bar');
-  bar.style.display = 'flex';
+  document.getElementById('audio-player-bar').style.display = 'flex';
   document.body.classList.add('audio-active');
+  if (pb) pb.textContent = '⟳';
 
-  _audio.play().catch(() => {});
-  document.getElementById('audio-play-btn').textContent = '⏸';
+  // ── Stop previous playback and assign new src ──────────────
+  // NOTE: We set src directly on the <audio> element — no fetch(), no blob.
+  // fetch() is blocked by CORS when the page is served from file:// (null origin).
+  // The <audio> element bypasses CORS for media, so direct src always works.
+  _audio.pause();
+  _audio.src = url;
+  _audio.load(); // start buffering immediately
+
+  // ── Stall-retry: AudioTreasure throttles streams aggressively ──
+  // The 'stalled' event fires after ~3 s of no data. Calling .load() again
+  // re-issues the HTTP request and usually gets a fresh window of data.
+  let _stallRetries = 0;
+  const MAX_RETRIES = 8; // give up after ~40 s of continuous stalling
+
+  function _onStall() {
+    if (_audioLoadId !== loadId) return; // track changed — abort
+    if (_audio.readyState >= 3) return;  // HAVE_FUTURE_DATA — we're fine
+    _stallRetries++;
+    if (_stallRetries <= MAX_RETRIES) {
+      console.log(`[audio] stall #${_stallRetries} on ${track.label} — retrying…`);
+      const t = _audio.currentTime;
+      _audio.load();
+      if (t > 0) _audio.currentTime = t; // restore position after reload
+      _audio.play().catch(() => {});
+    } else {
+      // Too many retries; tell the user but keep the bar open so they can retry
+      if (label) label.textContent = `${track.label} — server is slow, tap ▶ to retry`;
+      if (pb) pb.textContent = '▶';
+      console.warn('[audio] giving up after', MAX_RETRIES, 'stall retries');
+    }
+  }
+  _audio.addEventListener('stalled', _onStall);
+  // Clean up this listener when the track changes or ends
+  _audio.addEventListener('playing', function _clearStallHandler() {
+    if (loadId === _audioLoadId && label)
+      label.textContent = track.label; // clear "loading…" text once playing
+    _audio.removeEventListener('playing', _clearStallHandler);
+  });
+  // Remove the stall handler when this track is superseded
+  const _origLoadId = loadId;
+  function _cleanupStall() {
+    if (_audioLoadId !== _origLoadId) {
+      _audio.removeEventListener('stalled', _onStall);
+    }
+  }
+  _audio.addEventListener('emptied', _cleanupStall, { once: true });
+
+  _audio.play().catch(err => {
+    if (_audioLoadId !== loadId) return;
+    if (pb) pb.textContent = '▶';
+    console.warn('play() rejected on initial load:', err.name, err.message);
+  });
 }
 
 // ── Public API ────────────────────────────────────────────────
@@ -3703,8 +3757,13 @@ function listenDay(dayIdx) {
 
 function audioTogglePlay() {
   if (_audio.paused) {
-    _audio.play().catch(() => {});
-    document.getElementById('audio-play-btn').textContent = '⏸';
+    const pb = document.getElementById('audio-play-btn');
+    if (pb) pb.textContent = '⟳';
+    _audio.play().catch(err => {
+      if (pb) pb.textContent = '▶';
+      console.warn('Audio play() rejected:', err.name, err.message);
+    });
+    // 'play' event listener will flip to ⏸ once playback actually starts
   } else {
     _audio.pause();
     document.getElementById('audio-play-btn').textContent = '▶';
@@ -3731,7 +3790,9 @@ function audioGoNext() {
 }
 
 function audioClose() {
+  _audioLoadId++;           // signals all stall-retry handlers to stop
   _audio.pause();
+  _audio.src = '';          // release the media resource
   document.getElementById('audio-player-bar').style.display = 'none';
   document.body.classList.remove('audio-active');
   if (_activeDayIdx >= 0) {
@@ -3761,6 +3822,16 @@ function audioClose() {
     document.getElementById('audio-play-btn').textContent = '▶';
   });
   _audio.addEventListener('play', () => {
+    document.getElementById('audio-play-btn').textContent = '⏸';
+  });
+  // Show spinner while buffering / stalled
+  const _showLoading = () => {
+    const pb = document.getElementById('audio-play-btn');
+    if (pb && !_audio.paused) pb.textContent = '⟳';
+  };
+  _audio.addEventListener('waiting', _showLoading);
+  _audio.addEventListener('stalled', _showLoading);
+  _audio.addEventListener('playing', () => {
     document.getElementById('audio-play-btn').textContent = '⏸';
   });
 
