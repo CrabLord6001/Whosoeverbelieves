@@ -3622,7 +3622,8 @@ function atBookName(book) {
 }
 function getAudioUrl(book, chapter) {
   const b = atBookName(book);
-  return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${b}/${b}${chapter}.mp3`;
+  const ch = String(chapter).padStart(2, '0');   // 1 → "01", 42 → "42"
+  return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${b}/${b}_${ch}.mp3`;
 }
 
 // ── Player state ──────────────────────────────────────────────
