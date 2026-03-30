@@ -1149,6 +1149,23 @@ a.scripture-ref:hover {
   border-color: rgba(138,106,31,0.3);
 }
 
+/* ── ARTICLE HERO IMAGE ─────────────────────────────────────────────────── */
+
+.article-hero {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface-alt);
+}
+
+.article-hero img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
 /* ── ARTICLE HEADER ──────────────────────────────────────────────────────── */
 
 .article-header {
