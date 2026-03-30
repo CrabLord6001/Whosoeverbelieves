@@ -533,8 +533,8 @@
   .cal-cell.grace:hover { border-color: rgba(184,64,64,0.45); }
   .cal-cell.completed {
     border-color: rgba(58,125,68,0.45);
+    background: rgba(20,55,28,0.25);
   }
-  :root:not(.light-mode) .cal-cell.completed { background: rgba(20,55,28,0.25); }
   :root.light-mode .cal-cell.completed { background: rgba(200,235,205,0.3); }
   .cal-cell.empty, .cal-cell.out-of-range {
     background: transparent; border-color: transparent; cursor: default; opacity: 0.35;
@@ -2363,7 +2363,7 @@ function renderListView(grid) {
         <div class="day-check-row">
           <input type="checkbox" class="day-checkbox" id="chk-${idx}"
             ${checkStates[idx] ? 'checked' : ''}
-            onchange="toggleCheck(${idx})">
+            onchange="toggleCheck(${idx}); if(checkStates[${idx}]) launchConfetti(this);">
           <label class="day-check-label" for="chk-${idx}">
             ${checkStates[idx] ? 'Completed' : 'Mark Complete'}
           </label>
@@ -2633,7 +2633,7 @@ function openDayPopover(idx) {
       <div class="day-check-row">
         <input type="checkbox" class="day-checkbox" id="pop-chk-${idx}"
           ${checkStates[idx] ? 'checked' : ''}
-          onchange="toggleCheck(${idx}); document.querySelector('#pop-chk-${idx} ~ .day-check-label').textContent = checkStates[${idx}] ? 'Completed' : 'Mark Complete';">
+          onchange="toggleCheck(${idx}); if(checkStates[${idx}]) launchConfetti(this);">
         <label class="day-check-label" for="pop-chk-${idx}">
           ${checkStates[idx] ? 'Completed' : 'Mark Complete'}
         </label>
@@ -2667,7 +2667,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDayPopo
 // CONFETTI
 // ══════════════════════════════════════════════════════════════
 function launchConfetti(originEl) {
-  const COLORS = ['#c9a84c','#e5c97a','#f5e6b2','#fff8e7','#a07c25','#d4b896'];
+  const COLORS = ['#e63946','#f4a261','#f9c74f','#43aa8b','#4361ee','#7b2d8b','#ff6b9d','#06d6a0','#118ab2','#ffd166'];
   const SHAPES = ['square','circle'];
   const rect = originEl.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
@@ -2718,6 +2718,7 @@ function launchConfetti(originEl) {
     piece.style.left = cx + 'px';
     piece.style.top  = cy + 'px';
     piece.style.position = 'fixed';
+    piece.style.zIndex   = '9999';
     piece.style.opacity  = '1';
     piece.style.transition = 'none';
     piece.style.animation = 'none';
@@ -2748,10 +2749,12 @@ function toggleCheck(idx) {
   // Update list view card
   const card = document.getElementById(`day-${idx}`);
   const lbl  = document.querySelector(`#day-${idx} .day-check-label`);
-  const chk  = document.getElementById(`chk-${idx}`);
   if (card) card.classList.toggle('completed', checkStates[idx]);
-  if (lbl)  lbl.textContent = checkStates[idx] ? 'Completed' : 'Mark Complete';
-  if (checkStates[idx] && chk) launchConfetti(chk);
+  if (lbl)  lbl.textContent = checkStates[idx] ? '✓ Completed' : 'Mark Complete';
+
+  // Update popover label if open
+  const popLbl = document.querySelector(`label[for="pop-chk-${idx}"]`);
+  if (popLbl) popLbl.textContent = checkStates[idx] ? '✓ Completed' : 'Mark Complete';
 
   // Update calendar cell (month/week view)
   const cell = document.getElementById(`cal-cell-${idx}`);
