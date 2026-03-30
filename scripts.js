@@ -213,6 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// Auto-set canonical to current page URL (normalized)
+if (!document.querySelector('link[rel="canonical"]')) {
+  const link = document.createElement('link');
+  link.rel = 'canonical';
+  link.href = window.location.href.split('?')[0].split('#')[0];
+  document.head.appendChild(link);
+}
 /* ── DROPDOWN NAV (touch support) ─────────────────────────────────────── */
 
 document.querySelectorAll('.nav-dropdown').forEach(function(dropdown) {
