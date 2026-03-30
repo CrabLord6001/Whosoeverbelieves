@@ -1166,6 +1166,12 @@ a.scripture-ref:hover {
   display: block;
 }
 
+@media (max-width: 480px) {
+  .article-hero img {
+    height: 220px;
+  }
+}
+
 /* ── ARTICLE HEADER ──────────────────────────────────────────────────────── */
 
 .article-header {
