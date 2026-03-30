@@ -720,6 +720,33 @@
   }
   #user-bar button:hover { color: var(--gold); }
 
+  /* ── PLAN BUILDER COLLAPSIBLE ── */
+  .plan-builder-header {
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; padding: 0.85rem 1.25rem;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 8px; margin-bottom: 0.75rem;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  .plan-builder-header:hover { border-color: var(--gold); background: var(--gold-faint); }
+  .plan-builder-header-title {
+    font-family: 'Cinzel', serif; font-size: 0.78rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .plan-builder-chevron {
+    font-size: 0.75rem; color: var(--text-faint);
+    transition: transform 0.25s ease;
+    display: inline-block;
+  }
+  .plan-builder-chevron.open { transform: rotate(180deg); }
+  .plan-builder-body {
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+    max-height: 9999px; opacity: 1;
+  }
+  .plan-builder-body.collapsed { max-height: 0; opacity: 0; pointer-events: none; }
+
   /* ── SAVED PLANS PANEL ── */
   #saved-plans-panel { display: none; margin-bottom: 1.5rem; }
   .saved-plan-row {
@@ -1429,6 +1456,14 @@
     </div>
   </div>
 
+  <!-- PLAN BUILDER COLLAPSIBLE SECTION -->
+  <div id="plan-builder-section">
+    <div class="plan-builder-header" onclick="togglePlanBuilder()" id="plan-builder-toggle">
+      <span class="plan-builder-header-title">✦ Build a New Plan</span>
+      <span class="plan-builder-chevron open" id="plan-builder-chevron">&#9660;</span>
+    </div>
+    <div class="plan-builder-body" id="plan-builder-body">
+
   <!-- STEP 1: BOOK SELECTION -->
   <div class="card" style="animation-delay:0.05s">
     <div class="card-title">① Select Books</div>
@@ -1540,9 +1575,12 @@
     ">
       Chapters are grouped so each day's reading is approximately equal in length
     </p>
-    
+
    </div>
-  
+
+    </div><!-- /plan-builder-body -->
+  </div><!-- /plan-builder-section -->
+
   <!-- PROGRESS BAR -->
   <div id="progress-section" class="card" style="animation-delay:0.15s">
     <div class="progress-header">
@@ -2243,6 +2281,22 @@ function formatPassage(chapters) {
 }
 
 // ══════════════════════════════════════════════════════════════
+// PLAN BUILDER COLLAPSIBLE
+// ══════════════════════════════════════════════════════════════
+function togglePlanBuilder(forceCollapse) {
+  const body    = document.getElementById('plan-builder-body');
+  const chevron = document.getElementById('plan-builder-chevron');
+  const isOpen  = !body.classList.contains('collapsed');
+  if (forceCollapse === true || isOpen) {
+    body.classList.add('collapsed');
+    chevron.classList.remove('open');
+  } else {
+    body.classList.remove('collapsed');
+    chevron.classList.add('open');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
 // MAIN GENERATE FUNCTION
 // ══════════════════════════════════════════════════════════════
 function generatePlan() {
@@ -2314,6 +2368,90 @@ function renderPlan() {
   document.getElementById('plan-title-display').textContent = name;
   document.getElementById('plan-section').style.display = 'block';
   document.getElementById('progress-section').style.display = 'block';
+
+  // ── Render plan-level reminder card ──
+  let reminderCard = document.getElementById('plan-reminder-card');
+  if (!reminderCard) {
+    reminderCard = document.createElement('div');
+    reminderCard.id = 'plan-reminder-card';
+    reminderCard.style.cssText = `
+      background:var(--surface); border:1px solid var(--rule);
+      border-radius:8px; padding:1.25rem 1.5rem; margin-bottom:1.5rem;
+    `;
+    reminderCard.innerHTML = `
+      <div style="
+        font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.16em;
+        text-transform:uppercase; color:var(--gold); margin-bottom:1rem;
+        display:flex; align-items:center; gap:0.5rem;
+      ">⏰ Email Reminders
+        <span style="flex:1;height:1px;background:var(--rule);display:block;"></span>
+      </div>
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;
+        color:var(--text-mid);font-size:0.95rem;margin-bottom:0.9rem;">
+        Get a daily email with a link to today's reading passage for this plan.
+      </p>
+      <div style="margin-bottom:0.6rem;">
+        <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;">
+          <input type="checkbox" id="plan-reminder-enabled">
+          <span style="font-family:'EB Garamond',serif;font-size:1rem;color:var(--text);">
+            Send me daily reading reminders
+          </span>
+        </label>
+      </div>
+      <div id="plan-reminder-time-row" style="display:none;flex-wrap:wrap;
+        align-items:center;gap:0.75rem;margin-bottom:0.9rem;">
+        <label style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;
+          color:var(--text-mid);margin:0;">Remind me at:</label>
+        <select id="plan-reminder-hour" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
+          <option value="01">1</option><option value="02">2</option>
+          <option value="03">3</option><option value="04">4</option>
+          <option value="05">5</option><option value="06">6</option>
+          <option value="07">7</option><option value="08">8</option>
+          <option value="09" selected>9</option><option value="10">10</option>
+          <option value="11">11</option><option value="12">12</option>
+        </select>
+        <select id="plan-reminder-ampm" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
+          <option value="AM">AM</option>
+          <option value="PM" selected>PM</option>
+        </select>
+        <label style="font-family:'Cormorant Garamond',serif;font-size:0.9rem;
+          color:var(--text-mid);margin:0;">Timezone:</label>
+        <select id="plan-reminder-tz" style="width:auto;padding:0.35rem 0.6rem;font-size:0.95rem;">
+          <option value="America/New_York">Eastern (ET)</option>
+          <option value="America/Chicago">Central (CT)</option>
+          <option value="America/Denver">Mountain (MT)</option>
+          <option value="America/Los_Angeles">Pacific (PT)</option>
+          <option value="America/Anchorage">Alaska (AKT)</option>
+          <option value="Pacific/Honolulu">Hawaii (HT)</option>
+          <option value="Europe/London">London (GMT/BST)</option>
+          <option value="Europe/Paris">Central Europe (CET)</option>
+          <option value="Asia/Kolkata">India (IST)</option>
+          <option value="Asia/Tokyo">Japan (JST)</option>
+          <option value="Australia/Sydney">Sydney (AEST)</option>
+        </select>
+      </div>
+      <button onclick="savePlanReminderSettings()" style="
+        font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.12em;
+        text-transform:uppercase; padding:0.4rem 1rem;
+        background:var(--gold-faint); border:1px solid rgba(201,168,76,0.5);
+        color:var(--gold); border-radius:2px; cursor:pointer; transition:all 0.2s;
+      ">Save Reminder</button>
+      <span id="plan-reminder-saved" style="display:none; margin-left:0.75rem;
+        color:var(--gold); font-family:'Cormorant Garamond',serif;
+        font-style:italic; font-size:0.9rem;">✓ Saved!</span>
+    `;
+    // Wire up checkbox toggle
+    reminderCard.querySelector('#plan-reminder-enabled')
+      .addEventListener('change', function() {
+        document.getElementById('plan-reminder-time-row').style.display
+          = this.checked ? 'flex' : 'none';
+      });
+    // Insert before the calendar grid
+    const planSection = document.getElementById('plan-section');
+    planSection.insertBefore(reminderCard, planSection.firstChild);
+  }
+  // Pre-fill if we have a saved plan loaded
+  if (currentPlanId) loadPlanReminderSettings();
 
   if (currentView === 'month')     renderMonthView(grid);
   else if (currentView === 'week') renderWeekView(grid);
@@ -4026,6 +4164,63 @@ function exportWithNotes() {
   a.download = `${name.replace(/[^a-z0-9]/gi,'_')}_with_notes.txt`;
   a.click();
   URL.revokeObjectURL(a.href);
+}
+
+// ══════════════════════════════════════════════════════════════
+// REMINDER SETTINGS (plan-level)
+// ══════════════════════════════════════════════════════════════
+
+function loadPlanReminderSettings() {
+  if (!currentPlanId) return;
+  _supabase
+    .from('plans')
+    .select('reminder_enabled, reminder_time, reminder_timezone')
+    .eq('id', currentPlanId)
+    .single()
+    .then(({ data, error }) => {
+      if (error || !data) return;
+      const chk = document.getElementById('plan-reminder-enabled');
+      const tz  = document.getElementById('plan-reminder-tz');
+      if (!chk) return;
+      chk.checked = data.reminder_enabled;
+      if (data.reminder_time) {
+        const [hStr] = data.reminder_time.slice(0, 5).split(':');
+        let h = parseInt(hStr);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        document.getElementById('plan-reminder-hour').value = String(h).padStart(2, '0');
+        document.getElementById('plan-reminder-ampm').value = ampm;
+      }
+      if (data.reminder_timezone) tz.value = data.reminder_timezone;
+      document.getElementById('plan-reminder-time-row').style.display
+        = data.reminder_enabled ? 'flex' : 'none';
+    });
+}
+
+async function savePlanReminderSettings() {
+  if (!currentUser)   { showToast('Sign in to save reminder settings.', 'error'); return; }
+  if (!currentPlanId) { showToast('Save your plan first, then set a reminder.', 'error'); return; }
+
+  const enabled = document.getElementById('plan-reminder-enabled').checked;
+  let h = parseInt(document.getElementById('plan-reminder-hour').value);
+  const ampm = document.getElementById('plan-reminder-ampm').value;
+  if (ampm === 'PM' && h !== 12) h += 12;
+  if (ampm === 'AM' && h === 12) h = 0;
+  const time = String(h).padStart(2, '0') + ':00';
+  const tz   = document.getElementById('plan-reminder-tz').value;
+
+  const { error } = await _supabase
+    .from('plans')
+    .update({ reminder_enabled: enabled, reminder_time: time, reminder_timezone: tz })
+    .eq('id', currentPlanId);
+
+  if (!error) {
+    const msg = document.getElementById('plan-reminder-saved');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  } else {
+    showToast('Could not save reminder settings.', 'error');
+  }
 }
 
 // ══════════════════════════════════════════════════════════════
