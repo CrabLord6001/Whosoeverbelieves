@@ -882,14 +882,16 @@
 
   // ── THEME (mirrors scripts.js pattern) ──
   function setTheme(t) {
-    document.documentElement.classList.toggle('light-mode', t === 'light');
-    document.documentElement.classList.toggle('dark-mode', t === 'dark');
-    localStorage.setItem('theme', t);
+    if (t === 'light') {
+      document.documentElement.classList.add('light-mode');
+    } else {
+      document.documentElement.classList.remove('light-mode');
+    }
+    localStorage.setItem('themePref', t);
   }
   (function() {
-    const saved = localStorage.getItem('theme');
+    const saved = localStorage.getItem('themePref');
     if (saved === 'light') document.documentElement.classList.add('light-mode');
-    else if (saved === 'dark') document.documentElement.classList.add('dark-mode');
   })();
 
   let activeTag = 'all';
