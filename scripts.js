@@ -203,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entry.target.style.opacity = '1';
         entry.target.style.transform = 'translateY(0)';
         entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1 });
