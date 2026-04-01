@@ -3460,7 +3460,6 @@ async function onSignedIn(user) {
   document.getElementById('user-email-display').textContent = user.email;
   // Swap nav buttons: hide Sign In, show My Plans
   document.getElementById('nav-signin-btn').style.display = 'none';
-  document.getElementById('nav-myplans-btn').style.display = '';
   closeModal();
   await ensureProfile(user);
   await loadSavedPlans(true);  // auto-load most recent plan
@@ -3480,7 +3479,6 @@ function onSignedOut() {
   document.getElementById('saved-plans-panel').style.display = 'none';
   // Swap nav buttons back
   document.getElementById('nav-signin-btn').style.display = '';
-  document.getElementById('nav-myplans-btn').style.display = 'none';
   // Reset to welcome state if no plan is currently generated
   if (!currentPlan.length) showWelcomeState();
   else renderPlanTabs();
