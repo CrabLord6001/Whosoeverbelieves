@@ -1374,6 +1374,114 @@
     body.audio-active { padding-bottom: 110px; }
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     REDESIGN: Builder Modal, Plan Tabs, Welcome State, Today
+     ══════════════════════════════════════════════════════════════ */
+
+  /* ── BUILDER MODAL ── */
+  .builder-modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 900;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    overflow-y: auto; padding: 2rem 1rem;
+  }
+  .builder-modal-overlay.open { display: flex; justify-content: center; align-items: flex-start; }
+  .builder-modal {
+    background: var(--bg); border: 1px solid var(--rule);
+    border-radius: 10px; width: 100%; max-width: 960px;
+    padding: 2rem 2.5rem 2.5rem; position: relative;
+    animation: fadeUp 0.25s ease both;
+  }
+  .builder-modal-close {
+    position: absolute; top: 1rem; right: 1.2rem;
+    background: none; border: none; color: var(--text-faint);
+    font-size: 1.4rem; cursor: pointer; transition: color 0.15s;
+    line-height: 1; padding: 0.25rem;
+  }
+  .builder-modal-close:hover { color: var(--gold); }
+  .builder-modal-heading {
+    font-family: 'Cinzel', serif; font-size: 0.75rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .builder-modal-heading::after {
+    content: ''; flex: 1; height: 1px; background: var(--rule);
+  }
+  @media (max-width: 600px) {
+    .builder-modal { padding: 1.5rem 1rem 2rem; }
+  }
+
+  /* ── PLAN TAB BAR ── */
+  .plan-tab-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-bottom: 1rem; flex-wrap: wrap;
+  }
+  .plan-tab {
+    font-family: 'Cinzel', serif; font-size: 0.62rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.45rem 0.9rem; border-radius: 3px;
+    border: 1px solid var(--rule); background: none;
+    color: var(--text-faint); cursor: pointer;
+    transition: all 0.15s; white-space: nowrap;
+  }
+  .plan-tab:hover { border-color: var(--gold); color: var(--text-mid); }
+  .plan-tab.active {
+    border-color: rgba(201,168,76,0.5); background: var(--gold-faint);
+    color: var(--gold);
+  }
+  .plan-tab-new {
+    font-family: 'Cinzel', serif; font-size: 0.62rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.45rem 0.9rem; border-radius: 3px;
+    border: 1px dashed var(--rule); background: none;
+    color: var(--text-faint); cursor: pointer;
+    transition: all 0.15s; white-space: nowrap;
+    margin-left: auto;
+  }
+  .plan-tab-new:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-faint); }
+
+  /* ── WELCOME STATE ── */
+  .welcome-state {
+    text-align: center; padding: 3.5rem 2rem;
+    border: 1px solid var(--rule); border-radius: 10px;
+    background: var(--surface); max-width: 620px;
+    margin: 2rem auto;
+  }
+  .welcome-state-icon {
+    font-size: 2.5rem; margin-bottom: 1rem;
+    filter: grayscale(0.3);
+  }
+  .welcome-state h2 {
+    font-family: 'Cinzel', serif; font-size: 1.1rem;
+    letter-spacing: 0.08em; color: var(--text);
+    margin-bottom: 0.6rem;
+  }
+  .welcome-state p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; font-style: italic;
+    color: var(--text-mid); line-height: 1.7;
+    max-width: 440px; margin: 0 auto 1.5rem;
+  }
+  .welcome-state-btn {
+    font-family: 'Cinzel', serif; font-size: 1.35rem; 
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 1.1rem 3rem; border-radius: 3px;
+    border: 1px solid rgba(201,168,76,0.5);
+    background: var(--gold-faint); color: var(--gold);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .welcome-state-btn:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
+
+  /* ── TODAY HIGHLIGHT ── */
+  .cal-cell.today {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 1px var(--gold), 0 0 12px rgba(201,168,76,0.15);
+  }
+  .day-card.today {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 1px var(--gold), 0 0 12px rgba(201,168,76,0.15);
+  }
+
 </style>
 </head>
 <body>
@@ -1397,7 +1505,7 @@
 
     <!-- Auth -->
     <button id="nav-signin-btn" onclick="openAuthModal()" title="Sign in to save plans">Sign In</button>
-    <button id="nav-myplans-btn" style="display:none" onclick="loadSavedPlans()" title="View my saved plans">My Plans</button>
+    <button id="nav-myplans-btn" style="display:none" onclick="loadSavedPlans(true)" title="View my saved plans">My Plans</button>
 
     <a class="nav-back" href="/">← Site</a>
   </div>
@@ -1418,46 +1526,40 @@
   <span id="autosave-toast-text">Auto-saved</span>
 </div>
 
-<!-- HERO -->
 <div class="hero">
-  <div class="hero-eyebrow">Free Grace Resources</div>
-  <h1>Bible Reading <span>Plan Generator</span></h1>
-  <div class="divider"></div>
-  <p style="font-style:italic; max-width:none;">“How can a young man keep his way pure? By living according to your word.” <span style="white-space:nowrap;">— Psalm 119:9</span></p>
-</div>
-
-<!-- INTRO TEXT -->
-<div style="
-  border-left: 2px solid var(--gold);
-  padding: 1.2rem 1.8rem;
-  background: var(--glass);
-  border-radius: 0 4px 4px 0;
-  max-width: 960px;
-  margin: 0 auto 2rem;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-">
-  <p style="color:var(--text-mid); line-height:1.85; margin-bottom:1rem;">
-    I've noticed a hype around New Year's Day each year for yearly Bible reading plans — yet when life gets busy they can feel overwhelming and stir up guilt when we fall behind. I wanted to design this program to provide flexibility, not just a set of static premade plans. Choose the books you want to read, set your own schedule, and build in rest days as needed. Name your plan, pick a translation, and start when ready. You can sign in to save your plans across devices or download a PDF snapshot for offline use.
-  </p>
-  <p style="color:var(--text-mid); line-height:1.85; margin:0; font-style:italic;">
-    The narration is voiced by <a href="https://ebible.org/eng-web/audio/" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;" target="_blank" rel="noopener">Winfred W. Henson</a> using the World English Bible, which is public domain.
-  </p>
+    <h1 id="hero h1">Bible Reading Plan Generator</h1>
+    <p id="hero-eyebrow">“How can a young man keep his way pure? By living according to your word.”</p>
 </div>
 
 <!-- MAIN -->
 <div class="container">
 
-<!-- SAVED PLANS PANEL (shown when logged in) -->
-  <div id="saved-plans-panel" class="card">
+<!-- SAVED PLANS PANEL (hidden — replaced by tab bar) -->
+  <div id="saved-plans-panel" class="card" style="display:none!important">
     <div class="card-title">My Saved Plans</div>
     <div id="saved-plans-list">
       <div style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);">Loading your plans…</div>
     </div>
   </div>
 
-  <!-- PLAN BUILDER COLLAPSIBLE SECTION -->
-  <div id="plan-builder-section">
+  <!-- WELCOME STATE (shown when no plan is loaded) -->
+  <div id="welcome-state" class="welcome-state">
+    <button class="welcome-state-btn" onclick="openBuilderModal()">✦ Create Your First Plan</button>
+    <div style="margin-top:1rem;">
+      <button onclick="openAuthModal()" style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-style:italic; color:var(--text-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:3px;">
+        or sign in to load saved plans
+      </button>
+    </div>
+  </div>
+
+  <!-- PLAN TAB BAR (shown when a plan is loaded) -->
+  <div id="plan-tab-bar" class="plan-tab-bar" style="display:none">
+    <div id="plan-tabs-container"></div>
+    <button class="plan-tab-new" onclick="openBuilderModal()" title="Create a new plan">+ New Plan</button>
+  </div>
+
+  <!-- PLAN BUILDER (hidden — now lives in the modal below) -->
+  <div id="plan-builder-section" style="display:none">
     <div class="plan-builder-header" onclick="togglePlanBuilder()" id="plan-builder-toggle">
       <span class="plan-builder-header-title">✦ Build a New Plan</span>
       <span class="plan-builder-chevron open" id="plan-builder-chevron">&#9660;</span>
@@ -1582,7 +1684,7 @@
   </div><!-- /plan-builder-section -->
 
   <!-- PROGRESS BAR -->
-  <div id="progress-section" class="card" style="animation-delay:0.15s">
+  <div id="progress-section" class="card" style="display:none; animation-delay:0.15s">
     <div class="progress-header">
       <div style="display:flex;align-items:baseline;gap:0.75rem;">
         <span class="progress-label">Plan Completion</span>
@@ -1604,7 +1706,7 @@
   </div>
 
   <!-- PLAN OUTPUT -->
-  <div id="plan-section">
+  <div id="plan-section" style="display:none">
     <div class="plan-header">
       <div class="plan-header-left">
         <div class="plan-title" id="plan-title-display">Your Reading Plan</div>
@@ -2338,6 +2440,12 @@ function generatePlan() {
   reflections   = {};
   currentPlanId = null;  // new generation = new plan, don't overwrite existing saved plan
   lastMilestoneFired = 0;
+
+  // Close builder modal and show the plan view
+  closeBuilderModal();
+  showPlanView();
+  renderPlanTabs();
+
   renderPlan();
   updateProgress();
 }
@@ -2456,6 +2564,9 @@ function renderPlan() {
   if (currentView === 'month')     renderMonthView(grid);
   else if (currentView === 'week') renderWeekView(grid);
   else                             renderListView(grid);
+
+  // Highlight today's reading in the calendar
+  highlightToday();
 
   document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -3201,11 +3312,11 @@ function dismissMilestone() {
 
 // Completion modal for 100%
 function showCompletionModal() {
-  const name = document.getElementById('plan-name').value || 'your reading plan';
+  const name = document.getElementById('plan-name').value || 'Your Bible Reading Plan';
   const readingDays = currentPlan.filter(d => !d.isGrace);
   const totalVerses = readingDays.reduce((s, d) => s + d.verseCount, 0);
 
-  document.getElementById('completion-heading').textContent = `You finished ${name}!`;
+  document.getElementById('completion-heading').textContent = `You Finished ${name}!`;
   document.getElementById('completion-sub').textContent =
     `${readingDays.length} readings completed · ${totalVerses.toLocaleString()} verses read`;
   document.getElementById('completion-share-row').innerHTML = buildShareButtons(100, 'completion');
@@ -3344,7 +3455,7 @@ async function onSignedIn(user) {
   document.getElementById('nav-myplans-btn').style.display = '';
   closeModal();
   await ensureProfile(user);
-  await loadSavedPlans();
+  await loadSavedPlans(true);  // auto-load most recent plan
 
   // If we were mid-save, complete it now
   if (currentPlan.length && !currentPlanId) {
@@ -3356,11 +3467,15 @@ async function onSignedIn(user) {
 function onSignedOut() {
   currentUser   = null;
   currentPlanId = null;
+  cachedPlans   = [];
   document.getElementById('user-bar').style.display = 'none';
   document.getElementById('saved-plans-panel').style.display = 'none';
   // Swap nav buttons back
   document.getElementById('nav-signin-btn').style.display = '';
   document.getElementById('nav-myplans-btn').style.display = 'none';
+  // Reset to welcome state if no plan is currently generated
+  if (!currentPlan.length) showWelcomeState();
+  else renderPlanTabs();
 }
 
 async function ensureProfile(user) {
@@ -3586,6 +3701,16 @@ async function savePlanToDb() {
     btn.textContent = '✓ Saved';
     setTimeout(() => { btn.textContent = currentPlanId ? '💾 Save as New Plan' : '💾 Save Plan'; btn.disabled = false; }, 2000);
 
+    // Refresh tab bar to include newly saved plan
+    if (currentUser) {
+      const { data: freshPlans } = await _supabase
+        .from('plans')
+        .select('id, title, books, total_days, reading_days, created_at, completed_at')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: false });
+      if (freshPlans) { cachedPlans = freshPlans; renderPlanTabs(); }
+    }
+
   } catch (err) {
     console.error('Save error:', err);
     showToast('Save failed — please try again.', 'error');
@@ -3640,17 +3765,11 @@ async function persistReflection(idx, body) {
 // ══════════════════════════════════════════════════════════════
 // LOAD SAVED PLANS
 // ══════════════════════════════════════════════════════════════
-async function loadSavedPlans() {
+async function loadSavedPlans(autoLoad) {
   if (!currentUser) return;
 
   const panel = document.getElementById('saved-plans-panel');
   const list = document.getElementById('saved-plans-list');
-
-  // Show the panel
-  panel.style.display = 'block';
-
-  // Scroll smoothly to the Saved Plans section
-  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   // Load plans from Supabase
   const { data: plans, error } = await _supabase
@@ -3660,11 +3779,37 @@ async function loadSavedPlans() {
     .order('created_at', { ascending: false });
 
   if (error || !plans?.length) {
-    list.innerHTML = `<div style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);">No saved plans yet. Generate one below!</div>`;
+    cachedPlans = [];
+    renderPlanTabs();
+    list.innerHTML = `<div style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);">No saved plans yet.</div>`;
+    if (!currentPlan.length) showWelcomeState();
     return;
   }
 
-  // Clear and rebuild the list
+  // Cache for tab rendering
+  cachedPlans = plans;
+  renderPlanTabs();
+
+  // Auto-load the most recent active plan on sign-in (if no plan already loaded)
+  if (autoLoad && !currentPlan.length) {
+    const firstActive = plans.find(p => !p.completed_at);
+    if (firstActive) {
+      await loadPlanFromDb(firstActive.id);
+      return;
+    }
+  }
+
+  // If we have plans but nothing loaded, show tabs + welcome
+  if (!currentPlan.length) {
+    const firstActive = plans.find(p => !p.completed_at);
+    if (firstActive) {
+      showPlanView();
+    } else {
+      showWelcomeState();
+    }
+  }
+
+  // Clear and rebuild the list (for the legacy panel)
   list.innerHTML = '';
 
   const active = plans.filter(p => !p.completed_at);
@@ -3813,6 +3958,10 @@ async function loadPlanFromDb(planId) {
       date:        d.date_assigned
     };
   });
+
+  // Show the plan view and update tabs
+  showPlanView();
+  renderPlanTabs();
 
   renderPlan();
   updateProgress();
@@ -4241,11 +4390,32 @@ function showToast(msg, type = 'success') {
 const _origToggleCheck = toggleCheck;
 window.toggleCheck = function(idx) {
   checkStates[idx] = !checkStates[idx];
+
+  // Update list view card
   const card = document.getElementById(`day-${idx}`);
   const lbl  = document.querySelector(`#day-${idx} .day-check-label`);
   const chk  = document.getElementById(`chk-${idx}`);
   if (card) card.classList.toggle('completed', checkStates[idx]);
   if (lbl)  lbl.textContent = checkStates[idx] ? '✓ Completed' : 'Mark Complete';
+
+  // Update popover label if open
+  const popLbl = document.querySelector(`label[for="pop-chk-${idx}"]`);
+  if (popLbl) popLbl.textContent = checkStates[idx] ? '✓ Completed' : 'Mark Complete';
+
+  // Update calendar cell (month/week view)
+  const cell = document.getElementById(`cal-cell-${idx}`);
+  if (cell) {
+    cell.classList.toggle('completed', checkStates[idx]);
+    let checkEl = cell.querySelector('.cal-cell-check');
+    if (checkStates[idx] && !checkEl) {
+      const sp = document.createElement('span');
+      sp.className = 'cal-cell-check'; sp.textContent = '✓';
+      cell.insertBefore(sp, cell.children[1] || null);
+    } else if (!checkStates[idx] && checkEl) {
+      checkEl.remove();
+    }
+  }
+
   if (checkStates[idx] && chk) launchConfetti(chk);
   updateProgress();
   persistCheckState(idx);
@@ -4257,6 +4427,102 @@ window.saveReflection = function(idx, val) {
   clearTimeout(saveDebounce);
   saveDebounce = setTimeout(() => persistReflection(idx, val), 1200);
 };
+
+// ══════════════════════════════════════════════════════════════
+// BUILDER MODAL + PLAN TABS + WELCOME STATE
+// ══════════════════════════════════════════════════════════════
+
+// Move builder cards into the modal container on first open
+let builderMoved = false;
+function moveBuilderToModal() {
+  if (builderMoved) return;
+  const source = document.getElementById('plan-builder-body');
+  const target = document.getElementById('builder-modal-content');
+  if (source && target) {
+    // Move all children from the collapsible body into the modal
+    while (source.firstChild) target.appendChild(source.firstChild);
+    builderMoved = true;
+  }
+}
+
+function openBuilderModal() {
+  moveBuilderToModal();
+  document.getElementById('builder-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBuilderModal() {
+  document.getElementById('builder-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Show plan view (calendar + progress), hide welcome state
+function showPlanView() {
+  document.getElementById('welcome-state').style.display = 'none';
+  document.getElementById('plan-tab-bar').style.display = 'flex';
+  document.getElementById('progress-section').style.display = 'block';
+  document.getElementById('plan-section').style.display = 'block';
+}
+
+// Show welcome state, hide plan view
+function showWelcomeState() {
+  document.getElementById('welcome-state').style.display = '';
+  document.getElementById('plan-tab-bar').style.display = 'none';
+  document.getElementById('progress-section').style.display = 'none';
+  document.getElementById('plan-section').style.display = 'none';
+}
+
+// Cached plans list for tab rendering
+let cachedPlans = [];
+
+// Build the plan tab bar from the user's saved plans
+function renderPlanTabs() {
+  const container = document.getElementById('plan-tabs-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const plans = cachedPlans.filter(p => !p.completed_at);
+  if (!plans.length && !currentPlan.length) {
+    showWelcomeState();
+    return;
+  }
+
+  plans.forEach(plan => {
+    const tab = document.createElement('button');
+    tab.className = 'plan-tab' + (plan.id === currentPlanId ? ' active' : '');
+    tab.textContent = plan.title || 'Untitled Plan';
+    tab.onclick = () => loadPlanFromDb(plan.id);
+    container.appendChild(tab);
+  });
+
+  // If a plan is loaded but unsaved, show it as a tab too
+  if (currentPlan.length && !currentPlanId) {
+    const tab = document.createElement('button');
+    tab.className = 'plan-tab active';
+    tab.textContent = document.getElementById('plan-name').value || 'Unsaved Plan';
+    container.appendChild(tab);
+  }
+}
+
+// Apply today highlight to calendar cells and list cards
+function highlightToday() {
+  // Remove existing highlights
+  document.querySelectorAll('.cal-cell.today, .day-card.today').forEach(el => el.classList.remove('today'));
+
+  const today = new Date();
+  const todayStr = today.getFullYear() + '-' +
+    String(today.getMonth() + 1).padStart(2, '0') + '-' +
+    String(today.getDate()).padStart(2, '0');
+
+  currentPlan.forEach((day, idx) => {
+    if (day.date === todayStr) {
+      const cell = document.getElementById(`cal-cell-${idx}`);
+      const card = document.getElementById(`day-${idx}`);
+      if (cell) cell.classList.add('today');
+      if (card) card.classList.add('today');
+    }
+  });
+}
 
 // ══════════════════════════════════════════════════════════════
 // INIT
@@ -4274,13 +4540,16 @@ window.saveReflection = function(idx, val) {
   }
 })();
 
+// Move builder into modal immediately so forms are ready
+moveBuilderToModal();
+
 renderBookGrid();
 updateGracePreview();
 renderOrderCard();
 
-// Close journal/redo on Escape
+// Close journal/redo/builder on Escape
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeJournal(); closeRedo(); closeCompletion(); }
+  if (e.key === 'Escape') { closeJournal(); closeRedo(); closeCompletion(); closeBuilderModal(); }
 });
 
 // ── HANDLE PASSWORD RESET / MAGIC LINK REDIRECT ──
@@ -4670,11 +4939,11 @@ function audioClose() {
   <div class="completion-modal">
     <button class="completion-modal-close" onclick="closeCompletion()">✕</button>
     <div class="completion-icon">🎉</div>
-    <div class="completion-heading" id="completion-heading">You finished your plan!</div>
+    <div class="completion-heading" id="completion-heading">You Finished Your Bible Reading Plan!</div>
     <div class="completion-sub" id="completion-sub"></div>
     <div class="completion-share-row" id="completion-share-row"></div>
     <div class="completion-secondary">
-      <button class="completion-action gold" onclick="closeCompletion(); document.querySelector('.card').scrollIntoView({behavior:'smooth'});">✦ Start a New Plan</button>
+      <button class="completion-action gold" onclick="closeCompletion(); openBuilderModal();">✦ Start a New Plan</button>
       <button class="completion-action" onclick="closeCompletion()">Dismiss</button>
     </div>
   </div>
@@ -4690,6 +4959,21 @@ function audioClose() {
     <div class="redo-actions">
       <button class="redo-cancel" onclick="closeRedo()">Cancel</button>
       <button class="redo-confirm" onclick="confirmRedo()">↺ Start Fresh</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUILDER MODAL (contains the full plan builder) -->
+<div class="builder-modal-overlay" id="builder-modal-overlay" onclick="if(event.target===this)closeBuilderModal()">
+  <div class="builder-modal">
+    <button class="builder-modal-close" onclick="closeBuilderModal()">✕</button>
+    <div class="builder-modal-heading">✦ Build a New Plan</div>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--text-mid);font-size:0.95rem;margin-bottom:1.5rem;line-height:1.7;">
+      Choose the books you want to read, set your own schedule, and build in rest days as needed.
+      The narration is voiced by <a href="https://ebible.org/eng-web/audio/" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;" target="_blank" rel="noopener">Winfred W. Henson</a> using the World English Bible.
+    </p>
+    <div id="builder-modal-content">
+      <!-- Builder cards get moved here by JS on init -->
     </div>
   </div>
 </div>
