@@ -405,7 +405,7 @@
   .btn-generate:active { transform: translateY(0); }
 
   /* ── PROGRESS BAR ── */
-  #progress-section { display: none; margin-bottom: 1.5rem; }
+  #progress-section { display: none; margin-top: 1.5rem; margin-bottom: 1.5rem; }
   .progress-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
   .progress-label {
     font-family: 'Cinzel', serif; font-size: 0.75rem;
@@ -1552,11 +1552,8 @@
     </div>
   </div>
 
-  <!-- PLAN TAB BAR (shown when a plan is loaded) -->
-  <div id="plan-tab-bar" class="plan-tab-bar" style="display:none">
-    <div id="plan-tabs-container"></div>
-    <button class="plan-tab-new" onclick="openBuilderModal()" title="Create a new plan">+ New Plan</button>
-  </div>
+  <!-- PLAN TAB BAR (now rendered inline above calendar via #plan-tabs-inline) -->
+  <div id="plan-tab-bar" style="display:none"></div>
 
   <!-- PLAN BUILDER (hidden — now lives in the modal below) -->
   <div id="plan-builder-section" style="display:none">
@@ -1683,6 +1680,41 @@
     </div><!-- /plan-builder-body -->
   </div><!-- /plan-builder-section -->
 
+  <!-- PLAN OUTPUT (calendar first) -->
+  <div id="plan-section" style="display:none">
+    <div class="plan-header">
+      <div class="plan-header-left">
+        <div class="plan-title" id="plan-title-display">Your Reading Plan</div>
+      </div>
+      <div class="plan-actions-col">
+        <div class="plan-actions">
+          <div class="btn-col" id="save-plan-btn-col">
+            <button class="btn-sm" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
+            <div class="save-hint">Creates new plan</div>
+          </div>
+          <div class="btn-col">
+            <button class="btn-sm gold" onclick="downloadPDF()">🖨️ PDF</button>
+            <div class="save-hint">Saves printable copy</div>
+          </div>
+          <div class="btn-col">
+            <button class="btn-sm" onclick="exportWithNotes()">📄 TXT</button>
+            <div class="save-hint">Includes reflections</div>
+          </div>
+          <div class="btn-col" id="restart-plan-btn-col" style="display:none">
+            <button class="btn-sm" onclick="restartCurrentPlan()">↺ Restart</button>
+            <div class="save-hint">Keep notes</div>
+          </div>
+          <div class="btn-col" id="delete-plan-btn-col" style="display:none">
+            <button class="btn-sm" style="color:#b44;" onclick="deleteCurrentPlan()">✕ Delete</button>
+            <div class="save-hint">Remove plan</div>
+          </div>
+      </div>
+      </div>
+    </div>
+    <div id="plan-tabs-inline"></div>
+    <div id="calendar-grid"></div>
+  </div>
+
   <!-- PROGRESS BAR -->
   <div id="progress-section" class="card" style="display:none; animation-delay:0.15s">
     <div class="progress-header">
@@ -1703,37 +1735,6 @@
       <div class="stat-item"><strong id="stat-reading">0</strong> reading days total</div>
       <div class="stat-item"><strong id="stat-verses">0</strong> verses read</div>
     </div>
-  </div>
-
-  <!-- PLAN OUTPUT -->
-  <div id="plan-section" style="display:none">
-    <div class="plan-header">
-      <div class="plan-header-left">
-        <div class="plan-title" id="plan-title-display">Your Reading Plan</div>
-      </div>
-      <div class="plan-actions-col">
-        <div class="plan-actions">
-          <div class="btn-col">
-            <button class="btn-sm" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
-            <div class="save-hint">Creates new plan</div>
-          </div>
-          <div class="btn-col">
-            <button class="btn-sm gold" onclick="downloadPDF()">🖨️ PDF</button>
-            <div class="save-hint">Saves printable copy</div>
-          </div>
-          <div class="btn-col">
-            <button class="btn-sm" onclick="exportWithNotes()">📄 TXT</button>
-            <div class="save-hint">Includes reflections</div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="view-toggle">
-      <button class="view-btn active" id="vbtn-month" onclick="setView('month')">Month</button>
-      <button class="view-btn" id="vbtn-week" onclick="setView('week')">Week</button>
-      <button class="view-btn" id="vbtn-list" onclick="setView('list')">List</button>
-    </div>
-    <div id="calendar-grid"></div>
   </div>
 </div><!-- /container -->
 
@@ -2554,21 +2555,23 @@ function renderPlan() {
         document.getElementById('plan-reminder-time-row').style.display
           = this.checked ? 'flex' : 'none';
       });
-    // Insert before the calendar grid
-    const planSection = document.getElementById('plan-section');
-    planSection.insertBefore(reminderCard, planSection.firstChild);
+    // Insert after the progress section (below calendar)
+    const progressSection = document.getElementById('progress-section');
+    progressSection.parentNode.insertBefore(reminderCard, progressSection.nextSibling);
   }
   // Pre-fill if we have a saved plan loaded
   if (currentPlanId) loadPlanReminderSettings();
 
-  if (currentView === 'month')     renderMonthView(grid);
-  else if (currentView === 'week') renderWeekView(grid);
-  else                             renderListView(grid);
+  // Always render month view
+  renderMonthView(grid);
 
   // Highlight today's reading in the calendar
   highlightToday();
 
-  document.getElementById('progress-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Update delete/restart button visibility
+  updatePlanActionButtons();
+
+  document.getElementById('plan-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ── LIST VIEW (original card layout) ──────────────────────────
@@ -3966,7 +3969,7 @@ async function loadPlanFromDb(planId) {
   renderPlan();
   updateProgress();
   showToast(`"${plan.title}" loaded ✓`, 'success');
-  document.getElementById('progress-section').scrollIntoView({ behavior:'smooth' });
+  document.getElementById('plan-section').scrollIntoView({ behavior:'smooth' });
   // Update save button label to reflect this is an existing plan
   const saveBtn = document.getElementById('save-plan-btn');
   if (saveBtn) saveBtn.textContent = '💾 Save as New Plan';
@@ -4459,35 +4462,38 @@ function closeBuilderModal() {
 // Show plan view (calendar + progress), hide welcome state
 function showPlanView() {
   document.getElementById('welcome-state').style.display = 'none';
-  document.getElementById('plan-tab-bar').style.display = 'flex';
-  document.getElementById('progress-section').style.display = 'block';
   document.getElementById('plan-section').style.display = 'block';
+  document.getElementById('progress-section').style.display = 'block';
 }
 
 // Show welcome state, hide plan view
 function showWelcomeState() {
   document.getElementById('welcome-state').style.display = '';
-  document.getElementById('plan-tab-bar').style.display = 'none';
-  document.getElementById('progress-section').style.display = 'none';
   document.getElementById('plan-section').style.display = 'none';
+  document.getElementById('progress-section').style.display = 'none';
 }
 
 // Cached plans list for tab rendering
 let cachedPlans = [];
 
-// Build the plan tab bar from the user's saved plans
+// Build the plan tab bar (now rendered inline above the calendar)
 function renderPlanTabs() {
-  const container = document.getElementById('plan-tabs-container');
+  const container = document.getElementById('plan-tabs-inline');
   if (!container) return;
   container.innerHTML = '';
+  container.className = 'plan-tab-bar';
 
-  const plans = cachedPlans.filter(p => !p.completed_at);
-  if (!plans.length && !currentPlan.length) {
+  const allPlans = cachedPlans;
+  const plans = allPlans.filter(p => !p.completed_at);
+  const completedPlans = allPlans.filter(p => p.completed_at);
+  const allTabbable = [...plans, ...completedPlans];
+
+  if (!allTabbable.length && !currentPlan.length) {
     showWelcomeState();
     return;
   }
 
-  plans.forEach(plan => {
+  allTabbable.forEach(plan => {
     const tab = document.createElement('button');
     tab.className = 'plan-tab' + (plan.id === currentPlanId ? ' active' : '');
     tab.textContent = plan.title || 'Untitled Plan';
@@ -4502,9 +4508,59 @@ function renderPlanTabs() {
     tab.textContent = document.getElementById('plan-name').value || 'Unsaved Plan';
     container.appendChild(tab);
   }
+
+  // + New Plan button
+  const newBtn = document.createElement('button');
+  newBtn.className = 'plan-tab-new';
+  newBtn.textContent = '+ New Plan';
+  newBtn.title = 'Create a new plan';
+  newBtn.onclick = () => openBuilderModal();
+  container.appendChild(newBtn);
+
+  // Show/hide delete & restart buttons based on whether current plan is completed
+  updatePlanActionButtons();
 }
 
 // Apply today highlight to calendar cells and list cards
+// Show or hide Delete / Restart buttons based on current plan state
+function updatePlanActionButtons() {
+  const restartCol = document.getElementById('restart-plan-btn-col');
+  const deleteCol  = document.getElementById('delete-plan-btn-col');
+  const saveCol    = document.getElementById('save-plan-btn-col');
+  if (!restartCol || !deleteCol) return;
+
+  const isSaved = !!currentPlanId;
+  const plan = cachedPlans.find(p => p.id === currentPlanId);
+  const isCompleted = plan && !!plan.completed_at;
+
+  // Show restart & delete for any saved plan; hide save-as-new for completed plans
+  restartCol.style.display = isSaved ? '' : 'none';
+  deleteCol.style.display  = isSaved ? '' : 'none';
+  if (saveCol) saveCol.style.display = isCompleted ? 'none' : '';
+}
+
+// Delete the currently loaded plan
+async function deleteCurrentPlan() {
+  if (!currentPlanId) return;
+  if (!confirm('Delete this plan and all its reflections? This cannot be undone.')) return;
+  await _supabase.from('plans').delete().eq('id', currentPlanId);
+  currentPlanId = null;
+  showToast('Plan deleted.', 'success');
+  await loadSavedPlans();
+}
+
+// Restart the currently loaded plan (keeps notes, resets checkmarks)
+function restartCurrentPlan() {
+  if (!currentPlanId) return;
+  const plan = cachedPlans.find(p => p.id === currentPlanId);
+  const title = plan ? plan.title.replace(/'/g, "\\'") : 'this plan';
+  // Reuse the existing redo overlay
+  redoPlanId = currentPlanId;
+  document.getElementById('redo-plan-title').textContent = `Redo — ${plan ? plan.title : 'Plan'}`;
+  document.getElementById('redo-start-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('redo-overlay').classList.add('open');
+}
+
 function highlightToday() {
   // Remove existing highlights
   document.querySelectorAll('.cal-cell.today, .day-card.today').forEach(el => el.classList.remove('today'));
