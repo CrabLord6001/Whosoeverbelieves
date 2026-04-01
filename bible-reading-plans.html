@@ -172,7 +172,16 @@
     color: var(--gold);
     text-transform: uppercase;
     margin-bottom: 0.75rem;
+    max-width: 680px;        /* ← Increase this */
+    margin-left: auto;
+    margin-right: auto;
   }
+
+  .hero-eyebrow .verse-reference {
+    white-space: nowrap;        
+    flex-shrink: 0;             
+}
+
   .hero h1 {
     font-family: 'Cinzel', serif;
     font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -1463,13 +1472,14 @@
     max-width: 440px; margin: 0 auto 1.5rem;
   }
   .welcome-state-btn {
-    font-family: 'Cinzel', serif; font-size: 1.35rem; 
+    font-family: 'Cinzel', serif; font-size: 1.35rem; font-size: clamp(1.05rem, 4vw, 1.35rem);
     letter-spacing: 0.14em; text-transform: uppercase;
     padding: 1.1rem 3rem; border-radius: 3px;
     border: 1px solid rgba(201,168,76,0.5);
     background: var(--gold-faint); color: var(--gold);
     cursor: pointer; transition: all 0.2s;
   }
+  
   .welcome-state-btn:hover { background: rgba(201,168,76,0.2); border-color: var(--gold); }
 
   /* ── TODAY HIGHLIGHT ── */
@@ -1505,7 +1515,6 @@
 
     <!-- Auth -->
     <button id="nav-signin-btn" onclick="openAuthModal()" title="Sign in to save plans">Sign In</button>
-    <button id="nav-myplans-btn" style="display:none" onclick="loadSavedPlans(true)" title="View my saved plans">My Plans</button>
 
     <a class="nav-back" href="/">← Site</a>
   </div>
@@ -1514,7 +1523,6 @@
 <!-- USER BAR (shown when logged in) -->
 <div id="user-bar">
   Signed in as <span id="user-email-display"></span>
-  <button onclick="loadSavedPlans()">My Plans</button>
   <button onclick="signOut()">Sign Out</button>
 </div>
 
@@ -1528,7 +1536,8 @@
 
 <div class="hero">
     <h1 id="hero h1">Bible Reading Plan Generator</h1>
-    <p id="hero-eyebrow">“How can a young man keep his way pure? By living according to your word.”</p>
+    <p id=".hero p">"Sanctify them by the truth; Your word is truth."
+    <span class="verse-reference">— John 17:17</span></p>
 </div>
 
 <!-- MAIN -->
@@ -1546,7 +1555,7 @@
   <div id="welcome-state" class="welcome-state">
     <button class="welcome-state-btn" onclick="openBuilderModal()">✦ Create Your First Plan</button>
     <div style="margin-top:1rem;">
-      <button onclick="openAuthModal()" style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-style:italic; color:var(--text-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:3px;">
+      <button onclick="openAuthModal()" style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-style:italic; color:var(--text-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:3px; white-space: nowrap;">
         or sign in to load saved plans
       </button>
     </div>
@@ -1688,10 +1697,6 @@
       </div>
       <div class="plan-actions-col">
         <div class="plan-actions">
-          <div class="btn-col" id="save-plan-btn-col">
-            <button class="btn-sm" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
-            <div class="save-hint">Creates new plan</div>
-          </div>
           <div class="btn-col">
             <button class="btn-sm gold" onclick="downloadPDF()">🖨️ PDF</button>
             <div class="save-hint">Saves printable copy</div>
