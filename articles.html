@@ -116,15 +116,17 @@
     <div class="article-grid">
 
 <a class="article-card" href="articles/Gods-Forever-Dwelling-Psalm-132.html">
-        <img src="images/red-plush-chair.jpg" alt="Red throne representing God's dwelling in Zion" class="article-card-img" />
-        <p class="article-card-title">God's Forever Dwelling (Psalm 132)</p>
-        <p class="article-card-excerpt">Study of Psalm 132 and the Messiah's reign from Zion</p>
-        <div class="article-card-meta">
-          <span class="tag">Eschatology</span>
-          <span>Jonathan Crow</span>
-          <span>4/04/26</span>
-        </div>
-  <span class="article-card-arrow">→</span>
+  <img src="images/red-plush-chair.jpg" alt="Red throne representing God's dwelling in Zion" class="article-card-img" />
+  <p class="article-card-title">God's Forever Dwelling (Psalm 132)</p>
+  <p class="article-card-excerpt">Study of Psalm 132 and the Messiah's reign from Zion</p>
+  <div class="article-card-tags">
+    <span class="tag">Eschatology</span>
+  </div>
+  <div class="article-card-meta">
+   <span>Jonathan Crow</span>
+   <span>4/04/26</span>
+  </div>
+  <span class="article-card-arrow"></span>
 </a>
 
 <a class="article-card" href="articles/Profiting-For-The-Kingdom-Mark-8.html">
@@ -324,23 +326,4 @@
     document.querySelectorAll('.tag-filter').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
 
-    var cards = document.querySelectorAll('.article-card');
-    var visible = 0;
-    cards.forEach(function(card) {
-      var tags = Array.from(card.querySelectorAll('.tag')).map(function(t) { return t.textContent; });
-      var show = (tag === 'all' || tags.includes(tag));
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
-    });
-
-    var countEl = document.getElementById('filterCount');
-    if (tag === 'all') {
-      countEl.textContent = 'All topics';
-    } else {
-      countEl.textContent = visible + ' article' + (visible !== 1 ? 's' : '');
-    }
-  }
-</script>
-
-</body>
-</html>
+    var cards = document.qu
