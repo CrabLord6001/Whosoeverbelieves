@@ -326,4 +326,23 @@
     document.querySelectorAll('.tag-filter').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
 
-    var cards = document.qu
+    var cards = document.querySelectorAll('.article-card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      var tags = Array.from(card.querySelectorAll('.tag')).map(function(t) { return t.textContent; });
+      var show = (tag === 'all' || tags.includes(tag));
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    var countEl = document.getElementById('filterCount');
+    if (tag === 'all') {
+      countEl.textContent = 'All topics';
+    } else {
+      countEl.textContent = visible + ' article' + (visible !== 1 ? 's' : '');
+    }
+  }
+</script>
+
+</body>
+</html>
