@@ -476,6 +476,9 @@
   @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
   #autosave-toast-dot.saving { animation: pulse-dot 0.8s ease infinite; }
   .plan-title { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--text); }
+  .header-rename-btn { background: none; border: none; color: var(--text-faint); font-size: 0.85rem; cursor: pointer; padding: 0.1rem 0.25rem; opacity: 0.4; transition: opacity 0.15s, color 0.15s; }
+  .header-rename-btn:hover { opacity: 1; color: var(--gold); }
+  .header-rename-input { font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--text); background: var(--bg); border: 1px solid var(--gold); border-radius: 3px; padding: 0.1rem 0.4rem; outline: none; width: 100%; }
   .plan-actions { display: flex; gap: 0.5rem; flex-wrap: nowrap; }
 
   /* ── SMALL BUTTONS — matches site tag-filter style ── */
@@ -757,28 +760,6 @@
   }
   .plan-builder-body.collapsed { max-height: 0; opacity: 0; pointer-events: none; }
 
-  /* ── SAVED PLANS PANEL ── */
-  #saved-plans-panel { display: none; margin-bottom: 1.5rem; }
-  .saved-plan-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.65rem 0.9rem; border: 1px solid var(--rule); border-radius: 4px;
-    margin-bottom: 0.5rem; transition: border-color 0.15s, background 0.15s; cursor: pointer;
-  }
-  .saved-plan-row:hover { border-color: var(--gold); background: var(--gold-faint); }
-  .saved-plan-name { font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text); }
-  .saved-plan-meta { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; color: var(--text-mid); }
-  .saved-plan-del { background: none; border: none; color: #b84040; font-size: 1rem; cursor: pointer; padding: 0 0.25rem; opacity: 0.55; transition: opacity 0.15s; }
-  .saved-plan-del:hover { opacity: 1; }
-  .saved-plan-rename { background: none; border: none; color: var(--text-faint); font-size: 0.85rem; cursor: pointer; padding: 0 0.25rem; opacity: 0.55; transition: opacity 0.15s, color 0.15s; }
-  .saved-plan-rename:hover { opacity: 1; color: var(--gold); }
-  .saved-plan-actions { display: flex; align-items: center; gap: 0.1rem; flex-shrink: 0; }
-  /* Inline rename input */
-  .rename-input {
-    font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text);
-    background: var(--bg); border: 1px solid var(--gold);
-    border-radius: 3px; padding: 0.1rem 0.4rem; outline: none; width: 100%;
-  }
-
   /* ── AUTH MODAL ── */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 200;
@@ -872,22 +853,6 @@
     .calendar-grid { grid-template-columns: 1fr; }
     nav { padding: 0.75rem 1rem; }
   }
-
-  /* ── COMPLETED PLAN ROW ── */
-  .saved-plan-row-complete { background: rgba(58,125,68,0.07); border: 1px solid rgba(58,125,68,0.3) !important; }
-  .saved-plan-row-complete:hover { border-color: rgba(58,125,68,0.5) !important; background: rgba(58,125,68,0.12) !important; }
-  .saved-plan-meta-complete { color: rgba(58,125,68,0.75) !important; }
-  .complete-badge {
-    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.1em;
-    padding: 2px 8px; border-radius: 10px;
-    background: rgba(58,125,68,0.12); border: 1px solid rgba(58,125,68,0.3);
-    color: #4a9d58; white-space: nowrap; text-transform: uppercase; flex-shrink: 0;
-  }
-  .redo-btn {
-    background: none; border: none; color: var(--gold); font-size: 1rem;
-    cursor: pointer; padding: 2px 5px; opacity: 0.6; transition: opacity 0.15s;
-  }
-  .redo-btn:hover { opacity: 1; }
 
   /* ── JOURNAL MODAL ── */
   .journal-overlay {
@@ -1544,14 +1509,6 @@
 <!-- MAIN -->
 <div class="container">
 
-<!-- SAVED PLANS PANEL (hidden — replaced by tab bar) -->
-  <div id="saved-plans-panel" class="card" style="display:none!important">
-    <div class="card-title">My Saved Plans</div>
-    <div id="saved-plans-list">
-      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);">Loading your plans…</div>
-    </div>
-  </div>
-
   <!-- WELCOME STATE (shown when no plan is loaded) -->
   <div id="welcome-state" class="welcome-state">
     <button class="welcome-state-btn" onclick="openBuilderModal()">✦ Create Your First Plan</button>
@@ -1694,7 +1651,10 @@
   <div id="plan-section" style="display:none">
     <div class="plan-header">
       <div class="plan-header-left">
-        <div class="plan-title" id="plan-title-display">Your Reading Plan</div>
+        <div style="display:flex;align-items:center;gap:0.45rem;">
+          <div class="plan-title" id="plan-title-display">Your Reading Plan</div>
+          <button class="header-rename-btn" id="header-rename-btn" onclick="startHeaderRename()" title="Rename plan" style="display:none">✎</button>
+        </div>
       </div>
       <div class="plan-actions-col">
         <div class="plan-actions">
@@ -3477,7 +3437,6 @@ function onSignedOut() {
   currentPlanId = null;
   cachedPlans   = [];
   document.getElementById('user-bar').style.display = 'none';
-  document.getElementById('saved-plans-panel').style.display = 'none';
   // Swap nav buttons back
   document.getElementById('nav-signin-btn').style.display = '';
   // Reset to welcome state if no plan is currently generated
@@ -3775,9 +3734,6 @@ async function persistReflection(idx, body) {
 async function loadSavedPlans(autoLoad) {
   if (!currentUser) return;
 
-  const panel = document.getElementById('saved-plans-panel');
-  const list = document.getElementById('saved-plans-list');
-
   // Load plans from Supabase
   const { data: plans, error } = await _supabase
     .from('plans')
@@ -3788,7 +3744,6 @@ async function loadSavedPlans(autoLoad) {
   if (error || !plans?.length) {
     cachedPlans = [];
     renderPlanTabs();
-    list.innerHTML = `<div style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);">No saved plans yet.</div>`;
     if (!currentPlan.length) showWelcomeState();
     return;
   }
@@ -3815,108 +3770,70 @@ async function loadSavedPlans(autoLoad) {
       showWelcomeState();
     }
   }
-
-  // Clear and rebuild the list (for the legacy panel)
-  list.innerHTML = '';
-
-  const active = plans.filter(p => !p.completed_at);
-  const completed = plans.filter(p => p.completed_at);
-
-  function renderPlanRow(plan) {
-    const row = document.createElement('div');
-    row.className = 'saved-plan-row' + (plan.completed_at ? ' saved-plan-row-complete' : '');
-    const date = new Date(plan.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-    const completedDate = plan.completed_at
-      ? new Date(plan.completed_at).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })
-      : null;
-    const books = plan.books?.length 
-      ? plan.books.slice(0,3).join(', ') + (plan.books.length > 3 ? ` +${plan.books.length-3} more` : '') 
-      : '';
-    const meta = plan.completed_at
-      ? `${books} — completed ${completedDate}`
-      : `${books} — ${plan.reading_days} reading days · saved ${date}`;
-
-    row.innerHTML = `
-      <div style="flex:1;min-width:0;" onclick="loadPlanFromDb('${plan.id}')">
-        <div class="saved-plan-name" id="plan-name-${plan.id}">${plan.title}</div>
-        <div class="saved-plan-meta ${plan.completed_at ? 'saved-plan-meta-complete' : ''}">${meta}</div>
-      </div>
-      <div class="saved-plan-actions">
-        ${plan.completed_at ? `<span class="complete-badge">✓ Complete</span>
-        <button class="redo-btn" onclick="openRedo('${plan.id}','${plan.title.replace(/'/g,"\\'")}', event)" title="Redo this plan">↺</button>` : ''}
-        <button class="saved-plan-rename" onclick="startRename('${plan.id}', event)" title="Rename plan">✎</button>
-        <button class="saved-plan-del" onclick="deletePlan('${plan.id}', event)" title="Delete plan">✕</button>
-      </div>`;
-    list.appendChild(row);
-  }
-
-  // Active plans section
-  if (active.length) {
-    const hdr = document.createElement('div');
-    hdr.style.cssText = 'font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-bottom:0.4rem;border-bottom:1px solid var(--rule);margin-bottom:0.6rem;';
-    hdr.textContent = 'Active Plans';
-    list.appendChild(hdr);
-    active.forEach(renderPlanRow);
-  }
-
-  // Completed plans section
-  if (completed.length) {
-    const hdr = document.createElement('div');
-    hdr.style.cssText = 'font-family:"Cinzel",serif;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;color:rgba(58,125,68,0.6);padding-bottom:0.4rem;border-bottom:1px solid rgba(58,125,68,0.2);margin:0.75rem 0 0.6rem;';
-    hdr.textContent = 'Completed';
-    list.appendChild(hdr);
-    completed.forEach(renderPlanRow);
-  }
 }
 
-function startRename(planId, e) {
-  e.stopPropagation(); // prevent row click / plan load
-  const nameEl = document.getElementById(`plan-name-${planId}`);
-  if (!nameEl) return;
-  const current = nameEl.textContent;
+/* ── Header inline rename ── */
+function startHeaderRename() {
+  if (!currentPlanId) return;
+  const titleEl = document.getElementById('plan-title-display');
+  const renameBtn = document.getElementById('header-rename-btn');
+  if (!titleEl) return;
 
-  // Replace the name div with an input
+  const current = titleEl.textContent;
+
+  // Hide pencil while editing
+  if (renameBtn) renameBtn.style.display = 'none';
+
+  // Replace title with input
   const input = document.createElement('input');
-  input.className = 'rename-input';
+  input.className = 'header-rename-input';
   input.value = current;
-  nameEl.replaceWith(input);
+  titleEl.replaceWith(input);
   input.focus();
   input.select();
 
-  const commit = () => renamePlan(planId, input.value.trim() || current, input);
+  const commit = async () => {
+    const newTitle = input.value.trim() || current;
+
+    // Restore the title element
+    const restored = document.createElement('div');
+    restored.className = 'plan-title';
+    restored.id = 'plan-title-display';
+    restored.textContent = newTitle;
+    input.replaceWith(restored);
+
+    // Show pencil again
+    if (renameBtn) renameBtn.style.display = '';
+
+    if (newTitle === current) return;
+
+    // Update in Supabase
+    const { error } = await _supabase
+      .from('plans')
+      .update({ title: newTitle })
+      .eq('id', currentPlanId)
+      .eq('user_id', currentUser.id);
+
+    if (error) {
+      showToast('Could not rename plan.', 'error');
+      restored.textContent = current;
+    } else {
+      showToast('Plan renamed.', 'success');
+      // Sync the builder name field
+      const nameInput = document.getElementById('plan-name');
+      if (nameInput) nameInput.value = newTitle;
+      // Update cached plan title so tabs reflect the change
+      const cached = cachedPlans.find(p => p.id === currentPlanId);
+      if (cached) cached.title = newTitle;
+      renderPlanTabs();
+    }
+  };
+
   input.addEventListener('blur', commit);
   input.addEventListener('keydown', ev => {
-    if (ev.key === 'Enter') { ev.preventDefault(); input.blur(); }
+    if (ev.key === 'Enter')  { ev.preventDefault(); input.blur(); }
     if (ev.key === 'Escape') { input.value = current; input.blur(); }
   });
-}
-
-async function renamePlan(planId, newTitle, inputEl) {
-  // Restore the name div regardless of outcome
-  const nameEl = document.createElement('div');
-  nameEl.className = 'saved-plan-name';
-  nameEl.id = `plan-name-${planId}`;
-  nameEl.textContent = newTitle;
-  inputEl.replaceWith(nameEl);
-
-  if (!newTitle) return;
-
-  const { error } = await _supabase
-    .from('plans')
-    .update({ title: newTitle })
-    .eq('id', planId)
-    .eq('user_id', currentUser.id);
-
-  if (error) {
-    showToast('Could not rename plan.', 'error');
-  } else {
-    showToast('Plan renamed.', 'success');
-    // If this is the currently loaded plan, update the plan title input too
-    if (planId === currentPlanId) {
-      const titleInput = document.getElementById('plan-name');
-      if (titleInput) titleInput.value = newTitle;
-    }
-  }
 }
 
 async function loadPlanFromDb(planId) {
@@ -3977,15 +3894,6 @@ async function loadPlanFromDb(planId) {
   // Update save button label to reflect this is an existing plan
   const saveBtn = document.getElementById('save-plan-btn');
   if (saveBtn) saveBtn.textContent = '💾 Save as New Plan';
-}
-
-async function deletePlan(planId, evt) {
-  evt.stopPropagation();
-  if (!confirm('Delete this plan and all its reflections? This cannot be undone.')) return;
-  await _supabase.from('plans').delete().eq('id', planId);
-  if (currentPlanId === planId) { currentPlanId = null; }
-  showToast('Plan deleted.', 'success');
-  await loadSavedPlans();
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -4531,6 +4439,7 @@ function updatePlanActionButtons() {
   const restartCol = document.getElementById('restart-plan-btn-col');
   const deleteCol  = document.getElementById('delete-plan-btn-col');
   const saveCol    = document.getElementById('save-plan-btn-col');
+  const renameBtn  = document.getElementById('header-rename-btn');
   if (!restartCol || !deleteCol) return;
 
   const isSaved = !!currentPlanId;
@@ -4541,6 +4450,8 @@ function updatePlanActionButtons() {
   restartCol.style.display = isSaved ? '' : 'none';
   deleteCol.style.display  = isSaved ? '' : 'none';
   if (saveCol) saveCol.style.display = isCompleted ? 'none' : '';
+  // Show rename pencil only for saved plans
+  if (renameBtn) renameBtn.style.display = isSaved ? '' : 'none';
 }
 
 // Delete the currently loaded plan
