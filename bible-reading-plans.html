@@ -1666,6 +1666,10 @@
             <button class="btn-sm" onclick="exportWithNotes()">📄 TXT</button>
             <div class="save-hint">Includes reflections</div>
           </div>
+          <div class="btn-col" id="save-plan-btn-col">
+            <button class="btn-sm gold" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
+            <div class="save-hint">Save to account</div>
+          </div>
           <div class="btn-col" id="restart-plan-btn-col" style="display:none">
             <button class="btn-sm" onclick="restartCurrentPlan()">↺ Restart</button>
             <div class="save-hint">Keep notes</div>
@@ -3588,7 +3592,7 @@ function flashAutosave(text = 'Auto-saved') {
 async function savePlanToDb() {
   const btn  = document.getElementById('save-plan-btn');
   const name = document.getElementById('plan-name').value || 'Untitled Plan';
-  btn.textContent = '💾 Saving…'; btn.disabled = true;
+  if (btn) { btn.textContent = '💾 Saving…'; btn.disabled = true; }
 
   try {
     // ── 1. Upsert the plan row ──
@@ -3664,8 +3668,8 @@ async function savePlanToDb() {
     }
 
     showToast('Plan saved ✓', 'success');
-    btn.textContent = '✓ Saved';
-    setTimeout(() => { btn.textContent = currentPlanId ? '💾 Save as New Plan' : '💾 Save Plan'; btn.disabled = false; }, 2000);
+    if (btn) btn.textContent = '✓ Saved';
+    setTimeout(() => { if (btn) { btn.textContent = currentPlanId ? '💾 Save as New Plan' : '💾 Save Plan'; btn.disabled = false; } }, 2000);
 
     // Refresh tab bar to include newly saved plan
     if (currentUser) {
@@ -3680,7 +3684,7 @@ async function savePlanToDb() {
   } catch (err) {
     console.error('Save error:', err);
     showToast('Save failed — please try again.', 'error');
-    btn.textContent = '💾 Save Plan'; btn.disabled = false;
+    if (btn) { btn.textContent = '💾 Save Plan'; btn.disabled = false; }
   }
 }
 
