@@ -24,6 +24,12 @@
   <!-- ══ ARTICLES ════════════════════════════════════════════════════ -->
 
   <url>
+    <loc>https://whosoeverbelieves.com/articles/Abraham-Father-Of-Faith</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://whosoeverbelieves.com/articles/kjv-unicorns-reem</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
