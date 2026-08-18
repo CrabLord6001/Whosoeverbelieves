@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-05VNP2PXN4');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synthetic Outline of the Gospel of John &#8212; Free Grace Blog</title>
+  <meta name="description" content="John wrote his Gospel for one stated reason: that you would believe in Jesus for everlasting life. A walk through the seven signs, the world's reaction, and the verdict John asks the reader to reach." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+
+  <!-- ── SIGNS TABLE (scoped to this article; move to styles.css if reused) ── -->
+  <style>
+    .table-wrap {
+      overflow-x: auto;
+      margin: 2rem 0 2.5rem;
+      border: 1px solid var(--glass-border);
+      border-radius: 6px;
+      background: var(--glass);
+    }
+
+    table.signs-table {
+      width: 100%;
+      min-width: 620px;
+      border-collapse: collapse;
+      font-family: 'EB Garamond', Georgia, serif;
+    }
+
+    table.signs-table th {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: left;
+      padding: 1rem 1.1rem;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+      white-space: nowrap;
+    }
+
+    table.signs-table td {
+      padding: 1rem 1.1rem;
+      border-bottom: 1px solid var(--rule);
+      color: var(--text);
+      line-height: 1.7;
+      vertical-align: top;
+      font-size: 0.95rem;
+    }
+
+    table.signs-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.signs-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    :root.light-mode table.signs-table tbody tr:hover {
+      background: rgba(0, 0, 0, 0.03);
+    }
+
+    .signs-table .col-num {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 0.9rem;
+      width: 1%;
+      text-align: center;
+    }
+
+    .signs-table .col-sign {
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+      width: 1%;
+    }
+
+    .signs-table .col-ref {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--text-mid);
+      white-space: nowrap;
+      width: 1%;
+    }
+
+    .signs-table .col-sig {
+      color: var(--text-mid);
+    }
+
+    .table-caption {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.75;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 480px) {
+      table.signs-table td { font-size: 0.88rem; padding: 0.8rem 0.9rem; }
+      table.signs-table th { padding: 0.8rem 0.9rem; }
+    }
+
+    /* Full-width centred figure (same override used in bible-memory-rooms.html) */
+    .article-figure { margin: 2.5rem 0; text-align: center; float: none !important; width: 100% !important; max-width: 100% !important; }
+    .article-figure img { width: 100%; max-width: 620px; border-radius: 6px; border: 1px solid var(--glass-border); display: block; margin: 0 auto; float: none !important; }
+    .article-figure figcaption { font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-top: 0.6rem; }
+  </style>
+</head>
+<body class="page-article">
+<div class="site-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <p class="site-greek">πᾶς ὁ πιστεύων</p>
+    <div class="site-title"><a href="../index.html">Whosoever</a></div>
+    <p class="site-tagline">Free Grace Theology &amp; Biblical Studies</p>
+    <div class="header-ornament">
+      <span></span>
+      <em>Faith Alone</em>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- Top Buttons + Search Bar -->
+<div class="font-size-group">
+  <button onclick="setSize('font-small')">A&#8722;</button>
+  <button onclick="setSize('default')">A</button>
+  <button onclick="setSize('font-large')">A+</button>
+  <button onclick="setTheme('light')" id="btn-light" title="Light mode">&#9728;&#65039;</button>
+  <button onclick="setTheme('dark')" id="btn-dark" title="Dark mode">&#127769;</button>
+  <input type="text" id="site-search" placeholder="Search articles, verses, topics&#8230;" oninput="runSearch(this.value)" />
+</div>
+<div id="search-results"></div>
+
+  <!-- NAV -->
+<nav>
+  <a href="../index.html">Home</a>
+  <a href="../articles.html">Articles</a>
+  <div class="nav-dropdown">
+    <button class="nav-dropdown-btn">
+      Bible Study Tools <span class="nav-dropdown-arrow">&#9660;</span>
+    </button>
+    <div class="nav-dropdown-menu">
+      <a href="../greek/index.html">Greek Studies</a>
+      <a href="../bible-reading-plans.html">Bible Reading Plans</a>
+      <a href="../free-grace-glossary.html">Theology Glossary</a>
+    </div>
+  </div>
+</nav>
+
+  <!-- ARTICLE HERO IMAGE -->
+  <figure class="article-hero">
+    <img src="../images/Tanner-Nicodemus-Visiting-Jesus.jpg" alt="Nicodemus Visiting Jesus by Henry Ossawa Tanner, 1899 &#8212; the two men seated at night on a Jerusalem rooftop" style="object-position: center 20%;" />
+  </figure>
+
+  <!-- ARTICLE HEADER -->
+  <div class="article-header">
+    <h1 class="article-title">Synthetic Outline of the Gospel of John</h1>
+    <p class="article-subtitle">Tracing the theme of believing Christ in the Gospel of John</p>
+  </div>
+
+  <article class="article-body">
+
+    <p class="article-lead">
+      This article was originally a 2,000-word paper for a New Testament Survey course answering the prompt &#8220;write a synthetic outline of the Gospel of John, including major themes and narrative structure&#8221;. I&#8217;ve expanded a few sections and formatted it differently to work as a blog post here. I generally followed Merrill Tenney&#8217;s commentary. Hope you enjoy and find it edifying for your own studies!
+    </p>
+
+    <hr style="border: none; border-top: 1px solid var(--rule); margin: 2.5rem 0;" />
+
+    <p>
+      The Apostle John wrote his Gospel account primarily as an evangelistic presentation to convince the readers to believe in Jesus as the Christ, the Son of God, for His gift of everlasting life, as declared in the purpose statement of
+      <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+20%3A30-31&version=WEB" target="_blank" rel="noopener"
+         data-ref="John 20:30&#8211;31"
+         data-verse="Therefore Jesus did many other signs in the presence of his disciples, which are not written in this book; but these are written, that you may believe that Jesus is the Christ, the Son of God, and that believing you may have life in his name.">20:30&#8211;31</a>.
+    </p>
+
+    <p>
+      Encapsulated in this thesis are key elements for the whole narrative. The account is a selective sampling of Jesus&#8217; ministry with the specific purpose of proving Jesus is the Christ who offers spiritual life to whoever believes in Him. John is confident the record is definitive and effective in convincing the readers. The account is largely an apologetic defense of Christ. He is the Christ, the promised Messiah who is the Son of God with all authority and power. Therefore, believe in Him to receive spiritual life.
+    </p>
+
+    <p>
+      To believe means to receive something as true. It involves understanding the facts and agreeing with their reality. While a life of discipleship is the Christian calling for healthy living and avoiding chastisement, John presents content for unbelievers to receive eternal life.
+    </p>
+
+    <p>
+      Jesus&#8217; gift is established by unique miracles called signs. These works point to the character and divinity of Christ to give validity to His power to provide eternal life. John records seven signs, each offering an illustrative picture of Jesus.
+    </p>
+
+    <div class="table-caption">The Seven Signs of the Fourth Gospel</div>
+    <div class="table-wrap">
+      <table class="signs-table">
+        <thead>
+          <tr>
+            <th class="col-num">&#8470;</th>
+            <th class="col-sign">Sign</th>
+            <th class="col-ref">Text</th>
+            <th class="col-sig">Theological Significance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-num">1</td>
+            <td class="col-sign">Turning water into wine</td>
+            <td class="col-ref">John 2:1&#8211;11</td>
+            <td class="col-sig">The first manifestation of His glory, and the disciples&#8217; first recorded belief. Christ freely supplies what the old order had run out of.</td>
+          </tr>
+          <tr>
+            <td class="col-num">2</td>
+            <td class="col-sign">Healing the nobleman&#8217;s son</td>
+            <td class="col-ref">John 4:46&#8211;54</td>
+            <td class="col-sig">Faith rests on the bare word of Christ. The father believes and departs before he has any evidence the healing occurred.</td>
+          </tr>
+          <tr>
+            <td class="col-num">3</td>
+            <td class="col-sign">Healing the paralytic</td>
+            <td class="col-ref">John 5:1&#8211;15</td>
+            <td class="col-sig">Authority over the Sabbath and equality with the Father. Life is granted by the Son&#8217;s word alone, apart from any contribution of the man.</td>
+          </tr>
+          <tr>
+            <td class="col-num">4</td>
+            <td class="col-sign">Feeding the five thousand</td>
+            <td class="col-ref">John 6:1&#8211;14</td>
+            <td class="col-sig">Jesus is Himself the Bread of Life. The crowd wants the gift; He offers the Giver, and asks only that they believe.</td>
+          </tr>
+          <tr>
+            <td class="col-num">5</td>
+            <td class="col-sign">Walking on the sea</td>
+            <td class="col-ref">John 6:16&#8211;21</td>
+            <td class="col-sig">Deity disclosed privately to the disciples. The transitional sign turning the narrative from the crowds toward the Twelve.</td>
+          </tr>
+          <tr>
+            <td class="col-num">6</td>
+            <td class="col-sign">Healing the man born blind</td>
+            <td class="col-ref">John 9:1&#8211;41</td>
+            <td class="col-sig">Sight is given to the outsider and withheld from the self-assured. Spiritual blindness is chosen, not imposed.</td>
+          </tr>
+          <tr>
+            <td class="col-num">7</td>
+            <td class="col-sign">Raising Lazarus</td>
+            <td class="col-ref">John 11:1&#8211;44</td>
+            <td class="col-sig">Mastery over death itself, and the direct offer of resurrection life to anyone who believes in Him for it.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Thematically, John shows the progression of the world&#8217;s reaction. These categories begin with genuine consideration, growing controversy, open conflict and crisis, conference with the disciples, and finally consummation in the atonement. Each episode reveals more evidence of Christ, ultimately climaxing in the bodily resurrection as the verdict for which Thomas could confess,
+      &#8220;My Lord and my God!&#8221; (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+20%3A28&version=WEB" target="_blank" rel="noopener" data-ref="John 20:28" data-verse="My Lord and my God!">20:28</a>).
+      This last evidence transitions into the purpose statement to culminate into leading someone to believe in Christ for eternal life.<a href="#footnote1" id="ref1">[1]</a>
+    </p>
+
+    <h2>Prologue: Who is the Word?</h2>
+
+    <p>
+      The Gospel of John begins by immediately defining the person of Christ as the incarnate Word of God who offers light to
+      every man in the world (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+1%3A9&version=WEB" target="_blank" rel="noopener" data-ref="John 1:9" data-verse="The true light that enlightens everyone was coming into the world.">1:9</a>).
+      This new revelation is the gift of
+      being born of God through believing in His name (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+1%3A12-13&version=WEB" target="_blank" rel="noopener" data-ref="John 1:12&#8211;13" data-verse="But as many as received him, to them he gave the right to become God's children, to those who believe in his name: who were born not of blood, nor of the will of the flesh, nor of the will of man, but of God.">1:12&#8211;13</a>).
+      The author affirms beholding the glory of the Son of God, making this narrative an eyewitness testimony. Moreover, the Father is seen perfectly only through Christ (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+1%3A17-18&version=WEB" target="_blank" rel="noopener" data-ref="John 1:17&#8211;18" data-verse="For the law was given through Moses. Grace and truth were realized through Jesus Christ. No one has seen God at any time. The one and only Son, who is in the bosom of the Father, he has declared him.">1:17&#8211;18</a>). Therefore, He should be believed.
+    </p>
+
+    <h2>Consideration Period</h2>
+
+    <p>
+      Chapters 1&#8211;4 represent a period of consideration. Key interviews affirm Jesus as the Christ who offers eternal life. The text only presents Nicodemus as a skeptic, left with the cliffhanger question, &#8220;How can these things be?&#8221; (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+3%3A9&version=WEB" target="_blank" rel="noopener" data-ref="John 3:9" data-verse="Nicodemus answered him, &#8220;How can these things be?&#8221;">3:9</a>) The reader could likely identify with any character archetype at this point. They may be eagerly expecting as the disciples, a rejected outcast as the Samaritan woman, or a questioning Pharisee.
+    </p>
+
+    <p>
+      The period begins with the testimony of John the Baptist. He clarifies to the Jewish leadership he is neither the Prophet, Elijah, nor the Christ &#8211; but he did point to the Christ. Two of John&#8217;s disciples hear his declaration about Christ as He first appears. They follow Christ and gather Peter, Philip, and Nathanael. Here the invitation to &#8220;come and see&#8221; applies to the reader. Come and examine the person of Christ! For Philip, the Law and all the prophets gave sufficient evidence to convince him. Nathanael personally needed Jesus to reassure him (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+1%3A45-49&version=WEB" target="_blank" rel="noopener" data-ref="John 1:45&#8211;49" data-verse="Philip found Nathanael, and said to him, &#8220;We have found him, of whom Moses in the law, and the prophets, wrote: Jesus of Nazareth, the son of Joseph.&#8221; &#8230; Nathanael answered him, &#8220;Rabbi, you are the Son of God! You are King of Israel!&#8221;">1:45&#8211;49</a>).
+    </p>
+
+    <p>
+      Included in this section are several famous evangelistic verses.
+      <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+3%3A16&version=WEB" target="_blank" rel="noopener"
+         data-ref="John 3:16"
+         data-verse="For God so loved the world, that he gave his one and only Son, that whoever believes in him should not perish, but have eternal life.">John 3:16</a>
+      is often memorized by children today. It comes with a powerful comparison in <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+3%3A14&version=WEB" target="_blank" rel="noopener" data-ref="John 3:14" data-verse="As Moses lifted up the serpent in the wilderness, even so must the Son of Man be lifted up,">3:14</a> to <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=Numbers+21%3A4-9&version=WEB" target="_blank" rel="noopener" data-ref="Numbers 21:4&#8211;9" data-verse="The people spoke against God and against Moses &#8230; Yahweh said to Moses, &#8220;Make a venomous snake, and set it on a pole. It shall happen that everyone who is bitten, when he sees it, shall live.&#8221; Moses made a serpent of bronze, and set it on the pole.">Numbers 21:4&#8211;9</a>. Believing in Christ for eternal life is as simple as a glance with no sense of meditation or commitment implied. In <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+4%3A10&version=WEB" target="_blank" rel="noopener" data-ref="John 4:10" data-verse="Jesus answered her, &#8220;If you knew the gift of God, and who it is who says to you, &#8216;Give me a drink,&#8217; you would have asked him, and he would have given you living water.&#8221;">John 4:10</a>, Jesus merely instructs the Samaritan woman, though living in sin, to ask for the gift of living water. Those who ask Christ for the source of eternal life are given that revelation to believe.<a href="#footnote2" id="ref2">[2]</a>
+    </p>
+
+    <p>
+      John records two of the signs in this portion of the narrative. Jesus turns water into wine in a compassionate act of provision for the wedding at Cana. This miracle
+      manifested His glory, leading the disciples to believe in Him (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+2%3A11&version=WEB" target="_blank" rel="noopener" data-ref="John 2:11" data-verse="This beginning of his signs Jesus did in Cana of Galilee, and revealed his glory; and his disciples believed in him.">2:11</a>).
+      Then, the nobleman exercised faith in his son&#8217;s healing without seeing the result. Jesus rebukes the Jews for their obsession with examining signs. The truth of Jesus&#8217; person and the reality of His gift were already evident. How many signs would they need? How many do you need?
+    </p>
+
+    <h2>Growing Controversy</h2>
+
+    <p>
+      Chapters 5 and 6 create a period of increasing resistance to Jesus&#8217; ministry by the authorities. Naturally, their self-righteous traditions ran counter to Jesus&#8217; claim to provide spiritually as a free gift.
+    </p>
+
+    <p>
+      The third sign of Jesus involved healing a paralyzed man on the Sabbath. Rather than rejoicing, the Jewish authorities sought to kill Jesus for seeming to break the Law. Jesus follows the miracle with a claim of equality with the Father, who granted Him power to raise the dead for the final judgment. The believer, however,
+      immediately receives eternal life and will not face judgment (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+5%3A24-29&version=WEB" target="_blank" rel="noopener" data-ref="John 5:24&#8211;29" data-verse="Most certainly I tell you, he who hears my word, and believes him who sent me, has eternal life, and doesn't come into judgment, but has passed out of death into life &#8230; the hour comes, in which all that are in the tombs will hear his voice, and will come out.">5:24&#8211;29</a>).
+    </p>
+
+    <p>
+      Jesus defends Himself with four lines of evidence. The Father bore witness of Him, even audibly later in <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+12%3A28&version=WEB" target="_blank" rel="noopener" data-ref="John 12:28" data-verse="Father, glorify your name!&#8221; Then there came a voice out of the sky, saying, &#8220;I have both glorified it, and will glorify it again.&#8221;">12:28</a>. John the Baptist testified He was the Christ. They even rejoiced for a time under his ministry. The miracles themselves pointed to Jesus&#8217; greater authority. Finally, the Scriptures testify that Jesus is the source of eternal life.
+    </p>
+
+    <p>
+      After His fourth sign (and the transitional fifth, walking on the water), followers find Jesus again across the sea and merely desire more food. First, Jesus did not feed the 5,000 only to meet physical appetites but as a sign pointing to the Son of Man, Himself. Jesus dispels the idea of moral works for Him to give everlasting life. Believing is the only expected response. Finally, Jesus denies the need for additional signs. Just as God, not Moses, gave manna from Heaven, now Jesus had come as the true bread of life. He is the sign!
+    </p>
+
+    <p>
+      The physical bread, while miraculously provided, only could extend mortal life. The flesh of Jesus, the Bread of Life, was given later for the world on the cross (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+6%3A51&version=WEB" target="_blank" rel="noopener" data-ref="John 6:51" data-verse="I am the living bread which came down out of heaven. If anyone eats of this bread, he will live forever. Yes, the bread which I will give for the life of the world is my flesh.">6:51</a>), and also is His message, the words that He speaks, as the promise of eternal life (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+6%3A63&version=WEB" target="_blank" rel="noopener" data-ref="John 6:63" data-verse="It is the spirit who gives life. The flesh profits nothing. The words that I speak to you are spirit, and are life.">6:63</a>). Significantly, the Bread of Life is unlike the manna provided to Israel in the wilderness. The wandering nation all died after eating it. But anyone who eats of the Bread of Life will never die. Believing in Christ is a moment in time that secures salvation for all time.
+    </p>
+
+    <p>
+      Notably, Jesus makes plain His own metaphor:
+      &#8220;he who believes in Me has everlasting life&#8221; (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+6%3A47&version=WEB" target="_blank" rel="noopener" data-ref="John 6:47" data-verse="Most certainly, I tell you, he who believes in me has eternal life.">6:47</a>).
+      Rather than a sacrament or lifestyle change, eating of the bread is simply being persuaded of His gift of eternal life.
+    </p>
+
+    <p>
+      Peter&#8217;s confession is a model for the reader. No one else has a message that provides eternal life. Because He is the Son of the living God, Jesus has the power to fulfill His promises. The disciples had formed a settled conclusion from the facts available.<a href="#footnote3" id="ref3">[3]</a>
+    </p>
+
+    <figure class="article-figure">
+      <img src="../images/Lorenzo_Lotto_-_Christ_and_the_Woman_Taken_in_Adultery.jpg" alt="Christ and the Woman Taken in Adultery by Lorenzo Lotto &#8212; accusers crowding around Jesus with pointing fingers" />
+      <figcaption>Lorenzo Lotto, <em>Christ and the Adulteress</em>, c. 1527&#8211;29 &#8212; Louvre</figcaption>
+    </figure>
+
+    <h2>Open Conflict &amp; Crisis</h2>
+
+    <p>
+      In <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+7%3A1&version=WEB" target="_blank" rel="noopener" data-ref="John 7:1" data-verse="After these things, Jesus was walking in Galilee, for he wouldn&#8217;t walk in Judea, because the Jews sought to kill him.">7:1</a> the geography shifts, centered around Jerusalem for the remainder of the gospel. Due to hostile tensions, Judea was off-limits. Even Jesus&#8217; brothers, who were unbelieving at the time, recognized His avoidance could not always be the case. Jesus replied that His hour had not yet come (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+7%3A6&version=WEB" target="_blank" rel="noopener" data-ref="John 7:6" data-verse="Jesus therefore said to them, &#8220;My time has not yet come, but your time is always ready.">7:6</a>). The concept of His hour is elsewhere found in <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+2%3A4&version=WEB" target="_blank" rel="noopener" data-ref="John 2:4" data-verse="Jesus said to her, &#8220;Woman, what does that have to do with you and me? My hour has not yet come.&#8221;">2:4</a>, <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+4%3A21&version=WEB" target="_blank" rel="noopener" data-ref="John 4:21" data-verse="Jesus said to her, &#8220;Woman, believe me, the hour comes, when neither in this mountain, nor in Jerusalem, will you worship the Father.">4:21</a>, and <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+5%3A25-29&version=WEB" target="_blank" rel="noopener" data-ref="John 5:25&#8211;29" data-verse="Most certainly, I tell you, the hour comes, and now is, when the dead will hear the Son of God&#8217;s voice; and those who hear will live &#8230; all that are in the tombs will hear his voice, and will come out; those who have done good, to the resurrection of life; and those who have done evil, to the resurrection of judgment.">5:25&#8211;29</a>. God always has perfect timing to accomplish His will. In this context, His arrest and crucifixion were still future (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+7%3A30&version=WEB" target="_blank" rel="noopener" data-ref="John 7:30" data-verse="They sought therefore to take him; but no one laid a hand on him, because his hour had not yet come.">7:30</a>).
+    </p>
+
+    <p>
+      Jesus attended the Feast of Tabernacles and promised the future indwelling of the Spirit for believers. His attendance and bold claims caused several divisions among the Jews. Many said Jesus was a good man, while others claimed He deceived people (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+7%3A12&version=WEB" target="_blank" rel="noopener" data-ref="John 7:12" data-verse="There was much murmuring among the multitudes concerning him. Some said, &#8220;He is a good man.&#8221; Others said, &#8220;Not so, but he leads the multitude astray.&#8221;">7:12</a>). Still, others even believed Him demon-possessed (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+8%3A48&version=WEB" target="_blank" rel="noopener" data-ref="John 8:48" data-verse="Then the Jews answered him, &#8220;Don&#8217;t we say well that you are a Samaritan, and have a demon?&#8221;">8:48</a>). Some did believe Jesus was the Christ because of His miraculous signs (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+7%3A31&version=WEB" target="_blank" rel="noopener" data-ref="John 7:31" data-verse="But of the multitude, many believed in him. They said, &#8220;When the Christ comes, he won&#8217;t do more signs than those which this man has done, will he?&#8221;">7:31</a>), claims of equality with the Father (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+8%3A28-30&version=WEB" target="_blank" rel="noopener" data-ref="John 8:28&#8211;30" data-verse="When you have lifted up the Son of Man, then you will know that I am he, and I do nothing of myself, but as my Father taught me, I say these things &#8230; As he spoke these things, many believed in him.">8:28&#8211;30</a>), and the testimony of John the Baptist (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+10%3A41-42&version=WEB" target="_blank" rel="noopener" data-ref="John 10:41&#8211;42" data-verse="Many came to him. They said, &#8220;John indeed did no sign, but everything that John said about this man is true.&#8221; Many believed in him there.">10:41&#8211;42</a>). The reader of the Gospel of John may fall into any of these camps. Today, as then, the question remains: was Jesus a liar, a lunatic, or Lord?
+    </p>
+
+    <p>
+      Then, Jesus forgave the adulterous woman. The Pharisees rudely interrupted Jesus&#8217; teaching with a sham judgment and actually ignored a key part of the Law - that the witnesses themselves must cast the first stone, a principle applied from <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=Deuteronomy+17%3A6-7&version=WEB" target="_blank" rel="noopener" data-ref="Deuteronomy 17:6&#8211;7" data-verse="At the mouth of two witnesses, or three witnesses, he who is to die shall be put to death. At the mouth of one witness he shall not be put to death. The hand of the witnesses shall be first on him to put him to death, and afterward the hand of all the people.">Deuteronomy 17:6-7</a>. By asking this be fulfilled, Jesus exposed the fact it was a setup. Whatever He wrote in the ground sparked guilt in illuminating the truth (the KJV following the Textus Receptus adds &#8220;<em>being convicted by their own conscience</em>&#8221; to 8:9). He concluded this episode by declaring Himself the Light of the World, recalling the prologue&#8217;s introduction (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+1%3A4-5&version=WEB" target="_blank" rel="noopener" data-ref="John 1:4&#8211;5" data-verse="In him was life, and the life was the light of men. The light shines in the darkness, and the darkness hasn&#8217;t overcome it.">1:4-5</a>). Being the Light of the World, Jesus provides clarity in the disciple&#8217;s daily walk in the truth.
+    </p>
+
+    <p>
+      Therefore, anyone can trust His promise that
+      if you keep His word, you will never see death (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+8%3A51&version=WEB" target="_blank" rel="noopener" data-ref="John 8:51" data-verse="Most certainly, I tell you, if a person keeps my word, he will never see death.">8:51</a>).
+      The word for keep (τηρήσῃ) means to observe, playing off the latter half of the verse (&#8220;not see death,&#8221; θάνατον οὐ μὴ θεωρήσῃ εἰς τὸν αἰῶνα). The context does not imply committing one&#8217;s life as a kind of performance. Rather, they needed to see the message as true in
+      believing it (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+8%3A45&version=WEB" target="_blank" rel="noopener" data-ref="John 8:45" data-verse="But because I tell the truth, you don't believe me.">8:45</a>).
+      All people physically die, yet the believing ones have an eternity secure because of God&#8217;s life in them.
+    </p>
+
+    <p>
+      Next, Jesus restored the vision to a man born blind, a sign never recorded in the Jewish canon. This man, previously excluded from the temple worship, had the spiritual sight to see Jesus for His true identity,
+      someone worthy of worship (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+9%3A38&version=WEB" target="_blank" rel="noopener" data-ref="John 9:38" data-verse="He said, &#8220;Lord, I believe!&#8221; and he worshiped him.">9:38</a>).
+      The educated Pharisees had the capacity to perceive the evidence just as well as anyone. They, however, had developed a spiritual blindness. Jesus came to open the eyes of the blind, physically and spiritually (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+9%3A40-41&version=WEB" target="_blank" rel="noopener" data-ref="John 9:40&#8211;41" data-verse="Those of the Pharisees who were with him heard these things, and said to him, &#8220;Are we also blind?&#8221; Jesus said to them, &#8220;If you were blind, you would have no sin; but now you say, &#8216;We see.&#8217; Therefore your sin remains.">9:40&#8211;41</a>, <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=Isaiah+42%3A7&version=WEB" target="_blank" rel="noopener" data-ref="Isaiah 42:7" data-verse="to open the blind eyes, to bring the prisoners out of the dungeon, and those who sit in darkness out of the prison.">Isaiah 42:7</a>).
+    </p>
+
+    <p>
+      The formerly blind man formed a natural progression in understanding the person of Jesus. When first asked how his eyes were opened he answered that a man named Jesus told him to wash in the pool (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+9%3A11&version=WEB" target="_blank" rel="noopener" data-ref="John 9:11" data-verse="He answered, &#8220;A man called Jesus made mud, anointed my eyes, and said to me, &#8216;Go to the pool of Siloam, and wash.&#8217; So I went away and washed, and I received sight.&#8221;">9:11</a>). Then later told the Pharisees that man was a prophet. Finally, when Jesus met him again he worshiped Him as the Son of God, believing in His name.
+    </p>
+
+    <p>
+      While they refused to see, Jesus went further by asserting they were also deaf to His voice. Jesus, as the Good Shepherd, knows and cares for His sheep. They listen to Him. If you want security in the Father&#8217;s hands, listen to the evidence. The miraculous works, or signs, should convince them (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+10%3A25&version=WEB" target="_blank" rel="noopener" data-ref="John 10:25" data-verse="Jesus answered them, &#8220;I told you, and you don&#8217;t believe. The works that I do in my Father&#8217;s name, these testify about me.">10:25</a>, <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+10%3A37-38&version=WEB" target="_blank" rel="noopener" data-ref="John 10:37&#8211;38" data-verse="If I don&#8217;t do the works of my Father, don&#8217;t believe me. But if I do them, though you don&#8217;t believe me, believe the works; that you may know and believe that the Father is in me, and I in the Father.">37&#8211;38</a>).
+    </p>
+
+    <p>
+      The final public miracle of Jesus recorded in the Gospel of John takes special prominence in the narrative as proof of His supernatural claims. He exercised mastery over death by resurrecting Lazarus. He offers this same victory now to anyone who believes in Him for it. The miracle, like all the signs, had a specific purpose as a tool of evangelism (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+11%3A15&version=WEB" target="_blank" rel="noopener" data-ref="John 11:15" data-verse="I am glad for your sakes that I was not there, so that you may believe. Nevertheless, let&#8217;s go to him.">11:15</a>).
+    </p>
+
+    <blockquote>
+      &#8220;I am the resurrection and the life. He who believes in me will still live, even if he dies. Whoever lives and believes in me will never die. Do you believe this?&#8221;
+      <cite style="display:block; font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.15em; color:var(--gold); font-style:normal; text-align:right; margin-top:0.75rem; opacity:0.8;">John 11:25&#8211;26 (WEB)</cite>
+    </blockquote>
+
+    <p>
+      Indeed, Jesus&#8217; claim to be the very power of resurrection and life for the believer ends with the powerful call to action, &#8220;Do you believe this?&#8221; The central message of the Gospel of John is to persuade the reader in the affirmative. The abundance of evidence, including unique miraculous signs and key witnesses, should lead the reader to an unavoidable conclusion.
+    </p>
+
+    <h2>Disciples Conference</h2>
+
+    <p>
+      Yet, His own, the Jewish people, would not all receive Him (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+1%3A11&version=WEB" target="_blank" rel="noopener" data-ref="John 1:11" data-verse="He came to his own, and those who were his own didn&#8217;t receive him.">1:11</a>). John comments that God gave them over to hardening because they repeatedly rejected the light brought to them. <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=Isaiah+53%3A1&version=WEB" target="_blank" rel="noopener" data-ref="Isaiah 53:1" data-verse="Who has believed our message? To whom has Yahweh&#8217;s arm been revealed?">Isaiah 53:1</a> predicted their disdain for Christ (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+12%3A37-40&version=WEB" target="_blank" rel="noopener" data-ref="John 12:37&#8211;40" data-verse="But though he had done so many signs before them, yet they didn&#8217;t believe in him, that the word of Isaiah the prophet might be fulfilled, which he spoke, &#8220;Lord, who has believed our report? &#8230;&#8221; &#8230; &#8220;He has blinded their eyes and he hardened their heart, lest they should see with their eyes, and perceive with their heart, and would turn, and I would heal them.&#8221;">12:37&#8211;40</a>).<a href="#footnote4" id="ref4">[4]</a>
+    </p>
+
+    <p>
+      Now, the Jewish hatred peaking, Jesus&#8217; hour for His crucifixion had come (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+12%3A23&version=WEB" target="_blank" rel="noopener" data-ref="John 12:23" data-verse="Jesus answered them, &#8220;The time has come for the Son of Man to be glorified.">12:23</a>). In the final Passover recorded in John, Jesus withdrew with the apostles and was hidden from the world (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+12%3A36&version=WEB" target="_blank" rel="noopener" data-ref="John 12:36" data-verse="While you have the light, believe in the light, that you may become children of light.&#8221; Jesus said these things, and he departed and hid himself from them.">12:36</a>). Jesus focused on teaching them discipleship, rather than the previous main theme of evangelism. Believers can bear fruit, or productive spiritual lives, if they abide in Christ (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+15%3A4&version=WEB" target="_blank" rel="noopener" data-ref="John 15:4" data-verse="Remain in me, and I in you. As the branch can&#8217;t bear fruit by itself, unless it remains in the vine, so neither can you, unless you remain in me.">15:4</a>).
+    </p>
+
+    <p>
+      Jesus promises to send the Holy Spirit to convict the world, providing a significant future witness. Many characters in the Gospel of John believe. However, Jesus would soon ascend, and His works would not be visible any longer. Nevertheless, afterward, Christ will draw all peoples to Himself through the revelation of the Holy Spirit. The world is now conscious of sin, contrary to God&#8217;s perfect standard, and the impending condemnation. The Spirit would empower the disciples to have effective ministries by guiding them into all truth (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+12%3A32&version=WEB" target="_blank" rel="noopener" data-ref="John 12:32" data-verse="And I, if I am lifted up from the earth, will draw all people to myself.">12:32</a>, <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+16%3A8-13&version=WEB" target="_blank" rel="noopener" data-ref="John 16:8&#8211;13" data-verse="When he has come, he will convict the world about sin, about righteousness, and about judgment &#8230; However when he, the Spirit of truth, has come, he will guide you into all truth.">16:8&#8211;13</a>).<a href="#footnote5" id="ref5">[5]</a>
+    </p>
+
+    <p>
+      This section concludes with Jesus&#8217; beautiful High Priestly Prayer in John 17. Here the text points to yet another witness: the unity of the disciples. Jesus is one with the Father. Now, He calls believers to demonstrate that same harmony in mind and purpose to illustrate the love of Christ (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+17%3A23&version=WEB" target="_blank" rel="noopener" data-ref="John 17:23" data-verse="I in them, and you in me, that they may be perfected into one; that the world may know that you sent me, and loved them, even as you loved me.">17:23</a>).
+    </p>
+
+    <h2>Consummation</h2>
+
+    <p>
+      Jesus was arrested and promptly ushered into a sham trial. The Gospel of John has been carefully outlining categories of evidence for Jesus&#8217; claim through differing periods of reaction, geography, and chronology. In sharp contrast, the Jewish authorities ignored traditional procedural matters and the rights of the accused. Caiaphas could not ask the defendant to incriminate Himself, nor could He be beaten without evidence of wrongdoing (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+18%3A22-23&version=WEB" target="_blank" rel="noopener" data-ref="John 18:22&#8211;23" data-verse="When he had said this, one of the officers standing by slapped Jesus with his hand, saying, &#8220;Do you answer the high priest like that?&#8221; Jesus answered him, &#8220;If I have spoken evil, testify of the evil; but if well, why do you beat me?&#8221;">18:22&#8211;23</a>).<a href="#footnote6" id="ref6">[6]</a>
+    </p>
+
+    <p>
+      Before Pilate, Christ made clear He bore witness to the truth. The Gospel of John is a trial of the truth only heard from God. The governor asked the pivotal question &#8220;What is truth?&#8221; Jesus answered it back in
+      <a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+14%3A6&version=WEB" target="_blank" rel="noopener"
+         data-ref="John 14:6"
+         data-verse="I am the way, the truth, and the life. No one comes to the Father, except through me.">John 14:6</a>.
+      He is the Truth! As Peter proclaimed, only His message has words of life. Every other system of thought contains falsehood and provides no spiritual substance. Whether Pilate meant the question in jeering sarcasm or genuine curiosity is open to interpretation. In any case, the reader is invited to answer the question given the evidence presented.
+    </p>
+
+    <p>
+      When all prophecy had been fulfilled, Jesus proclaimed victory on the cross, saying &#8220;It is finished!&#8221;
+    </p>
+
+    <p>
+      The resurrection account is concise. Jesus graces doubting Thomas to meet his criteria to believe. Though Jesus affirms a greater blessing on those who believe without having seen Him resurrected.
+    </p>
+
+    <h2>Epilogue: What is Your Response?</h2>
+
+    <p>
+      The Gospel of John concludes with the disciples enjoying breakfast with the resurrected Lord. After recording Peter&#8217;s restoration and predicting his martyrdom, John reveals himself as the eyewitness authoring the Gospel. He admitted countless more books could be written on Jesus. The need for the response is overwhelming: believe in Him for life.
+    </p>
+
+    <p>
+      Then, in a separate call, Jesus addressed Peter, an existing believer, for discipleship. He restored him by directing him to tend His lambs and sheep. The apostles had a special place of leadership and needed to be an example in humility. The final words of Jesus form a model of Christian growth. If you want to experience blessings and maturity in faith,
+      follow Jesus (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=John+21%3A19&version=WEB" target="_blank" rel="noopener" data-ref="John 21:19" data-verse="Now he said this, signifying by what kind of death he would glorify God. When he had said this, he said to him, &#8220;Follow me.&#8221;">21:19</a>).
+    </p>
+
+    <!-- FOOTNOTES -->
+    <div class="footnotes">
+      <h2>Notes</h2>
+      <p id="footnote1">1. Merrill C. Tenney, <em>John, The Gospel of Belief: An Analytic Study of the Text</em>, pbk. ed. (Grand Rapids, MI: Eerdmans, 1997), 40&#8211;41. <a href="#ref1">&#8617;</a></p>
+      <p id="footnote2">2. Charles Caldwell Ryrie, <em>So Great Salvation: What It Means to Believe in Jesus Christ</em> (Wheaton, Ill.: Victor Books, 1989), 106&#8211;111. <a href="#ref2">&#8617;</a></p>
+      <p id="footnote3">3. Tenney, <em>John, the Gospel of Belief</em>, 116&#8211;125. <a href="#ref3">&#8617;</a></p>
+      <p id="footnote4">4. Robert N. Wilkin, ed., <em>The Grace New Testament Commentary</em>, rev. ed. (Denton, TX: Grace Evangelical Society, 2019), 214. <a href="#ref4">&#8617;</a></p>
+      <p id="footnote5">5. Tenney, <em>John, the Gospel of Belief</em>, 236&#8211;237. <a href="#ref5">&#8617;</a></p>
+      <p id="footnote6">6. Leon Morris, <em>The Gospel According to John: The English Text with Introduction, Exposition and Notes</em>, repr., The New International Commentary on the New Testament (Grand Rapids, Mich: Eerdmans, 1992), 755&#8211;757. <a href="#ref6">&#8617;</a></p>
+    </div>
+
+    <!-- BIBLIOGRAPHY -->
+    <div class="bibliography">
+      <h2>Bibliography</h2>
+      <p>Morris, Leon. <em>The Gospel According to John: The English Text with Introduction, Exposition and Notes.</em> Repr. The New International Commentary on the New Testament. Grand Rapids, Mich: Eerdmans, 1992.</p>
+      <p>Ryrie, Charles Caldwell. <em>So Great Salvation: What It Means to Believe in Jesus Christ.</em> Wheaton, Ill.: Victor Books, 1989.</p>
+      <p>Tenney, Merrill C. <em>John, The Gospel of Belief: An Analytic Study of the Text.</em> Pbk. ed. Grand Rapids, MI: Eerdmans, 1997.</p>
+      <p>Wilkin, Robert N., ed. <em>The Grace New Testament Commentary.</em> Revised edition. Denton, TX: Grace Evangelical Society, 2019.</p>
+    </div>
+
+  </article>
+
+<footer>
+  <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+  <div class="footer-nav">
+    <a href="../about.html">About</a>
+    <span>&#183;</span>
+    <span>&#169; 2026 Whosoever Believes</span>
+  </div>
+</footer>
+</div>
+
+<!-- VERSE TOOLTIP -->
+<div id="verse-tooltip" role="tooltip">
+  <div class="tt-ref" id="tt-ref"></div>
+  <div class="tt-text" id="tt-text"></div>
+  <div class="tt-version">World English Bible</div>
+</div>
+
+<script src="../search-index.js"></script>
+<script src="../scripts.js"></script>
+
+</body>
+</html>
