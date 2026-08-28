@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Moderate Comments — Whosoever Believes</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  .mod-wrap { padding: 3rem 2.5rem 4rem; background: var(--surface); }
+
+  .mod-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem;
+  }
+  .mod-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 2.2rem;
+    font-weight: 300; color: var(--text); letter-spacing: 0.02em;
+  }
+  .mod-rule {
+    width: 60px; height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 0 0 2rem;
+  }
+
+  .mod-btn {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.55rem 1.1rem; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--rule); background: none; color: var(--text-mid);
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .mod-btn:hover:not(:disabled) { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+  .mod-btn:disabled { opacity: 0.45; cursor: default; }
+  .mod-btn.primary {
+    background: var(--gold); color: #0d1117; border-color: var(--gold); font-weight: 700;
+  }
+  .mod-btn.primary:hover:not(:disabled) { background: var(--gold-light); color: #0d1117; }
+  .mod-btn.danger:hover:not(:disabled) { color: #e0736d; border-color: rgba(224,115,109,0.5); }
+
+  /* ── Sign in ── */
+  .mod-signin {
+    max-width: 420px; margin: 0 auto; background: var(--glass);
+    border: 1px solid var(--glass-border); border-radius: 6px; padding: 2.25rem 2rem;
+  }
+  .mod-signin h2 {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
+    font-weight: 300; margin-bottom: 0.35rem; color: var(--text);
+  }
+  .mod-signin p.hint {
+    font-size: 0.88rem; font-style: italic; color: var(--text-faint); margin-bottom: 1.5rem;
+  }
+  .mod-label {
+    display: block; font-family: 'Cinzel', serif; font-size: 0.55rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 0.4rem;
+  }
+  .mod-field { margin-bottom: 1rem; }
+  .mod-input {
+    width: 100%; font-family: 'EB Garamond', serif; font-size: 1rem;
+    padding: 0.65rem 1rem; border: 1px solid var(--rule); background: var(--glass);
+    color: var(--text); border-radius: 2px; outline: none; transition: border-color 0.2s;
+  }
+  .mod-input:focus { border-color: var(--gold); }
+
+  /* ── Tabs ── */
+  .mod-tabs {
+    display: flex; gap: 0; border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.75rem; flex-wrap: wrap;
+  }
+  .mod-tab {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.14em;
+    text-transform: uppercase; padding: 0.75rem 1.25rem; border: none;
+    background: none; color: var(--text-faint); cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .mod-tab:hover { color: var(--gold-light); }
+  .mod-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .mod-tab .count {
+    display: inline-block; margin-left: 0.45rem; font-size: 0.55rem;
+    color: var(--text-faint); opacity: 0.8;
+  }
+  .mod-tab.active .count { color: var(--gold); opacity: 1; }
+
+  /* ── Comment cards ── */
+  .mod-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 6px; padding: 1.5rem 1.75rem; margin-bottom: 1.1rem;
+  }
+  .mod-card.pending { border-left: 2px solid var(--gold); }
+
+  .mod-card-head {
+    display: flex; align-items: baseline; flex-wrap: wrap;
+    gap: 0.75rem; margin-bottom: 0.3rem;
+  }
+  .mod-card-author {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.2rem;
+    font-weight: 600; color: var(--text);
+  }
+  .mod-card-meta {
+    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-faint);
+  }
+  .mod-card-email { font-family: 'EB Garamond', serif; font-size: 0.85rem;
+    text-transform: none; letter-spacing: 0; color: var(--text-faint); }
+  .mod-card-page {
+    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold); opacity: 0.75; margin-bottom: 0.9rem;
+  }
+  .mod-card-page a { color: inherit; text-decoration: none; border-bottom: 1px dotted rgba(201,168,76,0.4); }
+  .mod-card-page a:hover { color: var(--gold-light); }
+
+  .mod-card-context {
+    font-size: 0.88rem; color: var(--text-faint); font-style: italic;
+    border-left: 1px solid var(--rule); padding-left: 0.9rem; margin-bottom: 0.9rem;
+    line-height: 1.65;
+  }
+  .mod-card-body {
+    color: var(--text); line-height: 1.8; white-space: pre-wrap;
+    overflow-wrap: break-word; margin-bottom: 1.1rem;
+  }
+  .mod-card-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+
+  .mod-reply-box { margin-top: 1rem; display: none; }
+  .mod-reply-box.open { display: block; }
+  .mod-reply-box textarea {
+    width: 100%; min-height: 110px; font-family: 'EB Garamond', serif;
+    font-size: 1rem; line-height: 1.75; padding: 0.7rem 1rem;
+    border: 1px solid var(--rule); background: var(--glass); color: var(--text);
+    border-radius: 2px; outline: none; resize: vertical; margin-bottom: 0.7rem;
+  }
+  .mod-reply-box textarea:focus { border-color: var(--gold); }
+
+  .mod-empty {
+    background: var(--glass); border: 1px dashed rgba(201,168,76,0.25);
+    padding: 2.5rem; text-align: center; color: var(--text-faint);
+    font-style: italic; border-radius: 4px;
+  }
+  .mod-msg { font-size: 0.9rem; margin-top: 0.75rem; line-height: 1.6; }
+  .mod-msg.error { color: #e0736d; }
+  .mod-msg.ok { color: var(--gold-light); font-style: italic; }
+
+  .mod-toast {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    background: #1a2233; border: 1px solid rgba(201,168,76,0.4);
+    color: var(--text); padding: 0.8rem 1.5rem; border-radius: 4px;
+    font-size: 0.9rem; z-index: 500; opacity: 0;
+    transition: opacity 0.25s; pointer-events: none;
+  }
+  .mod-toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .mod-wrap { padding: 2rem 1.15rem 3rem; }
+    .mod-card { padding: 1.2rem 1.1rem; }
+  }
+</style>
+</head>
+
+<body>
+<div class="site-wrapper">
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="articles.html">Articles</a>
+    <a href="about.html">About</a>
+  </nav>
+
+  <div class="mod-wrap">
+
+    <!-- ── SIGNED OUT ─────────────────────────────────────────────── -->
+    <div id="signin-view" class="mod-signin" style="display:none;">
+      <h2>Comment Moderation</h2>
+      <p class="hint">Sign in with the account that owns this site.</p>
+
+      <div class="mod-field">
+        <label class="mod-label" for="mod-email">Email</label>
+        <input class="mod-input" type="email" id="mod-email" autocomplete="email">
+      </div>
+      <div class="mod-field">
+        <label class="mod-label" for="mod-password">Password</label>
+        <input class="mod-input" type="password" id="mod-password" autocomplete="current-password">
+      </div>
+
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:1.25rem;">
+        <button class="mod-btn primary" id="btn-signin">Sign In</button>
+        <button class="mod-btn" id="btn-magic">Email Me a Link</button>
+      </div>
+      <div class="mod-msg" id="signin-msg"></div>
+    </div>
+
+    <!-- ── SIGNED IN ──────────────────────────────────────────────── -->
+    <div id="mod-view" style="display:none;">
+      <div class="mod-head">
+        <div>
+          <div class="mod-title">Comment Moderation</div>
+        </div>
+        <div style="display:flex; gap:0.6rem; align-items:center;">
+          <button class="mod-btn" id="btn-refresh">Refresh</button>
+          <button class="mod-btn" id="btn-signout">Sign Out</button>
+        </div>
+      </div>
+      <div class="mod-rule"></div>
+
+      <div class="mod-tabs">
+        <button class="mod-tab active" data-status="pending">Pending<span class="count" id="c-pending"></span></button>
+        <button class="mod-tab" data-status="approved">Approved<span class="count" id="c-approved"></span></button>
+        <button class="mod-tab" data-status="spam">Spam<span class="count" id="c-spam"></span></button>
+        <button class="mod-tab" data-status="trash">Trash<span class="count" id="c-trash"></span></button>
+      </div>
+
+      <div id="mod-list"></div>
+    </div>
+
+    <div id="boot-msg" class="mod-empty">Loading…</div>
+  </div>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    <div class="footer-nav">
+      <a href="about.html">About</a>
+      <span>·</span>
+      <span>© 2026 Whosoever Believes</span>
+    </div>
+  </footer>
+</div>
+
+<div class="mod-toast" id="mod-toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var SUPABASE_URL = 'https://tgzsyfmnzagqijjlzxsa.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_gck7v-L2PDbW2JKUoxTHDA_FidLWw8H';
+  var db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  var currentStatus = 'pending';
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function toast(text) {
+    var t = $('mod-toast');
+    t.textContent = text;
+    t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 2600);
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function formatDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+      + ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
+  }
+
+  function show(view) {
+    $('boot-msg').style.display   = view === 'boot'   ? '' : 'none';
+    $('signin-view').style.display = view === 'signin' ? '' : 'none';
+    $('mod-view').style.display    = view === 'mod'    ? '' : 'none';
+  }
+
+  // ── AUTH ────────────────────────────────────────────────────────────
+  function signinMsg(text, ok) {
+    var m = $('signin-msg');
+    m.textContent = text;
+    m.className = 'mod-msg ' + (ok ? 'ok' : 'error');
+  }
+
+  $('btn-signin').addEventListener('click', function () {
+    signinMsg('', true);
+    db.auth.signInWithPassword({
+      email: $('mod-email').value.trim(),
+      password: $('mod-password').value
+    }).then(function (res) {
+      if (res.error) signinMsg(res.error.message, false);
+    });
+  });
+
+  $('btn-magic').addEventListener('click', function () {
+    var email = $('mod-email').value.trim();
+    if (!email) { signinMsg('Enter your email address first.', false); return; }
+    db.auth.signInWithOtp({
+      email: email,
+      options: { emailRedirectTo: window.location.href }
+    }).then(function (res) {
+      if (res.error) signinMsg(res.error.message, false);
+      else signinMsg('Sign-in link sent — check your inbox.', true);
+    });
+  });
+
+  $('btn-signout').addEventListener('click', function () {
+    db.auth.signOut().then(function () { show('signin'); });
+  });
+
+  $('btn-refresh').addEventListener('click', function () { loadAll(); });
+
+  // ── TABS ────────────────────────────────────────────────────────────
+  document.querySelectorAll('.mod-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.mod-tab').forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      currentStatus = tab.dataset.status;
+      loadList();
+    });
+  });
+
+  // ── DATA ────────────────────────────────────────────────────────────
+  function loadCounts() {
+    return db.rpc('admin_comment_counts').then(function (res) {
+      var map = { pending: 0, approved: 0, spam: 0, trash: 0 };
+      (res.data || []).forEach(function (row) { map[row.status] = Number(row.n); });
+      Object.keys(map).forEach(function (k) {
+        $('c-' + k).textContent = map[k] ? '(' + map[k] + ')' : '';
+      });
+    });
+  }
+
+  function loadList() {
+    var list = $('mod-list');
+    list.textContent = '';
+    list.appendChild(el('div', 'mod-empty', 'Loading…'));
+
+    return db.rpc('admin_list_comments', { p_status: currentStatus, p_limit: 300 })
+      .then(function (res) {
+        list.textContent = '';
+        if (res.error) {
+          list.appendChild(el('div', 'mod-empty', 'Could not load comments: ' + res.error.message));
+          return;
+        }
+        var rows = res.data || [];
+        if (!rows.length) {
+          list.appendChild(el('div', 'mod-empty',
+            currentStatus === 'pending'
+              ? 'Nothing waiting for review. All caught up.'
+              : 'Nothing here.'));
+          return;
+        }
+        rows.forEach(function (row) { list.appendChild(card(row)); });
+      });
+  }
+
+  function loadAll() { return Promise.all([loadCounts(), loadList()]); }
+
+  function act(promise, okText) {
+    return promise.then(function (res) {
+      if (res && res.error) { toast('Error: ' + res.error.message); return; }
+      toast(okText);
+      return loadAll();
+    });
+  }
+
+  // ── CARD ────────────────────────────────────────────────────────────
+  function card(row) {
+    var wrap = el('div', 'mod-card' + (row.status === 'pending' ? ' pending' : ''));
+
+    var head = el('div', 'mod-card-head');
+    head.appendChild(el('span', 'mod-card-author', row.author_name));
+    if (row.is_author_reply) head.appendChild(el('span', 'mod-card-meta', '· your reply'));
+    head.appendChild(el('span', 'mod-card-meta', formatDate(row.created_at)));
+    if (row.author_email) head.appendChild(el('span', 'mod-card-email', row.author_email));
+    wrap.appendChild(head);
+
+    var page = el('div', 'mod-card-page');
+    var link = el('a', null, row.page_title || row.page_slug);
+    link.href = row.page_slug + '#comments';
+    link.target = '_blank';
+    link.rel = 'noopener';
+    page.appendChild(link);
+    wrap.appendChild(page);
+
+    if (row.parent_id && row.parent_author) {
+      var ctx = el('div', 'mod-card-context',
+        'In reply to ' + row.parent_author + ': “'
+        + String(row.parent_body || '').slice(0, 160)
+        + (String(row.parent_body || '').length > 160 ? '…' : '') + '”');
+      wrap.appendChild(ctx);
+    }
+
+    wrap.appendChild(el('div', 'mod-card-body', row.body));
+
+    // ── actions ──
+    var actions = el('div', 'mod-card-actions');
+
+    function statusBtn(label, status, cls) {
+      var b = el('button', 'mod-btn' + (cls ? ' ' + cls : ''), label);
+      b.addEventListener('click', function () {
+        b.disabled = true;
+        act(db.rpc('admin_set_comment_status', { p_id: row.id, p_status: status }), label + 'd.');
+      });
+      return b;
+    }
+
+    if (row.status !== 'approved') actions.appendChild(statusBtn('Approve', 'approved', 'primary'));
+    if (row.status === 'approved') actions.appendChild(statusBtn('Unapprove', 'pending'));
+    if (row.status !== 'spam')  actions.appendChild(statusBtn('Spam', 'spam'));
+    if (row.status !== 'trash') actions.appendChild(statusBtn('Trash', 'trash'));
+
+    var replyBtn = el('button', 'mod-btn', 'Reply');
+    actions.appendChild(replyBtn);
+
+    var del = el('button', 'mod-btn danger', 'Delete Forever');
+    del.addEventListener('click', function () {
+      if (del.dataset.armed !== '1') {
+        del.dataset.armed = '1';
+        del.textContent = 'Click again to confirm';
+        setTimeout(function () {
+          del.dataset.armed = '0';
+          del.textContent = 'Delete Forever';
+        }, 4000);
+        return;
+      }
+      del.disabled = true;
+      act(db.rpc('admin_delete_comment', { p_id: row.id }), 'Deleted.');
+    });
+    actions.appendChild(del);
+
+    wrap.appendChild(actions);
+
+    // ── reply box ──
+    var box = el('div', 'mod-reply-box');
+    var ta = document.createElement('textarea');
+    ta.placeholder = 'Write your reply — it posts publicly, approved, under your name.';
+    box.appendChild(ta);
+
+    var send = el('button', 'mod-btn primary', 'Post Reply');
+    send.addEventListener('click', function () {
+      var text = ta.value.trim();
+      if (text.length < 2) { toast('Write something first.'); return; }
+      send.disabled = true;
+      act(db.rpc('admin_reply', { p_parent: row.id, p_body: text }), 'Reply posted.');
+    });
+    box.appendChild(send);
+    wrap.appendChild(box);
+
+    replyBtn.addEventListener('click', function () {
+      box.classList.toggle('open');
+      if (box.classList.contains('open')) ta.focus();
+    });
+
+    return wrap;
+  }
+
+  // ── BOOT ────────────────────────────────────────────────────────────
+  function afterAuth(session) {
+    if (!session) { show('signin'); return; }
+    db.rpc('admin_comment_counts').then(function (res) {
+      if (res.error) {
+        show('signin');
+        signinMsg('That account does not have moderation access.', false);
+        db.auth.signOut();
+        return;
+      }
+      show('mod');
+      loadAll();
+    });
+  }
+
+  db.auth.getSession().then(function (res) { afterAuth(res.data.session); });
+  db.auth.onAuthStateChange(function (event, session) {
+    if (event === 'SIGNED_OUT') show('signin');
+    else afterAuth(session);
+  });
+
+  /* Theme preference, matching the rest of the site */
+  if (localStorage.getItem('themePref') === 'light') {
+    document.documentElement.classList.add('light-mode');
+  }
+})();
+</script>
+</body>
+</html>
