@@ -1166,9 +1166,25 @@ a.scripture-ref:hover {
   display: block;
 }
 
+.article-hero figcaption {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  text-align: center;
+  padding: 0.7rem 1.25rem 0;
+  background: var(--surface);
+}
+
 @media (max-width: 480px) {
   .article-hero img {
     height: 220px;
+  }
+
+  .article-hero figcaption {
+    font-size: 0.6rem;
+    padding: 0.6rem 1rem 0;
   }
 }
 

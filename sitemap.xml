@@ -24,6 +24,12 @@
   <!-- ══ ARTICLES ════════════════════════════════════════════════════ -->
 
   <url>
+    <loc>https://whosoeverbelieves.com/articles/implications-of-gods-transcendence</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
     <loc>https://whosoeverbelieves.com/articles/kjv-dragons-tannin</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
