@@ -181,4 +181,10 @@
     <priority>0.7</priority>
   </url>
 
+  <url>
+    <loc>https://whosoeverbelieves.com/resources/basics-of-biblical-greek-notes.pdf</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
 </urlset>

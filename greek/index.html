@@ -208,6 +208,25 @@
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .section-h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 300; color: var(--text); margin-bottom: 1.1rem; }
+    .guide-section { padding: 3rem 2.5rem; background: var(--surface); border-top: 1px solid var(--rule); }
+    .guide-block { display: grid; grid-template-columns: 180px 1fr; gap: 2.5rem; align-items: center; }
+    .guide-cover { display: block; border: 1px solid var(--glass-border); border-radius: 4px; overflow: hidden; box-shadow: 0 14px 40px rgba(0,0,0,0.45); transform: rotate(-1.5deg); transition: transform 0.25s; }
+    .guide-cover:hover { transform: rotate(0) translateY(-4px); }
+    .guide-cover img { display: block; width: 100%; height: auto; }
+    .guide-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--text); line-height: 1.2; }
+    .guide-desc { margin-top: 0.4rem; font-style: italic; color: var(--text-mid); }
+    .guide-btns { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+    .guide-btn { font-family: 'Cinzel', serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.8rem 1.5rem; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
+    .guide-btn-solid { background: var(--gold); color: #0d1117; }
+    .guide-btn-solid:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .guide-btn-outline { color: var(--gold); border: 2px solid rgba(201,168,76,0.7); }
+    .guide-btn-outline:hover { color: var(--gold-light); border-color: var(--gold); }
+    @media (max-width: 640px) {
+      .guide-section { padding: 2.25rem 1.25rem; }
+      .guide-block { grid-template-columns: 1fr; gap: 1.75rem; text-align: center; }
+      .guide-cover { max-width: 180px; margin: 0 auto; }
+      .guide-btns { justify-content: center; }
+    }
   </style>
 </head>
 
@@ -280,6 +299,23 @@
       <div class="bbg-callout-icon">&#128218;</div>
       <div class="bbg-callout-text">
         The vocabulary and chapter structure used in these tools follows <strong>Basics of Biblical Greek</strong> by William D. Mounce &#8212; the most widely used NT Greek textbook in seminaries today. Whether you are working through the textbook in class or self-study, the tools here map directly to each chapter&#8217;s vocabulary list.
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDY GUIDE (PDF) -->
+  <div class="guide-section reveal">
+    <div class="guide-block">
+      <a class="guide-cover" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">
+        <img src="../images/basics-of-biblical-greek-notes-cover.png" alt="Cover of Basics of Biblical Greek - Notes" width="360" height="466" loading="lazy" />
+      </a>
+      <div>
+        <h2 class="guide-title">Basics of Biblical Greek - Notes</h2>
+        <p class="guide-desc">My personal notes condensed from first year Greek</p>
+        <div class="guide-btns">
+          <a class="guide-btn guide-btn-solid" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">Read Online</a>
+          <a class="guide-btn guide-btn-outline" href="../resources/basics-of-biblical-greek-notes.pdf" download>Download PDF</a>
+        </div>
       </div>
     </div>
   </div>
