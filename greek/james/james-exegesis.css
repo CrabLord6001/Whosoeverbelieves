@@ -194,3 +194,55 @@
 .passage-card:hover { transform: translateY(-2px); border-color: var(--gold); }
 .passage-ref { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.14em; color: var(--gold); }
 .passage-sub { font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text); line-height: 1.5; }
+
+/* ── Fixed audio bar ── */
+body.has-audio-bar { padding-bottom: 5.5rem; }
+#audio-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+  background: rgba(13,17,23,0.96); border-top: 1px solid rgba(201,168,76,0.35);
+  box-shadow: 0 -8px 30px rgba(0,0,0,0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  padding: 0.55rem 1rem 0.4rem; color: #e8e6e0;
+}
+:root.light-mode #audio-bar { background: rgba(237,232,218,0.97); color: #1a1a1a; box-shadow: 0 -6px 24px rgba(0,0,0,0.12); }
+#audio-bar .ab-inner { max-width: 940px; margin: 0 auto; display: flex; align-items: center; gap: 0.6rem; }
+#audio-bar .ab-btn {
+  flex-shrink: 0; min-width: 2.4rem; height: 2.4rem; padding: 0 0.55rem; border-radius: 3px; cursor: pointer;
+  background: transparent; border: 1px solid rgba(201,168,76,0.45); color: var(--gold-light);
+  font-family: 'EB Garamond', serif; font-size: 0.95rem;
+}
+#audio-bar .ab-play { background: var(--gold); color: #0d1117; border-color: var(--gold); font-size: 0.9rem; }
+#audio-bar .ab-btn:hover { border-color: var(--gold-light); }
+:root.light-mode #audio-bar .ab-btn:not(.ab-play) { color: var(--gold); }
+#audio-bar .ab-chapters { display: flex; gap: 0.3rem; flex-shrink: 0; }
+#audio-bar .ab-ch {
+  font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0.35rem 0.55rem; border-radius: 2px; cursor: pointer;
+  background: transparent; color: var(--text-mid); border: 1px solid var(--glass-border);
+}
+#audio-bar .ab-ch.active { color: var(--gold-light); border-color: var(--gold); }
+:root.light-mode #audio-bar .ab-ch.active { color: var(--gold); }
+#audio-bar .ab-seek { flex: 1; min-width: 60px; accent-color: #c9a84c; cursor: pointer; }
+#audio-bar .ab-time { flex-shrink: 0; font-family: 'EB Garamond', serif; font-size: 0.9rem; color: var(--text-mid); font-variant-numeric: tabular-nums; }
+#audio-bar .ab-credit {
+  max-width: 940px; margin: 0.25rem auto 0; font-size: 0.72rem; color: var(--text-faint); text-align: right;
+}
+#audio-bar .ab-credit a { color: inherit; text-decoration: underline; text-decoration-color: rgba(201,168,76,0.4); }
+@media (max-width: 640px) {
+  body.has-audio-bar { padding-bottom: 7.5rem; }
+  #audio-bar { padding: 0.5rem 0.6rem 0.35rem; }
+  #audio-bar .ab-inner { flex-wrap: wrap; gap: 0.45rem; }
+  #audio-bar .ab-seek { order: 10; flex-basis: 100%; }
+  #audio-bar .ab-time { margin-left: auto; font-size: 0.82rem; }
+  #audio-bar .ab-credit { text-align: left; font-size: 0.66rem; }
+}
+
+/* ── Per-verse listen button ── */
+.exegesis-page .verse-num { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.exegesis-page .verse-play {
+  font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 0.2rem 0.55rem; border-radius: 2px; cursor: pointer;
+  background: transparent; color: var(--gold); border: 1px solid rgba(201,168,76,0.45);
+}
+.exegesis-page .verse-play:hover { background: var(--gold-faint); color: var(--gold-light); }
+.exegesis-page .verse-block { transition: border-color 0.3s, box-shadow 0.3s; }
+.exegesis-page .verse-block.now-playing { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(201,168,76,0.35), 0 0 24px rgba(201,168,76,0.12); }
