@@ -1,0 +1,196 @@
+/* ==========================================================================
+   James — Greek Exegesis series
+   Page styles layered on top of ../../styles.css (uses the site's variables)
+   ========================================================================== */
+
+/* Parts-of-speech palette: bright tones for dark mode, original tones for light */
+:root {
+  --pos-verb: #ff8a7a;  --pos-inf: #f4a097;   --pos-ptcp: #c9a2ff;
+  --pos-noun: #86b9ff;  --pos-pron: #62d6b8;  --pos-adj: #dba6ff;
+  --pos-art: #9aa3ab;   --pos-part: #e5c97a;  --pos-prep: #f5a960;
+  --pos-conj: #b9c0c5;  --pos-adv: #93c9f2;   --pos-interj: #ff9a8f;
+  --pos-rel: #56c9a6;   --pos-neg: #d9ad90;
+  --note-bg: rgba(61,108,192,0.10);  --note-edge: #5b86d6;
+}
+:root.light-mode {
+  --pos-verb: #c0392b;  --pos-inf: #922b21;   --pos-ptcp: #6c3483;
+  --pos-noun: #1a5276;  --pos-pron: #117a65;  --pos-adj: #884ea0;
+  --pos-art: #6f7b7c;   --pos-part: #8a6a1f;  --pos-prep: #b35e14;
+  --pos-conj: #515a5b;  --pos-adv: #1f618d;   --pos-interj: #c0392b;
+  --pos-rel: #0e6655;   --pos-neg: #5d4037;
+  --note-bg: rgba(61,108,192,0.07);  --note-edge: #3d6cc0;
+}
+
+.exegesis-page .verb    { color: var(--pos-verb); font-weight: 600; }
+.exegesis-page .inf     { color: var(--pos-inf); font-weight: 600; font-style: italic; }
+.exegesis-page .ptcp    { color: var(--pos-ptcp); font-weight: 600; font-style: italic; }
+.exegesis-page .noun    { color: var(--pos-noun); font-weight: 600; }
+.exegesis-page .pronoun { color: var(--pos-pron); font-weight: 600; }
+.exegesis-page .adj     { color: var(--pos-adj); font-weight: 600; }
+.exegesis-page .art     { color: var(--pos-art); }
+.exegesis-page .particle{ color: var(--pos-part); font-weight: 600; }
+.exegesis-page .prep    { color: var(--pos-prep); font-weight: 600; }
+.exegesis-page .conj    { color: var(--pos-conj); font-weight: 600; }
+.exegesis-page .adv     { color: var(--pos-adv); font-weight: 600; }
+.exegesis-page .interj  { color: var(--pos-interj); font-weight: 600; font-style: italic; }
+.exegesis-page .rel     { color: var(--pos-rel); font-weight: 600; }
+.exegesis-page .neg     { color: var(--pos-neg); font-weight: 600; }
+
+.exegesis-page [lang="el"], .exegesis-page .greek-cell {
+  font-family: 'Noto Serif', 'EB Garamond', 'Times New Roman', serif;
+}
+
+/* ── Header meta line ── */
+.article-meta {
+  font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--gold); opacity: 0.85; margin-bottom: 0.9rem;
+}
+
+/* ── Series navigation ── */
+.series-nav {
+  display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center;
+  padding: 1rem 2.5rem; background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.series-nav .series-label {
+  font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-faint); margin-right: 0.4rem;
+}
+.series-nav a, .series-nav span.current {
+  font-family: 'EB Garamond', serif; font-size: 0.92rem; padding: 0.15rem 0.6rem;
+  border: 1px solid var(--glass-border); border-radius: 2px; text-decoration: none; color: var(--text-mid);
+  transition: color 0.2s, border-color 0.2s;
+}
+.series-nav a:hover { color: var(--gold-light); border-color: var(--gold); }
+.series-nav span.current { color: #0d1117; background: var(--gold); border-color: var(--gold); }
+:root.light-mode .series-nav span.current { color: #fff; }
+
+.pager {
+  display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  padding: 1.5rem 2.5rem; background: var(--bg); border-top: 1px solid var(--rule);
+}
+.pager a {
+  font-family: 'Cinzel', serif; font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--gold); text-decoration: none;
+}
+.pager a:hover { color: var(--gold-light); }
+
+/* ── Legend ── */
+.pos-legend {
+  display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin: 0 0 1.5rem;
+  padding: 0.9rem 1.2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 4px;
+  font-size: 0.9rem;
+}
+.pos-legend .legend-title {
+  width: 100%; font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+
+/* ── Contents ── */
+.exegesis-page details.toc {
+  margin: 0 0 2rem; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 4px;
+}
+.exegesis-page details.toc summary, .exegesis-page details.study-panel summary {
+  cursor: pointer; list-style: none; padding: 0.75rem 1.2rem;
+  font-family: 'Cinzel', serif; font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+}
+.exegesis-page details summary::-webkit-details-marker { display: none; }
+.exegesis-page details summary::before { content: '▸ '; display: inline-block; transition: transform 0.2s; }
+.exegesis-page details[open] > summary::before { transform: rotate(90deg); }
+.exegesis-page details.toc .toc-list { display: block; padding: 0 1.2rem 1rem; }
+.exegesis-page details.toc .toc-list a {
+  display: block; padding: 0.2rem 0; font-size: 0.95rem; color: var(--text-mid); text-decoration: none;
+  font-family: 'EB Garamond', serif; letter-spacing: 0; text-transform: none;
+}
+.exegesis-page details.toc .toc-list a:hover { color: var(--gold-light); }
+
+/* ── Intro callout ── */
+.exegesis-page .section-intro {
+  background: var(--glass); border: 1px solid rgba(201,168,76,0.22); border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; line-height: 1.85;
+}
+.exegesis-page .section-intro strong:first-child { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; }
+
+/* ── Verse block ── */
+.exegesis-page h2[id] { scroll-margin-top: 7rem; }
+.exegesis-page .verse-block {
+  background: var(--bg); border: 1px solid var(--glass-border); border-radius: 6px;
+  padding: 1.1rem 1.4rem; margin: 1rem 0 1.25rem;
+}
+.exegesis-page .verse-num {
+  font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.4rem;
+}
+.exegesis-page .greek-line {
+  font-size: 1.3rem; line-height: 2.2; overflow-wrap: break-word;
+}
+.exegesis-page .greek-line span { display: inline; }
+.exegesis-page .trans {
+  margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed var(--rule);
+  font-style: italic; color: var(--text-mid); font-size: 1rem;
+}
+
+/* ── Notes ── */
+.exegesis-page .note {
+  background: var(--note-bg); border-left: 3px solid var(--note-edge); border-radius: 0 4px 4px 0;
+  padding: 0.8rem 1.1rem; margin: 0.8rem 0; font-size: 0.95rem; line-height: 1.75; color: var(--text);
+}
+
+/* ── Collapsible study panels (parsing table / diagram) ── */
+.exegesis-page details.study-panel {
+  margin: 0.8rem 0; border: 1px solid var(--glass-border); border-radius: 4px; background: var(--glass);
+}
+.exegesis-page details.study-panel > .panel-body { padding: 0 0.9rem 0.9rem; }
+
+.exegesis-page .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.5rem 0 1rem; }
+.exegesis-page table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 560px; }
+.exegesis-page th {
+  background: var(--navy-mid); color: var(--gold-light); text-align: left; padding: 0.55rem 0.75rem;
+  font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+}
+:root.light-mode .exegesis-page th { background: #ddd5c0; color: #3a2e10; }
+.exegesis-page td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.55; color: var(--text); }
+.exegesis-page tr:nth-child(even) td { background: var(--glass); }
+.exegesis-page .greek-cell { font-size: 1.08rem; white-space: nowrap; }
+
+.exegesis-page .diagram-box {
+  font-family: 'Courier New', 'Noto Sans Mono', monospace; font-size: 0.85rem; line-height: 1.75;
+  white-space: pre; overflow-x: auto; color: var(--text);
+  background: var(--bg); border: 1px solid var(--glass-border); border-radius: 4px; padding: 0.9rem 1.1rem; margin-top: 0.5rem;
+}
+
+/* ── Exegesis ── */
+.exegesis-page .exegesis {
+  border-left: 3px solid var(--gold); padding: 0.2rem 0 0.2rem 1.25rem; margin: 1.25rem 0 1.5rem;
+}
+.exegesis-page .exegesis p { max-width: none; }
+.exegesis-page .key-term {
+  color: var(--gold-light); background: var(--gold-faint); border-radius: 2px; padding: 0 0.3rem;
+  font-family: 'Noto Serif', 'EB Garamond', serif; font-size: 0.95em;
+}
+.exegesis-page hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+
+/* ── Sources ── */
+.exegesis-page .sources {
+  margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  font-size: 0.88rem; color: var(--text-mid); line-height: 1.7;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .series-nav, .pager { padding: 0.9rem 1.25rem; }
+  .exegesis-page.article-body { padding: 1.5rem 1.1rem; }
+  .exegesis-page .verse-block { padding: 0.9rem 1rem; }
+  .exegesis-page .greek-line { font-size: 1.15rem; line-height: 2; }
+  .exegesis-page .exegesis { padding-left: 0.9rem; }
+}
+
+/* ── Series index ── */
+.passage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.passage-card {
+  display: flex; flex-direction: column; gap: 0.35rem; padding: 1.1rem 1.25rem; text-decoration: none !important;
+  background: var(--glass); border: 1px solid var(--glass-border); border-left: 3px solid var(--gold); border-radius: 0 4px 4px 0;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.passage-card:hover { transform: translateY(-2px); border-color: var(--gold); }
+.passage-ref { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.14em; color: var(--gold); }
+.passage-sub { font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text); line-height: 1.5; }

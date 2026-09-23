@@ -209,10 +209,6 @@
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .section-h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 300; color: var(--text); margin-bottom: 1.1rem; }
     .guide-section { padding: 3rem 2.5rem; background: var(--surface); border-top: 1px solid var(--rule); }
-    .guide-block { display: grid; grid-template-columns: 180px 1fr; gap: 2.5rem; align-items: center; }
-    .guide-cover { display: block; border: 1px solid var(--glass-border); border-radius: 4px; overflow: hidden; box-shadow: 0 14px 40px rgba(0,0,0,0.45); transform: rotate(-1.5deg); transition: transform 0.25s; }
-    .guide-cover:hover { transform: rotate(0) translateY(-4px); }
-    .guide-cover img { display: block; width: 100%; height: auto; }
     .guide-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--text); line-height: 1.2; }
     .guide-desc { margin-top: 0.4rem; font-style: italic; color: var(--text-mid); }
     .guide-btns { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
@@ -221,10 +217,49 @@
     .guide-btn-solid:hover { background: var(--gold-light); transform: translateY(-1px); }
     .guide-btn-outline { color: var(--gold); border: 2px solid rgba(201,168,76,0.7); }
     .guide-btn-outline:hover { color: var(--gold-light); border-color: var(--gold); }
+    .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .notes-panel {
+      display: flex; flex-direction: column; position: relative; overflow: hidden;
+      padding: 1.75rem; border-radius: 10px; color: #fff;
+      transition: transform 0.25s cubic-bezier(.2,0,.2,1), box-shadow 0.25s;
+    }
+    .notes-panel:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .notes-panel::before {
+      content: ''; position: absolute; top: -30px; right: -30px; width: 180px; height: 180px;
+      border-radius: 50%; opacity: 0.2; pointer-events: none;
+    }
+    .notes-panel > * { position: relative; z-index: 1; }
+    .notes-glyph {
+      position: absolute; top: 0.9rem; right: 1.4rem; z-index: 0;
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 5rem; line-height: 1;
+      opacity: 0.16; pointer-events: none; user-select: none;
+    }
+    .notes-bbg {
+      background: linear-gradient(135deg, #0f4a47 0%, #0a2a30 45%, #0d2247 100%);
+      border: 1px solid rgba(80,200,180,0.3); box-shadow: 0 8px 32px rgba(20,120,110,0.3);
+    }
+    .notes-bbg::before { background: radial-gradient(circle, #4fd1c0 0%, transparent 70%); }
+    .notes-bbg .notes-glyph { color: #7fe3d6; }
+    .notes-james {
+      background: linear-gradient(135deg, #4a3a10 0%, #2a1f08 45%, #0d2247 100%);
+      border: 1px solid rgba(201,168,76,0.35); box-shadow: 0 8px 32px rgba(160,120,30,0.3);
+    }
+    .notes-james::before { background: radial-gradient(circle, #e5c97a 0%, transparent 70%); }
+    .notes-james .notes-glyph { color: #e5c97a; }
+    .notes-label {
+      font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.26em; text-transform: uppercase;
+      opacity: 0.7; margin-bottom: 0.5rem;
+    }
+    .notes-bbg .notes-label { color: #7fe3d6; }
+    .notes-james .notes-label { color: #e5c97a; }
+    .notes-panel .guide-title { color: #fff; }
+    .notes-panel .guide-desc { flex: 1; min-height: 1.6em; color: rgba(235,240,255,0.75); }
+    .notes-panel .guide-btn-solid { background: var(--gold); color: #0d1117; }
+    .notes-panel .guide-btn-outline { color: #e5c97a; border-color: rgba(229,201,122,0.7); }
+    :root.light-mode .notes-panel .guide-btn-solid { background: #c9a84c; }
+    @media (max-width: 640px) { .notes-grid { grid-template-columns: 1fr; } .notes-panel { padding: 1.4rem; } .notes-panel .guide-btns { justify-content: flex-start; } }
     @media (max-width: 640px) {
       .guide-section { padding: 2.25rem 1.25rem; }
-      .guide-block { grid-template-columns: 1fr; gap: 1.75rem; text-align: center; }
-      .guide-cover { max-width: 180px; margin: 0 auto; }
       .guide-btns { justify-content: center; }
     }
   </style>
@@ -305,16 +340,24 @@
 
   <!-- STUDY GUIDE (PDF) -->
   <div class="guide-section reveal">
-    <div class="guide-block">
-      <a class="guide-cover" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">
-        <img src="../images/basics-of-biblical-greek-notes-cover.png" alt="Cover of Basics of Biblical Greek - Notes" width="360" height="466" loading="lazy" />
-      </a>
-      <div>
+    <div class="notes-grid">
+      <div class="notes-panel notes-bbg">
+        <div class="notes-glyph">&#946;</div>
+        <div class="notes-label">First-Year Greek</div>
         <h2 class="guide-title">Basics of Biblical Greek - Notes</h2>
         <p class="guide-desc">My personal notes condensed from first year Greek</p>
         <div class="guide-btns">
           <a class="guide-btn guide-btn-solid" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">Read Online</a>
           <a class="guide-btn guide-btn-outline" href="../resources/basics-of-biblical-greek-notes.pdf" download>Download PDF</a>
+        </div>
+      </div>
+      <div class="notes-panel notes-james">
+        <div class="notes-glyph">&#7992;&#945;&#954;</div>
+        <div class="notes-label">Exegesis</div>
+        <h2 class="guide-title">James &#8212; Greek Exegesis</h2>
+        <p class="guide-desc">Verse-by-verse notes, parsing, and diagramming</p>
+        <div class="guide-btns">
+          <a class="guide-btn guide-btn-solid" href="james/">Open Series</a>
         </div>
       </div>
     </div>
