@@ -1670,6 +1670,10 @@
             <button class="btn-sm gold" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
             <div class="save-hint">Save to account</div>
           </div>
+          <div class="btn-col" id="copy-plan-btn-col" style="display:none">
+            <button class="btn-sm gold" onclick="openCopyPlan()">⧉ Copy Plan</button>
+            <div class="save-hint">New start date</div>
+          </div>
           <div class="btn-col" id="restart-plan-btn-col" style="display:none">
             <button class="btn-sm" onclick="restartCurrentPlan()">↺ Restart</button>
             <div class="save-hint">Keep notes</div>
@@ -3669,7 +3673,7 @@ async function savePlanToDb() {
 
     showToast('Plan saved ✓', 'success');
     if (btn) btn.textContent = '✓ Saved';
-    setTimeout(() => { if (btn) { btn.textContent = currentPlanId ? '💾 Save as New Plan' : '💾 Save Plan'; btn.disabled = false; } }, 2000);
+    setTimeout(() => { if (btn) { btn.textContent = '💾 Save Plan'; btn.disabled = false; } }, 2000);
 
     // Refresh tab bar to include newly saved plan
     if (currentUser) {
@@ -3895,9 +3899,8 @@ async function loadPlanFromDb(planId) {
   updateProgress();
   showToast(`"${plan.title}" loaded ✓`, 'success');
   document.getElementById('plan-section').scrollIntoView({ behavior:'smooth' });
-  // Update save button label to reflect this is an existing plan
   const saveBtn = document.getElementById('save-plan-btn');
-  if (saveBtn) saveBtn.textContent = '💾 Save as New Plan';
+  if (saveBtn) saveBtn.textContent = '💾 Save Plan';
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -4450,10 +4453,12 @@ function updatePlanActionButtons() {
   const plan = cachedPlans.find(p => p.id === currentPlanId);
   const isCompleted = plan && !!plan.completed_at;
 
-  // Show restart & delete for any saved plan; hide save-as-new for completed plans
+  // Save only for unsaved plans; Copy, Restart & Delete for saved plans
+  const copyCol = document.getElementById('copy-plan-btn-col');
   restartCol.style.display = isSaved ? '' : 'none';
   deleteCol.style.display  = isSaved ? '' : 'none';
-  if (saveCol) saveCol.style.display = isCompleted ? 'none' : '';
+  if (saveCol) saveCol.style.display = isSaved ? 'none' : '';
+  if (copyCol) copyCol.style.display = isSaved ? '' : 'none';
   // Show rename pencil only for saved plans
   if (renameBtn) renameBtn.style.display = isSaved ? '' : 'none';
 }
@@ -4466,6 +4471,92 @@ async function deleteCurrentPlan() {
   currentPlanId = null;
   showToast('Plan deleted.', 'success');
   await loadSavedPlans();
+}
+
+// ── COPY PLAN ──
+function localDateStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function openCopyPlan() {
+  if (!currentPlanId || !currentPlan.length) return;
+  if (!currentUser) { showSaveModal(); return; }
+  const title = document.getElementById('plan-name').value.trim() || 'Untitled Plan';
+  document.getElementById('copy-plan-title').textContent = `Copy — ${title}`;
+  document.getElementById('copy-start-date').value = localDateStr(new Date());
+  document.getElementById('copy-overlay').classList.add('open');
+}
+
+function closeCopyPlan() {
+  document.getElementById('copy-overlay').classList.remove('open');
+}
+
+// "Gospel of John" -> "Gospel of John (Copy)"; if taken, "(Copy 2)", "(Copy 3)"...
+function makeCopyTitle(title) {
+  const base = title.replace(/\s*\(Copy(?: \d+)?\)$/, '');
+  const taken = new Set(cachedPlans.map(p => p.title));
+  let name = `${base} (Copy)`;
+  for (let n = 2; taken.has(name); n++) name = `${base} (Copy ${n})`;
+  return name;
+}
+
+// Re-date the plan from a new start. Readings stay in the same order; rest days
+// stay on the same weekdays as the original (or the same positions if undated).
+function redatePlan(plan, startStr) {
+  const readings = plan.filter(d => !d.isGrace);
+  const restWeekdays = new Set(plan.filter(d => d.isGrace && d.date)
+    .map(d => new Date(d.date + 'T00:00:00').getDay()));
+  const hadDates = plan.some(d => d.date);
+  const sd = new Date(startStr + 'T00:00:00');
+  const out = [];
+
+  if (!hadDates || !restWeekdays.size) {
+    // Keep the exact day-by-day layout, just assign new dates
+    plan.forEach((d, i) => {
+      const dt = new Date(sd); dt.setDate(sd.getDate() + i);
+      out.push({ ...d, date: localDateStr(dt), checked: false });
+    });
+  } else {
+    let r = 0;
+    for (let i = 0; r < readings.length; i++) {
+      const dt = new Date(sd); dt.setDate(sd.getDate() + i);
+      if (restWeekdays.has(dt.getDay())) {
+        out.push({ isGrace: true, chapters: [], verseCount: 0, date: localDateStr(dt), checked: false });
+      } else {
+        out.push({ ...readings[r++], date: localDateStr(dt), checked: false });
+      }
+    }
+  }
+  out.forEach((d, i) => { d.dayNum = i + 1; });
+  return out;
+}
+
+async function confirmCopyPlan() {
+  const startStr = document.getElementById('copy-start-date').value;
+  if (!startStr) { showToast('Pick a start date for the copy.', 'error'); return; }
+  const btn = document.getElementById('copy-confirm-btn');
+  if (btn) btn.disabled = true;
+
+  const origTitle = document.getElementById('plan-name').value.trim() || 'Untitled Plan';
+  const newTitle  = makeCopyTitle(origTitle);
+
+  currentPlan   = redatePlan(currentPlan, startStr);
+  checkStates   = {};
+  reflections   = {};
+  lastMilestoneFired = 0;
+  currentPlanId = null;               // forces an insert, never touches the original
+  document.getElementById('plan-name').value  = newTitle;
+  document.getElementById('start-date').value = startStr;
+  document.getElementById('total-days').value = currentPlan.length;
+
+  closeCopyPlan();
+  await savePlanToDb();
+  if (btn) btn.disabled = false;
+
+  renderPlanTabs();
+  renderPlan();
+  updateProgress();
+  if (currentPlanId) showToast(`Created "${newTitle}" ✓`, 'success');
 }
 
 // Restart the currently loaded plan (keeps notes, resets checkmarks)
@@ -4524,7 +4615,7 @@ renderOrderCard();
 
 // Close journal/redo/builder on Escape
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeJournal(); closeRedo(); closeCompletion(); closeBuilderModal(); }
+  if (e.key === 'Escape') { closeJournal(); closeRedo(); closeCopyPlan(); closeCompletion(); closeBuilderModal(); }
 });
 
 // ── HANDLE PASSWORD RESET / MAGIC LINK REDIRECT ──
@@ -4934,6 +5025,20 @@ function audioClose() {
     <div class="redo-actions">
       <button class="redo-cancel" onclick="closeRedo()">Cancel</button>
       <button class="redo-confirm" onclick="confirmRedo()">↺ Start Fresh</button>
+    </div>
+  </div>
+</div>
+
+<!-- COPY PLAN MODAL -->
+<div class="redo-overlay" id="copy-overlay" onclick="if(event.target===this)closeCopyPlan()">
+  <div class="redo-modal">
+    <h3 id="copy-plan-title">Copy Plan</h3>
+    <p>Makes a new plan with the same readings and rest days. Your original plan stays as it is. The copy starts with no checkmarks or notes.</p>
+    <label>Start Date for the Copy</label>
+    <input type="date" id="copy-start-date" />
+    <div class="redo-actions">
+      <button class="redo-cancel" onclick="closeCopyPlan()">Cancel</button>
+      <button class="redo-confirm" id="copy-confirm-btn" onclick="confirmCopyPlan()">⧉ Create Copy</button>
     </div>
   </div>
 </div>
