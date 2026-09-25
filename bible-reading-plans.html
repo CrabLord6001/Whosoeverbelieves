@@ -1671,7 +1671,7 @@
             <div class="save-hint">Save to account</div>
           </div>
           <div class="btn-col" id="copy-plan-btn-col" style="display:none">
-            <button class="btn-sm gold" onclick="openCopyPlan()">⧉ Copy Plan</button>
+            <button class="btn-sm gold" onclick="openCopyPlan()">⧉ Copy</button>
             <div class="save-hint">New start date</div>
           </div>
           <div class="btn-col" id="restart-plan-btn-col" style="display:none">
@@ -3103,39 +3103,53 @@ function closeRedo() {
 async function confirmRedo() {
   if (!redoPlanId) return;
   const newStartDate = document.getElementById('redo-start-date').value;
+  if (!newStartDate) { showToast('Pick a new start date.', 'error'); return; }
+  const planId = redoPlanId;
+  closeRedo();
 
-  // Load the plan
-  const { data: plan } = await _supabase.from('plans').select('*').eq('id', redoPlanId).single();
-  const { data: days } = await _supabase.from('plan_days')
-    .select('*, reflections(body)')
-    .eq('plan_id', redoPlanId)
-    .order('day_number', { ascending: true });
+  // Load the saved plan exactly as it is (readings, notes, same plan ID)
+  await loadPlanFromDb(planId);
+  if (currentPlanId !== planId || !currentPlan.length) return;
 
-  if (!plan || !days) { showToast('Could not load plan.', 'error'); closeRedo(); return; }
-
-  // Restore books and settings
-  selectedBooks = plan.books || [];
-  document.getElementById('plan-name').value = plan.title;
-  document.getElementById('translation').value = plan.translation || 'WEB';
-  if (newStartDate) document.getElementById('start-date').value = newStartDate;
-  document.getElementById('total-days').value = plan.total_days;
-
-  // Carry over reflections, reset checkboxes
-  checkStates = {};
-  reflections = {};
-  lastMilestoneFired = 0;
-  days.forEach((d, idx) => {
-    if (d.reflections?.[0]?.body) reflections[idx] = d.reflections[0].body;
+  // Tie each note to its reading (not its calendar slot), since re-dating
+  // can move rest days around and shift day numbers
+  const readingNotes = [], restNotes = [];
+  currentPlan.forEach((d, idx) => {
+    (d.isGrace ? restNotes : readingNotes).push(reflections[idx] || '');
   });
 
-  // Regenerate plan with new dates
-  currentPlanId = null;
-  renderBookGrid();
-  renderOrderCard();
-  generatePlan();
-  lastMilestoneFired = 0;
+  // Same readings, same rest weekdays, new dates
+  currentPlan = redatePlan(currentPlan, newStartDate);
 
-  closeRedo();
+  // Put the notes back on the matching days
+  reflections = {};
+  let r = 0, g = 0;
+  currentPlan.forEach((d, idx) => {
+    const note = d.isGrace ? restNotes[g++] : readingNotes[r++];
+    if (note && note.trim()) reflections[idx] = note;
+  });
+  // If the new dates have fewer rest days, keep any leftover rest-day notes
+  const leftover = restNotes.slice(g).filter(n => n && n.trim());
+  if (leftover.length) {
+    const lastIdx = currentPlan.length - 1;
+    reflections[lastIdx] = [reflections[lastIdx], ...leftover].filter(Boolean).join('\n\n');
+  }
+
+  // Reset progress
+  checkStates = {};
+  lastMilestoneFired = 0;
+  document.getElementById('start-date').value = newStartDate;
+  document.getElementById('total-days').value = currentPlan.length;
+
+  // Save over the same plan (update, not a new plan) and un-mark it completed
+  await savePlanToDb();
+  await _supabase.from('plans').update({ completed_at: null }).eq('id', planId);
+  const cached = cachedPlans.find(p => p.id === planId);
+  if (cached) cached.completed_at = null;
+
+  renderPlanTabs();
+  renderPlan();
+  updateProgress();
   showToast('Plan restarted with your notes carried over ✓', 'success');
 }
 
