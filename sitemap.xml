@@ -5,246 +5,206 @@
 
   <url>
     <loc>https://whosoeverbelieves.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-09-22</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/about</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-04-03</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-09-11</lastmod>
   </url>
 
   <!-- ══ ARTICLES ════════════════════════════════════════════════════ -->
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/implications-of-gods-transcendence</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-09-11</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/kjv-dragons-tannin</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Gospel-Of-John-Outline</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Abraham-Father-Of-Faith</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/kjv-unicorns-reem</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/free-grace-gospel</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Holy-Spirit-Role-in-Believers</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/There-Is-A-God-Review</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Davidic-Covenant-Overview</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/New-Covenant-Jeremiah-31</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Book-Of-Daniel-Outline</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Millennial-Kingdom-Isaiah</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Call-On-The-Lord-Romans-10</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Faithful-Saying-2-Timothy-211-13</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Gods-Forever-Dwelling-Psalm-132</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/osborne-hermeneutical-spiral</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/bible-memory-rooms</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Profiting-For-The-Kingdom-Mark-8</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Age-Of-The-Universe-Problems-Solutions</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/articles/Jesus-Challenging-Presuppositions</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-08-28</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/free-grace-glossary</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-09-24</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/bible-reading-plans</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-09-24</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/jonathan-crow</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-04-03</lastmod>
   </url>
 
   <!-- ══ GREEK STUDIES ═══════════════════════════════════════════════ -->
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-09-22</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/vocabulary</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-04-03</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/Verb-Parsing</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-04-03</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-09-22</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-1-1-12</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-1-13-27</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-2-1-13</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-2-14-26</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-3-1-12</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-3-13-4-6</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-4-7-17</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-5-1-11</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/greek/james/james-5-12-20</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-23</lastmod>
   </url>
 
   <url>
     <loc>https://whosoeverbelieves.com/resources/basics-of-biblical-greek-notes.pdf</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-09-16</lastmod>
   </url>
 
 </urlset>
