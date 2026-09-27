@@ -142,6 +142,29 @@
 
   <article class="article-body">
 
+<audio id="player" src="../audio/bookending-the-ot-audio.mp3" preload="none"></audio>
+<div style="display: flex; align-items: center; gap: 10px; margin: 1rem 0; max-width: 720px;">
+  <button onclick="togglePlay()" id="playBtn" aria-label="Play or pause audio" style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #b8963e; background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+    <svg id="playIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e"><polygon points="2,1 11,6 2,11"/></svg>
+    <svg id="pauseIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e" style="display:none;"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7" y="1" width="3.5" height="10" rx="1"/></svg>
+  </button>
+  <span style="font-size: 12px; color: #888; white-space: nowrap;">&#127911; Listen to this article</span>
+  <input type="range" id="progress" value="0" min="0" max="100" step="0.1" aria-label="Audio position" style="flex: 1; accent-color: #b8963e; cursor: pointer;" oninput="seek(this.value)"/>
+  <span id="currentTime" style="font-size: 11px; color: #888; white-space: nowrap;">0:00</span>
+</div>
+<script>
+const a = document.getElementById('player');
+const pi = document.getElementById('playIcon');
+const pa = document.getElementById('pauseIcon');
+const pr = document.getElementById('progress');
+const ct = document.getElementById('currentTime');
+function fmt(s){const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec;}
+function togglePlay(){if(a.paused){a.play();pi.style.display='none';pa.style.display='block';}else{a.pause();pi.style.display='block';pa.style.display='none';}}
+function seek(v){if(a.duration)a.currentTime=(v/100)*a.duration;}
+a.addEventListener('timeupdate',()=>{if(a.duration){pr.value=(a.currentTime/a.duration)*100;ct.textContent=fmt(a.currentTime);}});
+a.addEventListener('ended',()=>{pi.style.display='block';pa.style.display='none';pr.value=0;ct.textContent='0:00';});
+</script>
+
     <p>At the Council of Trent (1546), the Catholic Church declared the seven deuterocanonical books with Greek additions to Esther and Daniel, called Apocrypha by Protestants, as authoritative Scripture.<sup><a href="#fn1" id="ref1">1</a></sup> These writings provide the Christian with helpful historical and cultural context to the New Testament, like the origin of Hanukkah.</p>
 
     <p>Despite their literary value, they ought to be rejected for canonicity because of clear doctrinal problems, including prayer for the dead (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=2%20Maccabees%2012%3A43-45&amp;version=WEB" target="_blank" rel="noopener" data-ref="2 Maccabees 12:43-45" data-verse="And when he had made a collection man by man to the sum of two thousand drachmas of silver, he sent to Jerusalem to offer a sacrifice for sin, doing therein right well and honorably, in that he took thought for a resurrection. For if he were not expecting that those who had fallen would rise again, it were superfluous and idle to pray for the dead. (And if he did it looking to an honorable memorial of gratitude laid up for those who die in godliness, holy and godly was the thought.) Wherefore he made the atoning sacrifice for those who had died, that they might be released from their sin.">2 Maccabees 12:43&#8211;45</a>) and atonement by almsgiving (<a class="scripture-ref" href="https://www.biblegateway.com/passage/?search=Tobit%2012%3A9&amp;version=WEB" target="_blank" rel="noopener" data-ref="Tobit 12:9" data-verse="Alms delivers from death, and it purges away all sin. Those who give alms and do righteousness will be filled with life;">Tobit 12:9</a>). I could expand on the theological issues in these writings. Yet, for this article I want to argue they should be rejected as Scripture for the simple fact our Lord did not consider the collection to be prophetic writings.</p>
