@@ -34,6 +34,15 @@
 
   var formOpenedAt = Date.now();
 
+  // ── OPTIONAL SIGN-IN ───────────────────────────────────────────────────
+  // Readers can still comment without an account. If they are signed in
+  // (same login as the Bible Reading Plans and Discipleship Challenge), their
+  // name and email are filled in and the comment is linked to their account.
+  var SESSION_KEY = 'sb-tgzsyfmnzagqijjlzxsa-auth-token';
+  var signedInUser = null;
+  var formHooks = [];          // each open form's "user changed" handler
+  var authLoading = null;
+
   // Captured while the script is executing — document.currentScript is null
   // by the time DOMContentLoaded fires.
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
@@ -96,11 +105,11 @@
     return wrap;
   }
 
-  function api(path, options) {
+  function api(path, options, token) {
     options = options || {};
     options.headers = Object.assign({
       'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Authorization': 'Bearer ' + (token || SUPABASE_KEY),
       'Content-Type': 'application/json'
     }, options.headers || {});
     return fetch(path, options);
@@ -129,6 +138,45 @@
   }
 
 
+  function hasStoredSession() {
+    try { return !!window.localStorage.getItem(SESSION_KEY); } catch (e) { return false; }
+  }
+
+  // Loads auth.js (which sits beside this script) only when it is needed:
+  // for readers who are already signed in, or who click "Sign in".
+  function loadAuth() {
+    if (window.WBAuth) return Promise.resolve(window.WBAuth);
+    if (authLoading) return authLoading;
+    authLoading = new Promise(function (resolve, reject) {
+      var src = (SELF_SRC || '').replace(/comments\.js(\?.*)?$/, 'auth.js') || '/auth.js';
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = function () { resolve(window.WBAuth); };
+      s.onerror = function () { authLoading = null; reject(new Error('auth unavailable')); };
+      document.head.appendChild(s);
+    }).then(function (auth) {
+      auth.onChange(function (user) {
+        signedInUser = user || null;
+        formHooks.forEach(function (fn) { fn(signedInUser); });
+      });
+      return auth;
+    });
+    return authLoading;
+  }
+
+  // A fresh access token for the signed-in reader, or null (anonymous).
+  function currentToken() {
+    if (!signedInUser || !window.WBAuth) return Promise.resolve(null);
+    return window.WBAuth.client()
+      .then(function (c) { return c.auth.getSession(); })
+      .then(function (res) {
+        var s = res && res.data && res.data.session;
+        return s ? s.access_token : null;
+      })
+      .catch(function () { return null; });
+  }
+
+
   // ── FORM ───────────────────────────────────────────────────────────────
 
   function buildForm(parentId, onDone, onCancel) {
@@ -141,6 +189,9 @@
     form.appendChild(el('div', 'wb-form-note',
       'Your email address is never published — it is only so we can reach you '
       + 'if needed. Comments are read before they appear.'));
+
+    var account = el('div', 'wb-form-account');
+    form.appendChild(account);
 
     var row = el('div', 'wb-form-row');
 
@@ -204,6 +255,33 @@
     var message = el('div', 'wb-form-message');
     form.appendChild(message);
 
+    // Signed in → fill in name, use the account email, hide the email box.
+    // Signed out → offer an optional sign-in link.
+    function applyUser(user) {
+      account.textContent = '';
+      if (user) {
+        var who = (window.WBAuth && window.WBAuth.displayName(user)) || user.email || '';
+        account.appendChild(document.createTextNode('Signed in as ' + who + '. '));
+        if (!nameInput.value.trim() && who && who !== user.email) nameInput.value = who.slice(0, 60);
+        emailInput.value = user.email || '';
+        emailField.style.display = 'none';
+      } else {
+        var link = el('a', 'wb-form-signin', 'Sign in');
+        link.href = '#';
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          loadAuth().then(function (auth) { auth.open('signin'); })
+            .catch(function () { fail('Sign-in is unavailable right now. You can still comment without an account.'); });
+        });
+        account.appendChild(document.createTextNode('Have an account? '));
+        account.appendChild(link);
+        account.appendChild(document.createTextNode(' to fill this in automatically (optional).'));
+        if (emailField.style.display === 'none') { emailInput.value = ''; emailField.style.display = ''; }
+      }
+    }
+    applyUser(signedInUser);
+    formHooks.push(applyUser);
+
     function fail(text) {
       message.className = 'wb-form-message is-error';
       message.textContent = text;
@@ -233,18 +311,21 @@
       submit.disabled = true;
       submit.textContent = 'Sending…';
 
-      api(REST, {
-        method: 'POST',
-        headers: { 'Prefer': 'return=minimal' },
-        body: JSON.stringify({
-          page_slug: pageSlug(),
-          page_title: pageTitle(),
-          parent_id: parentId || null,
-          author_name: name,
-          author_email: email,
-          body: body
+      currentToken()
+        .then(function (token) {
+          return api(REST, {
+            method: 'POST',
+            headers: { 'Prefer': 'return=minimal' },
+            body: JSON.stringify({
+              page_slug: pageSlug(),
+              page_title: pageTitle(),
+              parent_id: parentId || null,
+              author_name: name,
+              author_email: email,
+              body: body
+            })
+          }, token);
         })
-      })
         .then(function (res) {
           if (res.ok) { onDone(form); return; }
           return res.json().catch(function () { return {}; }).then(function (err) {
@@ -373,6 +454,7 @@
 
   function init() {
     ensureStylesheet();
+    if (hasStoredSession()) loadAuth().catch(function () {});
 
     var host = mountPoint();
     host.className = 'wb-comments';

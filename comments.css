@@ -425,3 +425,19 @@
     padding: 1.4rem 1.15rem;
   }
 }
+
+
+/* ── OPTIONAL SIGN-IN LINE ─────────────────────────────────────────────── */
+
+.wb-form-account {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--text-faint);
+  margin: -0.4rem 0 1rem;
+}
+
+.wb-form-account a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: rgba(201, 168, 76, 0.4);
+}

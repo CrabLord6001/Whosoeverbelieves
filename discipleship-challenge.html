@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://whosoeverbelieves.com/discipleship-challenge" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-05VNP2PXN4');
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>30-Day Discipleship Challenge — Whosoever Believes</title>
+<meta name="description" content="A 30-day discipleship challenge for building habits of Bible reading, prayer, focus, and obedience. Sign in to track your progress." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Whosoever Believes" />
+<meta property="og:url" content="https://whosoeverbelieves.com/discipleship-challenge" />
+<meta property="og:title" content="30-Day Discipleship Challenge — Whosoever Believes" />
+<meta property="og:description" content="A 30-day discipleship challenge for building habits of Bible reading, prayer, focus, and obedience. Sign in to track your progress." />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="30-Day Discipleship Challenge — Whosoever Believes" />
+<meta name="twitter:description" content="A 30-day discipleship challenge for building habits of Bible reading, prayer, focus, and obedience. Sign in to track your progress." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" type="image/png" href="/images/Bible-Book-32.png">
+<style>
+  /* ── TRACKER CARD ─────────────────────────────────────────────── */
+  .dc-tracker {
+    margin: 0 0 2.5rem;
+    padding: 1.5rem 1.6rem;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    max-width: 740px;
+  }
+  .dc-tracker[hidden] { display: none; }
+  .dc-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .dc-day {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .dc-sub { color: var(--text-mid); font-style: italic; margin: 0.25rem 0 0; }
+  .dc-purpose { color: var(--text); font-size: 1.05rem; line-height: 1.6; margin: 0.35rem 0 0.5rem; max-width: 640px; }
+  .dc-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-top: 1rem; }
+  .dc-btn {
+    font-family: 'Cinzel', serif; font-size: 0.66rem; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); border: 2px solid rgba(201,168,76,0.7);
+    padding: 0.6rem 1.2rem; background: none; cursor: pointer; border-radius: 2px;
+  }
+  .dc-btn:hover { color: var(--gold-light); border-color: var(--gold); }
+  .dc-btn.quiet { border-color: var(--rule); color: var(--text-faint); font-size: 0.58rem; padding: 0.45rem 0.9rem; }
+  .dc-btn.quiet:hover { color: var(--gold); }
+  .dc-btn:disabled { opacity: 0.5; cursor: default; }
+  .dc-date {
+    background: var(--bg); border: 1px solid var(--rule); border-radius: 4px;
+    color: var(--text); font-family: 'EB Garamond', serif; font-size: 1rem; padding: 0.4rem 0.6rem;
+  }
+  .dc-bar { height: 6px; background: var(--rule); border-radius: 3px; overflow: hidden; margin-top: 1rem; }
+  .dc-bar > span { display: block; height: 100%; width: 0; background: var(--gold); transition: width 0.3s; }
+  .dc-count { font-size: 0.9rem; color: var(--text-faint); margin-top: 0.35rem; }
+
+  .dc-error { color: #e57373; font-style: italic; font-size: 0.95rem; margin-top: 0.6rem; }
+
+  /* Override the site-wide homepage <section> panels */
+  .article-body section.dc-week,
+  .article-body section.dc-tracker { background: none; padding: 0; border-top: none; animation: none; }
+  .article-body section.dc-tracker { background: var(--glass); padding: 1.5rem 1.6rem; border: 1px solid var(--glass-border); }
+
+  /* ── WEEK TABS ───────────────────────────────────────────── */
+  .dc-tabs {
+    display: flex; gap: 0.25rem; margin: 0 0 0; border-bottom: 1px solid var(--rule);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .dc-tabs::-webkit-scrollbar { display: none; }
+  .dc-tab {
+    flex: 1 0 auto; min-width: 88px; padding: 0.7rem 0.6rem 0.8rem; text-align: center;
+    text-decoration: none; color: var(--text-faint); border-bottom: 3px solid transparent;
+    position: relative; transition: color 0.2s;
+  }
+  .article-body a.dc-tab { color: var(--text-faint); text-decoration: none; }
+  .article-body a.dc-tab:hover { color: var(--text-mid); }
+  .dc-nowrap { white-space: nowrap; }
+  .dc-tab-n { white-space: nowrap; display: block; font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase; }
+  .dc-tab-t { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.08rem; margin-top: 0.1rem; white-space: nowrap; }
+  .article-body a.dc-tab.is-shown { color: var(--text); border-bottom-color: var(--wk); }
+  .dc-tab.is-shown .dc-tab-n { color: var(--wk); }
+  .dc-tab.is-here::after {
+    content: ''; position: absolute; top: 0.5rem; right: 0.55rem;
+    width: 7px; height: 7px; border-radius: 50%; background: var(--gold);
+  }
+  .dc-tab.is-complete .dc-tab-n::after { content: ' ✓'; color: #4f9a5a; }
+
+  /* ── WEEK PANELS ─────────────────────────────────────────────── */
+  .dc-week { display: none; scroll-margin-top: 4rem; }
+  .dc-week.is-shown { display: block; }
+  .dc-hero {
+    position: relative; overflow: hidden;
+    margin: 0 -2.5rem 2rem; padding: 3rem 2.5rem 2.4rem;
+    background: var(--hero); border-bottom: 1px solid var(--rule);
+  }
+  .dc-motif { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: var(--mo, 0.5); }
+  .dc-hero > :not(svg) { position: relative; }
+  .article-body .dc-hero h2 {
+    font-size: clamp(1.8rem, 4.5vw, 2.4rem); margin: 0.3rem 0 1.3rem; padding: 0; border: none; line-height: 1.15;
+  }
+  .dc-week-days {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.24em;
+    text-transform: uppercase; color: var(--wk); margin: 0;
+  }
+  .dc-still { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; max-width: 740px; margin: 0 0 1.2rem; }
+  .dc-still-label {
+    font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-faint); margin-right: 0.3rem;
+  }
+  .dc-chip { font-size: 0.85rem; color: var(--text-mid); border: 1px solid var(--rule); border-radius: 999px; padding: 0.1rem 0.7rem; }
+  .dc-pager { display: flex; justify-content: space-between; max-width: 740px; margin-top: 1.6rem; }
+  .article-body .dc-pager a {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--wk); text-decoration: none;
+  }
+  .article-body .dc-pager a:hover { text-decoration: underline; }
+
+  /* ── WEEK THEMES (accent --wk, banner --hero, drawing strength --mo) ── */
+  .article-body { --wk: var(--gold); }
+  .article-body[data-shown="1"] { --wk: #9fae6a; --hero: linear-gradient(180deg, #141a14 0%, #18201a 55%, #1d2419 100%); --mo: 0.55; }
+  .article-body[data-shown="2"] { --wk: #e3a954; --hero: radial-gradient(ellipse 60% 90% at 85% 10%, rgba(227,169,84,0.20), transparent 70%), linear-gradient(180deg, #17151a, #1a1714); --mo: 0.9; }
+  .article-body[data-shown="3"] { --wk: #9fb8cc; --hero: linear-gradient(180deg, #0f1520, #131c28); --mo: 1; }
+  .article-body[data-shown="4"] { --wk: #d98b5f; --hero: linear-gradient(180deg, #1a1512, #16181c); --mo: 0.45; }
+  .article-body[data-shown="5"] { --wk: #e6a58c; --hero: linear-gradient(180deg, #141a2a 0%, #2a2233 55%, #4a2f35 100%); --mo: 0.8; }
+  /* Light mode: same accents, parchment-toned banners */
+  :root.light-mode .article-body[data-shown="1"] { --wk: #5f6f2e; --hero: linear-gradient(180deg, #e9ead8, #dfe2cb); }
+  :root.light-mode .article-body[data-shown="2"] { --wk: #9a6414; --hero: radial-gradient(ellipse 60% 90% at 85% 10%, rgba(227,169,84,0.35), transparent 70%), linear-gradient(180deg, #f1e7d3, #ebdfc6); }
+  :root.light-mode .article-body[data-shown="3"] { --wk: #3f5f7a; --hero: linear-gradient(180deg, #dfe6ec, #d3dde6); }
+  :root.light-mode .article-body[data-shown="4"] { --wk: #a4532a; --hero: linear-gradient(180deg, #f0e2d6, #e9dccf); }
+  :root.light-mode .article-body[data-shown="5"] { --wk: #a0513a; --hero: linear-gradient(180deg, #ece3e6 0%, #f0dccf 60%, #f3cdb6 100%); }
+
+  .article-body ul.dc-items { list-style: none; margin: 0 0 1rem; padding: 0; max-width: 740px; }
+
+  /* Each practice is a small card: neutral → in progress (amber) → done (green) */
+  .dc-item {
+    --state: var(--rule);
+    display: flex; gap: 0.85rem; align-items: flex-start;
+    padding: 0.75rem 0.95rem; margin-bottom: 0.6rem;
+    border: 1px solid var(--state); border-left-width: 4px; border-radius: 4px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .dc-item.is-started { --state: #d4a017; background: rgba(212,160,23,0.07); }
+  .dc-item.is-done    { --state: #4f9a5a; background: rgba(79,154,90,0.08); }
+  .dc-check {
+    flex-shrink: 0; width: 1.4rem; height: 1.4rem; margin-top: 0.25rem;
+    border: 1.5px solid var(--text-faint); border-radius: 50%; background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; line-height: 1; padding: 0; color: #fff;
+  }
+  .dc-item.is-started .dc-check { border-color: #d4a017; background: linear-gradient(90deg, #d4a017 50%, transparent 50%); }
+  .dc-item.is-done .dc-check { border-color: #4f9a5a; background: #4f9a5a; }
+  .dc-item.is-done .dc-check::after { content: '✓'; }
+  .dc-check:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+  .dc-item-text { color: var(--text); line-height: 1.7; }
+  .dc-state-label {
+    display: none; margin-left: 0.4rem; font-family: 'Cinzel', serif; font-size: 0.55rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--state); white-space: nowrap;
+  }
+  .dc-item.is-started .dc-state-label, .dc-item.is-done .dc-state-label { display: inline; }
+  .article-body .dc-item-text a { color: var(--gold); }
+
+  /* Theme verse + notes */
+  .article-body blockquote.dc-theme {
+    margin: 0 0 1.25rem; padding: 0.2rem 0 0.2rem 1.1rem; max-width: 740px;
+    border-left: 2px solid var(--wk); background: none;
+  }
+  .dc-theme p {
+    font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem;
+    line-height: 1.55; color: var(--text); margin: 0 0 0.3rem !important;
+  }
+  .dc-theme cite { display: block; margin-top: 0.4rem; font-style: normal; font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 0.12em; }
+  .dc-theme cite::before { content: '— '; color: var(--wk); }
+  .article-body .dc-theme cite a { color: var(--wk); text-decoration: none; }
+  .article-body .dc-theme cite a:hover { text-decoration: underline; }
+
+  /* Avoid a single word stranded on the last line */
+  .dc-theme p, .dc-notes p, .dc-item-text { text-wrap: pretty; }
+  .dc-notes {
+    max-width: 740px; margin: 0 0 1.25rem; padding: 0.85rem 1.1rem;
+    background: var(--glass); border: 1px dashed var(--rule); border-radius: 4px;
+  }
+  .dc-notes-label {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.35rem;
+  }
+  .article-body .dc-notes p { font-size: 0.95rem; color: var(--text-mid); margin: 0 0 0.5rem; line-height: 1.65; }
+  .article-body .dc-notes p:last-child { margin-bottom: 0; }
+
+  /* Legend + print button row */
+  .dc-tools {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 0.75rem; max-width: 740px; margin: -1rem 0 1.5rem;
+  }
+  .dc-legend { font-size: 0.88rem; color: var(--text-faint); font-style: italic; }
+  .dc-key { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 50%; vertical-align: -1px; margin: 0 0.15rem 0 0.35rem; }
+  .dc-key.is-started { background: linear-gradient(90deg, #d4a017 50%, transparent 50%); border: 1.5px solid #d4a017; }
+  .dc-key.is-done { background: #4f9a5a; border: 1.5px solid #4f9a5a; }
+
+  /* ── PRINT ── */
+  @media print {
+    header, .font-size-group, #search-results, nav, footer, .dc-tracker, .dc-tools .dc-btn,
+    #verse-tooltip, .wba-overlay { display: none !important; }
+    body, .site-wrapper, .article-header, .article-body, section { background: #fff !important; color: #000 !important; }
+    body::before { display: none; }
+    .article-header, .article-body { padding: 0.5rem 0 !important; border: none !important; }
+    .article-title, .article-body h2, .dc-item-text, .dc-theme p, .article-body .dc-notes p { color: #000 !important; }
+    .article-body a { color: #000 !important; text-decoration: none; }
+    .dc-week { break-inside: avoid; }
+    .dc-item { background: none !important; border-color: #999; break-inside: avoid; }
+    .dc-item.is-started { border-left-color: #d4a017; }
+    .dc-item.is-done { border-left-color: #4f9a5a; }
+    .dc-check { border-color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dc-notes { border-color: #999; background: none; }
+    .dc-tools, .dc-tabs, .dc-pager, .dc-motif, .dc-still { display: none !important; }
+    .dc-week { display: block !important; margin-bottom: 1.5rem; }
+    .dc-hero { margin: 0 0 1rem !important; padding: 0 !important; background: none !important; border: none !important; }
+    .article-body .dc-hero h2 { color: #000 !important; font-size: 1.6rem; }
+  }
+
+  @media (max-width: 600px) {
+    .article-body section.dc-tracker { padding: 1.2rem 1rem; }
+    .dc-hero { margin: 0 -1.1rem 1.6rem; padding: 2.2rem 1.1rem 2rem; }
+    .dc-motif { opacity: calc(var(--mo, 0.5) * 0.6); }
+    .dc-tab { flex: 0 0 auto; min-width: 0; padding: 0.6rem 0.65rem 0.7rem; }
+    .dc-tab-n { font-size: 0.5rem; letter-spacing: 0.12em; }
+    .dc-tab-t { font-size: 0.92rem; }
+    .article-body { padding: 1.75rem 1.1rem; }
+  }
+</style>
+</head>
+<body class="page-article">
+
+<div class="site-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <p class="site-greek">πᾶς ὁ πιστεύων</p>
+    <div class="site-title"><a href="index.html">Whosoever</a></div>
+    <p class="site-tagline">Free Grace Theology &amp; Biblical Studies</p>
+    <div class="header-ornament">
+      <span></span>
+      <em>Faith Alone</em>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- Top Buttons + Search Bar -->
+<div class="font-size-group">
+  <button onclick="setSize('font-small')">A−</button>
+  <button onclick="setSize('default')">A</button>
+  <button onclick="setSize('font-large')">A+</button>
+ <button onclick="setTheme('light')" id="btn-light" title="Light mode">☀️</button>
+ <button onclick="setTheme('dark')" id="btn-dark" title="Dark mode">🌙</button>
+  <input type="text" id="site-search" placeholder="Search articles, verses, topics…" oninput="runSearch(this.value)" />
+</div>
+<div id="search-results"></div>
+
+    <!-- NAV -->
+<nav>
+  <a href="index.html">Home</a>
+  <a href="articles.html">Articles</a>
+  <div class="nav-dropdown">
+    <button class="nav-dropdown-btn">
+      Bible Study Tools <span class="nav-dropdown-arrow">▼</span>
+    </button>
+    <div class="nav-dropdown-menu">
+      <a href="greek/index.html">Greek Studies</a>
+      <a href="bible-reading-plans.html">Bible Reading Plans</a>
+      <a href="discipleship-challenge.html">Discipleship Challenge</a>
+      <a href="free-grace-glossary.html">Theology Glossary</a>
+    </div>
+  </div>
+</nav>
+
+  <!-- PAGE HEADER -->
+  <div class="article-header">
+    <h1 class="article-title">30-Day Discipleship Challenge</h1>
+  </div>
+
+  <article class="article-body">
+
+    <!-- ── TRACKER (built by the script below) ── -->
+    <section class="dc-tracker" id="dc-tracker" aria-live="polite">
+      <div class="dc-label">Your Progress</div>
+      <p class="dc-sub">Loading…</p>
+    </section>
+
+    <div class="dc-tools">
+      <span class="dc-legend"><span class="dc-key is-started"></span> In progress <span class="dc-key is-done"></span> Done · tap a box to change it</span>
+      <button type="button" class="dc-btn quiet" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div class="dc-tabs" role="tablist" aria-label="Challenge weeks">
+      <a class="dc-tab" role="tab" id="tab-1" href="#week-1" data-go="1"><span class="dc-tab-n">Week 1</span><span class="dc-tab-t">Rooted</span></a>
+      <a class="dc-tab" role="tab" id="tab-2" href="#week-2" data-go="2"><span class="dc-tab-n">Week 2</span><span class="dc-tab-t">Prayer</span></a>
+      <a class="dc-tab" role="tab" id="tab-3" href="#week-3" data-go="3"><span class="dc-tab-n">Week 3</span><span class="dc-tab-t">Fasting</span></a>
+      <a class="dc-tab" role="tab" id="tab-4" href="#week-4" data-go="4"><span class="dc-tab-n">Week 4</span><span class="dc-tab-t">Living It Out</span></a>
+      <a class="dc-tab" role="tab" id="tab-5" href="#conclusion" data-go="5"><span class="dc-tab-n">Days 29–31</span><span class="dc-tab-t">Reaffirm &amp; Reflect</span></a>
+    </div>
+
+    <!-- ── WEEK-1 ── -->
+    <section class="dc-week" data-week="1" id="week-1" role="tabpanel" aria-labelledby="tab-1">
+      <div class="dc-hero">
+        <svg class="dc-motif" viewBox="0 0 940 300" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><g fill="none" stroke="var(--wk)" stroke-width="1.2" stroke-linecap="round">
+        <path d="M780 0 C780 60 770 90 745 130 C720 170 700 195 670 235 C650 262 630 282 610 300"/><path d="M780 0 C785 70 805 110 840 150 C865 180 890 220 905 300"/>
+        <path d="M745 130 C760 170 770 220 762 300"/><path d="M700 195 C680 205 660 208 630 220"/><path d="M840 150 C865 150 900 142 940 158"/>
+        <path d="M670 235 C656 255 656 282 660 300" opacity=".7"/><path d="M805 110 C810 170 830 230 826 300" opacity=".7"/></g></svg>
+        <p class="dc-week-days">Days 1–7</p>
+        <h2>Week 1 - Rooted in God’s Word</h2>
+        <blockquote class="dc-theme">
+          <p>“As therefore you received Christ Jesus the Lord, walk in him, rooted and built up in him and established in the faith, even as you were taught, abounding in it in thanksgiving.”</p>
+          <cite><a href="https://www.biblegateway.com/passage/?search=Colossians+2%3A6-7&version=WEB" target="_blank" rel="noopener">Colossians 2:6–7</a></cite>
+        </blockquote>
+      </div>
+      <aside class="dc-notes">
+        <div class="dc-notes-label">Notes</div>
+        <p>Try to be consistent for the sake of building a natural routine.</p>
+        <p>For your memory verse, summarize the meaning in your own words from the context and key words (see the “<a href="articles/osborne-hermeneutical-spiral.html">The Hermeneutical Spiral</a>”) and try to diagram the sentences (this <a href="https://www.grammarly.com/blog/sentences/sentence-diagramming/" target="_blank" rel="noopener">grammarly article</a> is a helpful start). Think of mnemonics and personal connections to each block of the verse (see “<a href="articles/bible-memory-rooms.html">The Power to Memorize Scripture</a>”).</p>
+      </aside>
+      <ul class="dc-items">
+        <li class="dc-item" data-key="w1-1"><span class="dc-item-text"><a href="bible-reading-plans.html">Make a Bible reading plan</a> for the month</span></li>
+        <li class="dc-item" data-key="w1-2"><span class="dc-item-text">Pick a time of day to read and stick to it at least 5 days this week</span></li>
+        <li class="dc-item" data-key="w1-3"><span class="dc-item-text">Choose a verse to memorize (you’ll add a new one each week)</span></li>
+        <li class="dc-item" data-key="w1-4"><span class="dc-item-text">Put your verse in your own words and diagram it</span></li>
+        <li class="dc-item" data-key="w1-5"><span class="dc-item-text">Say your verse from memory by the end of the week</span></li>
+        <li class="dc-item" data-key="w1-6"><span class="dc-item-text">Jot down questions as you read, and take at least one to an elder or mature believing friend</span></li>
+        <li class="dc-item" data-key="w1-7"><span class="dc-item-text">Pick a friend to check in with each week, and share a verse or passage with them</span></li>
+      </ul>
+      <div class="dc-pager"><span></span><a href="#week-2" data-go="2">Week 2 →</a></div>
+    </section>
+
+    <!-- ── WEEK-2 ── -->
+    <section class="dc-week" data-week="2" id="week-2" role="tabpanel" aria-labelledby="tab-2">
+      <div class="dc-hero">
+        <svg class="dc-motif" viewBox="0 0 940 300" preserveAspectRatio="xMaxYMin slice" aria-hidden="true"><defs><radialGradient id="dc-glow2"><stop offset="0" stop-color="#ffd48a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd48a" stop-opacity="0"/></radialGradient></defs><circle cx="800" cy="40" r="120" fill="url(#dc-glow2)"/><path d="M800 70 C790 55 792 40 800 22 C808 40 810 55 800 70Z" fill="#ffcf7a" opacity=".85"/></svg>
+        <p class="dc-week-days">Days 8–14</p>
+        <h2>Week 2 - Drawing Near with Prayer</h2>
+        <blockquote class="dc-theme">
+          <p>“Draw near to God, and he will draw near to you. Cleanse your hands, you sinners. Purify your hearts, you double-minded.”</p>
+          <cite><a href="https://www.biblegateway.com/passage/?search=James+4%3A8&version=WEB" target="_blank" rel="noopener">James 4:8</a></cite>
+        </blockquote>
+      </div>
+      <aside class="dc-notes">
+        <div class="dc-notes-label">Notes</div>
+        <p>Having a fixed prayer hour at the end of the day gives you time to reflect back in gratitude. It also forces you to remove yourself from screentime and rest easier. Or pray in the morning to set the tone for the day. Pick what works for you!</p>
+        <p>Prayer should be intentional to intercede for others.</p>
+      </aside>
+      <div class="dc-still"><span class="dc-still-label">Still going</span><span class="dc-chip">Daily reading</span><span class="dc-chip">Memory verse</span><span class="dc-chip">Friend check-in</span></div>
+      <ul class="dc-items">
+        <li class="dc-item" data-key="w2-1"><span class="dc-item-text">Pray before you read, then pray the passage back to God after</span></li>
+        <li class="dc-item" data-key="w2-2"><span class="dc-item-text">Set a daily prayer time, morning or night</span></li>
+        <li class="dc-item" data-key="w2-3"><span class="dc-item-text">Pray through ACTS (Adoration, Confession, Thanksgiving, Supplications) at least 5 days</span></li>
+        <li class="dc-item" data-key="w2-4"><span class="dc-item-text">Ask 3 people what you can pray for, and check back in with each of them</span></li>
+        <li class="dc-item" data-key="w2-5"><span class="dc-item-text">Make a calming worship playlist for your prayer time</span></li>
+        <li class="dc-item" data-key="w2-6"><span class="dc-item-text">Write down 3–5 things you’re thankful for at least 5 days this week</span></li>
+      </ul>
+      <div class="dc-pager"><a href="#week-1" data-go="1">← Week 1</a><a href="#week-3" data-go="3">Week 3 →</a></div>
+    </section>
+
+    <!-- ── WEEK-3 ── -->
+    <section class="dc-week" data-week="3" id="week-3" role="tabpanel" aria-labelledby="tab-3">
+      <div class="dc-hero">
+        <svg class="dc-motif" viewBox="0 0 940 300" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><defs><radialGradient id="dc-moon"><stop offset="0" stop-color="#dfe8f0" stop-opacity=".9"/><stop offset=".25" stop-color="#dfe8f0" stop-opacity=".25"/><stop offset="1" stop-color="#dfe8f0" stop-opacity="0"/></radialGradient><linearGradient id="dc-lake" x1="0" x2="1"><stop offset="0" stop-color="#8fb0c9" stop-opacity="0"/><stop offset="1" stop-color="#8fb0c9" stop-opacity=".4"/></linearGradient></defs>
+        <circle cx="800" cy="70" r="70" fill="url(#dc-moon)"/><circle cx="800" cy="70" r="14" fill="#e8eef4" opacity=".85"/>
+        <rect x="560" y="215" width="380" height="85" fill="url(#dc-lake)" opacity=".45"/><path d="M560 215 H940" stroke="url(#dc-lake)"/>
+        <g fill="none" stroke="#b9cfe0" stroke-opacity=".5"><ellipse cx="800" cy="255" rx="40" ry="6"/><ellipse cx="800" cy="255" rx="85" ry="13" stroke-opacity=".3"/><ellipse cx="800" cy="255" rx="120" ry="21" stroke-opacity=".16"/></g>
+        <path d="M790 222 h20 M784 234 h32 M792 246 h16" stroke="#e8eef4" stroke-opacity=".25"/></svg>
+        <p class="dc-week-days">Days 15–21</p>
+        <h2>Week 3 - Quiet the Noise</h2>
+        <blockquote class="dc-theme">
+          <p>“Be still, and know that I am God. I will be exalted among the nations. I will be exalted in the earth.”</p>
+          <cite><a href="https://www.biblegateway.com/passage/?search=Psalm+46%3A10&version=WEB" target="_blank" rel="noopener">Psalm 46:10</a></cite>
+        </blockquote>
+      </div>
+      <aside class="dc-notes">
+        <div class="dc-notes-label">Notes</div>
+        <p>If you need social media for work, consider the level of separation that would be practical (deleting the app, using an alt, setting away messages, etc…)</p>
+        <p>If you’re used to using a Bible app, this is a good opportunity to focus on traditional journaling and note taking in a physical Bible.</p>
+      </aside>
+      <div class="dc-still"><span class="dc-still-label">Still going</span><span class="dc-chip">Daily reading</span><span class="dc-chip">Memory verse</span><span class="dc-chip">Prayer time</span><span class="dc-chip">Gratitude list</span></div>
+      <ul class="dc-items">
+        <li class="dc-item" data-key="w3-1"><span class="dc-item-text">Pick 1–2 things to fast from this week, like social media, video games, or junk food</span></li>
+        <li class="dc-item" data-key="w3-2"><span class="dc-item-text">Keep the fast all week (slipped? Just pick it back up)</span></li>
+        <li class="dc-item" data-key="w3-3"><span class="dc-item-text">Take notes by hand in a physical Bible or journal at least 5 days</span></li>
+        <li class="dc-item" data-key="w3-4"><span class="dc-item-text">Set aside one rest day this week</span></li>
+      </ul>
+      <div class="dc-pager"><a href="#week-2" data-go="2">← Week 2</a><a href="#week-4" data-go="4">Week 4 →</a></div>
+    </section>
+
+    <!-- ── WEEK-4 ── -->
+    <section class="dc-week" data-week="4" id="week-4" role="tabpanel" aria-labelledby="tab-4">
+      <div class="dc-hero">
+        <svg class="dc-motif" viewBox="0 0 940 300" preserveAspectRatio="xMaxYMid slice" aria-hidden="true"><path d="M560 300 C630 240 600 190 680 160 C760 130 780 90 870 70 C905 62 925 40 940 30" fill="none" stroke="var(--wk)" stroke-width="1.5" stroke-dasharray="2 9" stroke-linecap="round"/><circle cx="680" cy="160" r="3" fill="var(--wk)"/><circle cx="870" cy="70" r="3" fill="var(--wk)"/></svg>
+        <p class="dc-week-days">Days 22–28</p>
+        <h2>Week 4 - Living It Out</h2>
+        <blockquote class="dc-theme">
+          <p>“But be doers of the word, and not only hearers, deluding your own selves.”</p>
+          <cite><a href="https://www.biblegateway.com/passage/?search=James+1%3A22&version=WEB" target="_blank" rel="noopener">James 1:22</a></cite>
+        </blockquote>
+      </div>
+      <div class="dc-still"><span class="dc-still-label">Still going</span><span class="dc-chip">Daily reading</span><span class="dc-chip">Memory verse</span><span class="dc-chip">Prayer time</span><span class="dc-chip">Rest day</span></div>
+      <ul class="dc-items">
+        <li class="dc-item" data-key="w4-1"><span class="dc-item-text">Go back through your reading plan and list the commands that apply to you</span></li>
+        <li class="dc-item" data-key="w4-2"><span class="dc-item-text">Pick 2 of them and put them into practice this week</span></li>
+        <li class="dc-item" data-key="w4-3"><span class="dc-item-text">Tell someone what you’ve been learning</span></li>
+        <li class="dc-item" data-key="w4-4"><span class="dc-item-text">Share the gospel with an unbelieving friend or family member</span></li>
+        <li class="dc-item" data-key="w4-5"><span class="dc-item-text">Do one concrete act of service in your church or for a neighbor</span></li>
+        <li class="dc-item" data-key="w4-6"><span class="dc-item-text">Spend time with other believers outside of Sunday service (a meal, small group, or Bible study)</span></li>
+      </ul>
+      <div class="dc-pager"><a href="#week-3" data-go="3">← Week 3</a><a href="#conclusion" data-go="5">Days 29–31 →</a></div>
+    </section>
+
+    <!-- ── CONCLUSION ── -->
+    <section class="dc-week" data-week="5" id="conclusion" role="tabpanel" aria-labelledby="tab-5">
+      <div class="dc-hero">
+        <svg class="dc-motif" viewBox="0 0 940 300" preserveAspectRatio="none" aria-hidden="true"><defs><radialGradient id="dc-sun" cx=".5" cy="1" r=".5"><stop offset="0" stop-color="#ffc49a" stop-opacity=".55"/><stop offset="1" stop-color="#ffc49a" stop-opacity="0"/></radialGradient></defs><ellipse cx="740" cy="300" rx="330" ry="170" fill="url(#dc-sun)"/><path d="M0 299 H940" stroke="#e6a58c" stroke-opacity=".5"/></svg>
+        <h2>Reaffirm &amp; Reflect <span class="dc-nowrap">(Days 29-31)</span></h2>
+        <blockquote class="dc-theme">
+          <p>“Brothers, I don't regard myself as yet having taken hold, but one thing I do: forgetting the things which are behind and stretching forward to the things which are before, I press on toward the goal for the prize of the high calling of God in Christ Jesus.”</p>
+          <cite><a href="https://www.biblegateway.com/passage/?search=Philippians+3%3A13-14&version=WEB" target="_blank" rel="noopener">Philippians 3:13–14</a></cite>
+        </blockquote>
+      </div>
+      <aside class="dc-notes">
+        <div class="dc-notes-label">Notes</div>
+        <p>It should be easier now you know what to expect.</p>
+      </aside>
+      <ul class="dc-items">
+        <li class="dc-item" data-key="c-1"><span class="dc-item-text">Write a short reflection on what worked and what didn’t</span></li>
+        <li class="dc-item" data-key="c-2"><span class="dc-item-text">Name the one area you most want to grow in</span></li>
+        <li class="dc-item" data-key="c-3"><span class="dc-item-text">Pick a start date for your next cycle</span></li>
+      </ul>
+      <div class="dc-pager"><a href="#week-4" data-go="4">← Week 4</a><span></span></div>
+    </section>
+
+  </article>
+
+ <footer>
+  <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+  <div class="footer-nav">
+    <a href="about.html">About</a>
+    <span>·</span>
+    <span>© 2026 Whosoever Believes</span>
+  </div>
+</footer>
+
+</div><!-- /.site-wrapper -->
+
+<script src="search-index.js"></script>
+<script src="scripts.js"></script>
+<script src="auth.js"></script>
+<script>
+/* ==========================================================================
+   Discipleship Challenge — progress tracking
+   Tables: challenge_runs, challenge_checks (see sql/)
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var SLUG = 'discipleship-30';
+  var PURPOSE = 'These are practical steps to grow in maturity in faith and deepen your connection to God.';
+  var TOTAL_DAYS = 31;                 // Weeks 1–4 = days 1–28, Conclusion = 29–31
+  var ITEM_KEYS = Array.prototype.map.call(
+    document.querySelectorAll('.dc-item'), function (li) { return li.getAttribute('data-key'); });
+
+  var tracker = document.getElementById('dc-tracker');
+  var db = null;
+  var user = null;
+  var run = null;                      // current challenge_runs row
+  var checks = {};                     // item_key → 'started' | 'done'
+  var loadedFor = null;                // user id the page last loaded for
+
+  // ── DATE HELPERS (local time, no time-zone drift) ──
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function dayNumber(startISO) {
+    var p = startISO.split('-').map(Number);
+    var start = new Date(p[0], p[1] - 1, p[2]);
+    var now = new Date(); now.setHours(0, 0, 0, 0);
+    return Math.floor((now - start) / 86400000) + 1;
+  }
+  function weekFor(day) {
+    if (day <= 7) return 1;
+    if (day <= 14) return 2;
+    if (day <= 21) return 3;
+    if (day <= 28) return 4;
+    return 5;
+  }
+  function prettyDate(iso) {
+    var p = iso.split('-').map(Number);
+    return (p[1]) + '/' + p[2] + '/' + String(p[0]).slice(2);
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  // ── NO HANGING WORDS ──
+  // Joins the last two words of each verse, note, and practice with a
+  // non-breaking space so a single word never sits alone on the last line.
+  // (Newer browsers already do this via text-wrap: pretty.)
+  document.querySelectorAll('.dc-theme p, .dc-notes p, .dc-item-text').forEach(function (node) {
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    var last = null, t;
+    while ((t = walker.nextNode())) { if (t.nodeValue.trim()) last = t; }
+    if (!last) return;
+    var v = last.nodeValue.replace(/\s+$/, '');
+    var i = v.lastIndexOf(' ');
+    if (i > 0) last.nodeValue = v.slice(0, i) + '\u00A0' + v.slice(i + 1) + last.nodeValue.slice(v.length);
+  });
+
+  // ── CHECKBOXES (added to every practice) ──
+  document.querySelectorAll('.dc-item').forEach(function (li) {
+    var key = li.getAttribute('data-key');
+    var box = el('button', 'dc-check');
+    box.type = 'button';
+    box.setAttribute('role', 'checkbox');
+    box.setAttribute('aria-checked', 'false');
+    box.setAttribute('aria-label', 'Not started. Tap to mark in progress.');
+    box.addEventListener('click', function () { toggle(key); });
+    li.insertBefore(box, li.firstChild);
+    li.querySelector('.dc-item-text').appendChild(el('span', 'dc-state-label'));
+  });
+
+  var NEXT = { none: 'started', started: 'done', done: 'none' };
+  var ARIA = {
+    none:    ['false', 'Not started. Tap to mark in progress.'],
+    started: ['mixed', 'In progress. Tap to mark done.'],
+    done:    ['true',  'Done. Tap to clear.']
+  };
+
+  function paintChecks() {
+    document.querySelectorAll('.dc-item').forEach(function (li) {
+      var st = checks[li.getAttribute('data-key')] || 'none';
+      li.classList.toggle('is-started', st === 'started');
+      li.classList.toggle('is-done', st === 'done');
+      var box = li.querySelector('.dc-check');
+      box.setAttribute('aria-checked', ARIA[st][0]);
+      box.setAttribute('aria-label', ARIA[st][1]);
+      li.querySelector('.dc-state-label').textContent =
+        st === 'done' ? 'Done' : st === 'started' ? 'In progress' : '';
+    });
+    document.querySelectorAll('.dc-week').forEach(function (sec) {
+      var keys = Array.prototype.map.call(sec.querySelectorAll('.dc-item'), function (li) { return li.getAttribute('data-key'); });
+      var complete = keys.length && keys.every(function (k) { return checks[k] === 'done'; });
+      var tab = document.getElementById('tab-' + sec.getAttribute('data-week'));
+      if (tab) tab.classList.toggle('is-complete', !!complete);
+    });
+    var done = ITEM_KEYS.filter(function (k) { return checks[k] === 'done'; }).length;
+    var going = ITEM_KEYS.filter(function (k) { return checks[k] === 'started'; }).length;
+    var bar = tracker.querySelector('.dc-bar > span');
+    var count = tracker.querySelector('.dc-count');
+    if (bar) bar.style.width = Math.round(done / ITEM_KEYS.length * 100) + '%';
+    if (count) count.textContent = done + ' of ' + ITEM_KEYS.length + ' done'
+      + (going ? ' · ' + going + ' in progress' : '');
+  }
+
+  function toggle(key) {
+    if (!user) { WBAuth.open('signin'); return; }
+    if (!run) { tracker.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+    var before = checks[key] || 'none';
+    var after = NEXT[before];
+    if (after === 'none') delete checks[key]; else checks[key] = after;
+    paintChecks();
+    var q = after === 'none'
+      ? db.from('challenge_checks').delete().eq('run_id', run.id).eq('item_key', key)
+      : db.from('challenge_checks').upsert(
+          { run_id: run.id, item_key: key, user_id: user.id, status: after, checked_at: new Date().toISOString() },
+          { onConflict: 'run_id,item_key' });
+    q.then(function (res) {
+      if (res.error) {
+        if (before === 'none') delete checks[key]; else checks[key] = before;
+        paintChecks();
+        showError('That change could not be saved. Please try again.');
+      }
+    });
+  }
+
+  // ── WEEK TABS ──
+  var article = document.querySelector('.article-body');
+  var tabsBar = document.querySelector('.dc-tabs');
+  var HASH_TO_WEEK = { 'week-1': 1, 'week-2': 2, 'week-3': 3, 'week-4': 4, 'conclusion': 5 };
+  var pickedByReader = false;
+
+  function weekFromHash() { return HASH_TO_WEEK[(window.location.hash || '').slice(1)] || 0; }
+
+  function showWeek(n) {
+    article.setAttribute('data-shown', n);
+    document.querySelectorAll('.dc-week').forEach(function (sec) {
+      sec.classList.toggle('is-shown', Number(sec.getAttribute('data-week')) === n);
+    });
+    document.querySelectorAll('.dc-tab').forEach(function (t) {
+      var on = Number(t.getAttribute('data-go')) === n;
+      t.classList.toggle('is-shown', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on && tabsBar.scrollWidth > tabsBar.clientWidth) {
+        var left = t.getBoundingClientRect().left - tabsBar.getBoundingClientRect().left + tabsBar.scrollLeft;
+        tabsBar.scrollLeft = left - (tabsBar.clientWidth - t.offsetWidth) / 2;
+      }
+    });
+  }
+
+  function goToWeek(n, scroll) {
+    pickedByReader = true;
+    showWeek(n);
+    var sec = document.querySelector('.dc-week[data-week="' + n + '"]');
+    if (sec && history.replaceState) history.replaceState(null, '', '#' + sec.id);
+    if (scroll && tabsBar.getBoundingClientRect().top < 0) {
+      tabsBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('[data-go]');
+    if (!link) return;
+    e.preventDefault();
+    goToWeek(Number(link.getAttribute('data-go')), true);
+  });
+  tabsBar.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var cur = Number(article.getAttribute('data-shown')) || 1;
+    var n = Math.min(5, Math.max(1, cur + (e.key === 'ArrowRight' ? 1 : -1)));
+    goToWeek(n, false);
+    document.getElementById('tab-' + n).focus();
+  });
+  window.addEventListener('hashchange', function () {
+    var n = weekFromHash(); if (n) { pickedByReader = true; showWeek(n); }
+  });
+
+  // Marks the reader's current week with a dot, and opens it unless the
+  // reader (or a shared #week link) already chose a different week.
+  function highlightWeek(day) {
+    var w = day ? weekFor(day) : 0;
+    document.querySelectorAll('.dc-tab').forEach(function (t) {
+      t.classList.toggle('is-here', Number(t.getAttribute('data-go')) === w);
+    });
+    if (w && !pickedByReader) showWeek(w);
+  }
+
+  var initialWeek = weekFromHash();
+  if (initialWeek) pickedByReader = true;
+  showWeek(initialWeek || 1);
+
+  function showError(text) {
+    var e = tracker.querySelector('.dc-error');
+    if (!e) { e = el('p', 'dc-error'); tracker.appendChild(e); }
+    e.textContent = text;
+  }
+
+  // ── TRACKER STATES ──
+  function renderSignedOut() {
+    tracker.textContent = '';
+    tracker.appendChild(el('div', 'dc-label', 'Your Progress'));
+    tracker.appendChild(el('p', 'dc-purpose', PURPOSE));
+    tracker.appendChild(el('p', 'dc-sub', 'Sign in to start the challenge and check off practices. Uses the same account as the Bible Reading Plans.'));
+    var row = el('div', 'dc-row');
+    var b = el('button', 'dc-btn', 'Sign In to Begin');
+    b.type = 'button';
+    b.addEventListener('click', function () { WBAuth.open('signin'); });
+    row.appendChild(b);
+    tracker.appendChild(row);
+    checks = {}; run = null;
+    paintChecks();
+    highlightWeek(0);
+  }
+
+  function renderStart() {
+    tracker.textContent = '';
+    tracker.appendChild(el('div', 'dc-label', 'Your Progress'));
+    tracker.appendChild(el('div', 'dc-day', 'Ready to begin?'));
+    tracker.appendChild(el('p', 'dc-purpose', PURPOSE));
+    tracker.appendChild(el('p', 'dc-sub', 'Pick your Day 1. You can choose an earlier date if you have already started.'));
+    var row = el('div', 'dc-row');
+    var date = el('input', 'dc-date');
+    date.type = 'date';
+    date.value = todayISO();
+    date.max = todayISO();
+    date.setAttribute('aria-label', 'Start date');
+    var b = el('button', 'dc-btn', 'Start the Challenge');
+    b.type = 'button';
+    b.addEventListener('click', function () {
+      b.disabled = true;
+      db.from('challenge_runs')
+        .insert({ user_id: user.id, challenge_slug: SLUG, start_date: date.value || todayISO() })
+        .select().single()
+        .then(function (res) {
+          b.disabled = false;
+          if (res.error) { showError('The challenge could not be started. Please try again.'); return; }
+          run = res.data; checks = {};
+          renderRun();
+        });
+    });
+    row.appendChild(date);
+    row.appendChild(b);
+    tracker.appendChild(row);
+    checks = {}; paintChecks(); highlightWeek(0);
+  }
+
+  function renderRun() {
+    var day = dayNumber(run.start_date);
+    var finished = day > TOTAL_DAYS;
+
+    tracker.textContent = '';
+    tracker.appendChild(el('div', 'dc-label', 'Your Progress'));
+
+    if (day < 1) {
+      tracker.appendChild(el('div', 'dc-day', 'Starts ' + prettyDate(run.start_date)));
+    } else if (finished) {
+      tracker.appendChild(el('div', 'dc-day', 'Challenge complete'));
+    } else {
+      var wk = weekFor(day);
+      tracker.appendChild(el('div', 'dc-day', 'Day ' + day + ' of ' + TOTAL_DAYS));
+      tracker.appendChild(el('p', 'dc-sub', wk === 5 ? 'Conclusion' : 'Week ' + wk));
+    }
+
+    var bar = el('div', 'dc-bar'); bar.appendChild(el('span'));
+    tracker.appendChild(bar);
+    tracker.appendChild(el('div', 'dc-count'));
+
+    var row = el('div', 'dc-row');
+    if (!finished && day >= 1) {
+      var jump = el('button', 'dc-btn quiet', 'Go to this week');
+      jump.type = 'button';
+      jump.addEventListener('click', function () {
+        goToWeek(weekFor(day), false);
+        tabsBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      row.appendChild(jump);
+    }
+    var again = el('button', 'dc-btn quiet', 'Start a New Cycle');
+    again.type = 'button';
+    again.addEventListener('click', function () {
+      if (!window.confirm('Start a new cycle? Your current checks stay saved with this run.')) return;
+      run = null; renderStart();
+    });
+    row.appendChild(again);
+    tracker.appendChild(row);
+
+    paintChecks();
+    highlightWeek(finished || day < 1 ? 0 : day);
+  }
+
+  // ── LOAD ──
+  function load() {
+    return db.from('challenge_runs')
+      .select('*')
+      .eq('challenge_slug', SLUG)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .then(function (res) {
+        if (res.error) throw res.error;
+        run = res.data && res.data[0];
+        if (!run) { renderStart(); return; }
+        return db.from('challenge_checks').select('item_key, status').eq('run_id', run.id)
+          .then(function (r) {
+            checks = {};
+            (r.data || []).forEach(function (row) { checks[row.item_key] = row.status || 'done'; });
+            renderRun();
+          });
+      })
+      .catch(function () {
+        tracker.textContent = '';
+        tracker.appendChild(el('div', 'dc-label', 'Your Progress'));
+        showError('Your progress could not be loaded right now. The challenge itself is below.');
+      });
+  }
+
+  WBAuth.onChange(function (u) {
+    user = u;
+    if (!u) { loadedFor = null; renderSignedOut(); return; }
+    if (loadedFor === u.id) return;
+    loadedFor = u.id;
+    WBAuth.client().then(function (c) { db = c; return load(); });
+  });
+})();
+</script>
+</body>
+</html>
