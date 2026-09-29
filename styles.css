@@ -2054,3 +2054,6 @@ nav a:hover { color: var(--gold-light); }
 .hp-subscribe .hp-btn { background: #c9a84c; border-color: #c9a84c; color: #0d1117; }
 .hp-subscribe .hp-btn:hover { background: #e5c97a; border-color: #e5c97a; }
 .hp-subscribe .hp-btn.ghost { background: none; color: #f1ece2; border-color: rgba(255,255,255,0.3); }
+
+/* Long web addresses in article sources wrap instead of widening the page on phones */
+.article-body a { overflow-wrap: anywhere; }
