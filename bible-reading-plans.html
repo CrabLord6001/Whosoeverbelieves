@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="search-index.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
@@ -50,114 +51,6 @@
     font-family: 'EB Garamond', Georgia, serif;
     min-height: 100vh;
     overflow-x: hidden;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(13,17,23,0.88);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--rule);
-    padding: 0.75rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1rem;
-  }
-  :root.light-mode nav {
-    background: rgba(237,232,218,0.92) !important;
-  }
-  .nav-logo {
-    font-family: 'Cinzel', serif;
-    color: var(--gold);
-    font-size: 1.05rem;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  .nav-back {
-    font-family: 'Cormorant Garamond', serif;
-    color: var(--text-mid);
-    font-size: 0.95rem;
-    text-decoration: none;
-    border: 1px solid var(--rule);
-    padding: 0.3rem 0.85rem;
-    border-radius: 4px;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .nav-back:hover { color: var(--gold); border-color: var(--gold); }
-
-  /* Nav controls group (right side) */
-  .nav-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex-shrink: 0;
-  }
-  .nav-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.32rem 0.65rem;
-    background: none;
-    border: 1px solid var(--rule);
-    color: var(--text-faint);
-    cursor: pointer;
-    border-radius: 2px;
-    transition: color 0.2s, border-color 0.2s;
-    white-space: nowrap;
-  }
-  .nav-btn:hover, .nav-btn.active {
-    color: var(--gold);
-    border-color: rgba(201,168,76,0.45);
-  }
-  .nav-divider {
-    width: 1px;
-    height: 18px;
-    background: var(--rule);
-    flex-shrink: 0;
-  }
-  /* Sign In / Account buttons */
-  #nav-signin-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.32rem 0.9rem;
-    background: var(--gold-faint);
-    border: 1px solid rgba(201,168,76,0.45);
-    color: var(--gold);
-    cursor: pointer;
-    border-radius: 2px;
-    transition: background 0.2s, color 0.2s;
-    white-space: nowrap;
-  }
-  #nav-signin-btn:hover {
-    background: rgba(201,168,76,0.22);
-  }
-  #nav-myplans-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.32rem 0.9rem;
-    background: none;
-    border: 1px solid var(--rule);
-    color: var(--text-faint);
-    cursor: pointer;
-    border-radius: 2px;
-    transition: color 0.2s, border-color 0.2s;
-    white-space: nowrap;
-  }
-  #nav-myplans-btn:hover {
-    color: var(--gold);
-    border-color: rgba(201,168,76,0.45);
-  }
-  @media (max-width: 600px) {
-    .nav-logo { font-size: 0.85rem; }
-    .nav-back { display: none; }
-    .nav-btn { padding: 0.28rem 0.5rem; font-size: 0.55rem; }
-    #nav-signin-btn, #nav-myplans-btn { padding: 0.28rem 0.6rem; font-size: 0.55rem; }
   }
 
   /* ── HERO ── */
@@ -1458,6 +1351,68 @@
     box-shadow: 0 0 0 1px var(--gold), 0 0 12px rgba(201,168,76,0.15);
   }
 
+
+  /* ── 2026 REDESIGN ── */
+  nav { zoom: 0.89; }
+  #user-bar { text-align: center; }
+  .rp-banner{position:relative;max-width:940px;margin:0 auto;height:230px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 1.5rem 1.8rem;
+    background:linear-gradient(180deg,rgba(8,12,20,.15) 0%,rgba(8,12,20,.55) 55%,rgba(13,17,23,.95) 100%),url("/images/rp/reading-plans-banner.webp") center 55%/cover no-repeat,#0d1117}
+  :root.light-mode .rp-banner{background:linear-gradient(180deg,rgba(8,12,20,.15) 0%,rgba(8,12,20,.55) 55%,rgba(8,12,20,.85) 100%),url("/images/rp/reading-plans-banner.webp") center 55%/cover no-repeat,#1a1a1a}
+  .rp-banner h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(1.5rem,4vw,2.3rem);letter-spacing:.12em;color:#fff;margin:0;text-wrap:balance}
+  .rp-banner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:#d9d2c3;margin:.4rem 0 0}
+  .welcome-state.rp-chooser{display:block;text-align:left;margin:0 auto;padding:2.2rem 0 1rem;background:none;border:0;box-shadow:none;max-width:none}
+  .rp-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.2rem}
+  .rp-head h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:2rem;margin:0;color:var(--text)}
+  .rp-head p{color:var(--text-mid);margin:0}
+  .rp-group{margin-top:1.8rem}
+  .rp-group-label{display:flex;align-items:center;gap:1rem;font-family:'Cinzel',serif;font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--text-mid);margin-bottom:.9rem}
+  .rp-group-label::before,.rp-group-label::after{content:"";flex:1;height:1px;background:var(--rule)}
+  .rp-row{display:flex;justify-content:center;flex-wrap:wrap;gap:1rem}
+  .rp-art{position:relative;flex:0 0 calc((100% - 3rem)/4);aspect-ratio:1/1;border-radius:8px;overflow:hidden;border:1px solid var(--rule);background:#0d1117;color:#fff;text-align:left;cursor:pointer;padding:0;font:inherit}
+  .rp-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .4s ease;filter:saturate(.75) brightness(.85)}
+  .rp-art::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,12,20,.25) 0%,rgba(8,12,20,.45) 45%,rgba(8,12,20,.9) 100%);transition:background .4s ease}
+  .rp-art-body{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:1rem 1.1rem 1.1rem;display:flex;flex-direction:column;gap:.25rem}
+  .rp-art-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.4rem;line-height:1.15;text-shadow:0 2px 10px rgba(0,0,0,.6);text-wrap:balance}
+  .rp-art-more{display:flex;flex-direction:column;gap:.15rem;max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease}
+  .rp-art-books{color:#e2dccf;font-size:.95rem}
+  .rp-art-meta{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:#e5c97a}
+  .rp-art-go{margin-top:.35rem;color:#e5c97a;font-size:.95rem}
+  .rp-art:hover img,.rp-art:focus-visible img{transform:scale(1.05);filter:saturate(.95) brightness(.9)}
+  .rp-art:hover::after,.rp-art:focus-visible::after{background:linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.92) 100%)}
+  .rp-art:hover .rp-art-more,.rp-art:focus-visible .rp-art-more{max-height:8rem;opacity:1}
+  .rp-art:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  @media (hover:none){.rp-art-more{max-height:none;opacity:1}}
+  .rp-custom-row{display:flex;justify-content:center;margin-top:1.8rem}
+  .rp-custom{flex:0 0 calc((100% - 3rem)/4);aspect-ratio:1/1;border-radius:8px;border:1px dashed rgba(201,168,76,.5);background:var(--gold-faint);color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;cursor:pointer;font:inherit;padding:1rem}
+  .rp-custom .rp-plus{font-size:2rem;color:var(--gold);line-height:1}
+  .rp-custom b{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:600}
+  .rp-custom span{color:var(--text-mid)}
+  .rp-custom:hover{border-color:var(--gold)}
+  .rp-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:3rem;counter-reset:s}
+  .rp-step{padding:1.1rem 1.2rem;border-top:1px solid rgba(201,168,76,.4);display:flex;flex-direction:column;gap:.3rem}
+  .rp-step b{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--text);font-weight:600}
+  .rp-step b::before{counter-increment:s;content:counter(s) ". ";color:var(--gold)}
+  .rp-step span{color:var(--text-mid);font-size:.95rem}
+  .rp-signin-note{text-align:center;color:var(--text-mid);margin-top:2rem}
+  .rp-signin-note button{background:none;border:0;color:var(--gold-light);font:inherit;text-decoration:underline;cursor:pointer}
+  #plan-section #progress-section{margin:1.2rem 0 1.4rem}
+  .cal-cell.completed{background:var(--gold-faint);border-color:rgba(201,168,76,.4)}
+  :root.light-mode .cal-cell.completed{background:rgba(138,106,31,.1)}
+  .cal-cell-check{color:var(--gold)}
+  @media (max-width:800px){.rp-art,.rp-custom{flex-basis:calc((100% - 1rem)/2)}.rp-steps{grid-template-columns:minmax(0,1fr)}}
+  .rp-head h2{font-size:clamp(1.5rem,6vw,2rem)}
+  @media (max-width:600px){
+    .rp-banner{height:auto;min-height:170px;padding-top:2.2rem;padding-bottom:1.4rem}
+    .rp-banner h1{font-size:1.45rem;letter-spacing:.08em}
+    .rp-banner p{font-size:.95rem}
+    .rp-art,.rp-custom{flex-basis:100%}
+    .rp-art{aspect-ratio:16/9}
+    .rp-art img{object-position:center 22%}
+    .rp-custom{aspect-ratio:auto;padding:1.4rem 1rem}
+    .rp-art-name{font-size:1.25rem}
+    .rp-art-books{font-size:.88rem}
+    .rp-art-go{display:none}
+  }
 </style>
   <!-- SEO metadata -->
   <link rel="canonical" href="https://whosoeverbelieves.com/bible-reading-plans" />
@@ -1496,26 +1451,26 @@
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="/">✦ Whosoever Believes</a>
-
-  <div class="nav-controls">
-    <!-- Font size -->
-    <button class="nav-btn" id="nav-font-small" title="Smaller text" onclick="rpSetSize('font-small')">A−</button>
-    <button class="nav-btn" id="nav-font-default" title="Default text" onclick="rpSetSize('default')">A</button>
-    <button class="nav-btn" id="nav-font-large" title="Larger text" onclick="rpSetSize('font-large')">A+</button>
-
-    <div class="nav-divider"></div>
-
-    <!-- Theme toggle -->
-    <button class="nav-btn" id="nav-theme-btn" title="Toggle light/dark mode" onclick="rpToggleTheme()">☀︎</button>
-
-    <div class="nav-divider"></div>
-
-    <!-- Auth -->
-    <button id="nav-signin-btn" onclick="openAuthModal()" title="Sign in to save plans">Sign In</button>
-
-    <a class="nav-back" href="/">← Site</a>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles.html">Articles</a>
+    <a href="/bible-reading-plans.html" aria-current="page">Reading Plans</a>
+    <a href="/greek/">Greek</a>
+    <a href="/discipleship-challenge.html">Discipleship</a>
+    <a href="#" id="nav-signin-btn" class="wba-nav-link" onclick="openAuthModal(); return false;">Sign In</a>
   </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" id="nav-font-small" onclick="rpSetSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" id="nav-font-default" onclick="rpSetSize('default')" aria-label="Default text size">A</button>
+    <button type="button" id="nav-font-large" onclick="rpSetSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
 </nav>
 
 <!-- USER BAR (shown when logged in) -->
@@ -1532,23 +1487,36 @@
   <span id="autosave-toast-text">Auto-saved</span>
 </div>
 
-<div class="hero">
-    <h1 id="hero h1">Bible Reading Plan Generator</h1>
-    <p id=".hero p">"Sanctify them by the truth; Your word is truth."
-    <span class="verse-reference" style="white-space:nowrap">— John 17:17</span></p>
+<div class="rp-banner">
+  <h1>Bible Reading Plans</h1>
+  <p>"Sanctify them by the truth; Your word is truth." <span style="white-space:nowrap">— John 17:17</span></p>
 </div>
 
 <!-- MAIN -->
 <div class="container">
 
   <!-- WELCOME STATE (shown when no plan is loaded) -->
-  <div id="welcome-state" class="welcome-state">
-    <button class="welcome-state-btn" onclick="openBuilderModal()">✦ Create Your First Plan</button>
-    <div style="margin-top:1rem;">
-      <button onclick="openAuthModal()" style="font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-style:italic; color:var(--text-faint); background:none; border:none; cursor:pointer; text-decoration:underline; text-underline-offset:3px; white-space: nowrap;">
-        or sign in to load saved plans
-      </button>
+  <div id="welcome-state" class="welcome-state rp-chooser">
+    <div class="rp-head"><h2>Choose a Reading Plan</h2><p>Pick a plan, or build your own.</p></div>
+    <div class="rp-group"><div class="rp-group-label">Old Testament</div><div class="rp-row">
+      <button class="rp-art" type="button" onclick="startTemplate('pentateuch')"><img src="/images/rp/plan-pentateuch.webp" alt="Rembrandt, Moses with the Ten Commandments" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">The Pentateuch</span><span class="rp-art-more"><span class="rp-art-books">Genesis – Deuteronomy</span><span class="rp-art-meta">5 books · 90 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+      <button class="rp-art" type="button" onclick="startTemplate('wisdom')"><img src="/images/rp/plan-wisdom.webp" alt="Gerard van Honthorst, King David Playing the Harp" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">Wisdom Literature</span><span class="rp-art-more"><span class="rp-art-books">Job – Song of Songs</span><span class="rp-art-meta">5 books · 21 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+      <button class="rp-art" type="button" onclick="startTemplate('major-prophets')"><img src="/images/rp/plan-major.webp" alt="Rembrandt, Jeremiah Lamenting the Destruction of Jerusalem" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">Major Prophets</span><span class="rp-art-more"><span class="rp-art-books">Isaiah – Daniel</span><span class="rp-art-meta">5 books · 60 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+      <button class="rp-art" type="button" onclick="startTemplate('minor-prophets')"><img src="/images/rp/plan-minor.webp" alt="Pieter Lastman, Jonah and the Whale" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">Minor Prophets</span><span class="rp-art-more"><span class="rp-art-books">Hosea – Malachi</span><span class="rp-art-meta">12 books · 30 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+    </div></div>
+    <div class="rp-group"><div class="rp-group-label">New Testament</div><div class="rp-row">
+      <button class="rp-art" type="button" onclick="startTemplate('gospels')"><img src="/images/rp/plan-gospels.webp" alt="Jacob Jordaens, The Four Evangelists" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">The Four Gospels</span><span class="rp-art-more"><span class="rp-art-books">Matthew – John</span><span class="rp-art-meta">4 books · 30 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+      <button class="rp-art" type="button" onclick="startTemplate('pauline')"><img src="/images/rp/plan-pauline.webp" alt="Raphael, St Paul Preaching in Athens" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">Pauline Epistles</span><span class="rp-art-more"><span class="rp-art-books">Romans – Philemon</span><span class="rp-art-meta">13 books · 45 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+      <button class="rp-art" type="button" onclick="startTemplate('general')"><img src="/images/rp/plan-general.webp" alt="Albrecht Dürer, Saints John and Peter" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">General Epistles</span><span class="rp-art-more"><span class="rp-art-books">Hebrews – Jude</span><span class="rp-art-meta">8 books · 14 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+      <button class="rp-art" type="button" onclick="startTemplate('end-times')"><img src="/images/rp/plan-end-times.webp" alt="Diego Velázquez, Saint John the Evangelist on Patmos" loading="lazy" decoding="async"><span class="rp-art-body"><span class="rp-art-name">End Times</span><span class="rp-art-more"><span class="rp-art-books">Daniel, 1–2 Thessalonians, Revelation</span><span class="rp-art-meta">4 books · 30 days</span><span class="rp-art-go">Start this plan →</span></span></span></button>
+    </div></div>
+    <div class="rp-custom-row"><button class="rp-custom" type="button" onclick="openBuilderModal()"><span class="rp-plus">+</span><b>Build Your Own</b><span>Any books, your pace</span></button></div>
+    <div class="rp-steps">
+      <div class="rp-step"><b>Choose your books</b><span>Start from a plan above or pick any books of the Bible.</span></div>
+      <div class="rp-step"><b>Set your pace</b><span>Choose how many days, a start date, and rest days.</span></div>
+      <div class="rp-step"><b>Read and track</b><span>Check off each day, keep notes, and get email reminders.</span></div>
     </div>
+    <p class="rp-signin-note" id="rp-signin-note">Already have plans? <button type="button" onclick="openAuthModal()">Sign in</button> to load them.</p>
   </div>
 
   <!-- PLAN TAB BAR (now rendered inline above calendar via #plan-tabs-inline) -->
@@ -1575,6 +1543,7 @@
           <option value="gospels">The Four Gospels — 30 days</option>
           <option value="pauline">Pauline Epistles — 45 days</option>
           <option value="general">General Epistles — 14 days</option>
+          <option value="end-times">End Times — 30 days</option>
         </optgroup>
         <optgroup label="Old Testament">
           <option value="pentateuch">The Pentateuch — 90 days</option>
@@ -1691,37 +1660,34 @@
       <div class="plan-actions-col">
         <div class="plan-actions">
           <div class="btn-col">
-            <button class="btn-sm gold" onclick="downloadPDF()">🖨️ PDF</button>
+            <button class="btn-sm gold" onclick="downloadPDF()">PDF</button>
             <div class="save-hint">Saves printable copy</div>
           </div>
           <div class="btn-col">
-            <button class="btn-sm" onclick="exportWithNotes()">📄 TXT</button>
+            <button class="btn-sm" onclick="exportWithNotes()">Notes</button>
             <div class="save-hint">Includes reflections</div>
           </div>
           <div class="btn-col" id="save-plan-btn-col">
-            <button class="btn-sm gold" id="save-plan-btn" onclick="handleSavePlan()">💾 Save Plan</button>
+            <button class="btn-sm gold" id="save-plan-btn" onclick="handleSavePlan()">Save Plan</button>
             <div class="save-hint">Save to account</div>
           </div>
           <div class="btn-col" id="copy-plan-btn-col" style="display:none">
-            <button class="btn-sm gold" onclick="openCopyPlan()">⧉ Copy</button>
+            <button class="btn-sm gold" onclick="openCopyPlan()">Copy</button>
             <div class="save-hint">New start date</div>
           </div>
           <div class="btn-col" id="restart-plan-btn-col" style="display:none">
-            <button class="btn-sm" onclick="restartCurrentPlan()">↺ Restart</button>
+            <button class="btn-sm" onclick="restartCurrentPlan()">Restart</button>
             <div class="save-hint">Keep notes</div>
           </div>
           <div class="btn-col" id="delete-plan-btn-col" style="display:none">
-            <button class="btn-sm" style="color:#b44;" onclick="deleteCurrentPlan()">✕ Delete</button>
+            <button class="btn-sm" style="color:#b44;" onclick="deleteCurrentPlan()">Delete</button>
             <div class="save-hint">Remove plan</div>
           </div>
       </div>
       </div>
     </div>
     <div id="plan-tabs-inline"></div>
-    <div id="calendar-grid"></div>
-  </div>
-
-  <!-- PROGRESS BAR -->
+    <!-- PROGRESS BAR -->
   <div id="progress-section" class="card" style="display:none; animation-delay:0.15s">
     <div class="progress-header">
       <div style="display:flex;align-items:baseline;gap:0.75rem;">
@@ -1742,6 +1708,9 @@
       <div class="stat-item"><strong id="stat-verses">0</strong> verses read</div>
     </div>
   </div>
+    <div id="calendar-grid"></div>
+  </div>
+
 </div><!-- /container -->
 
 <!-- DAY DETAIL POPOVER -->
@@ -2174,6 +2143,11 @@ const TEMPLATES = {
             'Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'],
     days:  30
   },
+  'end-times': {
+    name:  'End Times',
+    books: ['Daniel','1 Thessalonians','2 Thessalonians','Revelation'],
+    days:  30
+  },
   'wisdom': {
     name:  'Wisdom Literature',
     books: ['Job','Psalms','Proverbs','Ecclesiastes','Song of Songs'],
@@ -2562,8 +2536,9 @@ function renderPlan() {
           = this.checked ? 'flex' : 'none';
       });
     // Insert after the progress section (below calendar)
-    const progressSection = document.getElementById('progress-section');
-    progressSection.parentNode.insertBefore(reminderCard, progressSection.nextSibling);
+    // Reminders sit below the calendar
+    const calGrid = document.getElementById('calendar-grid');
+    calGrid.parentNode.insertBefore(reminderCard, calGrid.nextSibling);
   }
   // Pre-fill if we have a saved plan loaded
   if (currentPlanId) loadPlanReminderSettings();
@@ -4413,6 +4388,13 @@ function moveBuilderToModal() {
   }
 }
 
+function startTemplate(key) {
+  openBuilderModal();
+  const sel = document.getElementById('template-select');
+  if (sel) sel.value = key;
+  applyTemplate(key);
+}
+
 function openBuilderModal() {
   moveBuilderToModal();
   document.getElementById('builder-modal-overlay').classList.add('open');
@@ -4434,6 +4416,8 @@ function showPlanView() {
 // Show welcome state, hide plan view
 function showWelcomeState() {
   document.getElementById('welcome-state').style.display = '';
+  const note = document.getElementById('rp-signin-note');
+  if (note) note.hidden = !!currentUser;
   document.getElementById('plan-section').style.display = 'none';
   document.getElementById('progress-section').style.display = 'none';
 }

@@ -193,7 +193,7 @@
       <span class="hp-eyebrow">Learn</span>
       <h2 id="hp-writing-h">Theology Blog</h2>
     </div>
-    <div class="hp-writing">
+    <div class="hp-writing" id="hp-writing">
       <a class="hp-feature" href="/articles/bookending-the-ot.html">
         <img src="/images/opt/bookending-the-ot-diptych-800.webp" alt="Jan Luyken etchings of Cain killing Abel and the stoning of Zechariah" decoding="async">
         <div class="hp-feature-body">
@@ -239,11 +239,12 @@
     <div class="hp-subscribe-text">
       <h2 class="hp-subscribe-title" id="hp-sub-h">Mailing List</h2>
       <p class="hp-subscribe-line">Subscribe for blog updates</p>
+      <div class="hp-subscribe-actions">
+        <button type="button" class="hp-btn" id="hp-sub-btn">Subscribe</button>
+        <span class="hp-subscribe-msg" id="hp-sub-msg" aria-live="polite"></span>
+      </div>
     </div>
-    <div class="hp-subscribe-actions">
-      <button type="button" class="hp-btn" id="hp-sub-btn">Subscribe</button>
-      <span class="hp-subscribe-msg" id="hp-sub-msg" aria-live="polite"></span>
-    </div>
+    <img class="hp-subscribe-art" src="/images/paul-writing-epistles.webp" alt="Valentin de Boulogne, Saint Paul Writing His Epistles" loading="lazy" decoding="async">
   </section>
 
   <!-- COMMUNITY + AUTHOR -->
@@ -258,11 +259,13 @@
       </a>
     </div>
     <a class="hp-panel hp-author" href="/jonathan-crow.html">
-      <img src="/images/selfie-resized.jpg" alt="Jonathan Crow" loading="lazy" decoding="async">
-      <div>
-        <span class="hp-eyebrow">About the Author</span>
-        <div class="hp-author-name">Jonathan Crow</div>
-        <div class="hp-author-role">Founder &amp; Editor</div>
+      <span class="hp-eyebrow">About the Author</span>
+      <div class="hp-author-row">
+        <img src="/images/selfie-resized.jpg" alt="Jonathan Crow" loading="lazy" decoding="async">
+        <div>
+          <div class="hp-author-name">Jonathan Crow</div>
+          <div class="hp-author-role">Founder &amp; Editor</div>
+        </div>
       </div>
     </a>
   </section>
@@ -293,6 +296,42 @@
   'use strict';
   var FN = 'https://tgzsyfmnzagqijjlzxsa.supabase.co/functions/v1/';
   var $ = function (id) { return document.getElementById(id); };
+
+  // ── Theology Blog: newest four articles from search-index.js ──
+  (function () {
+    if (typeof searchIndex === 'undefined') return;
+    var posts = searchIndex.filter(function (a) { return a.date && /^\/?articles\//.test(a.url); })
+      .sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; })
+      .slice(0, 4);
+    if (posts.length < 4) return;   // keep the cards written into the page
+    function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+    function shortDate(iso) { var p = iso.split('-').map(Number); return p[1] + '/' + p[2] + '/' + String(p[0]).slice(2); }
+    function tagline(a) { return (a.tags || []).filter(function (t) { return t !== 'Featured'; }).join(' \u00B7 '); }
+
+    var f = posts[0];
+    var feature = el('a', 'hp-feature'); feature.href = f.url;
+    var img = el('img'); img.src = f.image; img.alt = f.imageAlt || ''; img.decoding = 'async';
+    if (f.imagePosition) img.style.objectPosition = f.imagePosition;
+    var body = el('div', 'hp-feature-body');
+    body.appendChild(el('span', 'hp-tagline', tagline(f)));
+    body.appendChild(el('span', 'hp-feature-title', f.title));
+    body.appendChild(el('span', 'hp-excerpt', f.blurb || f.excerpt));
+    body.appendChild(el('span', 'hp-date', 'Jonathan Crow \u00B7 ' + shortDate(f.date)));
+    feature.appendChild(img); feature.appendChild(body);
+
+    var side = el('div', 'hp-side');
+    posts.slice(1).forEach(function (a) {
+      var m = el('a', 'hp-mini'); m.href = a.url;
+      m.appendChild(el('span', 'hp-tagline', tagline(a)));
+      m.appendChild(el('span', 'hp-mini-title', a.title));
+      m.appendChild(el('span', 'hp-date', shortDate(a.date)));
+      side.appendChild(m);
+    });
+
+    var grid = $('hp-writing');
+    grid.innerHTML = '';
+    grid.appendChild(feature); grid.appendChild(side);
+  })();
 
   // Verse of the day (YouVersion's pick, WEB text). The John 3:16 in the
   // markup stays if the service can't be reached.
