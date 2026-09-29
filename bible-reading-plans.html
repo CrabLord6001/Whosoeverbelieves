@@ -1413,6 +1413,14 @@
     .rp-art-books{font-size:.88rem}
     .rp-art-go{display:none}
   }
+
+  .rp-plan-sub{color:var(--text-mid);font-size:.95rem;margin-top:.2rem}
+  .plan-tab,.plan-tab-new{font-family:'EB Garamond',serif;font-size:1rem;letter-spacing:0;text-transform:none;border-radius:20px;padding:.4rem 1rem;color:var(--text-mid)}
+  .plan-tab.active{border-color:var(--gold);color:var(--text);background:var(--gold-faint)}
+  .plan-tab-new{color:var(--gold-light);border-color:rgba(201,168,76,.4)}
+  #progress-section{position:relative}
+  .rp-today{margin-top:1rem;min-height:40px;padding:0 1.2rem;border-radius:3px;border:0;background:var(--gold);color:#0d1117;font-family:'Cinzel',serif;font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+  .rp-today:hover{background:var(--gold-light)}
 </style>
   <!-- SEO metadata -->
   <link rel="canonical" href="https://whosoeverbelieves.com/bible-reading-plans" />
@@ -1656,6 +1664,7 @@
           <div class="plan-title" id="plan-title-display">Your Reading Plan</div>
           <button class="header-rename-btn" id="header-rename-btn" onclick="startHeaderRename()" title="Rename plan" style="display:none">✎</button>
         </div>
+        <div class="rp-plan-sub" id="rp-plan-sub"></div>
       </div>
       <div class="plan-actions-col">
         <div class="plan-actions">
@@ -1707,6 +1716,7 @@
       <div class="stat-item"><strong id="stat-reading">0</strong> reading days total</div>
       <div class="stat-item"><strong id="stat-verses">0</strong> verses read</div>
     </div>
+    <button type="button" class="rp-today" id="rp-today-btn" hidden onclick="goToToday()">Today</button>
   </div>
     <div id="calendar-grid"></div>
   </div>
@@ -4610,14 +4620,47 @@ function highlightToday() {
     String(today.getMonth() + 1).padStart(2, '0') + '-' +
     String(today.getDate()).padStart(2, '0');
 
+  let todayIdx = -1;
   currentPlan.forEach((day, idx) => {
     if (day.date === todayStr) {
+      todayIdx = idx;
       const cell = document.getElementById(`cal-cell-${idx}`);
       const card = document.getElementById(`day-${idx}`);
       if (cell) cell.classList.add('today');
       if (card) card.classList.add('today');
     }
   });
+  updatePlanMeta(todayIdx);
+}
+
+// Date range + translation under the plan title, and the "Today" button
+function updatePlanMeta(todayIdx) {
+  const sub = document.getElementById('rp-plan-sub');
+  const btn = document.getElementById('rp-today-btn');
+  const fmt = iso => {
+    const p = iso.split('-').map(Number);
+    return new Date(p[0], p[1] - 1, p[2]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+  const dated = currentPlan.filter(d => d.date);
+  const tr = (document.getElementById('translation') || {}).value || 'WEB';
+  const trName = tr === 'WEB' ? 'World English Bible' : tr;
+  if (sub) sub.textContent = dated.length
+    ? fmt(dated[0].date) + ' – ' + fmt(dated[dated.length - 1].date) + ' · ' + trName
+    : trName;
+  if (btn) {
+    btn.hidden = todayIdx < 0;
+    if (todayIdx >= 0) {
+      btn.textContent = 'Today: Day ' + (todayIdx + 1);
+      btn.dataset.idx = todayIdx;
+    }
+  }
+}
+
+function goToToday() {
+  const idx = Number(document.getElementById('rp-today-btn').dataset.idx);
+  const cell = document.getElementById(`cal-cell-${idx}`) || document.getElementById(`day-${idx}`);
+  if (cell) cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => openDayPopover(idx), 350);
 }
 
 // ══════════════════════════════════════════════════════════════
