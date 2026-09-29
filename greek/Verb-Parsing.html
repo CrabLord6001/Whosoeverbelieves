@@ -939,7 +939,7 @@ function showQ(){
   }
   if(qI>=qData.length){endQ();return}
   qA=false;
-  document.getElementById('nxtB').classList.add('hidden');
+  document.getElementById('nxtB').classList.add('hidden');document.getElementById('fbbox').classList.remove('hidden');
   document.getElementById('fbbox').innerHTML='<div class="hint-txt">Choose an answer above</div>';
   const w=qData[qI];
   document.getElementById('qWord').textContent=w.f;
@@ -993,7 +993,7 @@ function pickQ(btn,choice,correct,w){
   fb.innerHTML=isOk
     ?`<div class="fres fok">✓ CORRECT</div><div class="fdet">${w.note||'Well parsed!'}</div>`
     :`<div class="fres fbad">✗ INCORRECT</div><div class="fdet">Correct: ${correct}</div>`;
-  document.getElementById('nxtB').classList.remove('hidden');
+  document.getElementById('fbbox').classList.add('hidden');document.getElementById('nxtB').classList.remove('hidden');
 }
 
 function nxtQ(){qI++;showQ();}

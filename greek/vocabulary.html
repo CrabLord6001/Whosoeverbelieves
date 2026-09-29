@@ -581,7 +581,7 @@ function showQ(){
     grid.appendChild(b);
   });
   document.getElementById('fbbox').innerHTML='<div class="hint-txt">Choose an answer above</div>';
-  document.getElementById('nxtB').classList.add('hidden');
+  document.getElementById('nxtB').classList.add('hidden');document.getElementById('fbbox').classList.remove('hidden');
   const tot=qC+qW+qq.length,done=qC+qW;
   setProg(done,tot,'Question '+(done+1)+' of '+tot);
 }
@@ -597,9 +597,9 @@ function chkAns(btn,chosen,correct){
     <div class="fres ${isOk?'fok':'fbad'}">${isOk?'✓ CORRECT':'✗ INCORRECT — '+correct}</div>
     ${w.mnemonic?`<div class="fdet">💡 ${w.mnemonic}</div>`:''}
     ${w.verse?`<div class="fdet">📖 ${w.verse}</div>`:''}`;
-  qq.shift();updQS();document.getElementById('nxtB').classList.remove('hidden');
+  qq.shift();updQS();document.getElementById('fbbox').classList.add('hidden');document.getElementById('nxtB').classList.remove('hidden');
 }
-function nxtQ(){document.getElementById('nxtB').classList.add('hidden');showQ();}
+function nxtQ(){document.getElementById('nxtB').classList.add('hidden');document.getElementById('fbbox').classList.remove('hidden');showQ();}
 function showQRes(){
   document.getElementById('qzMode').classList.add('hidden');document.getElementById('qzRes').classList.remove('hidden');
   const t=qC+qW,pct=t?Math.round(qC/t*100):0;

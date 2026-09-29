@@ -261,3 +261,8 @@ body.focus .pg-val{font-size:clamp(1.9rem,3.4vw,3rem)}
 body.focus .mood-chip,body.focus .cbadge,body.focus .cchap,body.focus .cstrongs{font-size:.82rem;padding:.3rem .95rem}
 body.focus .clabel{font-size:.85rem}
 body.focus .cnote{font-size:clamp(1.15rem,1.8vw,1.45rem);max-width:48rem}
+
+/* Quiz: after answering, the Next button takes the feedback box's place */
+#qzMode .nxtbtn{display:block;width:100%;max-width:none;min-height:70px;margin:1rem 0;font-size:.78rem;letter-spacing:.18em}
+#qzMode .nxtbtn.hidden{display:none!important}
+body.focus #qzMode .nxtbtn{margin:0;min-height:72px;font-size:.85rem}
