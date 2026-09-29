@@ -226,33 +226,6 @@
   </footer>
 </div><!-- /.site-wrapper -->
 
-<script>
-  // Font size + theme (mirrors shared site script)
-  function setSize(s) {
-    document.documentElement.classList.remove('font-small','font-large');
-    if (s !== 'default') document.documentElement.classList.add(s);
-    localStorage.setItem('fontSize', s);
-  }
-  function setTheme(t) {
-    document.documentElement.classList.toggle('light-mode', t === 'light');
-    localStorage.setItem('theme', t);
-  }
-  (function() {
-    const s = localStorage.getItem('fontSize');
-    if (s && s !== 'default') document.documentElement.classList.add(s);
-    if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light-mode');
-  })();
-
-  function runSearch(val) {
-    const el = document.getElementById('search-results');
-    if (!val.trim()) { el.style.display = 'none'; return; }
-    el.style.display = 'block';
-    el.style.padding = '0.75rem 2.5rem';
-    el.style.color = 'var(--text-mid)';
-    el.style.fontStyle = 'italic';
-    el.innerHTML = 'Search the full site: <a href="../articles.html" style="color:var(--gold)">browse all articles</a>';
-  }
-</script>
 <script src="../search-index.js"></script>
 <script src="../scripts.js"></script>
 <script src="/auth.js" defer></script>
