@@ -455,7 +455,7 @@
         open('signin');
       }
     });
-    nav.appendChild(navLink);
+    (nav.querySelector('.nav-links') || nav).appendChild(navLink);
     updateNav();
   }
 

@@ -1974,3 +1974,39 @@ header .site-title a { color: inherit; -webkit-text-fill-color: #fff; text-decor
 @media (max-width: 480px) {
   header { height: 170px; padding-top: 1.5rem; }
 }
+
+/* ── NAV: link group + search form ─────────────────────────────────────── */
+
+.nav-links { display: contents; }
+.nav-search-form { display: contents; margin: 0; }
+nav a.wba-nav-link { order: 10; }
+
+/* phones: links on one sideways-swiping row, search + buttons on the next */
+@media (max-width: 720px) {
+  nav { padding: 0; }
+  .nav-links {
+    display: flex;
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent);
+            mask-image: linear-gradient(90deg, #000 86%, transparent);
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a { flex: 0 0 auto; padding: 0.85rem 0.7rem; }
+  .nav-links a:first-child { padding-left: 1rem; }
+  .nav-links a:last-child { padding-right: 2.5rem; }
+  .nav-search { order: 0; flex: 1 1 0; min-width: 0; width: auto; margin: 0.45rem 0 0.6rem 1rem; }
+  .nav-tools { order: 0; flex: 0 0 auto; width: auto; padding: 0.45rem 1rem 0.6rem 0.4rem; }
+  .nav-tools button { min-width: 1.75rem; padding: 0.3rem; }
+}
+.hp-all { text-align: center; margin-top: 1.4rem; }
+
+/* ── NAV CONTRAST: same look, brighter text ────────────────────────────── */
+
+nav a { color: var(--text); }
+nav a:hover { color: var(--gold-light); }
+:root.light-mode nav a:hover { color: var(--gold); }
+.nav-tools button { color: var(--text-mid); }
+.nav-search::placeholder { color: var(--text-mid); }

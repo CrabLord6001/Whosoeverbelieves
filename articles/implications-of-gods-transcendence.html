@@ -100,13 +100,17 @@
 
   <!-- NAV -->
 <nav>
-  <a href="/">Home</a>
-  <a href="/articles.html">Articles</a>
-  <a href="/bible-reading-plans.html">Reading Plans</a>
-  <a href="/greek/">Greek</a>
-  <a href="/discipleship-challenge.html">Discipleship</a>
-  <label for="site-search" class="visually-hidden">Search the site</label>
-  <input type="search" id="site-search" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" />
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles.html">Articles</a>
+    <a href="/bible-reading-plans.html">Reading Plans</a>
+    <a href="/greek/">Greek</a>
+    <a href="/discipleship-challenge.html">Discipleship</a>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
   <div class="nav-tools">
     <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
     <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
