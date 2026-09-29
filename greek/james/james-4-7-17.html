@@ -103,33 +103,24 @@
     </div>
   </header>
 
-  <!-- FONT SIZE + THEME + SEARCH -->
-  <div class="font-size-group">
-    <button onclick="setSize('font-small')">A&#8722;</button>
-    <button onclick="setSize('default')">A</button>
-    <button onclick="setSize('font-large')">A+</button>
-    <button onclick="setTheme('light')" id="btn-light" title="Light mode">&#9728;&#65039;</button>
-    <button onclick="setTheme('dark')"  id="btn-dark"  title="Dark mode">&#127769;</button>
-    <input type="text" id="site-search" placeholder="Search articles, verses, topics&#8230;" oninput="runSearch(this.value)" />
-  </div>
-  <div id="search-results"></div>
-
   <!-- NAV -->
   <nav>
-    <a href="/">Home</a>
-    <a href="../../articles.html">Articles</a>
-    <div class="nav-dropdown">
-      <button class="nav-dropdown-btn">
-        Bible Study Tools <span class="nav-dropdown-arrow">&#9660;</span>
-      </button>
-      <div class="nav-dropdown-menu">
-        <a href="/greek/">Greek Studies</a>
-        <a href="../../bible-reading-plans.html">Bible Reading Plans</a>
-        <a href="../../discipleship-challenge.html">Discipleship Challenge</a>
-        <a href="../../free-grace-glossary.html">Theology Glossary</a>
-      </div>
-    </div>
-  </nav>
+  <a href="/">Home</a>
+  <a href="/articles.html">Articles</a>
+  <a href="/bible-reading-plans.html">Reading Plans</a>
+  <a href="/greek/">Greek</a>
+  <a href="/discipleship-challenge.html">Discipleship</a>
+  <label for="site-search" class="visually-hidden">Search the site</label>
+  <input type="search" id="site-search" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" />
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
   <div class="series-nav">
     <a class="series-label" href="index.html" style="border:0;padding:0">James Series</a>
     <a href="james-1-1-12.html">1:1–12</a>
@@ -921,6 +912,8 @@ MAIN CLAUSE
     <span class="greek">&#960;&#8118;&#962; &#8001; &#960;&#953;&#963;&#964;&#949;&#973;&#969;&#957; &#949;&#7984;&#962; &#945;&#8016;&#964;&#8056;&#957; &#7956;&#967;&#8131; &#950;&#969;&#8052;&#957; &#945;&#7984;&#974;&#957;&#953;&#959;&#957;</span>
     <div class="footer-nav">
       <a href="../../about.html">About</a>
+    <span>&#183;</span>
+    <a href="/free-grace-glossary.html">Glossary</a>
       <span>&#183;</span>
       <span>&#169; 2026 Whosoever Believes</span>
     </div>
@@ -939,5 +932,6 @@ MAIN CLAUSE
 <script src="james-audio.js"></script>
 <script src="../../search-index.js"></script>
 <script src="../../scripts.js"></script>
+<script src="/auth.js" defer></script>
 </body>
 </html>

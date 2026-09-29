@@ -16,7 +16,7 @@
 
        WBAuth.ready()          → Promise<user | null>   (after first check)
        WBAuth.onChange(fn)     → fn(user | null) now and on every change
-       WBAuth.open(tab)        → show the sign-in window ('signin', 'signup', …)
+       WBAuth.open(tab)        → show the sign-in window ('signin', 'signup', 'account', …)
        WBAuth.signOut()
        WBAuth.client()         → Promise<SupabaseClient>
    ========================================================================== */
@@ -105,7 +105,7 @@
         }
         var user = session && session.user;
         if (user && (!currentUser || currentUser.id !== user.id)) {
-          ensureProfile(user);
+          Promise.resolve(ensureProfile(user)).then(function () { applySignupChoice(user); });
           if (modal && modal.classList.contains('open') && event === 'SIGNED_IN') close();
         }
         setUser(user);
@@ -163,6 +163,10 @@
     '.wba-divider{display:flex;align-items:center;gap:.75rem;margin:1.1rem 0;color:var(--text-faint);',
     '  font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase}',
     '.wba-divider::before,.wba-divider::after{content:"";flex:1;height:1px;background:var(--rule)}',
+    '.wba-check{display:flex;gap:.6rem;align-items:flex-start;text-align:left;font-size:.95rem;color:var(--text-mid);margin:0 0 1.1rem;cursor:pointer}',
+    '.wba-check input{margin-top:.3rem;accent-color:var(--gold,#c9a84c);width:1rem;height:1rem;flex-shrink:0}',
+    '.wba-modal.acct .wba-tabs,.wba-modal.acct .wba-lede{display:none}',
+    '.wba-acct-email{font-family:"Cormorant Garamond",serif;font-size:1.1rem;color:var(--text);margin:0 0 1.2rem;word-break:break-all}',
     'nav a.wba-nav-link{cursor:pointer}'
   ].join('\n');
 
@@ -208,6 +212,7 @@
       '<div class="wba-field"><label for="wba-signup-name">Display Name (optional)</label><input type="text" id="wba-signup-name" autocomplete="name" placeholder="Your name"></div>' +
       '<div class="wba-field"><label for="wba-signup-email">Email</label><input type="email" id="wba-signup-email" autocomplete="email" placeholder="you@example.com"></div>' +
       '<div class="wba-field"><label for="wba-signup-pass">Password (min 6 chars)</label><input type="password" id="wba-signup-pass" autocomplete="new-password" placeholder="••••••••"></div>' +
+      '<label class="wba-check"><input type="checkbox" id="wba-signup-updates"> Email me when a new article is published</label>' +
       '<div class="wba-actions"><button type="button" class="wba-btn" data-wba="signup">Create Account</button><button type="button" class="wba-btn secondary" data-wba="close">Cancel</button></div>' +
     '</div>' +
 
@@ -230,6 +235,13 @@
       '<p class="wba-help">Enter your new password below.</p>' +
       '<div class="wba-field"><label for="wba-new-pass">New Password (min 6 chars)</label><input type="password" id="wba-new-pass" autocomplete="new-password" placeholder="New password"></div>' +
       '<div class="wba-actions"><button type="button" class="wba-btn" data-wba="newpassword">Update Password</button></div>' +
+    '</div>' +
+
+    '<div class="wba-form" data-form="account">' +
+      '<div class="wba-error"></div><div class="wba-ok"></div>' +
+      '<p class="wba-acct-email" id="wba-acct-email"></p>' +
+      '<label class="wba-check"><input type="checkbox" id="wba-account-updates" disabled> Email me when a new article is published</label>' +
+      '<div class="wba-actions"><button type="button" class="wba-btn" data-wba="signout">Sign Out</button><button type="button" class="wba-btn secondary" data-wba="close">Close</button></div>' +
     '</div>' +
     '</div>';
 
@@ -272,6 +284,9 @@
       if (action === 'close') close();
       else handle(action, btn);
     });
+    modal.addEventListener('change', function (e) {
+      if (e.target && e.target.id === 'wba-account-updates') setEmailUpdates(e.target);
+    });
     modal.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') close();
       if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
@@ -309,7 +324,7 @@
           p = c.auth.signUp({
             email: val('wba-signup-email'),
             password: pass,
-            options: { data: { display_name: val('wba-signup-name') }, emailRedirectTo: here() }
+            options: { data: { display_name: val('wba-signup-name'), email_updates: !!(document.getElementById('wba-signup-updates') || {}).checked }, emailRedirectTo: here() }
           }).then(function (r) {
             if (r.error) msg('signup', r.error.message);
             else msg('signup', 'Account created! Check your email to confirm, then sign in.', true);
@@ -330,6 +345,9 @@
               if (r.error) msg('reset', r.error.message);
               else msg('reset', 'Reset link sent — check your inbox.', true);
             });
+          break;
+        case 'signout':
+          p = c.auth.signOut().then(function () { close(); });
           break;
         case 'newpassword':
           var np = document.getElementById('wba-new-pass').value;
@@ -352,9 +370,60 @@
     });
   }
 
+  // ── EMAIL UPDATES (new-article emails) ────────────────────────────────
+
+  function emailPrefs(method, body) {
+    return getClient().then(function (c) {
+      return c.functions.invoke('email-prefs', { method: method, body: body });
+    }).then(function (r) {
+      if (r.error) throw r.error;
+      return r.data || {};
+    });
+  }
+
+  function loadAccount() {
+    var box = document.getElementById('wba-account-updates');
+    var who = document.getElementById('wba-acct-email');
+    if (who) who.textContent = currentUser ? 'Signed in as ' + (currentUser.email || '') : '';
+    if (!box) return;
+    box.disabled = true;
+    emailPrefs('GET').then(function (d) {
+      box.checked = !!d.email_updates;
+      box.disabled = false;
+    }).catch(function () {
+      msg('account', 'Email settings are unavailable right now.');
+    });
+  }
+
+  function setEmailUpdates(box) {
+    var want = box.checked;
+    box.disabled = true;
+    clearMessages();
+    emailPrefs('POST', { subscribe: want }).then(function (d) {
+      box.checked = !!d.email_updates;
+      msg('account', d.email_updates ? 'You’ll get an email when a new article is published.' : 'Email updates turned off.', true);
+    }).catch(function () {
+      box.checked = !want;
+      msg('account', 'Could not save that change. Please try again.');
+    }).then(function () { box.disabled = false; });
+  }
+
+  // A reader who ticked the box at sign-up is subscribed on first sign-in.
+  function applySignupChoice(user) {
+    var m = (user && user.user_metadata) || {};
+    if (m.email_updates !== true || m.email_updates_synced) return;
+    emailPrefs('POST', { subscribe: true }).then(function () {
+      return getClient().then(function (c) { return c.auth.updateUser({ data: { email_updates_synced: true } }); });
+    }).catch(function (e) { console.warn('[auth] email updates', e); });
+  }
+
   function open(tab) {
     buildModal();
+    var acct = tab === 'account';
+    modal.querySelector('.wba-modal').classList.toggle('acct', acct);
+    modal.querySelector('#wba-title').textContent = acct ? 'Your Account' : 'Welcome';
     switchTab(tab || 'signin');
+    if (acct) loadAccount();
     modal.classList.add('open');
     getClient();   // start loading Supabase while the reader types
     var first = modal.querySelector('.wba-form.active input');
@@ -381,7 +450,7 @@
     navLink.addEventListener('click', function (e) {
       e.preventDefault();
       if (currentUser) {
-        if (window.confirm('Sign out of Whosoever Believes?')) signOut();
+        open('account');
       } else {
         open('signin');
       }
@@ -392,7 +461,7 @@
 
   function updateNav() {
     if (!navLink) return;
-    navLink.textContent = currentUser ? 'Sign Out' : 'Sign In';
+    navLink.textContent = currentUser ? 'Account' : 'Sign In';
     navLink.title = currentUser ? 'Signed in as ' + (currentUser.email || '') : 'Sign in or create an account';
   }
 

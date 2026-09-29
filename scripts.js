@@ -19,7 +19,7 @@ function setSize(size) {
   if (size !== 'default') document.documentElement.classList.add(size);
   localStorage.setItem('fontPref', size);
   const labels = { default:'A', 'font-small':'A\u2212', 'font-large':'A+' };
-  document.querySelectorAll('.font-size-group button').forEach(b => {
+  document.querySelectorAll('.nav-tools button, .font-size-group button').forEach(b => {
     b.classList.toggle('active', b.textContent === labels[size]);
   });
 }
@@ -239,4 +239,18 @@ document.addEventListener('click', function(e) {
   if (!e.target.closest('.nav-dropdown')) {
     document.querySelectorAll('.nav-dropdown').forEach(d => d.classList.remove('open'));
   }
+});
+
+/* ── CLOSE SEARCH RESULTS ──────────────────────────────────────────────── */
+
+document.addEventListener('click', e => {
+  const box = document.getElementById('search-results');
+  if (box && !e.target.closest('#search-results, #site-search')) box.style.display = 'none';
+});
+document.addEventListener('keydown', e => {
+  const box = document.getElementById('search-results');
+  if (e.key === 'Escape' && box) box.style.display = 'none';
+});
+document.addEventListener('focusin', e => {
+  if (e.target.id === 'site-search' && e.target.value.trim()) runSearch(e.target.value);
 });

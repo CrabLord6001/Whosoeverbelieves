@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Announce an Article — Whosoever Believes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .an-wrap { padding: 3rem 2.5rem 4rem; background: var(--surface); }
+  .an-title { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--text); }
+  .an-rule { width: 60px; height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 0.5rem 0 2rem; }
+  .an-count { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.75rem; }
+  .an-field { margin-bottom: 1.2rem; }
+  .an-label { display: block; font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.4rem; }
+  .an-input, .an-select, .an-textarea {
+    width: 100%; box-sizing: border-box; font-family: 'EB Garamond', serif; font-size: 1rem;
+    padding: 0.65rem 1rem; border: 1px solid var(--rule); background: var(--glass); color: var(--text);
+    border-radius: 2px; outline: none;
+  }
+  .an-select option { background: var(--surface); color: var(--text); }
+  .an-textarea { min-height: 4.5rem; resize: vertical; }
+  .an-input:focus, .an-select:focus, .an-textarea:focus { border-color: var(--gold); }
+  .an-preview { display: flex; gap: 1.25rem; align-items: center; border: 1px solid var(--glass-border); background: var(--glass); border-radius: 6px; padding: 1rem; margin: 0.5rem 0 1.75rem; }
+  .an-preview img { width: 160px; height: 100px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: var(--bg); }
+  .an-preview p { margin: 0; color: var(--text-mid); font-size: 0.95rem; }
+  .an-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .an-btn { font-family: 'Cinzel', serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.75rem 1.3rem; border-radius: 2px; cursor: pointer; border: 1px solid var(--rule); background: none; color: var(--text-mid); }
+  .an-btn:hover:not(:disabled) { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+  .an-btn.primary { background: var(--gold); color: #0d1117; border-color: var(--gold); font-weight: 700; }
+  .an-btn:disabled { opacity: 0.45; cursor: default; }
+  .an-msg { margin-top: 1rem; font-style: italic; min-height: 1.4em; }
+  .an-msg.ok { color: #4f9a5a; } .an-msg.error { color: #e57373; }
+  .an-note { font-size: 0.9rem; color: var(--text-faint); font-style: italic; margin-top: 2rem; }
+  @media (max-width: 600px) { .an-wrap { padding: 2rem 1rem 3rem; } .an-preview { flex-direction: column; align-items: flex-start; } .an-preview img { width: 100%; height: 160px; } }
+</style>
+</head>
+<body>
+<div class="site-wrapper">
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="articles.html">Articles</a>
+    <a href="moderate-comments.html">Comments</a>
+  </nav>
+
+  <div class="an-wrap">
+    <h1 class="an-title">Announce an Article</h1>
+    <div class="an-rule"></div>
+
+    <p id="an-boot" class="an-msg">Checking sign-in…</p>
+
+    <div id="an-signin" style="display:none;">
+      <p>Sign in with the account that owns this site.</p>
+      <button class="an-btn primary" id="an-signin-btn" type="button">Sign In</button>
+    </div>
+
+    <div id="an-denied" style="display:none;"><p>This page is only for the site's admin.</p></div>
+
+    <div id="an-main" style="display:none;">
+      <p class="an-count" id="an-count">Subscribers: …</p>
+
+      <div class="an-field">
+        <label class="an-label" for="an-article">Article</label>
+        <select class="an-select" id="an-article"><option value="">Choose an article…</option></select>
+      </div>
+
+      <div class="an-field">
+        <label class="an-label" for="an-subject">Subject line</label>
+        <input class="an-input" id="an-subject" type="text" maxlength="200">
+      </div>
+      <div class="an-field">
+        <label class="an-label" for="an-atitle">Title shown in the email</label>
+        <input class="an-input" id="an-atitle" type="text" maxlength="200">
+      </div>
+      <div class="an-field">
+        <label class="an-label" for="an-excerpt">Excerpt shown in the email</label>
+        <textarea class="an-textarea" id="an-excerpt" maxlength="400"></textarea>
+      </div>
+
+      <div class="an-preview" id="an-preview" style="display:none;">
+        <img id="an-img" alt="">
+        <p id="an-img-note">Image comes from the article's share image (og:image).</p>
+      </div>
+
+      <div class="an-actions">
+        <button class="an-btn" id="an-test" type="button" disabled>Send Test to Me</button>
+        <button class="an-btn primary" id="an-send" type="button" disabled>Send to All Subscribers</button>
+      </div>
+      <p class="an-msg" id="an-msg"></p>
+
+      <p class="an-note">Always send yourself a test first. Feature announcements are written and sent from Resend's Broadcasts page, using the “Article Updates” segment.</p>
+    </div>
+  </div>
+</div>
+
+<script src="search-index.js"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var article = null;
+
+  function view(v) {
+    ['boot', 'signin', 'denied', 'main'].forEach(function (k) { $('an-' + k).style.display = k === v ? '' : 'none'; });
+  }
+  function say(text, ok) { var m = $('an-msg'); m.textContent = text; m.className = 'an-msg ' + (ok ? 'ok' : 'error'); }
+
+  function call(method, body) {
+    return WBAuth.client().then(function (c) {
+      return c.functions.invoke('send-announcement', { method: method, body: body });
+    }).then(function (r) {
+      if (r.error) {
+        return (r.error.context && r.error.context.json ? r.error.context.json() : Promise.resolve({}))
+          .then(function (j) { throw new Error((j && j.error) || r.error.message); });
+      }
+      return r.data || {};
+    });
+  }
+
+  // Articles from the site search index
+  var list = (typeof searchIndex !== 'undefined' ? searchIndex : []).filter(function (a) {
+    return a && a.url && /^\/?articles\//.test(a.url);
+  });
+  list.forEach(function (a, i) {
+    var o = document.createElement('option');
+    o.value = String(i);
+    o.textContent = a.title;
+    $('an-article').appendChild(o);
+  });
+
+  $('an-article').addEventListener('change', function () {
+    var a = list[Number(this.value)];
+    article = null;
+    $('an-test').disabled = $('an-send').disabled = true;
+    $('an-preview').style.display = 'none';
+    say('', true);
+    if (!a) return;
+    var url = new URL(a.url, 'https://whosoeverbelieves.com/').toString();
+    $('an-subject').value = 'New article: ' + a.title;
+    $('an-atitle').value = a.title;
+    $('an-excerpt').value = a.excerpt || '';
+    article = { url: url, image: '' };
+    fetch(a.url.charAt(0) === '/' ? a.url : '/' + a.url).then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var og = doc.querySelector('meta[property="og:image"]');
+      article.image = og ? og.getAttribute('content') : '';
+    }).catch(function () {}).then(function () {
+      if (article.image) { $('an-img').src = article.image; $('an-img-note').textContent = "Image comes from the article's share image (og:image)."; }
+      else { $('an-img').removeAttribute('src'); $('an-img-note').textContent = 'No share image found — the email will go out without one.'; }
+      $('an-preview').style.display = '';
+      $('an-test').disabled = $('an-send').disabled = false;
+    });
+  });
+
+  function payload(mode) {
+    return {
+      mode: mode,
+      subject: $('an-subject').value.trim(),
+      article: { url: article.url, image: article.image, title: $('an-atitle').value.trim(), excerpt: $('an-excerpt').value.trim() }
+    };
+  }
+
+  $('an-test').addEventListener('click', function () {
+    if (!article) return;
+    var b = this; b.disabled = true; say('Sending test…', true);
+    call('POST', payload('test')).then(function (d) { say('Test sent to ' + d.to + '. Check your inbox.', true); })
+      .catch(function (e) { say(e.message, false); }).then(function () { b.disabled = false; });
+  });
+
+  $('an-send').addEventListener('click', function () {
+    if (!article) return;
+    var n = $('an-count').getAttribute('data-n') || '?';
+    if (!window.confirm('Send “' + $('an-subject').value.trim() + '” to ' + n + ' subscriber(s)? This cannot be undone.')) return;
+    var b = this; b.disabled = true; say('Sending…', true);
+    call('POST', payload('send')).then(function () { say('Sent. Delivery status is on Resend’s Broadcasts page.', true); })
+      .catch(function (e) { say(e.message, false); b.disabled = false; });
+  });
+
+  $('an-signin-btn').addEventListener('click', function () { WBAuth.open('signin'); });
+
+  WBAuth.onChange(function (user) {
+    if (!user) { view('signin'); return; }
+    view('boot');
+    call('GET').then(function (d) {
+      $('an-count').textContent = 'Subscribers: ' + d.subscribers;
+      $('an-count').setAttribute('data-n', String(d.subscribers));
+      view('main');
+    }).catch(function () { view('denied'); });
+  });
+})();
+</script>
+</body>
+</html>
