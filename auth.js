@@ -29,7 +29,7 @@
   // is safe to expose; row-level security decides what it can do.
   var SUPABASE_URL = 'https://tgzsyfmnzagqijjlzxsa.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_gck7v-L2PDbW2JKUoxTHDA_FidLWw8H';
-  var SUPABASE_LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  var SUPABASE_LIB = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2';  // pinned: update deliberately, then test sign-in
 
   var client = null;
   var clientPromise = null;
