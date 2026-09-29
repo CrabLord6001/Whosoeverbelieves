@@ -233,3 +233,31 @@ body.focus .cq-en{margin-top:1.1rem}
 .cmeaning{font-size:clamp(2.2rem,6.5vw,3.2rem);font-weight:500;line-height:1.12;margin-bottom:.35rem;text-wrap:balance}
 body.focus .cmeaning{font-size:clamp(2.8rem,7vw,4.6rem)}
 .scene{height:370px}@media (max-width:640px){.scene{height:340px}}
+
+/* ── Focus mode for Multiple Choice / Parsing Drill / Speed Round ── */
+.streak-wrap{margin-bottom:.35rem}
+body.focus #qzMode,body.focus #spMode,body.focus #qzRes{flex:1;display:flex;flex-direction:column;gap:1rem;min-height:0}
+body.focus #qzMode .qbox{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;margin:0!important;min-height:220px}
+body.focus #qzMode .fbbox{margin:0!important}
+body.focus .qword{font-size:clamp(3.4rem,10vw,7rem)}
+body.focus .qlabel{font-size:.8rem}
+body.focus .qtype,body.focus .qmoodchip{font-size:.78rem}
+body.focus .choicebtn{font-size:clamp(1.2rem,2.2vw,1.6rem);padding:1.2rem 1rem}
+body.focus .choicebtn .sub{font-size:.7rem}
+body.focus .nxtbtn{max-width:360px;min-height:52px}
+body.focus #spStart,body.focus #spGame{flex:1;display:flex;flex-direction:column;justify-content:center}
+body.focus #spStart .sscrn{flex:1;display:flex;flex-direction:column;justify-content:center}
+body.focus .sword{font-size:clamp(3.6rem,11vw,7.5rem)}
+body.focus .sform-btn{font-size:clamp(1.6rem,3vw,2.4rem);padding:1rem}
+body.focus .sgrid{max-width:720px}
+body.focus .sinp{font-size:1.3rem;padding:.9rem 1.1rem}
+body.focus .sinp-wrap{max-width:560px}
+body.focus #qzRes{justify-content:center}
+body.focus .opts{display:none!important}
+/* Focus mode — parsing card back (full parsing grid) */
+body.focus .parsing-grid{max-width:960px;gap:1.4rem 2.6rem;margin:.6rem 0 1rem}
+body.focus .pg-label{font-size:.82rem;margin-bottom:.3rem}
+body.focus .pg-val{font-size:clamp(1.9rem,3.4vw,3rem)}
+body.focus .mood-chip,body.focus .cbadge,body.focus .cchap,body.focus .cstrongs{font-size:.82rem;padding:.3rem .95rem}
+body.focus .clabel{font-size:.85rem}
+body.focus .cnote{font-size:clamp(1.15rem,1.8vw,1.45rem);max-width:48rem}
