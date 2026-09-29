@@ -19,250 +19,54 @@
   <link rel="stylesheet" href="../styles.css" />
 
   <style>
-
-    :root.light-mode {
-  --dark: #f5efe0;
-  --navy: #e8e0cc;
-  --txt: #1a1a1a;
-  --txt2: #4a4035;
-}
-    /* ── INTRO FIX ── */
-    .greek-intro p strong { color: var(--text-mid); }
-
-    /* ── TOOL GRID ── */
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-
-    /* ── LAUNCHER CARD ── */
-    .tool-card {
-      display: flex;
-      flex-direction: column;
-      border-radius: 10px;
-      padding: 0;
-      text-decoration: none;
-      color: #fff;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.25s cubic-bezier(.2,0,.2,1), box-shadow 0.25s;
-      min-height: 260px;
-    }
-    .tool-card:hover {
-      transform: translateY(-5px) scale(1.015);
-      box-shadow: 0 22px 55px rgba(0,0,0,0.55);
-    }
-
-    .tool-card.card-vocab {
-      background: linear-gradient(135deg, #1a3a6b 0%, #0d2247 40%, #1e1060 100%);
-      border: 1px solid rgba(100,160,255,0.3);
-      box-shadow: 0 8px 32px rgba(30,60,180,0.35);
-    }
-    .tool-card.card-parsing {
-      background: linear-gradient(135deg, #3d1060 0%, #1a0840 40%, #0d2247 100%);
-      border: 1px solid rgba(180,100,255,0.35);
-      box-shadow: 0 8px 32px rgba(120,40,200,0.35);
-    }
-
-    .tool-card::before {
-      content: '';
-      position: absolute;
-      top: -30px;
-      right: -30px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      opacity: 0.18;
-      transition: opacity 0.3s, transform 0.3s;
-    }
-    .card-vocab::before  { background: radial-gradient(circle, #5599ff 0%, transparent 70%); }
-    .card-parsing::before { background: radial-gradient(circle, #bb66ff 0%, transparent 70%); }
-    .tool-card:hover::before { opacity: 0.32; transform: scale(1.15); }
-
-    .tool-glyph {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 5.5rem;
-      line-height: 1;
-      position: absolute;
-      top: 1rem;
-      right: 1.5rem;
-      opacity: 0.18;
-      transition: opacity 0.3s;
-      pointer-events: none;
-      user-select: none;
-    }
-    .card-vocab  .tool-glyph { color: #88bbff; }
-    .card-parsing .tool-glyph { color: #cc88ff; }
-    .tool-card:hover .tool-glyph { opacity: 0.3; }
-
-    .tool-card-body {
-      padding: 1.75rem 1.75rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      position: relative;
-      z-index: 1;
-    }
-
-    .tool-label {
-      font-family: 'Cinzel', serif;
-      font-size: 0.52rem;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      opacity: 0.6;
-      margin-bottom: 0.5rem;
-    }
-    .card-vocab  .tool-label { color: #88bbff; }
-    .card-parsing .tool-label { color: #cc88ff; }
-
-    .tool-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.75rem;
-      font-weight: 400;
-      color: #fff;
-      line-height: 1.2;
-      margin-bottom: 0.65rem;
-    }
-
-    .tool-desc {
-      font-family: 'EB Garamond', serif;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      opacity: 0.72;
-      color: #e0e8ff;
-      flex: 1;
-      margin-bottom: 1.25rem;
-    }
-
-    .tool-meta { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.4rem; }
-    .tool-tag {
-      font-family: 'Cinzel', serif;
-      font-size: 0.5rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.18rem 0.55rem;
-      border-radius: 2px;
-      opacity: 0.75;
-    }
-    .card-vocab  .tool-tag { color: #aaccff; border: 1px solid rgba(100,160,255,0.35); }
-    .card-parsing .tool-tag { color: #ddaaff; border: 1px solid rgba(180,100,255,0.35); }
-
-    .tool-cta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.85rem 1.75rem;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #fff;
-      background: rgba(255,255,255,0.06);
-      transition: background 0.2s;
-      position: relative;
-      z-index: 1;
-    }
-    .tool-card:hover .tool-cta { background: rgba(255,255,255,0.13); }
-    .tool-cta-arrow { font-size: 1rem; transition: transform 0.2s; opacity: 0.7; }
-    .tool-card:hover .tool-cta-arrow { transform: translateX(4px); opacity: 1; }
-    .greek-intro { padding: 3rem 2.5rem 2.5rem; background: var(--surface); border-top: 1px solid var(--rule); }
-    .greek-intro p { color: var(--text-mid); max-width: 100%; line-height: 1.85; margin-bottom: 1.1rem; }
-    .greek-intro p:last-child { margin-bottom: 0; }
-    .greek-intro strong { color: var(--text); font-weight: 500; }
-    .bbg-callout {
-      background: var(--glass);
-      border: 1px solid rgba(201,168,76,0.22);
-      border-left: 3px solid var(--gold);
-      border-radius: 0 4px 4px 0;
-      padding: 1.25rem 1.5rem;
-      margin-top: 1.75rem;
-      display: flex;
-      gap: 1.1rem;
-      align-items: flex-start;
-    }
-    .bbg-callout-icon { font-size: 1.5rem; line-height: 1; flex-shrink: 0; margin-top: 0.1rem; }
-    .bbg-callout-text { font-family: 'EB Garamond', serif; font-size: 0.95rem; color: var(--text-mid); line-height: 1.7; }
-    .bbg-callout-text strong { color: var(--gold-light); font-weight: 500; }
-    .tools-section { padding: 3rem 2.5rem; background: var(--bg); border-top: 1px solid var(--rule); }
-    .resources-section { padding: 3rem 2.5rem; background: var(--surface); border-top: 1px solid var(--rule); }
-    .resource-list { list-style: none; margin-top: 1.25rem; }
-    .resource-list li {
-      display: flex;
-      align-items: baseline;
-      gap: 0.75rem;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--rule);
-      font-size: 0.95rem;
-      color: var(--text-mid);
-    }
-    .resource-list li:last-child { border-bottom: none; }
-    .resource-list li::before { content: '\2014'; color: var(--gold); opacity: 0.6; flex-shrink: 0; }
-    .resource-list a { color: var(--gold); text-decoration: underline; text-decoration-color: rgba(201,168,76,0.35); text-underline-offset: 3px; transition: color 0.2s; }
-    .resource-list a:hover { color: var(--gold-light); }
-    nav a.active { color: var(--gold-light); }
-    nav a.active::after { left: 1.25rem; right: 1.25rem; }
-    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .section-h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 300; color: var(--text); margin-bottom: 1.1rem; }
-    .guide-section { padding: 3rem 2.5rem; background: var(--surface); border-top: 1px solid var(--rule); }
-    .guide-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: var(--text); line-height: 1.2; }
-    .guide-desc { margin-top: 0.4rem; font-style: italic; color: var(--text-mid); }
-    .guide-btns { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
-    .guide-btn { font-family: 'Cinzel', serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; padding: 0.8rem 1.5rem; border-radius: 2px; text-decoration: none; transition: all 0.2s; }
-    .guide-btn-solid { background: var(--gold); color: #0d1117; }
-    .guide-btn-solid:hover { background: var(--gold-light); transform: translateY(-1px); }
-    .guide-btn-outline { color: var(--gold); border: 2px solid rgba(201,168,76,0.7); }
-    .guide-btn-outline:hover { color: var(--gold-light); border-color: var(--gold); }
-    .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .notes-panel {
-      display: flex; flex-direction: column; position: relative; overflow: hidden;
-      padding: 1.75rem; border-radius: 10px; color: #fff;
-      transition: transform 0.25s cubic-bezier(.2,0,.2,1), box-shadow 0.25s;
-    }
-    .notes-panel:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .notes-panel::before {
-      content: ''; position: absolute; top: -30px; right: -30px; width: 180px; height: 180px;
-      border-radius: 50%; opacity: 0.2; pointer-events: none;
-    }
-    .notes-panel > * { position: relative; z-index: 1; }
-    .notes-glyph {
-      position: absolute; top: 0.9rem; right: 1.4rem; z-index: 0;
-      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 5rem; line-height: 1;
-      opacity: 0.16; pointer-events: none; user-select: none;
-    }
-    .notes-bbg {
-      background: linear-gradient(135deg, #0f4a47 0%, #0a2a30 45%, #0d2247 100%);
-      border: 1px solid rgba(80,200,180,0.3); box-shadow: 0 8px 32px rgba(20,120,110,0.3);
-    }
-    .notes-bbg::before { background: radial-gradient(circle, #4fd1c0 0%, transparent 70%); }
-    .notes-bbg .notes-glyph { color: #7fe3d6; }
-    .notes-james {
-      background: linear-gradient(135deg, #4a3a10 0%, #2a1f08 45%, #0d2247 100%);
-      border: 1px solid rgba(201,168,76,0.35); box-shadow: 0 8px 32px rgba(160,120,30,0.3);
-    }
-    .notes-james::before { background: radial-gradient(circle, #e5c97a 0%, transparent 70%); }
-    .notes-james .notes-glyph { color: #e5c97a; }
-    .notes-label {
-      font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.26em; text-transform: uppercase;
-      opacity: 0.7; margin-bottom: 0.5rem;
-    }
-    .notes-bbg .notes-label { color: #7fe3d6; }
-    .notes-james .notes-label { color: #e5c97a; }
-    .notes-panel .guide-title { color: #fff; }
-    .notes-panel .guide-desc { flex: 1; min-height: 1.6em; color: rgba(235,240,255,0.75); }
-    .notes-panel .guide-btn-solid { background: var(--gold); color: #0d1117; }
-    .notes-panel .guide-btn-outline { color: #e5c97a; border-color: rgba(229,201,122,0.7); }
-    :root.light-mode .notes-panel .guide-btn-solid { background: #c9a84c; }
-    @media (max-width: 640px) { .notes-grid { grid-template-columns: 1fr; } .notes-panel { padding: 1.4rem; } .notes-panel .guide-btns { justify-content: flex-start; } }
-    @media (max-width: 640px) {
-      .guide-section { padding: 2.25rem 1.25rem; }
-      .guide-btns { justify-content: center; }
-    }
-  </style>
+  .gk-banner{position:relative;max-width:940px;margin:0 auto;height:250px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 1.5rem 1.8rem;
+    background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.55) 55%,rgba(13,17,23,.96) 100%),url("/images/gk/greek-banner.webp") center 40%/cover no-repeat,#0d1117}
+  :root.light-mode .gk-banner{background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.15) 0%,rgba(8,12,20,.55) 55%,rgba(8,12,20,.85) 100%),url("/images/gk/greek-banner.webp") center 40%/cover no-repeat,#1a1a1a}
+  .gk-banner h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.12em;color:#fff;margin:0;text-wrap:balance;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+  .gk-banner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;font-weight:500;color:#f3eee4;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.75);margin:.45rem auto 0;max-width:40rem;text-wrap:balance}
+  .gk-banner cite{display:block;font-style:normal;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.2em;color:#e5c97a;margin-top:.4rem;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+  .gk-main{display:flex;flex-direction:column;gap:3.2rem;padding:2.4rem 2rem 3rem}
+  .gk-main>section{padding:0;margin:0;background:none;border:0;box-shadow:none;max-width:none}
+  .gk-main>section::before,.gk-main>section::after{display:none}
+  .gk-main>section.gk-essay{max-width:760px;margin:0 auto}
+  .gk-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.2rem;margin-bottom:1.3rem}
+  .gk-head h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:2rem;margin:0;color:var(--text);text-wrap:balance}
+  .gk-head p{color:var(--text-mid);margin:0}
+  .gk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem}
+  .gk-card{position:relative;display:block;aspect-ratio:3/2;border-radius:10px;overflow:hidden;border:1px solid var(--glass-border);color:#fff;text-decoration:none;background:#0d1117}
+  .gk-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.75) brightness(.85);transition:transform .5s ease,filter .4s ease}
+  .gk-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,12,20,.25) 0%,rgba(8,12,20,.45) 45%,rgba(8,12,20,.9) 100%);transition:background .4s ease}
+  .gk-body{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:1.3rem 1.5rem 1.4rem;display:flex;flex-direction:column;gap:.3rem}
+  .gk-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.75rem;line-height:1.15;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6);text-wrap:balance}
+  .gk-more{display:flex;flex-direction:column;gap:.2rem;max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease}
+  .gk-desc{color:#e2dccf;font-size:1.02rem;max-width:34rem}
+  .gk-go{margin-top:.35rem;color:#e5c97a;font-size:1rem}
+  .gk-btns{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
+  .gk-btn{display:inline-flex;align-items:center;min-height:40px;padding:0 1.1rem;border-radius:3px;font-family:'Cinzel',serif;font-size:.64rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;background:#c9a84c;color:#0d1117;border:1px solid #c9a84c}
+  .gk-btn.ghost{background:rgba(8,12,20,.35);color:#f1ece2;border-color:rgba(255,255,255,.35)}
+  .gk-btn:hover{background:#e5c97a;border-color:#e5c97a;color:#0d1117}
+  .gk-card:hover img,.gk-card:focus-within img{transform:scale(1.04);filter:saturate(.95) brightness(.9)}
+  .gk-card:hover::after,.gk-card:focus-within::after{background:linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.92) 100%)}
+  .gk-card:hover .gk-more,.gk-card:focus-within .gk-more{max-height:10rem;opacity:1}
+  .gk-card:hover{border-color:rgba(201,168,76,.55)}
+  a.gk-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  @media (hover:none){.gk-more{max-height:none;opacity:1}}
+  .gk-essay{max-width:760px;margin:0 auto;color:var(--text-mid)}
+  .gk-essay h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.8rem;color:var(--text);text-align:center;margin:0 0 1rem;text-wrap:balance}
+  .gk-essay p{margin:0 0 1rem;line-height:1.8}
+  .gk-essay strong{color:var(--text);font-weight:500}
+  @media (max-width:760px){
+    .gk-grid{grid-template-columns:minmax(0,1fr)}
+    .gk-main{padding:1.8rem 1rem 2rem;gap:2.6rem}
+    .gk-banner{height:auto;min-height:190px;padding-top:2.2rem;padding-bottom:1.4rem}
+    .gk-banner h1{font-size:1.5rem;letter-spacing:.08em}
+    .gk-banner p{font-size:.98rem}
+    .gk-card{aspect-ratio:auto;min-height:250px}
+    .gk-title{font-size:1.45rem}
+    .gk-desc{font-size:.95rem}
+    .gk-body{padding:1.1rem 1.15rem 1.2rem}
+  }
+</style>
   <!-- SEO metadata -->
   <link rel="canonical" href="https://whosoeverbelieves.com/greek/" />
   <link rel="icon" type="image/png" href="/images/Bible-Book-32.png">
@@ -301,18 +105,6 @@
 <body class="page-article">
 <div class="site-wrapper">
 
-  <!-- HEADER -->
-  <header>
-    <p class="site-greek">&#960;&#8182;&#962; &#8001; &#960;&#953;&#963;&#964;&#949;&#973;&#969;&#957;</p>
-    <div class="site-title"><a href="../index.html">Whosoever</a></div>
-    <p class="site-tagline">Free Grace Theology &amp; Biblical Studies</p>
-    <div class="header-ornament">
-      <span></span>
-      <em>Faith Alone</em>
-      <span></span>
-    </div>
-  </header>
-
   <!-- NAV -->
 <nav>
   <div class="nav-links">
@@ -336,110 +128,105 @@
   <div id="search-results"></div>
 </nav>
 
-  <!-- PAGE HEADER -->
-  <div class="article-header">
-    <h1 class="article-title">Greek Studies</h1>
-    <p class="article-subtitle">Interactive tools for the New Testament language</p>
+  <!-- BANNER -->
+  <div class="gk-banner">
+    <h1>Greek Studies</h1>
+    <p>&#8220;Give diligence to present yourself approved by God, a workman who doesn't need to be ashamed, properly handling the Word of Truth.&#8221;<cite>2 Timothy 2:15 &#8212; WEB</cite></p>
   </div>
 
-  <!-- HERO VERSE -->
-  <div class="hero">
-    <blockquote>
-      Give diligence to present yourself approved by God, a workman who doesn't need to be ashamed, properly handling the Word of Truth.
-    </blockquote>
-    <cite>2 Timothy 2:15 &#8212; WEB</cite>
-  </div>
+  <main class="gk-main">
 
-  <!-- INTRO -->
-  <div class="greek-intro reveal">
-    <h2 class="section-h2">Why Study the Greek New Testament?</h2>
+    <!-- TOOLS -->
+    <section aria-labelledby="gk-tools-h">
+      <div class="gk-head">
+        <h2 id="gk-tools-h">Interactive Learning Tools</h2>
+        <p>Each tool runs entirely in your browser &#8212; no login or installation required.</p>
+      </div>
+      <div class="gk-grid">
+        <a class="gk-card" href="vocabulary.html">
+          <img src="/images/gk/greek-vocab.webp" alt="Adriaen van Ostade, The Schoolmaster" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">NT Greek Vocabulary</h3>
+            <div class="gk-more">
+              <span class="gk-desc">1,000 words from Mounce's BBG — flashcards, quizzes, and speed rounds filtered by chapter.</span>
+              <span class="gk-go">Launch Tool &#8594;</span>
+            </div>
+          </div>
+        </a>
+        <a class="gk-card" href="Verb-Parsing.html">
+          <img src="/images/gk/greek-parsing.webp" alt="Rembrandt, Two Old Men Disputing" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">Verb Parsing Drills</h3>
+            <div class="gk-more">
+              <span class="gk-desc">387 forms across all five moods — Indicative, Subjunctive, Imperative, Infinitive, and Participle.</span>
+              <span class="gk-go">Launch Tool &#8594;</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- KOINE GREEK RESOURCES -->
+    <section aria-labelledby="gk-res-h">
+      <div class="gk-head">
+        <h2 id="gk-res-h">Koine Greek Resources</h2>
+      </div>
+      <div class="gk-grid">
+        <div class="gk-card">
+          <img src="/images/gk/greek-notes.webp" alt="Gerrit Dou, A Scholar Sharpening His Quill" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">Basics of Biblical Greek - Notes</h3>
+            <div class="gk-more">
+              <span class="gk-desc">My personal notes condensed from first year Greek</span>
+              <div class="gk-btns">
+                <a class="gk-btn" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">Read Online</a>
+                <a class="gk-btn ghost" href="../resources/basics-of-biblical-greek-notes.pdf" download>Download PDF</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="gk-card" href="james/">
+          <img src="/images/gk/greek-james.webp" alt="Papyrus 20, a third-century fragment of James 2:19&#8211;3:2" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">James &#8212; Greek Exegesis</h3>
+            <div class="gk-more">
+              <span class="gk-desc">Verse-by-verse notes, parsing, and diagramming</span>
+              <span class="gk-go">Open Series &#8594;</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- WHY STUDY GREEK -->
+    <section class="gk-essay">
+    <h2>Why Study the Greek New Testament?</h2>
     <p>
       The New Testament was written in <strong>Koine Greek</strong> &#8212; the common language of the first-century Mediterranean world. While faithful English translations convey the meaning of Scripture reliably, studying the original language opens a deeper window into the text: word meanings that carry theological weight, verb tenses that reveal aspect and action, and syntactical structures that shape interpretation.
     </p>
     <p>
       Key terms like <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#960;&#953;&#963;&#964;&#949;&#973;&#969;</em> (to believe), <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#950;&#969;&#942; &#945;&#943;&#974;&#957;&#953;&#959;&#962;</em> (eternal life), and <em style="font-family:'EB Garamond',serif;color:var(--gold);">&#963;&#8179;&#950;&#969;</em> (to save) carry precise meanings that inform debates around the gospel, assurance, and sanctification.
     </p>
-    <div class="bbg-callout">
-      <div class="bbg-callout-icon">&#128218;</div>
-      <div class="bbg-callout-text">
-        The vocabulary and chapter structure used in these tools follows <strong>Basics of Biblical Greek</strong> by William D. Mounce &#8212; the most widely used NT Greek textbook in seminaries today. Whether you are working through the textbook in class or self-study, the tools here map directly to each chapter&#8217;s vocabulary list.
-      </div>
-    </div>
-  </div>
-
-  <!-- STUDY GUIDE (PDF) -->
-  <div class="guide-section reveal">
-    <div class="notes-grid">
-      <div class="notes-panel notes-bbg">
-        <div class="notes-glyph">&#946;</div>
-        <div class="notes-label">First-Year Greek</div>
-        <h2 class="guide-title">Basics of Biblical Greek - Notes</h2>
-        <p class="guide-desc">My personal notes condensed from first year Greek</p>
-        <div class="guide-btns">
-          <a class="guide-btn guide-btn-solid" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">Read Online</a>
-          <a class="guide-btn guide-btn-outline" href="../resources/basics-of-biblical-greek-notes.pdf" download>Download PDF</a>
-        </div>
-      </div>
-      <div class="notes-panel notes-james">
-        <div class="notes-glyph">&#7992;&#945;&#954;</div>
-        <div class="notes-label">Exegesis</div>
-        <h2 class="guide-title">James &#8212; Greek Exegesis</h2>
-        <p class="guide-desc">Verse-by-verse notes, parsing, and diagramming</p>
-        <div class="guide-btns">
-          <a class="guide-btn guide-btn-solid" href="james/">Open Series</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOOLS -->
-  <div class="tools-section reveal">
-    <h2 class="section-h2" style="margin-bottom:0.4rem;">Interactive Learning Tools</h2>
-    <p style="color:var(--text-mid);font-size:0.95rem;margin-bottom:0;line-height:1.7;">
-      Each tool runs entirely in your browser &#8212; no login or installation required.
+    <p>
+      The vocabulary and chapter structure used in these tools follows <strong>Basics of Biblical Greek</strong> by William D. Mounce &#8212; the most widely used NT Greek textbook in seminaries today. Whether you are working through the textbook in class or self-study, the tools here map directly to each chapter&#8217;s vocabulary list.
     </p>
+    </section>
 
-    <div class="tools-grid">
+  </main>
 
-      <!-- VOCABULARY -->
-      <a class="tool-card card-vocab" href="vocabulary.html">
-        <div class="tool-glyph">&#945;</div>
-        <div class="tool-card-body">
-          <div class="tool-label">Vocabulary</div>
-          <h3 class="tool-title">NT Greek Vocabulary</h3>
-          <p class="tool-desc">1,000 words from Mounce's BBG — flashcards, quizzes, and speed rounds filtered by chapter.</p>
-          <div class="tool-meta">
-          </div>
-        </div>
-        <div class="tool-cta">Launch Tool <span class="tool-cta-arrow">&#8594;</span></div>
-      </a>
-
-      <!-- VERB PARSING -->
-      <a class="tool-card card-parsing" href="Verb-Parsing.html">
-        <div class="tool-glyph">&#955;&#973;&#969;</div>
-        <div class="tool-card-body">
-          <div class="tool-label">Parsing</div>
-          <h3 class="tool-title">Verb Parsing Drills</h3>
-          <p class="tool-desc">387 forms across all five moods — Indicative, Subjunctive, Imperative, Infinitive, and Participle.</p>
-          <div class="tool-meta">
-          </div>
-        </div>
-        <div class="tool-cta">Launch Tool <span class="tool-cta-arrow">&#8594;</span></div>
-      </a>
-
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    <div class="footer-nav">
+      <a href="/about.html">About</a>
+      <span>&#183;</span>
+      <a href="/free-grace-glossary.html">Glossary</a>
+      <span>·</span>
+      <span>© 2026 Whosoever Believes</span>
     </div>
-  </div>
+  </footer>
+</div><!-- /.site-wrapper -->
 
 <script>
-  // Scroll reveal
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.08 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-
-  // Footer year
-  document.getElementById('yr').textContent = new Date().getFullYear();
-
   // Font size + theme (mirrors shared site script)
   function setSize(s) {
     document.documentElement.classList.remove('font-small','font-large');

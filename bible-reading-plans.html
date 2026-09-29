@@ -2475,16 +2475,18 @@ function renderPlan() {
     reminderCard.id = 'plan-reminder-card';
     reminderCard.style.cssText = `
       background:var(--surface); border:1px solid var(--rule);
-      border-radius:8px; padding:1.25rem 1.5rem; margin-bottom:1.5rem;
+      border-radius:8px; padding:1.1rem 1.5rem; margin:2.5rem 0 1.5rem;
     `;
     reminderCard.innerHTML = `
-      <div style="
+      <button type="button" id="plan-reminder-head" aria-expanded="false" aria-controls="plan-reminder-body" style="
         font-family:'Cinzel',serif; font-size:0.8rem; letter-spacing:0.16em;
-        text-transform:uppercase; color:var(--gold); margin-bottom:1rem;
-        display:flex; align-items:center; gap:0.5rem;
-      ">⏰ Email Reminders
+        text-transform:uppercase; color:var(--gold); width:100%;
+        display:flex; align-items:center; gap:0.6rem; background:none; border:0; padding:0; cursor:pointer;
+      ">Email Reminders
         <span style="flex:1;height:1px;background:var(--rule);display:block;"></span>
-      </div>
+        <span id="plan-reminder-chev" aria-hidden="true" style="transition:transform .2s;">&#9662;</span>
+      </button>
+      <div id="plan-reminder-body" hidden style="margin-top:1rem;">
       <p style="font-family:'Cormorant Garamond',serif;font-style:italic;
         color:var(--text-mid);font-size:0.95rem;margin-bottom:0.9rem;">
         Get a daily email with a link to today's reading passage for this plan.
@@ -2538,7 +2540,15 @@ function renderPlan() {
       <span id="plan-reminder-saved" style="display:none; margin-left:0.75rem;
         color:var(--gold); font-family:'Cormorant Garamond',serif;
         font-style:italic; font-size:0.9rem;">✓ Saved!</span>
+          </div>
     `;
+    reminderCard.querySelector('#plan-reminder-head').addEventListener('click', function () {
+      const body = document.getElementById('plan-reminder-body');
+      const open = body.hidden;
+      body.hidden = !open;
+      this.setAttribute('aria-expanded', String(open));
+      document.getElementById('plan-reminder-chev').style.transform = open ? 'rotate(180deg)' : '';
+    });
     // Wire up checkbox toggle
     reminderCard.querySelector('#plan-reminder-enabled')
       .addEventListener('change', function() {
@@ -3395,6 +3405,12 @@ let saveDebounce   = null;
 // AUTH HELPERS
 // ══════════════════════════════════════════════════════════════
 async function initAuth() {
+  try {
+    if (sessionStorage.getItem('rpSignedOut')) {
+      sessionStorage.removeItem('rpSignedOut');
+      showToast('Signed out successfully.', 'success');
+    }
+  } catch (e) {}
   const { data: { session } } = await _supabase.auth.getSession();
   if (session?.user) await onSignedIn(session.user);
 
@@ -3472,6 +3488,16 @@ async function onSignedIn(user) {
 }
 
 function onSignedOut() {
+  // A real sign-out (not the first check on page load): wipe the page so a
+  // personal plan and notes are not left on screen. Reloading gives a clean
+  // signed-out page; nothing about the plan is stored in the browser.
+  if (currentUser) {
+    currentUser = null; currentPlan = []; reflections = {}; checkStates = {}; cachedPlans = [];
+    try { _audio.pause(); } catch (e) {}
+    try { sessionStorage.setItem('rpSignedOut', '1'); } catch (e) {}
+    location.replace(location.pathname);
+    return;
+  }
   currentUser   = null;
   currentPlanId = null;
   cachedPlans   = [];
@@ -3535,7 +3561,6 @@ async function sendMagicLink() {
 
 async function signOut() {
   await _supabase.auth.signOut();
-  showToast('Signed out successfully.', 'success');
 }
 
 // ── MODAL HELPERS ──
