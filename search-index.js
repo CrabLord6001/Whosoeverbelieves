@@ -304,5 +304,68 @@ const searchIndex = [
     url: "/greek/james/james-5-12-20.html",
     tags: ["Greek Exegesis"],
     content: `James 5:12 — Above All, Do Not Swear James 5:13 — Suffering? Pray. Cheerful? Sing. James 5:14 — Call the Elders James 5:15 — The Prayer of Faith Will Save the Sick James 5:16 — Confess and Pray for One Another James 5:17 — Elijah, a Man Like Us James 5:18 — He Prayed Again James 5:19 — If Anyone Wanders from the Truth James 5:20 — Saving a Soul from Death Overall Exegesis: James 5:12–20 Introduction to James 5:12–20 The letter ends without a formal farewell — no benediction, no greetings, no travel plans. It simply stops, with its last word about restoring a brother who has wandered. That abruptness is itself instructive: James is a sermon in letter form, and its conclusion is a pastoral charge rather than an epistolary courtesy. Three movements close the letter. Verse 12 returns a final time to the tongue (1:19, 26; 3:1–12; 4:11): let your yes be yes. Verses 13–18 gather the letter's teaching on prayer, begun at 1:5–8 and resumed at 4:2–3, and apply it to every condition — suffering, cheerfulness, sickness, sin — with Elijah as the example of what an ordinary praying person can accomplish. Verses 19–20 close with the recovery of a wandering brother. For this series, v. 20 is the destination. The verb σῴζω has run through the letter — the implanted word "able to save your souls" (1:21), "can that faith save him?" (2:14), "the one able to save and to destroy" (4:12), "the prayer of faith will save the sick" (5:15) — and here it arrives at its clearest statement: turning back a sinning brother "will save a soul from death." Verse 15 and verse 20 together give the letter's own definition of what James means by salvation, and that definition has governed the Free Grace readings offered throughout this series.`
+  },
+  {
+    title: "Maps, Charts & Timelines",
+    excerpt: "Bible charts, timelines, and maps organized by section of Scripture",
+    url: "/charts/",
+    tags: ["Bible Charts"],
+    content: "Maps charts timelines Bible study Seven Acts dispensations Law History Wisdom Prophets Gospels Epistles Revelation"
+  },
+  {
+    title: "The Generations of Genesis",
+    excerpt: "How Genesis narrows from all creation to the family of promise",
+    url: "/charts/genesis-generations.html",
+    tags: ["Bible Charts"],
+    content: "Genesis structure toledot generations prologue Adam Noah Shem Terah Abraham Ishmael Isaac Esau Jacob Joseph line of promise Messianic thread seed of the woman Melchizedek Judah"
+  },
+  {
+    title: "Esther in Context",
+    excerpt: "The Persian kings, the three returns from exile, and where Esther fits",
+    url: "/charts/esther-in-context.html",
+    tags: ["Bible Charts"],
+    content: "Esther Xerxes Ahasuerus Persian period timeline Cyrus Darius Artaxerxes Ezra Nehemiah Zerubbabel Haman Mordecai Purim great reversal Amalek Agag Saul"
+  },
+  {
+    title: "The Five Books of Psalms",
+    excerpt: "All 150 psalms by book and author, and the Messianic psalms",
+    url: "/charts/psalms-five-books.html",
+    tags: ["Bible Charts"],
+    content: "Psalms five books David Asaph sons of Korah Solomon Moses doxology Songs of Ascents Hallel Messianic psalms"
+  },
+  {
+    title: "Daniel's Seventy Weeks",
+    excerpt: "Daniel 9:24-27: sixty-nine weeks fulfilled, one still to come",
+    url: "/charts/seventy-weeks.html",
+    tags: ["Bible Charts"],
+    content: "Daniel 9 seventy weeks 490 years 69 weeks Messiah cut off 445 BC Artaxerxes decree Anderson Hoehner gap Church Age seventieth week Tribulation abomination of desolation"
+  },
+  {
+    title: "The Eight Signs of John",
+    excerpt: "The eight signs, the feasts, and Jesus' travels through John",
+    url: "/charts/john-eight-signs.html",
+    tags: ["Bible Charts"],
+    content: "Gospel of John eight signs water into wine Lazarus believe eternal life John 20:31 Passover feasts Galilee Jerusalem Samaria"
+  },
+  {
+    title: "When Paul Wrote His Letters",
+    excerpt: "Paul's thirteen letters placed in Acts and his life",
+    url: "/charts/pauls-letters.html",
+    tags: ["Bible Charts"],
+    content: "Paul epistles timeline missionary journeys Galatians Thessalonians Corinthians Romans prison epistles Ephesians Colossians Philemon Philippians pastoral Timothy Titus"
+  },
+  {
+    title: "The Order of Future Events",
+    excerpt: "Rapture, Tribulation, Second Coming, Kingdom, and the judgments of Revelation",
+    url: "/charts/future-events.html",
+    tags: ["Bible Charts"],
+    content: "Revelation future events Rapture Judgment Seat of Christ rewards Tribulation seals trumpets bowls Second Coming Millennium Great White Throne pretribulational premillennial"
+  },
+  {
+    title: "Paul's Missionary Journeys",
+    excerpt: "A map of Paul's three journeys and his voyage to Rome in Acts",
+    url: "/charts/pauls-journeys.html",
+    tags: ["Bible Charts"],
+    content: "Map of Paul's missionary journeys Acts 13-28 first second third journey voyage to Rome Antioch Cyprus Galatia Philippi Thessalonica Athens Corinth Ephesus Malta Rome progress reports Acts 1:8"
   }
 ];

@@ -2079,7 +2079,10 @@ nav a:hover { color: var(--gold-light); }
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
 .nav-drop-menu a { padding: 0.7rem 1.25rem; white-space: nowrap; }
-.nav-drop-menu a:hover { background: var(--gold-faint); }
+@media (min-width: 721px) {
+  .nav-drop-menu a:hover, .nav-drop-menu a:focus-visible { color: var(--text); font-weight: 700; }
+  .nav-drop-menu a::after { display: none; }
+}
 .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu, .nav-drop.open .nav-drop-menu { display: flex; }
 :root.light-mode .nav-drop-menu { background: rgba(245, 239, 224, 0.98); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
 
