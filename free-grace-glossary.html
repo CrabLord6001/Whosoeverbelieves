@@ -16,166 +16,19 @@
   <title>Free Grace Glossary — Whosoever Believes</title>
   <meta name="description" content="A glossary of key terms in Free Grace theology — clear definitions of faith, grace, eternal life, justification, and more from a faith-alone perspective." />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    :root {
-      --bg: #0d1117;
-      --surface: #131920;
-      --glass: rgba(255,255,255,0.03);
-      --rule: rgba(201,168,76,0.12);
-      --gold: #c9a84c;
-      --gold-light: #e0c070;
-      --text: #e8e0d0;
-      --text-mid: #a89880;
-      --text-faint: #6a5f52;
-    }
+    /* Glossary components. Colors, nav, footer and light mode come from styles.css. */
 
-    /* ── LIGHT MODE ── */
-    .light-mode {
-      --bg: #f5f0e8;
-      --surface: #ede7da;
-      --glass: rgba(0,0,0,0.03);
-      --rule: rgba(120,90,30,0.18);
-      --gold: #8a6318;
-      --gold-light: #6b4c10;
-      --text: #1e1810;
-      --text-mid: #4a3c28;
-      --text-faint: #7a6a50;
-    }
+    /* ── BANNER (matches the Greek and Memory Rooms landers) ── */
+    .gl-banner{position:relative;margin:0 auto;height:230px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 1.5rem 1.7rem;
+      background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.55) 55%,rgba(13,17,23,.96) 100%),url("/images/glossary-banner.webp") center 58%/cover no-repeat,#0d1117}
+    :root.light-mode .gl-banner{background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.15) 0%,rgba(8,12,20,.55) 55%,rgba(8,12,20,.85) 100%),url("/images/glossary-banner.webp") center 58%/cover no-repeat,#1a1a1a}
+    .gl-banner h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.12em;color:#fff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+    .gl-banner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;font-weight:500;color:#f3eee4;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.75);margin:.45rem auto 0;max-width:40rem}
+    @media (max-width:760px){ .gl-banner{height:auto;min-height:170px;padding-top:2.2rem;padding-bottom:1.3rem} .gl-banner h1{font-size:1.5rem;letter-spacing:.08em} .gl-banner p{font-size:.98rem} }
 
-    @media (prefers-color-scheme: light) {
-      :root:not(.dark-mode) {
-        --bg: #f5f0e8;
-        --surface: #ede7da;
-        --glass: rgba(0,0,0,0.03);
-        --rule: rgba(120,90,30,0.18);
-        --gold: #8a6318;
-        --gold-light: #6b4c10;
-        --text: #1e1810;
-        --text-mid: #4a3c28;
-        --text-faint: #7a6a50;
-      }
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'EB Garamond', serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* ── HEADER ── */
-    header {
-      text-align: center;
-      padding: 3rem 2rem 2rem;
-      border-bottom: 1px solid var(--rule);
-      background: linear-gradient(to bottom, rgba(201,168,76,0.04), transparent);
-    }
-
-    .site-greek {
-      font-family: 'EB Garamond', serif;
-      font-size: 0.85rem;
-      color: var(--text-faint);
-      letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
-    }
-
-    .site-title {
-      font-family: 'Cinzel', serif;
-      font-size: 2.2rem;
-      font-weight: 400;
-      color: var(--gold-light);
-      letter-spacing: 0.08em;
-      margin-bottom: 0.3rem;
-    }
-
-    .site-tagline {
-      font-size: 0.9rem;
-      color: var(--text-faint);
-      font-style: italic;
-      letter-spacing: 0.05em;
-    }
-
-    .header-ornament {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-      color: var(--gold);
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      font-family: 'Cinzel', serif;
-    }
-    .header-ornament span {
-      height: 1px;
-      width: 60px;
-      background: linear-gradient(to right, transparent, var(--gold));
-      opacity: 0.4;
-    }
-    .header-ornament span:last-child {
-      background: linear-gradient(to left, transparent, var(--gold));
-    }
-
-    /* ── NAV ── */
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 0.25rem;
-      padding: 0.6rem 1rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--rule);
-      flex-wrap: wrap;
-    }
-    nav a {
-      font-family: 'Cinzel', serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-mid);
-      text-decoration: none;
-      padding: 0.4rem 1rem;
-      border-radius: 2px;
-      transition: color 0.2s;
-    }
-    nav a:hover { color: var(--gold-light); }
-    nav a.active { color: var(--gold); }
-
-    /* ── PAGE HEADER ── */
-    .page-header {
-      padding: 2.5rem 2rem 2rem;
-      border-bottom: 1px solid var(--rule);
-      max-width: 860px;
-      margin: 0 auto;
-    }
-    .back-link {
-      font-family: 'Cinzel', serif;
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      text-decoration: none;
-      display: inline-block;
-      margin-bottom: 1.2rem;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--gold); }
-    .page-title {
-      font-family: 'Cinzel', serif;
-      font-size: 2rem;
-      font-weight: 400;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.04em;
-    }
-    .page-subtitle {
-      font-size: 1.05rem;
-      color: var(--text-mid);
-      font-style: italic;
-      line-height: 1.7;
-    }
+    .gl-main { background: var(--surface); padding: 0 0 3rem; }
 
     /* ── CONTROLS ── */
     .controls {
@@ -196,10 +49,10 @@
     }
     .search-wrap input {
       width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--rule);
-      border-radius: 3px;
-      padding: 0.55rem 0.9rem 0.55rem 2.2rem;
+      background: var(--bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      padding: 0.6rem 0.9rem 0.6rem 2.3rem;
       font-family: 'EB Garamond', serif;
       font-size: 0.95rem;
       color: var(--text);
@@ -450,23 +303,12 @@
       display: none;
     }
 
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--rule);
-      text-align: center;
-      padding: 2rem;
-      font-family: 'Cinzel', serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-    }
 
     @media (max-width: 640px) {
       .glossary-body-inner { grid-template-columns: 1fr; }
       .term-snippet { display: none; }
       .term-tags { display: none; }
-      .page-title { font-size: 1.5rem; }
+      .term-chevron { margin-left: auto; }
     }
   </style>
   <!-- SEO metadata -->
@@ -502,22 +344,44 @@
 }
 </script>
 </head>
-<body>
+<body class="page-article">
+<div class="site-wrapper">
 
-<div class="page-header">
-    <a class="back-link" href="index.html">← Back to Home</a>
-  <h1 class="page-title">Theological Glossary</h1>
-  <p class="page-subtitle">Key terms defined relevent to free grace</p>
-</div>
+  <!-- NAV -->
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles.html">Articles</a>
+    <a href="/bible-reading-plans.html">Reading Plans</a>
+    <a href="/greek/">Greek</a>
+    <a href="/discipleship-challenge.html">Discipleship</a>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+  <!-- BANNER -->
+  <div class="gl-banner">
+    <h1>Theological Glossary</h1>
+    <p>Key terms defined relevant to free grace</p>
+  </div>
+
+  <main class="gl-main">
 
 <div class="controls">
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input type="text" id="glossary-search" placeholder="Search terms, e.g. "justification"…" oninput="filterGlossary()" />
-  </div>
-  <div style="display:flex;gap:0.4rem;flex-shrink:0;">
-    <button onclick="setTheme('light')" title="Light mode" style="background:none;border:1px solid var(--rule);border-radius:3px;padding:0.35rem 0.6rem;cursor:pointer;font-size:0.85rem;">☀️</button>
-    <button onclick="setTheme('dark')" title="Dark mode" style="background:none;border:1px solid var(--rule);border-radius:3px;padding:0.35rem 0.6rem;cursor:pointer;font-size:0.85rem;">🌙</button>
+    <input type="text" id="glossary-search" placeholder="Search terms, e.g. &ldquo;justification&rdquo;…" oninput="filterGlossary()" />
   </div>
   <div class="tag-filters">
     <button class="tag-btn active" onclick="setTag(this,'all')">All</button>
@@ -528,6 +392,8 @@
     <button class="tag-btn" onclick="setTag(this,'Bibliology')">Bibliology</button>
   </div>
 </div>
+
+<div class="results-bar" id="results-bar" aria-live="polite"></div>
 
 <div class="glossary-list" id="glossary-list">
 
@@ -1216,26 +1082,24 @@
   <div class="no-results" id="no-results">No terms match your search.</div>
 </div>
 
+  </main>
+
 <footer>
-  &copy; <span id="yr"></span> Whosoever Believes &mdash; Free Grace Theology &amp; Biblical Studies
+  <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+  <div class="footer-nav">
+    <a href="/about.html">About</a>
+    <span>&#183;</span>
+    <a href="/free-grace-glossary.html">Glossary</a>
+    <span>·</span>
+    <span>© 2026 Whosoever Believes</span>
+  </div>
 </footer>
+</div><!-- /.site-wrapper -->
 
+<script src="search-index.js"></script>
+<script src="scripts.js"></script>
+<script src="/auth.js" defer></script>
 <script>
-  document.getElementById('yr').textContent = new Date().getFullYear();
-
-  // ── THEME (mirrors scripts.js pattern) ──
-  function setTheme(t) {
-    if (t === 'light') {
-      document.documentElement.classList.add('light-mode');
-    } else {
-      document.documentElement.classList.remove('light-mode');
-    }
-    localStorage.setItem('themePref', t);
-  }
-  (function() {
-    const saved = localStorage.getItem('themePref');
-    if (saved === 'light') document.documentElement.classList.add('light-mode');
-  })();
 
   let activeTag = 'all';
 
@@ -1286,6 +1150,7 @@
       visibleCount === 1 ? 'Showing 1 term' : `Showing ${visibleCount} terms`;
     document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
   }
+  filterGlossary();
 </script>
 </body>
 </html>

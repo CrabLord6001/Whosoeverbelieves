@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://whosoeverbelieves.com/memory-rooms" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-05VNP2PXN4');
+</script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Memory Rooms — Whosoever Believes</title>
+<!-- Meta description: DRAFT, pending Jonathan's approval -->
+<meta name="description" content="Memorize Scripture with memory rooms: place each phrase of a verse in a classical painting, link them with a story, and practice until it sticks." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Whosoever Believes" />
+<meta property="og:url" content="https://whosoeverbelieves.com/memory-rooms" />
+<meta property="og:title" content="Memory Rooms — Whosoever Believes" />
+<meta property="og:description" content="Memorize Scripture with memory rooms: place each phrase of a verse in a classical painting, link them with a story, and practice until it sticks." />
+<meta property="og:image" content="https://whosoeverbelieves.com/images/card-memory-rooms.webp" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Memory Rooms — Whosoever Believes" />
+<meta name="twitter:description" content="Memorize Scripture with memory rooms: place each phrase of a verse in a classical painting, link them with a story, and practice until it sticks." />
+<meta name="twitter:image" content="https://whosoeverbelieves.com/images/card-memory-rooms.webp" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" type="image/png" href="/images/Bible-Book-32.png">
+<style>
+  .mr-wrap { max-width: 1100px; margin: 0 auto; }
+  .mr-note { font-size: 0.9rem; color: var(--text-faint); font-style: italic; margin: 0 0 1rem; }
+
+  /* Stepper */
+  .mr-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin: 0 0 1.25rem; padding: 0; list-style: none; }
+  .mr-steps button {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
+    background: none; border: 1px solid var(--rule); color: var(--text-faint);
+    padding: 0.45rem 0.8rem; border-radius: 2px; cursor: pointer;
+  }
+  .mr-steps button.is-on { color: var(--gold); border-color: var(--gold); }
+  .mr-steps button:disabled { opacity: 0.4; cursor: default; }
+
+  .mr-label {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 0.5rem;
+  }
+  .mr-btn {
+    font-family: 'Cinzel', serif; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--gold); border: 2px solid rgba(201,168,76,0.7); padding: 0.55rem 1.1rem;
+    background: none; cursor: pointer; border-radius: 2px;
+  }
+  .mr-btn:hover { color: var(--gold-light); border-color: var(--gold); }
+  .mr-btn.quiet { border-width: 1px; border-color: var(--rule); color: var(--text-faint); font-size: 0.58rem; padding: 0.42rem 0.85rem; }
+  .mr-btn.quiet:hover { color: var(--gold); }
+  .mr-btn:disabled { opacity: 0.45; cursor: default; }
+  .mr-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-top: 1rem; }
+  .mr-warn { color: #e57373; font-style: italic; font-size: 0.95rem; }
+
+  /* Step 1: verse picker */
+  .mr-cat { margin: 0 0 1.1rem; }
+  .mr-verses { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.6rem; }
+  .mr-verse {
+    text-align: left; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 5px;
+    padding: 0.7rem 0.85rem; cursor: pointer; color: var(--text); font-family: 'EB Garamond', serif;
+  }
+  .mr-verse:hover, .mr-verse.is-on { border-color: var(--gold); }
+  .mr-verse b { display: block; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.08em; color: var(--gold); margin-bottom: 0.25rem; font-weight: 600; }
+  .mr-verse span { font-size: 0.95rem; color: var(--text-mid); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* Step 2: splitter */
+  .mr-split { font-family: 'EB Garamond', serif; font-size: 1.3rem; line-height: 2.1; }
+  .mr-word { cursor: pointer; padding: 0.1rem 0.12rem; border-radius: 3px; }
+  .mr-word:hover { background: var(--gold-faint); }
+  .mr-word.brk::after { content: "|"; color: var(--gold); font-weight: 600; margin: 0 0.3rem 0 0.35rem; }
+  .mr-phrases { margin: 1rem 0 0; padding-left: 1.4rem; color: var(--text-mid); }
+  .mr-phrases li { margin: 0.15rem 0; }
+  .mr-phrases li.ref { color: var(--text-faint); font-style: italic; }
+
+  /* Room layout */
+  .mr-room-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+  .mr-room { position: relative; user-select: none; -webkit-user-select: none; }
+  .mr-room img { display: block; width: 100%; height: auto; border-radius: 4px; }
+  /* Station markers: small + see-through so the painting stays visible.
+     Hovering one fades it almost away so you can see the object underneath. */
+  .mr-stn {
+    position: absolute; transform: translate(-50%, -50%);
+    width: 19px; height: 19px; border-radius: 50%;
+    background: rgba(13,17,23,0.45); border: 1.5px solid rgba(229,201,122,0.85); color: #f3e7c4;
+    font: 600 0.58rem/16px 'Cinzel', serif; text-align: center; cursor: pointer; padding: 0;
+    text-shadow: 0 0 3px #000; opacity: 0.8;
+    transition: transform 0.15s, background 0.15s, opacity 0.25s;
+  }
+  .mr-stn:hover { opacity: 0.12; }
+  .mr-stn.filled { background: rgba(201,168,76,0.55); color: #fff; }
+  .mr-stn.hot { opacity: 1; transform: translate(-50%, -50%) scale(1.35); background: rgba(229,201,122,0.85); color: #1a1406; text-shadow: none; }
+  .mr-room.walking .mr-stn { opacity: 0.25; }
+  .mr-room.walking .mr-stn.cur { opacity: 0.95; transform: translate(-50%, -50%) scale(1.25); background: rgba(229,201,122,0.6); color: #1a1406; text-shadow: none; animation: mrPulse 1.4s infinite; }
+  .mr-room.walking .mr-stn.cur:hover { opacity: 0.15; }
+  .mr-room.peek .mr-stn, .mr-room.peek .mr-stn.cur { opacity: 0 !important; pointer-events: none; }
+  .mr-peek {
+    font: 600 0.55rem 'Cinzel', serif; letter-spacing: 0.14em; text-transform: uppercase;
+    background: rgba(13,17,23,0.6); color: #f3e7c4; border: 1px solid rgba(229,201,122,0.6);
+    border-radius: 2px; padding: 0.3rem 0.5rem; cursor: pointer;
+  }
+  @keyframes mrPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(229,201,122,0.7); } 50% { box-shadow: 0 0 0 10px rgba(229,201,122,0); } }
+  .mr-credit { font-size: 0.78rem; color: var(--text-faint); margin-top: 0.35rem; font-style: italic; }
+
+  /* Step 3: chips + station list */
+  .mr-tray { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0 0 1rem; min-height: 2rem; }
+  .mr-chip {
+    font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text);
+    background: var(--glass); border: 1px solid var(--glass-border); border-radius: 4px;
+    padding: 0.3rem 0.6rem; cursor: grab; touch-action: none;
+  }
+  .mr-chip.ref { font-style: italic; color: var(--text-mid); }
+  .mr-chip.sel { border-color: var(--gold); background: var(--gold-faint); }
+  .mr-ghost { position: fixed; z-index: 9999; pointer-events: none; opacity: 0.92; transform: translate(-50%, -120%); box-shadow: 0 4px 14px rgba(0,0,0,0.5); }
+  .mr-list { list-style: none; margin: 0; padding: 0; font-size: 0.98rem; }
+  .mr-list li { display: grid; grid-template-columns: 1.5rem 1fr 9rem 1.2rem; gap: 0.4rem; align-items: baseline; padding: 0.28rem 0; border-bottom: 1px solid var(--rule); }
+  .mr-list .n { font-family: 'Cinzel', serif; color: var(--gold); font-size: 0.75rem; }
+  .mr-list .obj { color: var(--text-mid); }
+  .mr-list .ph { color: var(--text); }
+  .mr-list .ph.ref { color: var(--text-mid); font-style: italic; }
+  .mr-list .obj.empty { color: var(--text-faint); }
+  .mr-x { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 1rem; }
+  .mr-x:hover { color: #e57373; }
+
+  /* Step 4: connections table */
+  .mr-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+  .mr-table th { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); text-align: left; padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--rule); }
+  .mr-table td { padding: 0.35rem 0.4rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .mr-table td:nth-child(2) { color: var(--text-mid); width: 20%; }
+  .mr-table td:nth-child(1) { width: 26%; }
+  .mr-table textarea {
+    width: 100%; box-sizing: border-box; resize: vertical; min-height: 3.9rem;
+    background: var(--bg); color: var(--text); border: 1px solid var(--rule); border-radius: 4px;
+    font: 1rem/1.35 'EB Garamond', serif; padding: 0.35rem 0.5rem;
+  }
+  .mr-table tr.cur td { background: var(--gold-faint); }
+
+  /* Step 5: practice */
+  .mr-levels { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 1rem; }
+  .mr-levels button { font-family: 'EB Garamond', serif; font-size: 0.95rem; background: none; border: 1px solid var(--rule); color: var(--text-mid); border-radius: 3px; padding: 0.3rem 0.7rem; cursor: pointer; }
+  .mr-levels button.is-on { border-color: var(--gold); color: var(--gold); }
+  .mr-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 6px; padding: 1rem 1.1rem; }
+  .mr-card .obj { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.08em; color: var(--gold); }
+  .mr-card .story { color: var(--text-mid); font-style: italic; margin: 0.35rem 0 0.6rem; min-height: 1.3em; }
+  .mr-card .cue { font-family: 'EB Garamond', serif; font-size: 1.45rem; color: var(--text); min-height: 2rem; letter-spacing: 0.01em; }
+  .mr-card .cue.hidden { color: var(--text-faint); font-size: 1.1rem; font-style: italic; }
+  .mr-progress { font-size: 0.85rem; color: var(--text-faint); margin-top: 0.5rem; }
+  .mr-recite textarea { width: 100%; box-sizing: border-box; min-height: 7rem; background: var(--bg); color: var(--text); border: 1px solid var(--rule); border-radius: 4px; font: 1.1rem/1.5 'EB Garamond', serif; padding: 0.6rem; }
+  .mr-diff { font-family: 'EB Garamond', serif; font-size: 1.15rem; line-height: 1.7; margin-top: 0.8rem; }
+  .mr-diff .ok { color: #8fbf7f; }
+  .mr-diff .miss { color: #e57373; text-decoration: underline dotted; }
+  :root.light-mode .mr-diff .ok { color: #3d7a2c; }
+  :root.light-mode .mr-diff .miss { color: #b3261e; }
+  .mr-score { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.1em; color: var(--gold); margin-top: 0.5rem; }
+
+  .mr-panel[hidden], .mr-side[hidden], .mr-room-layout[hidden] { display: none; }
+
+  /* Word fading */
+  .mr-fade { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; margin: 0 0 0.9rem; font-size: 0.95rem; color: var(--text-mid); }
+  .mr-fade[hidden] { display: none; }
+  .mr-fade input[type=range] { flex: 1 1 140px; accent-color: var(--gold); }
+  .mr-fade #mr-hide-n { font-size: 0.85rem; color: var(--text-faint); min-width: 4.5rem; }
+  .mr-hint { display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; }
+  .mr-hint input { accent-color: var(--gold); }
+  .mr-w.can { cursor: pointer; border-bottom: 1px dotted var(--gold); }
+  .mr-w.blank { color: var(--gold); letter-spacing: 0.06em; border-bottom: none; }
+
+  /* Object names */
+  .mr-objs-h { margin-top: 1.2rem; }
+  .mr-objs { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .mr-obj { font-family: 'EB Garamond', serif; font-size: 0.92rem; background: none; color: var(--text-mid); border: 1px dashed var(--rule); border-radius: 3px; padding: 0.2rem 0.55rem; cursor: pointer; }
+  .mr-obj:hover, .mr-obj.hot { border-color: var(--gold); color: var(--gold); }
+  .mr-obj.used { border-style: solid; border-color: rgba(201,168,76,0.45); color: var(--text); }
+  .mr-room.labels .mr-stn::after {
+    content: attr(data-name); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 4px;
+    white-space: nowrap; font: italic 400 0.72rem/1.2 'EB Garamond', serif; letter-spacing: 0; text-transform: none;
+    color: #f3e7c4; background: rgba(13,17,23,0.72); padding: 1px 5px; border-radius: 2px; pointer-events: none;
+  }
+  .mr-room.labels .mr-stn.lft::after { left: auto; right: 100%; margin: 0 4px 0 0; }
+  .mr-room.labels .mr-stn { opacity: 1; }
+  .mr-room.labels .mr-stn:hover { opacity: 1; }
+  .mr-room.full.labels .mr-stn::after { font-size: 0.9rem; }
+
+  /* Phrase slots */
+  .mr-slot { cursor: pointer; border-radius: 3px; padding-left: 0.35rem !important; padding-right: 0.2rem !important; }
+  .mr-slot:hover { background: var(--glass); }
+  .mr-slot.act { background: var(--gold-faint); box-shadow: inset 3px 0 0 var(--gold); }
+  .mr-slot.act .obj.empty { color: var(--gold); font-style: italic; }
+  .mr-slot.drop { background: var(--gold-faint); outline: 1px dashed var(--gold); }
+  .mr-stn.drop { opacity: 1; transform: translate(-50%, -50%) scale(1.35); background: rgba(229,201,122,0.85); }
+  .mr-obj { touch-action: none; }
+
+  /* Translation toggle + custom verse */
+  .mr-ver { display: flex; align-items: center; gap: 0.4rem; margin: 0 0 1.1rem; }
+  .mr-ver .mr-label { margin: 0 0.4rem 0 0; }
+  .mr-ver button { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.12em; background: none; border: 1px solid var(--rule); color: var(--text-mid); border-radius: 3px; padding: 0.3rem 0.75rem; cursor: pointer; }
+  .mr-ver button.is-on { border-color: var(--gold); color: var(--gold); }
+  .mr-custom { max-width: 640px; margin-top: 1.6rem; }
+  .mr-c-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+  .mr-c-row input, .mr-custom textarea {
+    background: var(--bg); color: var(--text); border: 1px solid var(--rule); border-radius: 4px;
+    font: 1.02rem/1.4 'EB Garamond', serif; padding: 0.45rem 0.6rem; box-sizing: border-box;
+  }
+  .mr-c-row input { flex: 1; min-width: 0; }
+  .mr-custom textarea { width: 100%; resize: none; cursor: default; }
+  .mr-custom .mr-btn:disabled { opacity: 0.4; cursor: default; }
+  .mr-custom .mr-note { margin: 0.4rem 0 0; }
+  .mr-custom .mr-note.err { color: #e57373; }
+
+  /* Verse groups (accordion) */
+  .mr-group { border: 1px solid var(--glass-border); border-radius: 5px; background: var(--glass); margin: 0 0 0.55rem; }
+  .mr-group > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.9rem; padding: 0.7rem 0.95rem; }
+  .mr-group > summary::-webkit-details-marker { display: none; }
+  .mr-group > summary::before { content: '▸'; color: var(--gold); font-size: 0.8rem; transition: transform 0.15s; display: inline-block; }
+  .mr-group[open] > summary::before { transform: rotate(90deg); }
+  .mr-group > summary .t { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+  .mr-group > summary .c { font-size: 0.92rem; color: var(--text-faint); font-style: italic; }
+  .mr-group > summary:hover .t { color: var(--gold-light); }
+  .mr-group-body { padding: 0 0.95rem 0.9rem; }
+  .mr-vlist { display: grid; gap: 0.45rem; }
+  .mr-vlist .mr-verse { background: var(--bg); }
+  .mr-custom.mr-group { max-width: none; margin-top: 0; }
+  .mr-custom .mr-group-body { max-width: 680px; }
+  /* Room picker */
+  .mr-rooms { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 0 0 1rem; }
+  .mr-rooms .mr-label { margin: 0 0.3rem 0 0; }
+  .mr-room-pick { position: relative; padding: 0; width: 64px; height: 48px; border: 2px solid transparent; border-radius: 4px; overflow: hidden; background: var(--bg); cursor: pointer; opacity: 0.7; }
+  .mr-room-pick img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mr-room-pick span { position: absolute; left: -9999px; }
+  .mr-room-pick:hover { opacity: 1; }
+  .mr-room-pick.is-on { border-color: var(--gold); opacity: 1; }
+  .mr-room-layout.wide { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+  @media (max-width: 760px) { .mr-room-layout.wide { grid-template-columns: 1fr; } .mr-room-layout.wide .mr-stage { width: 100%; } }
+
+  .mr-intro {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.32rem; font-weight: 500; line-height: 1.55; color: var(--text);
+    text-align: center; max-width: 760px; margin: 0 auto 1.4rem; padding: 1.1rem 1.4rem;
+    border-top: 1px solid rgba(201,168,76,0.45); border-bottom: 1px solid rgba(201,168,76,0.45);
+    background: linear-gradient(90deg, transparent, var(--gold-faint), transparent); text-wrap: pretty;
+  }
+  .mr-intro a { font-style: italic; }
+  @media (max-width: 760px) { .mr-intro { font-size: 1.15rem; padding: 0.9rem 0.4rem; } }
+  .mr-or { margin: 1.4rem 0 0.6rem; }
+  .mr-custom[open] > summary::before { transform: rotate(90deg); }
+
+  /* Banner (matches the Greek lander) */
+  .mr-banner{position:relative;margin:0 auto;height:250px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 1.5rem 1.8rem;
+    background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.55) 55%,rgba(13,17,23,.96) 100%),url("/images/memory-rooms-banner.webp") center 60%/cover no-repeat,#0d1117}
+  :root.light-mode .mr-banner{background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.15) 0%,rgba(8,12,20,.55) 55%,rgba(8,12,20,.85) 100%),url("/images/memory-rooms-banner.webp") center 60%/cover no-repeat,#1a1a1a}
+  .mr-banner h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.12em;color:#fff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+  .mr-banner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;font-weight:500;color:#f3eee4;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.75);margin:.45rem auto 0;max-width:40rem;text-wrap:balance}
+  .mr-banner cite{display:block;font-style:normal;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.2em;color:#e5c97a;margin-top:.4rem;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+  @media (max-width:760px){ .mr-banner{height:auto;min-height:190px;padding-top:2.2rem;padding-bottom:1.4rem} .mr-banner h1{font-size:1.5rem;letter-spacing:.08em} .mr-banner p{font-size:.98rem} }
+  #mr-lead { scroll-margin-top: 4.5rem; }
+  .mr-step-intro { font-size: 1.1rem; line-height: 1.55; color: var(--text); margin: 0 auto 1.1rem; max-width: 720px; text-align: center; }
+
+  /* Practice stages + drills */
+  .mr-levels { gap: 0.4rem 1.1rem; align-items: flex-end; }
+  .mr-lgroup { display: flex; flex-direction: column; gap: 0.25rem; }
+  .mr-lbtns { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .mr-lstage { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-faint); }
+  .mr-built { font-family: 'EB Garamond', serif; font-size: 1.15rem; line-height: 1.5; color: var(--text); min-height: 1.5rem; }
+  .mr-built span::after { content: ' / '; color: var(--gold); }
+  .mr-built span:last-child::after { content: ''; }
+  .mr-built span.ref { font-style: italic; color: var(--text-mid); }
+  .mr-pool { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.9rem; }
+  .mr-pool .mr-chip { cursor: pointer; touch-action: auto; }
+  .mr-pool .mr-chip:hover { border-color: var(--gold); }
+  .mr-chip.bad, .mr-stn.bad { animation: mrShake 0.35s; border-color: #e57373 !important; }
+  .mr-stn.bad { background: rgba(229,115,115,0.8) !important; opacity: 1 !important; }
+  .mr-stn.good { background: rgba(143,191,127,0.9) !important; opacity: 1 !important; }
+  @keyframes mrShake { 0%,100% { translate: 0; } 25% { translate: -4px; } 75% { translate: 4px; } }
+  .mr-room.finding .mr-stn { opacity: 0.9; width: 17px; height: 17px; background: rgba(13,17,23,0.5); }
+  .mr-room.finding .mr-path { display: none; }
+  .mr-peek { white-space: nowrap; }
+  @media (max-width: 760px) { .mr-tools { gap: 4px; top: 6px; right: 6px; } .mr-peek { font-size: 0.5rem; letter-spacing: 0.08em; padding: 0.25rem 0.35rem; } }
+
+  /* Saving + My Verses */
+  .mr-save:empty { display: none; }
+  .mr-save { text-align: center; margin: -0.6rem 0 0.8rem; font-size: 0.88rem; font-style: italic; color: var(--text-faint); }
+  .mr-save a { color: var(--gold); }
+  .mr-guest { font-size: 0.98rem; color: var(--text-mid); margin: 1rem 0 0; }
+  .mr-guest a { color: var(--gold); }
+  .mr-mine .mr-verse { position: relative; padding-right: 2.2rem; }
+  .mr-mine .mr-verse .due { display: block; font-size: 0.85rem; font-style: italic; color: var(--text-faint); margin-top: 0.15rem; -webkit-line-clamp: unset; }
+  .mr-mine .mr-verse .due.now { color: var(--gold); font-style: normal; }
+  .mr-del { position: absolute; top: 0.45rem; right: 0.5rem; background: none; border: none; color: var(--text-faint); font-size: 1.05rem; cursor: pointer; }
+  .mr-del:hover { color: #e57373; }
+  .mr-next-review { margin-top: 0.4rem; font-size: 0.95rem; color: var(--text-mid); font-style: italic; }
+  /* Stage keeps markers aligned to the painting at any size */
+  .mr-stage { position: relative; width: min(100%, calc((100vh - 7rem) * var(--ar, 0.7885))); margin: 0 auto; }
+  .mr-stage img { cursor: zoom-in; }
+  .mr-path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .mr-path polyline { fill: none; stroke: rgba(229,201,122,0.55); stroke-width: 1.5; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; }
+  .mr-room.peek .mr-path { display: none; }
+  .mr-tools { position: absolute; top: 8px; right: 8px; z-index: 2; display: flex; gap: 6px; }
+  .mr-stn.empty { width: 11px; height: 11px; border-width: 1.5px; background: rgba(13,17,23,0.35); }
+  .mr-stn.empty.hot { width: 19px; height: 19px; }
+  .mr-room.walking .mr-stn.empty { opacity: 0; pointer-events: none; }
+  /* Full-screen study view */
+  .mr-room.full { position: fixed; inset: 0; z-index: 10000; background: rgba(5,7,10,0.95); display: flex; align-items: center; justify-content: center; }
+  .mr-room.full .mr-stage { width: min(96vw, calc(96vh * var(--ar, 0.7885))); }
+  .mr-room.full .mr-stage img { cursor: zoom-out; border-radius: 0; }
+  .mr-room.full .mr-stn { width: 26px; height: 26px; font-size: 0.75rem; line-height: 23px; }
+  .mr-room.full .mr-stn.empty { width: 14px; height: 14px; }
+  body.mr-noscroll { overflow: hidden; }
+  /* This tool gets a wider page than articles */
+  body.mr-page .site-wrapper { max-width: 1180px; }
+
+  /* Override the site-wide .article-body section / list styling */
+  .article-body section.mr-panel { background: none; padding: 0; border-top: none; animation: none; margin: 0; }
+  .article-body ol.mr-steps, .article-body ul.mr-list { padding-left: 0; margin-left: 0; }
+  .article-body .mr-steps li, .article-body .mr-list li { margin: 0; }
+  .article-body .mr-list li { line-height: 1.35; }
+  .mr-room-layout > div:first-child { position: sticky; top: 5rem; }
+
+  @media (max-width: 760px) {
+    .mr-room-layout { grid-template-columns: 1fr; gap: 1rem; }
+    .mr-room-layout > div:first-child { position: static; }
+    .mr-stage { width: min(100%, calc(52vh * var(--ar, 0.7885))); }
+    .mr-credit { text-align: center; font-size: 0.72rem; }
+    .mr-list li { grid-template-columns: 1.3rem 1fr 6.5rem 1.2rem; font-size: 0.92rem; }
+    .mr-table td:nth-child(2) { display: none; }
+    .mr-table th:nth-child(2) { display: none; }
+    .mr-stn { width: 17px; height: 17px; font-size: 0.52rem; line-height: 14px; }
+  }
+</style>
+</head>
+<body class="page-article mr-page">
+<div class="site-wrapper">
+
+
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles.html">Articles</a>
+    <a href="/bible-reading-plans.html">Reading Plans</a>
+    <a href="/greek/">Greek</a>
+    <a href="/discipleship-challenge.html">Discipleship</a>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+  <!-- BANNER -->
+  <div class="mr-banner">
+    <h1>Memory Rooms</h1>
+    <p>&#8220;I have hidden your word in my heart, that I might not sin against you.&#8221;<cite>Psalm 119:11 &#8212; WEB</cite></p>
+  </div>
+
+  <article class="article-body">
+  <div class="mr-wrap">
+    <!-- Lead text: the page intro on step 1, then one line per step in the same spot.
+         Intro + step 1 line: Jonathan's wording. Steps 2–5: DRAFT, pending Jonathan's approval. -->
+    <div id="mr-lead">
+      <p class="mr-intro" data-for="0">Struggling to memorize Scripture or don't know how to start? This tool walks you though an exercise in associating each segment of a verse with an object in a classical painting and crafting a memory or elaborate story for each in a sequence. Then you practice by repeating the story as you journey mentally through the room of objects. New to memory rooms? Start with <a href="/articles/bible-memory-rooms">The Power to Memorize Scripture</a>.</p>
+      <p class="mr-intro" data-for="1" hidden>Next, break the verse into short phrases. We've suggested the breaks — tap any word to add or remove one.</p>
+      <p class="mr-intro" data-for="2" hidden>Now choose a room and give each phrase a home. Click an object on the painting for the highlighted phrase, in any order you like.</p>
+      <p class="mr-intro" data-for="3" hidden>Then connect each phrase to its object with a line of story. The stranger and more personal, the better it sticks.</p>
+      <p class="mr-intro" data-for="4" hidden>Finally, practice in three stages: walk the room with your story, strengthen it with the drills, then recite the whole verse from memory.</p>
+    </div>
+
+    <ol class="mr-steps" id="mr-steps"></ol>
+    <p class="mr-save" id="mr-save" aria-live="polite"></p>
+
+    <!-- 1 · CHOOSE -->
+    <section class="mr-panel" data-step="0">
+      <p class="mr-step-intro">First, look up a verse you'd like to memorize or select one below.</p>
+      <div class="mr-ver" id="mr-ver"><span class="mr-label">Translation</span></div>
+      <details class="mr-group mr-custom" id="mr-custom" open>
+        <summary><span class="t">Your Own Verse</span></summary>
+        <div class="mr-group-body">
+        <div class="mr-c-row">
+          <input type="text" id="mr-c-ref" placeholder="Reference — e.g. John 3:16 or Proverbs 3:5–6" autocomplete="off" spellcheck="false">
+          <button class="mr-btn quiet" type="button" id="mr-c-look">Look Up</button>
+        </div>
+        <textarea id="mr-c-text" rows="3" readonly tabindex="-1" placeholder="The verse text appears here."></textarea>
+        <p class="mr-note" id="mr-c-status" hidden></p>
+        <div class="mr-row"><button class="mr-btn" type="button" id="mr-c-use" disabled>Use This Verse</button></div>
+              </div>
+      </details>
+      <div class="mr-mine" id="mr-mine" hidden>
+        <p class="mr-label mr-or">My Verses</p>
+        <div class="mr-vlist" id="mr-mine-list"></div>
+      </div>
+      <p class="mr-guest" id="mr-guest" hidden><a href="#" id="mr-guest-link">Sign in</a> to save your verses and rooms, and to see when each one is due for review.</p>
+      <p class="mr-label mr-or">Or choose a verse</p>
+      <div id="mr-picker"></div>
+    </section>
+
+    <!-- 2 · SPLIT -->
+    <section class="mr-panel" data-step="1" hidden>
+      <p class="mr-label" id="mr-split-ref"></p>
+      <div class="mr-split" id="mr-split"></div>
+      <ol class="mr-phrases" id="mr-phrases"></ol>
+      <p class="mr-warn" id="mr-split-warn" hidden></p>
+      <div class="mr-row">
+        <button class="mr-btn quiet" type="button" id="mr-reset-split">Reset to Suggested</button>
+        <button class="mr-btn" type="button" data-go="2">Next: Place</button>
+      </div>
+    </section>
+
+    <!-- 3–5 share the room image -->
+    <div class="mr-room-layout" id="mr-room-layout" hidden>
+      <div>
+        <div class="mr-room" id="mr-room">
+          <div class="mr-stage" id="mr-stage">
+            <img src="images/memory-room-jerome.webp" width="1100" height="1395" alt="Antonello da Messina, Saint Jerome in His Study" draggable="false" id="mr-img">
+            <svg class="mr-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline id="mr-path-line" points=""/></svg>
+            <div class="mr-tools">
+              <button type="button" class="mr-peek" id="mr-names" aria-pressed="false">Show Names</button>
+              <button type="button" class="mr-peek" id="mr-peek" aria-pressed="false">Hide Stations</button>
+              <button type="button" class="mr-peek" id="mr-full" aria-pressed="false">&#x26F6; Full Screen</button>
+            </div>
+          </div>
+        </div>
+        <p class="mr-credit" id="mr-credit"></p>
+      </div>
+
+      <div>
+        <!-- 3 · PLACE -->
+        <section class="mr-panel" data-step="2" hidden>
+          <div class="mr-rooms" id="mr-rooms"><span class="mr-label">Room</span></div>
+          <ul class="mr-list" id="mr-list"></ul>
+          <p class="mr-label mr-objs-h">Objects in this room</p>
+          <div class="mr-objs" id="mr-objs"></div>
+          <p class="mr-warn" id="mr-place-warn" hidden></p>
+          <div class="mr-row">
+            <button class="mr-btn quiet" type="button" id="mr-autofill">Suggested Path</button>
+            <button class="mr-btn quiet" type="button" id="mr-clear">Clear</button>
+            <button class="mr-btn" type="button" data-go="3">Next: Connect</button>
+          </div>
+        </section>
+
+        <!-- 4 · CONNECT -->
+        <section class="mr-panel" data-step="3" hidden>
+          <table class="mr-table">
+            <thead><tr><th>Verse Segment</th><th>Object</th><th>Connection</th></tr></thead>
+            <tbody id="mr-conn"></tbody>
+          </table>
+          <div class="mr-row">
+            <button class="mr-btn" type="button" data-go="4">Next: Walk the Room</button>
+          </div>
+        </section>
+
+        <!-- 5 · PRACTICE -->
+        <section class="mr-panel" data-step="4" hidden>
+          <div class="mr-levels" id="mr-levels"></div>
+          <div class="mr-fade" id="mr-fade">
+            <label for="mr-hide">Hide words</label>
+            <input type="range" id="mr-hide" min="0" max="10" value="0" step="1">
+            <label class="mr-hint"><input type="checkbox" id="mr-hint"> First-letter hints</label>
+          </div>
+          <div id="mr-walk">
+            <div class="mr-card">
+              <div class="obj" id="mr-w-obj"></div>
+              <div class="story" id="mr-w-story"></div>
+              <div class="cue" id="mr-w-cue"></div>
+            </div>
+            <div class="mr-row">
+              <button class="mr-btn quiet" type="button" id="mr-prev">&#8592; Back</button>
+              <button class="mr-btn quiet" type="button" id="mr-reveal">Show All</button>
+              <button class="mr-btn" type="button" id="mr-next">Next &#8594;</button>
+            </div>
+            <div class="mr-progress" id="mr-w-prog"></div>
+          </div>
+          <div id="mr-rebuild" hidden>
+            <div class="mr-card">
+              <div class="obj" id="mr-rb-obj"></div>
+              <div class="story" id="mr-rb-q"></div>
+              <div class="mr-built" id="mr-rb-built"></div>
+            </div>
+            <div class="mr-pool" id="mr-rb-pool"></div>
+            <div class="mr-row"><button class="mr-btn quiet" type="button" id="mr-rb-again">Shuffle &amp; Start Over</button></div>
+          </div>
+          <div id="mr-find" hidden>
+            <div class="mr-card">
+              <div class="obj" id="mr-fd-n"></div>
+              <div class="cue" id="mr-fd-q"></div>
+              <div class="story" id="mr-fd-msg"></div>
+            </div>
+            <div class="mr-row"><button class="mr-btn quiet" type="button" id="mr-fd-again">Shuffle &amp; Start Over</button></div>
+          </div>
+          <div id="mr-recite" class="mr-recite" hidden>
+            <textarea id="mr-recite-in" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+            <div class="mr-row">
+              <button class="mr-btn" type="button" id="mr-check">Check</button>
+              <button class="mr-btn quiet" type="button" id="mr-retry">Try Again</button>
+            </div>
+            <div class="mr-diff" id="mr-diff"></div>
+            <div class="mr-score" id="mr-score"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  </article>
+
+<footer>
+  <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+  <div class="footer-nav">
+    <a href="about.html">About</a>
+    <span>&#183;</span>
+    <a href="/free-grace-glossary.html">Glossary</a>
+    <span>·</span>
+    <span>© 2026 Whosoever Believes</span>
+  </div>
+</footer>
+</div>
+
+<script src="search-index.js"></script>
+<script src="scripts.js"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── DATA ──────────────────────────────────────────────────────────
+  // "|" marks the suggested phrase breaks. s = WEB, k = KJV.
+  var VERSES = [
+    { cat: 'Assurance of Salvation', ref: 'John 6:47', a: 'John 6', b: 'Verse 47',
+      s: 'Most certainly, I tell you, | he who believes in me | has eternal life.',
+      k: 'Verily, verily, I say unto you, | He that believeth on me | hath everlasting life.' },
+    { cat: 'Assurance of Salvation', ref: 'John 5:24', a: 'John 5', b: 'Verse 24',
+      s: 'Most certainly I tell you, | he who hears my word, | and believes him who sent me, | has eternal life, | and doesn’t come into judgment, | but has passed out of death into life.',
+      k: 'Verily, verily, I say unto you, | He that heareth my word, | and believeth on him that sent me, | hath everlasting life, | and shall not come into condemnation; | but is passed from death unto life.' },
+    { cat: 'Assurance of Salvation', ref: '1 John 5:13', a: '1 John 5', b: 'Verse 13',
+      s: 'These things I have written to you | who believe in the name of the Son of God, | that you may know | that you have eternal life, | and that you may continue to believe | in the name of the Son of God.',
+      k: 'These things have I written unto you | that believe on the name of the Son of God; | that ye may know | that ye have eternal life, | and that ye may believe | on the name of the Son of God.' },
+    { cat: 'God’s Love', ref: 'Romans 5:8', a: 'Romans 5', b: 'Verse 8',
+      s: 'But God commends his own love toward us, | in that while we were yet sinners, | Christ died for us.',
+      k: 'But God commendeth his love toward us, | in that, while we were yet sinners, | Christ died for us.' },
+    { cat: 'God’s Love', ref: '1 John 3:1', a: '1 John 3', b: 'Verse 1',
+      s: 'See how great a love the Father has given to us, | that we should be called children of God! | For this cause the world doesn’t know us, | because it didn’t know him.',
+      k: 'Behold, what manner of love the Father hath bestowed upon us, | that we should be called the sons of God: | therefore the world knoweth us not, | because it knew him not.' },
+    { cat: 'God’s Love', ref: 'Romans 8:38–39', a: 'Romans 8', b: 'Verses 38–39',
+      s: 'For I am persuaded | that neither death, nor life, | nor angels, nor principalities, | nor things present, nor things to come, | nor powers, | nor height, nor depth, | nor any other created thing, | will be able to separate us | from God’s love, | which is in Christ Jesus our Lord.',
+      k: 'For I am persuaded, | that neither death, nor life, | nor angels, nor principalities, | nor powers, | nor things present, nor things to come, | Nor height, nor depth, | nor any other creature, | shall be able to separate us | from the love of God, | which is in Christ Jesus our Lord.' },
+    { cat: 'God’s Goodness', ref: 'Psalm 34:8', a: 'Psalm 34', b: 'Verse 8',
+      s: 'Oh taste and see | that Yahweh is good. | Blessed is the man | who takes refuge in him.',
+      k: 'O taste and see | that the LORD is good: | blessed is the man | that trusteth in him.' },
+    { cat: 'God’s Goodness', ref: 'Lamentations 3:22–23', a: 'Lamentations 3', b: 'Verses 22–23',
+      s: 'It is because of Yahweh’s loving kindnesses | that we are not consumed, | because his compassion doesn’t fail. | They are new every morning. | Great is your faithfulness.',
+      k: 'It is of the LORD’S mercies | that we are not consumed, | because his compassions fail not. | They are new every morning: | great is thy faithfulness.' },
+    { cat: 'God’s Goodness', ref: 'James 1:17', a: 'James 1', b: 'Verse 17',
+      s: 'Every good gift and every perfect gift | is from above, | coming down from the Father of lights, | with whom can be no variation, | nor turning shadow.',
+      k: 'Every good gift and every perfect gift | is from above, | and cometh down from the Father of lights, | with whom is no variableness, | neither shadow of turning.' },
+    { cat: 'God’s Provision', ref: 'Psalm 23:1', a: 'Psalm 23', b: 'Verse 1',
+      s: 'Yahweh is my shepherd: | I shall lack nothing.',
+      k: 'The LORD is my shepherd; | I shall not want.' },
+    { cat: 'God’s Provision', ref: 'Philippians 4:19', a: 'Philippians 4', b: 'Verse 19',
+      s: 'My God will supply | every need of yours | according to his riches in glory | in Christ Jesus.',
+      k: 'But my God shall supply | all your need | according to his riches in glory | by Christ Jesus.' },
+    { cat: 'God’s Provision', ref: 'Psalm 84:11', a: 'Psalm 84', b: 'Verse 11',
+      s: 'For Yahweh God is a sun and a shield. | Yahweh will give grace and glory. | He withholds no good thing | from those who walk blamelessly.',
+      k: 'For the LORD God is a sun and shield: | the LORD will give grace and glory: | no good thing will he withhold | from them that walk uprightly.' }
+  ];
+
+  // Rooms. x / y are percentages of the image; station order is only a suggested path.
+  var ROOMS = [
+    { id: 'jerome', name: 'St. Jerome’s Study', img: 'images/memory-room-jerome.webp', w: 1100, h: 1395,
+      credit: 'Antonello da Messina, <i>Saint Jerome in His Study</i> (c. 1475), National Gallery, London. Public domain.',
+      stations: [
+        { name: 'Partridge', x: 29, y: 93 }, { name: 'Peacock', x: 62, y: 90 }, { name: 'Brass basin', x: 78, y: 91 },
+        { name: 'Slippers by the steps', x: 60, y: 82 }, { name: 'Jerome reading', x: 52, y: 57 }, { name: 'Red hat on the bench', x: 73, y: 62 },
+        { name: 'Lion in the hall', x: 85, y: 63 }, { name: 'Arched colonnade', x: 87, y: 55 }, { name: 'High window & birds', x: 49, y: 33 },
+        { name: 'Books on the shelf', x: 46, y: 50 }, { name: 'Hanging towel', x: 25, y: 52 }, { name: 'Window to the hills', x: 15, y: 61 },
+        { name: 'Potted plants', x: 37, y: 66 }, { name: 'Cat on the ledge', x: 21, y: 71 } ] },
+    { id: 'augustine', name: 'St. Augustine’s Study', img: 'images/memory-room-augustine.webp', w: 1059, h: 700,
+      credit: 'Vittore Carpaccio, <i>Vision of Saint Augustine</i> (1502), Scuola di San Giorgio degli Schiavoni, Venice. Public domain.',
+      stations: [
+        { name: 'Little white dog', x: 17, y: 82 }, { name: 'Folding chair', x: 5, y: 60 }, { name: 'Lectern', x: 18, y: 64 },
+        { name: 'Bookshelf', x: 12, y: 27 }, { name: 'Candle sconce', x: 12, y: 14 }, { name: 'Open cabinet', x: 30, y: 48 },
+        { name: 'Statue in the niche', x: 49, y: 37 }, { name: 'Bishop’s staff', x: 54, y: 51 }, { name: 'Stool with a book', x: 49, y: 81 },
+        { name: 'Book on the floor', x: 60, y: 92 }, { name: 'Augustine writing', x: 74, y: 38 }, { name: 'Red cabinet', x: 68, y: 24 },
+        { name: 'Armillary sphere', x: 89, y: 19 }, { name: 'Open music books', x: 88, y: 81 } ] },
+    { id: 'bedroom', name: 'The Bedroom', img: 'images/memory-room-bedroom.webp', w: 1400, h: 1111,
+      credit: 'Vincent van Gogh, <i>The Bedroom</i> (1888), Van Gogh Museum, Amsterdam. Public domain.',
+      stations: [
+        { name: 'Front chair', x: 9, y: 60 }, { name: 'Hanging towel', x: 12, y: 37 }, { name: 'Mirror', x: 19, y: 15 },
+        { name: 'Window', x: 32, y: 14 }, { name: 'Pitcher & basin', x: 23, y: 31 }, { name: 'Table', x: 30, y: 45 },
+        { name: 'Back chair', x: 40, y: 42 }, { name: 'Coat hooks', x: 44, y: 25 }, { name: 'Landscape picture', x: 49, y: 13 },
+        { name: 'Two portraits', x: 70, y: 10 }, { name: 'Sketches', x: 79, y: 19 }, { name: 'Red blanket', x: 53, y: 44 },
+        { name: 'Bed footboard', x: 76, y: 58 }, { name: 'Door', x: 96, y: 38 } ] },
+    { id: 'hunters', name: 'Hunters in the Snow', img: 'images/memory-room-hunters.webp', w: 1400, h: 996,
+      credit: 'Pieter Bruegel the Elder, <i>Hunters in the Snow</i> (1565), Kunsthistorisches Museum, Vienna. Public domain.',
+      stations: [
+        { name: 'Inn sign', x: 10, y: 35 }, { name: 'Fire at the inn', x: 13, y: 59 }, { name: 'Hunting dogs', x: 11, y: 82 },
+        { name: 'Hunters with spears', x: 31, y: 70 }, { name: 'Crow in the treetop', x: 23, y: 7 }, { name: 'Bramble in the snow', x: 57, y: 90 },
+        { name: 'Horse cart', x: 62, y: 56 }, { name: 'Flying magpie', x: 71, y: 25 }, { name: 'Village church', x: 75, y: 44 },
+        { name: 'Skaters on the pond', x: 81, y: 57 }, { name: 'Lower pond', x: 74, y: 68 }, { name: 'Stone bridge', x: 80, y: 82 },
+        { name: 'Water mill', x: 92, y: 76 }, { name: 'Jagged mountains', x: 90, y: 20 } ] },
+    { id: 'tabernacle', name: 'The Tabernacle', img: 'images/memory-room-tabernacle.webp', w: 1400, h: 1032,
+      credit: '<i>The Tabernacle in the Wilderness</i>, illustration from the Holman Bible (c. 1890). Public domain.',
+      stations: [
+        { name: 'Worshippers', x: 12, y: 88 }, { name: 'Lambs', x: 54, y: 81 }, { name: 'Oxen', x: 70, y: 83 },
+        { name: 'Gate curtain', x: 40, y: 64 }, { name: 'Bronze altar', x: 50, y: 66 }, { name: 'Laver', x: 50, y: 58 },
+        { name: 'Rising smoke', x: 45, y: 51 }, { name: 'Priests', x: 61, y: 55 }, { name: 'Tent of meeting', x: 57, y: 45 },
+        { name: 'Pillar of cloud', x: 52, y: 22 }, { name: 'Mountains', x: 83, y: 16 }, { name: 'Camp tents', x: 13, y: 40 },
+        { name: 'Court wall', x: 83, y: 45 }, { name: 'White hangings', x: 90, y: 63 } ] }
+  ];
+  var ROOM = ROOMS[0], STATIONS = ROOM.stations;
+
+  var STEPS = ['Choose', 'Split', 'Place', 'Connect', 'Walk'];
+  // Step 5 follows three stages: learn with cues → strengthen by removing them → test.
+  var LEVELS = [
+    { stage: 'Learn', name: 'Walk the Room' },
+    { stage: 'Strengthen', name: 'Hide Words' },
+    { stage: 'Strengthen', name: 'Rebuild the Room' },
+    { stage: 'Strengthen', name: 'Find the Object' },
+    { stage: 'Test', name: 'Recite' }
+  ];
+  var M_WALK = 0, M_HIDE = 1, M_REBUILD = 2, M_FIND = 3, M_RECITE = 4;
+
+  // ── STATE ─────────────────────────────────────────────────────────
+  var st = { step: 0, verse: null, words: [], breaks: {}, items: [], place: {}, notes: [], active: 0, ver: 'web', mode: 0, walk: 0, shown: false, hide: 0, hint: false, order: [], peek: {} };
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  // ── STEPPER ───────────────────────────────────────────────────────
+  function canReach(i) {
+    if (i === 0) return true;
+    if (!st.verse) return false;
+    if (i <= 2) return itemsOk();
+    if (i >= 3) return placeOk() === '';
+    return true;
+  }
+  function renderSteps() {
+    var ol = $('mr-steps'); ol.textContent = '';
+    STEPS.forEach(function (name, i) {
+      var li = el('li'), b = el('button', i === st.step ? 'is-on' : '', (i + 1) + ' · ' + name);
+      b.type = 'button'; b.disabled = !canReach(i);
+      b.addEventListener('click', function () { go(i); });
+      li.appendChild(b); ol.appendChild(li);
+    });
+  }
+  function go(i) {
+    if (!canReach(i)) return;
+    st.step = i;
+    document.querySelectorAll('.mr-panel').forEach(function (p) { p.hidden = +p.dataset.step !== i; });
+    document.querySelectorAll('#mr-lead [data-for]').forEach(function (p) { p.hidden = +p.dataset.for !== i; });
+    $('mr-room-layout').hidden = i < 2;
+    $('mr-room').classList.toggle('walking', i === 4 && st.mode < M_FIND); $('mr-room').classList.toggle('finding', i === 4 && st.mode === M_FIND);
+    if (i === 1) renderSplit();
+    if (i === 2) { if (st.active == null || st.place[st.active] != null) st.active = nextEmpty(0); renderPlace(); }
+    if (i === 3) renderConn();
+    if (i === 4) { setMode(st.mode); }
+    renderStations();
+    renderSteps();
+    if (i > 0) document.getElementById('mr-lead').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (i >= 3) save();
+    showSaveState();
+  }
+  document.querySelectorAll('[data-go]').forEach(function (b) {
+    b.addEventListener('click', function () { go(+b.dataset.go); });
+  });
+
+  // ── 1 · CHOOSE ────────────────────────────────────────────────────
+  var VERSIONS = [['web', 'WEB'], ['kjv', 'KJV']];
+  function verLabel(v) { for (var i = 0; i < VERSIONS.length; i++) if (VERSIONS[i][0] === v) return VERSIONS[i][1]; return ''; }
+  function renderVersions() {
+    var box = $('mr-ver');
+    box.querySelectorAll('button').forEach(function (b) { b.remove(); });
+    VERSIONS.forEach(function (v) {
+      var b = el('button', st.ver === v[0] ? 'is-on' : '', v[1]); b.type = 'button';
+      b.addEventListener('click', function () { st.ver = v[0]; renderVersions(); renderPicker(); });
+      box.appendChild(b);
+    });
+  }
+  function renderPicker() {
+    var box = $('mr-picker'), cats = {}, open = {};
+    box.querySelectorAll('details[open]').forEach(function (d) { open[d.dataset.cat] = true; });
+    box.textContent = '';
+    VERSES.forEach(function (v) { (cats[v.cat] = cats[v.cat] || []).push(v); });
+    Object.keys(cats).forEach(function (c) {
+      var d = el('details', 'mr-group'); d.dataset.cat = c; if (open[c]) d.open = true;
+      var sm = el('summary');
+      sm.appendChild(el('span', 't', c));
+      sm.appendChild(el('span', 'c', cats[c].map(function (v) { return v.ref; }).join(' · ')));
+      d.appendChild(sm);
+      var list = el('div', 'mr-group-body mr-vlist');
+      cats[c].forEach(function (v) {
+        var b = el('button', 'mr-verse'); b.type = 'button';
+        b.appendChild(el('b', null, v.ref));
+        b.appendChild(el('span', null, (st.ver === 'kjv' ? v.k : v.s).replace(/ \| /g, ' ')));
+        b.addEventListener('click', function () {
+          choose({ ref: v.ref, a: v.a, b: v.b, s: st.ver === 'kjv' ? v.k : v.s, ver: st.ver });
+        });
+        list.appendChild(b);
+      });
+      d.appendChild(list); box.appendChild(d);
+    });
+  }
+  function choose(v) {
+    var saved = mine[key(v.ref, v.ver || '')];
+    if (saved) { loadSaved(saved); return; }
+    st.verse = v; st.place = {}; st.notes = []; st.active = 0; st.order = []; st.savedId = null; st.rec = null;
+    resetSplit();
+    go(1);
+  }
+
+  // ── CUSTOM VERSE ──────────────────────────────────────────────────
+  // Suggested breaks: at punctuation, long phrases split before a joining word,
+  // one- and two-word scraps merged, capped at 12 phrases (14 stations − 2 for the reference).
+function autoSplit(text) {
+  var words = text.trim().split(/\s+/), pieces = [], cur = [];
+  words.forEach(function (w, i) {
+    cur.push(w);
+    if (/[,;:.!?][”’"')]*$/.test(w) || i === words.length - 1) { pieces.push(cur); cur = []; }
+  });
+  var JOIN = /^(and|but|that|which|who|whom|whose|because|for|nor|or|so|when|while|until|unless|though|if|where|with|from|according)$/i;
+  // split long pieces before a joining word near the middle
+  function splitLong(p) {
+    if (p.length <= 9) return [p];
+    var best = -1, mid = p.length / 2;
+    for (var k = 3; k <= p.length - 3; k++) if (JOIN.test(p[k].replace(/[^A-Za-z]/g, '')) && (best < 0 || Math.abs(k - mid) < Math.abs(best - mid))) best = k;
+    if (best < 0) { if (p.length <= 12) return [p]; best = Math.round(mid); }
+    return splitLong(p.slice(0, best)).concat(splitLong(p.slice(best)));
+  }
+  pieces = [].concat.apply([], pieces.map(splitLong));
+  // merge tiny pieces (1–2 words) into the next one (or the previous, at the end)
+  for (var i = 0; i < pieces.length; i++) {
+    if (pieces.length > 1 && pieces[i].length < 3) {
+      if (i < pieces.length - 1 && pieces[i].length + pieces[i + 1].length <= 12) { pieces[i + 1] = pieces[i].concat(pieces[i + 1]); pieces.splice(i, 1); i--; }
+      else if (i > 0 && pieces[i].length + pieces[i - 1].length <= 12) { pieces[i - 1] = pieces[i - 1].concat(pieces[i]); pieces.splice(i, 1); i--; }
+    }
+  }
+  // cap at 12 phrases: merge the shortest neighbouring pair
+  while (pieces.length > 12) {
+    var bi = 0, bl = Infinity;
+    for (var j = 0; j < pieces.length - 1; j++) { var l = pieces[j].length + pieces[j + 1].length; if (l < bl) { bl = l; bi = j; } }
+    pieces.splice(bi, 2, pieces[bi].concat(pieces[bi + 1]));
+  }
+  return pieces.map(function (p) { return p.join(' '); }).join(' | ');
+}
+
+  function parseRef(ref) {
+    ref = ref.trim().replace(/\s+/g, ' ').replace(/\s*[-–—]\s*/g, '–');
+    var m = ref.match(/^(.+?) (\d+):(\d+)(?:–(\d+))?$/);
+    if (!m) return { ref: ref, a: ref, b: null };
+    return { ref: ref, a: m[1] + ' ' + m[2], b: m[4] ? 'Verses ' + m[3] + '–' + m[4] : 'Verse ' + m[3] };
+  }
+  function cleanText(t) {
+    t = t.replace(/\s+/g, ' ').trim();
+    var open = (t.match(/[“]/g) || []).length, close = (t.match(/[”]/g) || []).length;
+    if (open !== close) t = t.replace(/[“”]/g, '');
+    return t;
+  }
+  var custom = { looked: null };   // text as returned by the lookup, to tell if the user edited it
+  function cStatus(msg, err) { var p = $('mr-c-status'); p.hidden = !msg; p.textContent = msg || ''; p.className = 'mr-note' + (err ? ' err' : ''); }
+  $('mr-c-look').addEventListener('click', function () {
+    var ref = $('mr-c-ref').value.trim();
+    if (!ref) { cStatus('Type a reference first.', true); return; }
+    var btn = this; btn.disabled = true; cStatus('Looking up ' + ref + ' (' + verLabel(st.ver) + ')…');
+    fetch('https://bible-api.com/' + encodeURIComponent(ref.replace(/[–—]/g, '-')) + '?translation=' + st.ver)
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || d.error || !d.text) throw new Error('not found');
+        var t = cleanText(d.text);
+        $('mr-c-text').value = t; custom.looked = t; custom.ver = st.ver; $('mr-c-use').disabled = false;
+        $('mr-c-ref').value = d.reference.replace(/^Psalms (\d+:)/, 'Psalm $1').replace(/-/g, '–');
+        var n = t.split(' ').length;
+        cStatus(n > 80 ? 'That is a long passage (' + n + ' words). It will work, but a shorter one fits the room better.' : '');
+      })
+      .catch(function () { cStatus('Couldn’t find that reference. Check the spelling, e.g. “1 John 3:1”.', true); })
+      .then(function () { btn.disabled = false; });
+  });
+  $('mr-c-ref').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('mr-c-look').click(); });
+  // Verses come from Look Up only: changing the reference clears the old text until it is looked up again.
+  $('mr-c-ref').addEventListener('input', function () {
+    if (custom.looked) { custom.looked = null; $('mr-c-text').value = ''; $('mr-c-use').disabled = true; }
+  });
+  $('mr-c-use').addEventListener('click', function () {
+    var ref = $('mr-c-ref').value.trim(), t = custom.looked;
+    if (!ref || !t) { cStatus('Look up a reference first.', true); return; }
+    var r = parseRef(ref);
+    r.s = autoSplit(t);
+    r.ver = custom.ver;
+    cStatus('');
+    choose(r);
+  });
+
+  // ── 2 · SPLIT ─────────────────────────────────────────────────────
+  function resetSplit() {
+    var parts = st.verse.s.split(' | ');
+    st.words = []; st.breaks = {};
+    parts.forEach(function (p, pi) {
+      p.split(' ').forEach(function (w) { st.words.push(w); });
+      if (pi < parts.length - 1) st.breaks[st.words.length - 1] = true;
+    });
+    buildItems();
+  }
+  function buildItems() {
+    var items = [], cur = [];
+    st.words.forEach(function (w, i) {
+      cur.push(w);
+      if (st.breaks[i] || i === st.words.length - 1) { items.push({ text: cur.join(' '), ref: false }); cur = []; }
+    });
+    items.push({ text: st.verse.a, ref: true });
+    if (st.verse.b) items.push({ text: st.verse.b, ref: true });
+    st.items = items;
+  }
+  function itemsOk() { return st.items.length <= STATIONS.length; }
+  function renderSplit() {
+    $('mr-split-ref').textContent = st.verse.ref + (st.verse.ver ? ' (' + verLabel(st.verse.ver) + ')' : '');
+    var box = $('mr-split'); box.textContent = '';
+    st.words.forEach(function (w, i) {
+      var s = el('span', 'mr-word' + (st.breaks[i] ? ' brk' : ''), w);
+      if (i < st.words.length - 1) {
+        s.addEventListener('click', function () {
+          if (st.breaks[i]) delete st.breaks[i]; else st.breaks[i] = true;
+          st.place = {}; st.notes = [];
+          buildItems(); renderSplit(); renderSteps();
+        });
+      }
+      box.appendChild(s); box.appendChild(document.createTextNode(' '));
+    });
+    var ol = $('mr-phrases'); ol.textContent = '';
+    st.items.forEach(function (it) { ol.appendChild(el('li', it.ref ? 'ref' : '', it.text)); });
+    var warn = $('mr-split-warn');
+    warn.hidden = itemsOk();
+    warn.textContent = 'This room has ' + STATIONS.length + ' stations. Combine a few phrases to fit.';
+    document.querySelector('[data-go="2"]').disabled = !itemsOk();
+  }
+  $('mr-reset-split').addEventListener('click', function () { st.place = {}; st.notes = []; resetSplit(); renderSplit(); renderSteps(); });
+
+  // ── ROOM STATIONS ─────────────────────────────────────────────────
+  function stationItem(si) {
+    for (var k in st.place) if (st.place[k] === si) return +k;
+    return -1;
+  }
+  // Markers show the PHRASE number once something is placed there, so the
+  // user's own path (any direction) is what gets numbered. Empty stations are plain dots.
+  function renderStations() {
+    var stage = $('mr-stage');
+    stage.querySelectorAll('.mr-stn').forEach(function (n) { n.remove(); });
+    var walkStn = st.step === 4 ? st.place[st.walk] : -1;
+    STATIONS.forEach(function (s, si) {
+      var finding = st.step === 4 && st.mode === M_FIND;
+      var it = st.step >= 2 && !finding ? stationItem(si) : -1;
+      var b = el('button', 'mr-stn', it >= 0 ? String(it + 1) : ''); b.type = 'button';
+      b.style.left = s.x + '%'; b.style.top = s.y + '%';
+      b.dataset.stn = si; b.dataset.name = s.name;
+      if (s.x > 68) b.classList.add('lft');
+      b.title = finding ? s.name : s.name + (it >= 0 ? ' — ' + st.items[it].text : '');
+      b.setAttribute('aria-label', b.title);
+      b.classList.add(it >= 0 ? 'filled' : 'empty');
+      if (si === walkStn && !finding) b.classList.add('cur');
+      b.addEventListener('click', function (e) { e.stopPropagation(); if (st.step === 2) pickStation(si); else if (finding) findPick(si, b); });
+      stage.appendChild(b);
+    });
+    // faint line tracing the user's path in verse order
+    var pts = [];
+    if (st.step >= 2 && !(st.step === 4 && st.mode === M_FIND)) st.items.forEach(function (_, i) {
+      if (st.place[i] != null) pts.push(STATIONS[st.place[i]].x + ',' + STATIONS[st.place[i]].y);
+    });
+    $('mr-path-line').setAttribute('points', pts.join(' '));
+  }
+
+  // ── 3 · PLACE ─────────────────────────────────────────────────────
+  // The verse is the frame: phrases stay in order, and the user fills each
+  // phrase's object slot. The active slot advances to the next empty one.
+  function nextEmpty(from) {
+    for (var k = 0; k < st.items.length; k++) {
+      var i = (from + k) % st.items.length;
+      if (st.place[i] == null) return i;
+    }
+    return null;
+  }
+  function refreshPlace() { renderPlace(); renderStations(); renderSteps(); }
+  function assign(item, si) {
+    var prev = stationItem(si);
+    if (prev >= 0 && prev !== item) delete st.place[prev];   // an object holds one phrase
+    st.place[item] = si;
+    st.active = nextEmpty(item + 1);
+    refreshPlace();
+  }
+  function pickStation(si) {
+    if (st.active != null) { assign(st.active, si); return; }
+    var it = stationItem(si);                                  // all filled: clicking a used object selects its row
+    if (it >= 0) { st.active = it; refreshPlace(); }
+  }
+  function placeOk() {
+    for (var i = 0; i < st.items.length; i++) if (st.place[i] == null) return 'Place every phrase to continue.';
+    return '';
+  }
+  function renderPlace() {
+    if (st.active != null && st.active >= st.items.length) st.active = nextEmpty(0);
+    var ul = $('mr-list'); ul.textContent = '';
+    st.items.forEach(function (it, i) {
+      var si = st.place[i], li = el('li', 'mr-slot' + (st.active === i ? ' act' : ''));
+      li.dataset.item = i; li.tabIndex = 0;
+      li.appendChild(el('span', 'n', String(i + 1)));
+      li.appendChild(el('span', 'ph' + (it.ref ? ' ref' : ''), it.text));
+      li.appendChild(el('span', 'obj' + (si == null ? ' empty' : ''), si == null ? (st.active === i ? 'choose an object…' : '—') : STATIONS[si].name));
+      if (si != null) {
+        var x = el('button', 'mr-x', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Remove');
+        x.addEventListener('click', function (e) { e.stopPropagation(); delete st.place[i]; st.active = i; refreshPlace(); });
+        li.appendChild(x);
+      } else li.appendChild(el('span'));
+      li.addEventListener('click', function () { st.active = st.active === i ? null : i; refreshPlace(); });
+      li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); li.click(); } });
+      li.addEventListener('mouseenter', function () { if (si != null) hotStation(si, true); });
+      li.addEventListener('mouseleave', function () { if (si != null) hotStation(si, false); });
+      ul.appendChild(li);
+    });
+    var objs = $('mr-objs'); objs.textContent = '';
+    STATIONS.forEach(function (s, si) {
+      var it = stationItem(si);
+      var b = el('button', 'mr-obj' + (it >= 0 ? ' used' : ''), (it >= 0 ? (it + 1) + ' · ' : '') + s.name);
+      b.type = 'button'; b.dataset.obj = si;
+      b.addEventListener('mouseenter', function () { hotStation(si, true); });
+      b.addEventListener('mouseleave', function () { hotStation(si, false); });
+      bindObjDrag(b, si);
+      objs.appendChild(b);
+    });
+    document.querySelector('[data-go="3"]').disabled = !!placeOk();
+  }
+  function hotStation(si, on) {
+    var m = $('mr-stage').querySelector('.mr-stn[data-stn="' + si + '"]');
+    if (m) m.classList.toggle('hot', on);
+  }
+  $('mr-autofill').addEventListener('click', function () {
+    st.place = {}; st.items.forEach(function (_, i) { st.place[i] = i; }); st.active = null;
+    refreshPlace();
+  });
+  $('mr-clear').addEventListener('click', function () { st.place = {}; st.active = 0; refreshPlace(); });
+
+  // Object names: tap = fill the active slot; drag = drop onto any phrase row
+  // (or onto a circle on the painting, same as tapping it).
+  function bindObjDrag(chip, si) {
+    chip.addEventListener('pointerdown', function (e) {
+      if (e.button > 0) return;
+      e.preventDefault();
+      var sx = e.clientX, sy = e.clientY, ghost = null, hot = null;
+      function targetAt(x, y) {
+        var t = document.elementFromPoint(x, y);
+        return t && t.closest ? t.closest('.mr-slot, .mr-stn') : null;
+      }
+      function move(ev) {
+        if (!ghost && Math.hypot(ev.clientX - sx, ev.clientY - sy) < 6) return;
+        if (!ghost) { ghost = chip.cloneNode(true); ghost.classList.add('mr-ghost'); document.body.appendChild(ghost); }
+        ghost.style.left = ev.clientX + 'px'; ghost.style.top = ev.clientY + 'px';
+        var t = targetAt(ev.clientX, ev.clientY);
+        if (hot && hot !== t) hot.classList.remove('drop');
+        hot = t; if (hot) hot.classList.add('drop');
+      }
+      function up(ev) {
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        document.removeEventListener('pointercancel', up);
+        if (hot) hot.classList.remove('drop');
+        if (ghost) {
+          ghost.remove();
+          var t = targetAt(ev.clientX, ev.clientY);
+          if (t && t.classList.contains('mr-slot')) assign(+t.dataset.item, si);
+          else if (t && t.classList.contains('mr-stn')) pickStation(+t.dataset.stn);
+        } else {
+          pickStation(si);
+        }
+      }
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', up);
+      document.addEventListener('pointercancel', up);
+    });
+  }
+
+  // ── 4 · CONNECT ───────────────────────────────────────────────────
+  function renderConn() {
+    var tb = $('mr-conn'); tb.textContent = '';
+    st.items.forEach(function (it, i) {
+      var tr = el('tr');
+      tr.appendChild(el('td', null, it.text));
+      tr.appendChild(el('td', null, STATIONS[st.place[i]].name));
+      var td = el('td'), ta = el('textarea'); ta.rows = 2; ta.maxLength = 240;
+      ta.value = st.notes[i] || '';
+      if (i === 0) ta.placeholder = 'e.g. ' + STATIONS[st.place[0]].name + ' … (start the story here)';
+      else ta.placeholder = '…and then';
+      ta.addEventListener('input', function () { st.notes[i] = ta.value; saveSoon(); });
+      ta.addEventListener('focus', function () {
+        tb.querySelectorAll('tr').forEach(function (r) { r.classList.remove('cur'); });
+        tr.classList.add('cur'); st.walk = i;
+        $('mr-stage').querySelectorAll('.mr-stn').forEach(function (n) { n.classList.toggle('hot', +n.dataset.stn === st.place[i]); });
+      });
+      td.appendChild(ta); tr.appendChild(td); tb.appendChild(tr);
+    });
+  }
+
+  // ── 5 · PRACTICE ──────────────────────────────────────────────────
+  // Words are hidden one at a time in a fixed shuffled order (per verse), so
+  // moving the slider up always hides the words already hidden plus one more.
+  function buildOrder() {
+    var keys = [], seed = 0;
+    st.items.forEach(function (it, i) { it.text.split(' ').forEach(function (_, w) { keys.push(i + ':' + w); }); });
+    for (var c = 0; c < st.verse.ref.length; c++) seed = (seed * 31 + st.verse.ref.charCodeAt(c)) >>> 0;
+    for (var k = keys.length - 1; k > 0; k--) {
+      seed = (seed * 1103515245 + 12345) >>> 0;
+      var j = seed % (k + 1), t = keys[k]; keys[k] = keys[j]; keys[j] = t;
+    }
+    st.order = keys; st.peek = {};
+    if (st.hide > keys.length) st.hide = keys.length;
+  }
+  function blankFor(w) {
+    var m = w.match(/^([^A-Za-z0-9]*)([A-Za-z0-9’']+)(.*)$/);
+    if (!m) return w;
+    var core = m[2], fill = st.hint ? core[0] + '_'.repeat(Math.max(core.length - 1, 1)) : '_'.repeat(Math.max(core.length, 2));
+    return m[1] + fill + m[3];
+  }
+  function renderLevels() {
+    var lv = $('mr-levels'); lv.textContent = '';
+    var lastStage = null, grp = null;
+    LEVELS.forEach(function (L, i) {
+      if (L.stage !== lastStage) {
+        var g = el('div', 'mr-lgroup'); g.appendChild(el('span', 'mr-lstage', L.stage));
+        grp = el('div', 'mr-lbtns'); g.appendChild(grp);
+        lv.appendChild(g); lastStage = L.stage;
+      }
+      var b = el('button', i === st.mode ? 'is-on' : '', L.name); b.type = 'button';
+      b.addEventListener('click', function () { setMode(i); });
+      grp.appendChild(b);
+    });
+  }
+  function setMode(i) {
+    st.mode = i; st.walk = 0; st.shown = false; st.peek = {};
+    if (i === M_REBUILD) startRebuild();
+    if (i === M_FIND) startFind();
+    renderPractice(); renderStations();
+  }
+  function renderPractice() {
+    renderLevels();
+    var m = st.mode;
+    $('mr-walk').hidden = !(m === M_WALK || m === M_HIDE);
+    $('mr-fade').hidden = m !== M_HIDE;
+    $('mr-rebuild').hidden = m !== M_REBUILD;
+    $('mr-find').hidden = m !== M_FIND;
+    $('mr-recite').hidden = m !== M_RECITE;
+    var room = $('mr-room');
+    room.classList.toggle('walking', m === M_WALK || m === M_HIDE || m === M_REBUILD);
+    room.classList.toggle('finding', m === M_FIND);
+    if (m === M_REBUILD) { renderRebuild(); return; }
+    if (m === M_FIND) { renderFind(); return; }
+    if (m === M_RECITE) return;
+    if (st.order.length === 0 || st.orderFor !== st.items) { st.orderFor = st.items; buildOrder(); }
+    var slider = $('mr-hide'); slider.max = st.order.length; slider.value = st.hide;
+    $('mr-hint').checked = st.hint;
+    var hidden = {}; st.order.slice(0, m === M_HIDE ? st.hide : 0).forEach(function (k) { hidden[k] = true; });
+
+    var i = st.walk, it = st.items[i];
+    $('mr-w-obj').textContent = (i + 1) + ' · ' + STATIONS[st.place[i]].name;
+    $('mr-w-story').textContent = st.notes[i] ? st.notes[i] : '';
+    var cue = $('mr-w-cue'); cue.textContent = ''; cue.className = 'cue';
+    var anyHidden = false;
+    it.text.split(' ').forEach(function (w, wi) {
+      var key = i + ':' + wi, isHid = hidden[key] && !st.shown && !st.peek[key];
+      if (hidden[key]) anyHidden = true;
+      var sp = el('span', 'mr-w' + (hidden[key] ? ' can' : '') + (isHid ? ' blank' : ''), isHid ? blankFor(w) : w);
+      if (hidden[key]) {
+        sp.title = isHid ? 'Tap to peek' : 'Tap to hide';
+        sp.addEventListener('click', function () { st.peek[key] = !st.peek[key]; renderPractice(); });
+      }
+      cue.appendChild(sp); cue.appendChild(document.createTextNode(' '));
+    });
+    var rv = $('mr-reveal');
+    rv.hidden = !anyHidden;
+    rv.textContent = st.shown ? 'Hide Again' : 'Show All';
+    $('mr-prev').disabled = i === 0;
+    $('mr-next').textContent = i === st.items.length - 1 ? 'Start Over ↺' : 'Next →';
+    $('mr-w-prog').textContent = 'Station ' + (i + 1) + ' of ' + st.items.length;
+  }
+  function stepWalk(d) {
+    st.walk = d > 0 ? (st.walk === st.items.length - 1 ? 0 : st.walk + 1) : Math.max(0, st.walk - 1);
+    st.shown = false; st.peek = {};
+    renderPractice(); renderStations();
+  }
+  function shuffled(n) {
+    var a = []; for (var i = 0; i < n; i++) a.push(i);
+    for (var k = a.length - 1; k > 0; k--) { var j = Math.floor(Math.random() * (k + 1)), t = a[k]; a[k] = a[j]; a[j] = t; }
+    return a;
+  }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+
+  // Rebuild the Room: stations light up in path order; pick the phrase that belongs there.
+  var rb = null;
+  function startRebuild() { rb = { pool: shuffled(st.items.length), k: 0, miss: 0 }; st.walk = 0; }
+  function renderRebuild() {
+    if (!rb || rb.n !== st.items.length) { startRebuild(); rb.n = st.items.length; }
+    var done = rb.k >= st.items.length;
+    $('mr-rb-obj').textContent = done ? 'Room rebuilt' : (rb.k + 1) + ' · ' + STATIONS[st.place[rb.k]].name;
+    $('mr-rb-q').textContent = done ? (rb.miss ? 'Finished with ' + plural(rb.miss, 'slip') + '. Try again for a clean walk.' : 'A clean walk. Well done!') : 'Which phrase belongs here?';
+    var built = $('mr-rb-built'); built.textContent = '';
+    for (var i = 0; i < rb.k; i++) built.appendChild(el('span', st.items[i].ref ? 'ref' : '', st.items[i].text));
+    var pool = $('mr-rb-pool'); pool.textContent = '';
+    rb.pool.forEach(function (idx) {
+      if (idx < rb.k) return;
+      var c = el('button', 'mr-chip' + (st.items[idx].ref ? ' ref' : ''), st.items[idx].text); c.type = 'button';
+      c.addEventListener('click', function () {
+        if (idx === rb.k) { rb.k++; st.walk = Math.min(rb.k, st.items.length - 1); renderRebuild(); renderStations(); }
+        else { rb.miss++; c.classList.remove('bad'); void c.offsetWidth; c.classList.add('bad'); }
+      });
+      pool.appendChild(c);
+    });
+  }
+  $('mr-rb-again').addEventListener('click', function () { startRebuild(); rb.n = st.items.length; renderRebuild(); renderStations(); });
+
+  // Find the Object: a phrase appears; click the object it lives on. All stations look alike.
+  var fd = null;
+  function startFind() { fd = { order: shuffled(st.items.length), k: 0, miss: 0, n: st.items.length }; }
+  function renderFind() {
+    if (!fd || fd.n !== st.items.length) startFind();
+    var done = fd.k >= fd.order.length;
+    $('mr-fd-n').textContent = done ? 'All found' : 'Phrase ' + (fd.k + 1) + ' of ' + fd.order.length;
+    $('mr-fd-q').textContent = done ? '' : st.items[fd.order[fd.k]].text;
+    $('mr-fd-msg').textContent = done ? (fd.miss ? 'Finished with ' + plural(fd.miss, 'miss') .replace('misss', 'misses') + '.' : 'Every object found on the first try!') : 'Click the object on the painting where this phrase lives.';
+  }
+  function findPick(si, node) {
+    if (!fd || fd.k >= fd.order.length) return;
+    var ok = st.place[fd.order[fd.k]] === si;
+    node.classList.remove('good', 'bad'); void node.offsetWidth; node.classList.add(ok ? 'good' : 'bad');
+    if (ok) { fd.k++; setTimeout(renderFind, 250); } else { fd.miss++; }
+  }
+  $('mr-fd-again').addEventListener('click', function () { startFind(); renderFind(); renderStations(); });
+
+  $('mr-prev').addEventListener('click', function () { stepWalk(-1); });
+  $('mr-next').addEventListener('click', function () { stepWalk(1); });
+  $('mr-reveal').addEventListener('click', function () { st.shown = !st.shown; st.peek = {}; renderPractice(); });
+  $('mr-hide').addEventListener('input', function () { st.hide = +this.value; st.shown = false; st.peek = {}; renderPractice(); });
+  $('mr-hint').addEventListener('change', function () { st.hint = this.checked; renderPractice(); });
+
+  // Recite check: word-level LCS so one missed word doesn't mark everything after it wrong.
+  function norm(t) {
+    return t.toLowerCase().replace(/[’‘']/g, '').replace(/[:–—-]/g, ' ')
+      .replace(/[^a-z0-9 ]+/g, ' ').replace(/\b(verses?)\b/g, ' ').split(/\s+/).filter(Boolean);
+  }
+  $('mr-check').addEventListener('click', function () {
+    var targetRaw = st.items.filter(function (x) { return !x.ref; }).map(function (x) { return x.text; }).join(' ') + ' ' + st.verse.ref;
+    var tw = targetRaw.split(/\s+/), tn = norm(targetRaw), un = norm($('mr-recite-in').value);
+    // map display words → normalized tokens (skip tokens that normalize away)
+    var n = tn.length, m = un.length, dp = [];
+    for (var i = 0; i <= n; i++) { dp[i] = []; for (var j = 0; j <= m; j++) dp[i][j] = 0; }
+    for (i = n - 1; i >= 0; i--) for (j = m - 1; j >= 0; j--)
+      dp[i][j] = tn[i] === un[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    var hit = [], a = 0, b = 0;
+    while (a < n && b < m) { if (tn[a] === un[b]) { hit[a] = true; a++; b++; } else if (dp[a + 1][b] >= dp[a][b + 1]) a++; else b++; }
+    var box = $('mr-diff'); box.textContent = '';
+    var k = 0;
+    tw.forEach(function (w) {
+      var parts = norm(w), ok = true;
+      parts.forEach(function () { if (!hit[k]) ok = false; k++; });
+      box.appendChild(el('span', parts.length && !ok ? 'miss' : 'ok', w));
+      box.appendChild(document.createTextNode(' '));
+    });
+    var got = hit.filter(Boolean).length;
+    $('mr-score').textContent = got + ' of ' + n + ' words' + (got === n ? ' — well done!' : '');
+    recordRecite(Math.round(100 * got / Math.max(n, 1)));
+  });
+  $('mr-retry').addEventListener('click', function () { $('mr-recite-in').value = ''; $('mr-diff').textContent = ''; $('mr-score').textContent = ''; });
+
+  $('mr-names').addEventListener('click', function (e) {
+    e.stopPropagation();
+    var on = $('mr-room').classList.toggle('labels');
+    this.textContent = on ? 'Hide Names' : 'Show Names';
+    this.setAttribute('aria-pressed', on);
+  });
+  $('mr-peek').addEventListener('click', function (e) {
+    e.stopPropagation();
+    var on = $('mr-room').classList.toggle('peek');
+    this.textContent = on ? 'Show Stations' : 'Hide Stations';
+    this.setAttribute('aria-pressed', on);
+  });
+
+  // The room is moved to <body> while full screen, so no parent (sticky
+  // column, animated section) can trap or cover the fixed overlay.
+  var roomHome = null;
+  function setFull(on) {
+    var room = $('mr-room');
+    if (on === room.classList.contains('full')) return;
+    if (on) { roomHome = document.createComment('mr-room'); room.parentNode.insertBefore(roomHome, room); document.body.appendChild(room); }
+    else if (roomHome) { roomHome.parentNode.insertBefore(room, roomHome); roomHome.remove(); roomHome = null; }
+    room.classList.toggle('full', on);
+    document.body.classList.toggle('mr-noscroll', on);
+    $('mr-full').innerHTML = on ? '&#x2715; Close' : '&#x26F6; Full Screen';
+    $('mr-full').setAttribute('aria-pressed', on);
+  }
+  $('mr-full').addEventListener('click', function (e) { e.stopPropagation(); setFull(!$('mr-room').classList.contains('full')); });
+  $('mr-img').addEventListener('click', function () { setFull(!$('mr-room').classList.contains('full')); });
+  $('mr-room').addEventListener('click', function (e) { if (e.target === $('mr-room')) setFull(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setFull(false); });
+
+  function renderRooms() {
+    var box = $('mr-rooms');
+    box.querySelectorAll('button').forEach(function (b) { b.remove(); });
+    ROOMS.forEach(function (r) {
+      var b = el('button', 'mr-room-pick' + (r === ROOM ? ' is-on' : '')); b.type = 'button';
+      b.title = r.name; b.setAttribute('aria-label', 'Room: ' + r.name);
+      var im = el('img'); im.src = r.img.replace('.webp', '-thumb.webp'); im.alt = ''; im.loading = 'lazy';
+      b.appendChild(im); b.appendChild(el('span', null, r.name));
+      b.addEventListener('click', function () { setRoom(r); });
+      box.appendChild(b);
+    });
+  }
+  function setRoom(r, quiet) {
+    if (r === ROOM && !quiet) return;
+    var placed = Object.keys(st.place).length;
+    if (!quiet && placed && !window.confirm('Switch rooms? Your placed objects and connections for this verse will be cleared.')) return;
+    ROOM = r; STATIONS = r.stations;
+    st.place = {}; st.notes = []; st.active = st.items.length ? 0 : null;
+    var img = $('mr-img'); img.src = r.img; img.width = r.w; img.height = r.h; img.alt = r.credit.replace(/<[^>]+>/g, '');
+    $('mr-credit').innerHTML = r.credit;
+    var lay = $('mr-room-layout');
+    lay.style.setProperty('--ar', (r.w / r.h).toFixed(4));
+    lay.classList.toggle('wide', r.w > r.h);
+    renderRooms();
+    if (st.step === 2) renderPlace();
+    renderStations(); renderSteps();
+  }
+
+
+  // ── SAVING (signed-in readers) ────────────────────────────────────
+  // Tables: memory_verses, memory_reviews (see sql/memory-rooms.sql).
+  // Guests can use everything; nothing is stored for them.
+  var user = null, db = null, mine = {}, saveTimer = null, saving = false, saveAgain = false;
+  var INTERVALS = [1, 3, 7, 14, 30, 60];          // days until the next review, by review_step
+  var PASS = 90;                                   // Recite score (%) that counts as remembered
+  function key(ref, ver) { return ref + '|' + (ver || ''); }
+  function todayISO(offsetDays) {
+    var d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + (offsetDays || 0));
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function niceDate(iso) {
+    var d = new Date(iso + 'T12:00:00');
+    return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+  }
+  function dueText(r) {
+    if (!r.next_review) return { t: 'Not reviewed yet', now: false };
+    if (r.next_review <= todayISO()) return { t: 'Due for review today', now: true };
+    return { t: 'Next review ' + niceDate(r.next_review), now: false };
+  }
+  function roomById(id) { for (var i = 0; i < ROOMS.length; i++) if (ROOMS[i].id === id) return ROOMS[i]; return ROOMS[0]; }
+
+  function showSaveState(text) {
+    var p = $('mr-save');
+    if (st.step === 0) { p.textContent = ''; return; }
+    if (!user) {
+      p.textContent = '';
+      var a = el('a', null, 'Sign in'); a.href = '#';
+      a.addEventListener('click', function (e) { e.preventDefault(); if (window.WBAuth) WBAuth.open('signin'); });
+      p.appendChild(a); p.appendChild(document.createTextNode(' to save this verse and your room.'));
+      return;
+    }
+    if (text) p.textContent = text;
+  }
+
+  function payload() {
+    var breaks = Object.keys(st.breaks).map(Number).sort(function (a, b) { return a - b; });
+    return {
+      ref: st.verse.ref, version: st.verse.ver || '',
+      verse_text: st.words.join(' '),
+      ref_a: st.verse.a || null, ref_b: st.verse.b || null,
+      breaks: breaks, room_id: ROOM.id,
+      placements: st.items.map(function (_, i) { return st.place[i] == null ? -1 : st.place[i]; }),
+      notes: st.items.map(function (_, i) { return (st.notes[i] || '').slice(0, 240); }),
+      updated_at: new Date().toISOString()
+    };
+  }
+  function save() {
+    if (!user || !db || !st.verse) return Promise.resolve();
+    if (saving) { saveAgain = true; return Promise.resolve(); }
+    saving = true; showSaveState('Saving…');
+    return db.from('memory_verses').upsert(payload(), { onConflict: 'user_id,ref,version' }).select().single()
+      .then(function (res) {
+        if (res.error) throw res.error;
+        st.savedId = res.data.id; st.rec = res.data;
+        mine[key(res.data.ref, res.data.version)] = res.data;
+        renderMine();
+        showSaveState('Saved to My Verses');
+      })
+      .catch(function () { showSaveState('Couldn’t save just now — your work is still here on the page.'); })
+      .then(function () { saving = false; if (saveAgain) { saveAgain = false; save(); } });
+  }
+  function saveSoon() {
+    if (!user) return;
+    clearTimeout(saveTimer); showSaveState('Unsaved changes…');
+    saveTimer = setTimeout(save, 1500);
+  }
+
+  function recordRecite(score) {
+    if (!user || !db) return;
+    save().then(function () {
+      if (!st.savedId) return;
+      var r = st.rec || {}, stepN = r.review_step || 0, next;
+      if (score >= PASS) { next = todayISO(INTERVALS[Math.min(stepN, INTERVALS.length - 1)]); stepN = Math.min(stepN + 1, INTERVALS.length - 1); }
+      else { next = todayISO(1); stepN = 0; }
+      var upd = { review_step: stepN, next_review: next, last_score: score,
+                  best_score: Math.max(score, r.best_score || 0), last_practiced_at: new Date().toISOString() };
+      return db.from('memory_reviews').insert({ verse_id: st.savedId, mode: 'recite', score: score })
+        .then(function () { return db.from('memory_verses').update(upd).eq('id', st.savedId).select().single(); })
+        .then(function (res) {
+          if (res.error) throw res.error;
+          st.rec = res.data; mine[key(res.data.ref, res.data.version)] = res.data; renderMine();
+          var note = $('mr-next-review') || el('p', 'mr-next-review'); note.id = 'mr-next-review';
+          note.textContent = (score >= PASS ? 'Remembered! ' : 'Keep at it — ') + 'Next review: ' + niceDate(next) + '.';
+          $('mr-score').after(note);
+        })
+        .catch(function () { showSaveState('Couldn’t record this review just now.'); });
+    });
+  }
+
+  function loadSaved(r) {
+    var words = r.verse_text.split(' '), br = {};
+    (r.breaks || []).forEach(function (b) { br[b] = true; });
+    var parts = [], cur = [];
+    words.forEach(function (w, i) { cur.push(w); if (br[i] || i === words.length - 1) { parts.push(cur.join(' ')); cur = []; } });
+    st.verse = { ref: r.ref, a: r.ref_a, b: r.ref_b, s: parts.join(' | '), ver: r.version };
+    st.order = []; st.savedId = r.id; st.rec = r;
+    resetSplit();
+    setRoom(roomById(r.room_id), true);
+    st.place = {}; st.notes = [];
+    (r.placements || []).forEach(function (si, i) { if (si >= 0 && si < STATIONS.length && i < st.items.length) st.place[i] = si; });
+    (r.notes || []).forEach(function (t, i) { if (t) st.notes[i] = t; });
+    st.active = nextEmpty(0);
+    go(placeOk() === '' ? 4 : 2);
+  }
+
+  function renderMine() {
+    var box = $('mr-mine'), list = $('mr-mine-list');
+    $('mr-guest').hidden = !!user;
+    var rows = Object.keys(mine).map(function (k) { return mine[k]; });
+    box.hidden = !user || !rows.length;
+    list.textContent = '';
+    rows.sort(function (a, b) {
+      var ad = a.next_review || '9999', bd = b.next_review || '9999';
+      return ad < bd ? -1 : ad > bd ? 1 : (a.updated_at < b.updated_at ? 1 : -1);
+    });
+    rows.forEach(function (r) {
+      var b = el('div', 'mr-verse'); b.tabIndex = 0; b.setAttribute('role', 'button');
+      b.appendChild(el('b', null, r.ref + (r.version ? ' (' + verLabel(r.version) + ')' : '')));
+      b.appendChild(el('span', null, r.verse_text));
+      var d = dueText(r); b.appendChild(el('span', 'due' + (d.now ? ' now' : ''), d.t + ' · ' + roomById(r.room_id).name));
+      var x = el('button', 'mr-del', '×'); x.type = 'button'; x.title = 'Remove from My Verses'; x.setAttribute('aria-label', 'Remove ' + r.ref);
+      x.addEventListener('click', function (e) {
+        e.stopPropagation();
+        if (!window.confirm('Remove ' + r.ref + ' from My Verses? Your room and story lines for it will be deleted.')) return;
+        db.from('memory_verses').delete().eq('id', r.id).then(function (res) {
+          if (res.error) return;
+          delete mine[key(r.ref, r.version)];
+          if (st.savedId === r.id) { st.savedId = null; st.rec = null; }
+          renderMine();
+        });
+      });
+      b.appendChild(x);
+      b.addEventListener('click', function () { loadSaved(r); });
+      b.addEventListener('keydown', function (e) { if (e.key === 'Enter') loadSaved(r); });
+      list.appendChild(b);
+    });
+  }
+  function loadMine() {
+    return db.from('memory_verses').select('*').order('updated_at', { ascending: false })
+      .then(function (res) {
+        mine = {};
+        if (!res.error) (res.data || []).forEach(function (r) { mine[key(r.ref, r.version)] = r; });
+        renderMine();
+      });
+  }
+  $('mr-guest-link').addEventListener('click', function (e) { e.preventDefault(); if (window.WBAuth) WBAuth.open('signin'); });
+  if (window.WBAuth) {
+    WBAuth.onChange(function (u) {
+      var was = user && user.id;
+      user = u || null;
+      if (!user) { db = null; mine = {}; st.savedId = null; st.rec = null; renderMine(); showSaveState(); return; }
+      if (was === user.id) return;
+      WBAuth.client().then(function (c) { db = c; return loadMine(); })
+        .then(function () { showSaveState(); if (st.step >= 3) save(); });
+    });
+  } else { renderMine(); }
+
+  setRoom(ROOMS[0], true);
+  renderVersions();
+  renderPicker();
+  renderSteps();
+})();
+</script>
+</body>
+</html>

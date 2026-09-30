@@ -1744,7 +1744,10 @@ nav a:hover::after { left: 0.9rem; right: 0.9rem; }
 .hp-start-go { color: var(--gold-light); margin-top: auto; }
 
 /* tool cards */
-.hp-tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+.hp-tools { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1.25rem; }
+/* three cards per row; a last row of two sits centered under the three */
+.hp-tools > .hp-tool { grid-column: span 2; }
+.hp-tools > .hp-tool:nth-child(3n+1):nth-last-child(2) { grid-column: 2 / span 2; }
 .hp-tool {
   display: flex; flex-direction: column; overflow: hidden;
   border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass);
@@ -1823,6 +1826,7 @@ a.hp-panel:hover { border-color: rgba(201,168,76,0.45); }
   .hp-lead, .hp-tools, .hp-writing, .hp-bottom { grid-template-columns: minmax(0, 1fr); }
   .hp-votd, .hp-feature, .hp-side { grid-column: auto; }
   .hp-tool img { height: 170px; }
+  .hp-tools > .hp-tool, .hp-tools > .hp-tool:nth-child(3n+1):nth-last-child(2) { grid-column: auto; }
   .hp-divider { display: none; }
 }
 
