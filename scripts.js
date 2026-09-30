@@ -254,3 +254,22 @@ document.addEventListener('keydown', e => {
 document.addEventListener('focusin', e => {
   if (e.target.id === 'site-search' && e.target.value.trim()) runSearch(e.target.value);
 });
+
+
+// ── NAV: "Study Tools" dropdown (click/tap to toggle; hover and keyboard work via CSS) ──
+(function () {
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.nav-drop-btn');
+    document.querySelectorAll('.nav-drop.open').forEach(function (d) {
+      if (!btn || d !== btn.parentNode) { d.classList.remove('open'); d.querySelector('.nav-drop-btn').setAttribute('aria-expanded', 'false'); }
+    });
+    if (btn) {
+      var d = btn.parentNode, on = d.classList.toggle('open');
+      btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.nav-drop.open').forEach(function (d) { d.classList.remove('open'); });
+  });
+})();

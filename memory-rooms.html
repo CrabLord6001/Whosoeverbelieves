@@ -178,15 +178,8 @@
   .mr-obj { font-family: 'EB Garamond', serif; font-size: 0.92rem; background: none; color: var(--text-mid); border: 1px dashed var(--rule); border-radius: 3px; padding: 0.2rem 0.55rem; cursor: pointer; }
   .mr-obj:hover, .mr-obj.hot { border-color: var(--gold); color: var(--gold); }
   .mr-obj.used { border-style: solid; border-color: rgba(201,168,76,0.45); color: var(--text); }
-  .mr-room.labels .mr-stn::after {
-    content: attr(data-name); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 4px;
-    white-space: nowrap; font: italic 400 0.72rem/1.2 'EB Garamond', serif; letter-spacing: 0; text-transform: none;
-    color: #f3e7c4; background: rgba(13,17,23,0.72); padding: 1px 5px; border-radius: 2px; pointer-events: none;
-  }
-  .mr-room.labels .mr-stn.lft::after { left: auto; right: 100%; margin: 0 4px 0 0; }
   .mr-room.labels .mr-stn { opacity: 1; }
   .mr-room.labels .mr-stn:hover { opacity: 1; }
-  .mr-room.full.labels .mr-stn::after { font-size: 0.9rem; }
 
   /* Phrase slots */
   .mr-slot { cursor: pointer; border-radius: 3px; padding-left: 0.35rem !important; padding-right: 0.2rem !important; }
@@ -246,6 +239,7 @@
     text-wrap: pretty;
   }
   .mr-intro a { font-style: italic; }
+  .mr-intro-tip { display: block; margin-top: 0.8rem; font-size: 0.86em; color: var(--text-mid); font-style: italic; }
   @media (max-width: 760px) { .mr-intro { font-size: 1.15rem; padding: 0.9rem 0.4rem; } }
   .mr-or { margin: 1.4rem 0 0.6rem; }
   .mr-custom[open] > summary::before { transform: rotate(90deg); }
@@ -294,11 +288,47 @@
   .mr-del { position: absolute; top: 0.45rem; right: 0.5rem; background: none; border: none; color: var(--text-faint); font-size: 1.05rem; cursor: pointer; }
   .mr-del:hover { color: #e57373; }
   .mr-next-review { margin-top: 0.4rem; font-size: 0.95rem; color: var(--text-mid); font-style: italic; }
+
+  /* Room step */
+  .mr-gallery { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.5rem; margin: 0 0 1.1rem; }
+  .mr-gallery .mr-room-pick { width: auto; height: auto; aspect-ratio: 4 / 3; opacity: 0.75; }
+  .mr-gallery .mr-room-pick span { position: static; left: auto; display: block; font-size: 0.72rem; line-height: 1.2; color: var(--text-mid); padding: 0.25rem 0.1rem 0; text-align: center; font-family: 'EB Garamond', serif; }
+  .mr-gallery .mr-room-pick { overflow: visible; background: none; border: 0; padding: 0; }
+  .mr-gallery .mr-room-pick img { aspect-ratio: 4 / 3; height: auto; border: 2px solid transparent; border-radius: 4px; }
+  .mr-gallery .mr-room-pick.is-on img { border-color: var(--gold); }
+  .mr-gallery .mr-room-pick.is-on span { color: var(--gold); }
+  .mr-gallery .mr-room-pick:hover { opacity: 1; }
+  .mr-room-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; margin: 0.4rem 0 0.3rem; color: var(--text); }
+  .mr-room-about { color: var(--text-mid); line-height: 1.6; margin: 0 0 0.6rem; }
+  .mr-obj.hot { border-color: var(--gold); color: var(--gold); background: var(--gold-faint); }
+  @media (max-width: 760px) { .mr-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  /* Stronger highlight when an object name is pointed at */
+  .mr-stn.hot, .mr-room .mr-stn.hot {
+    opacity: 1 !important; z-index: 4; width: 22px; height: 22px;
+    transform: translate(-50%, -50%) scale(1.45); background: #f2c14e !important; color: #1a1406; text-shadow: none;
+    border: 2px solid #fff; box-shadow: 0 0 0 4px rgba(242,193,78,0.45), 0 0 16px rgba(242,193,78,0.95);
+  }
+  /* Object-name labels (placed by script so they never overlap) */
+  .mr-lbl {
+    position: absolute; z-index: 3; pointer-events: none; white-space: nowrap;
+    font: italic 400 0.74rem/1.25 'EB Garamond', serif; color: #f6ecd0;
+    background: rgba(13,17,23,0.78); padding: 1px 6px; border-radius: 3px; box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  }
+  .mr-lbl.hot { background: #f2c14e; color: #1a1406; font-weight: 600; z-index: 5; }
+  .mr-room.full .mr-lbl { font-size: 0.9rem; }
+  .mr-room.labels .mr-stn { opacity: 1; }
+
+  .mr-export { margin-top: 1.8rem; padding-top: 1.1rem; border-top: 1px solid var(--rule); }
+  .mr-export .mr-note { margin: 0.2rem 0 0; }
+  .mr-export-mini { margin-top: 1.6rem; padding-top: 0.9rem; border-top: 1px solid var(--rule); }
   /* Stage keeps markers aligned to the painting at any size */
   .mr-stage { position: relative; width: min(100%, calc((100vh - 7rem) * var(--ar, 0.7885))); margin: 0 auto; }
   .mr-stage img { cursor: zoom-in; }
   .mr-path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .mr-path polyline { fill: none; stroke: rgba(229,201,122,0.55); stroke-width: 1.5; stroke-dasharray: 4 4; vector-effect: non-scaling-stroke; }
+  .mr-path .mr-path-under { fill: none; stroke: rgba(10,12,16,0.75); stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .mr-path .mr-path-line { fill: none; stroke: #f2c14e; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+  .mr-path .mr-path-arrow { fill: #f2c14e; stroke: rgba(10,12,16,0.8); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
   .mr-room.peek .mr-path { display: none; }
   .mr-tools { position: absolute; top: 8px; right: 8px; z-index: 2; display: flex; gap: 6px; }
   .mr-stn.empty { width: 11px; height: 11px; border-width: 1.5px; background: rgba(13,17,23,0.35); }
@@ -341,9 +371,15 @@
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/articles.html">Articles</a>
-    <a href="/bible-reading-plans.html">Reading Plans</a>
-    <a href="/greek/">Greek</a>
-    <a href="/discipleship-challenge.html">Discipleship</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans.html">Reading Plans</a>
+        <a href="/greek/">Greek</a>
+        <a href="/discipleship-challenge.html">Discipleship</a>
+        <a href="/memory-rooms.html">Bible Memory</a>
+      </div>
+    </div>
   </div>
   <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
     <label for="site-search" class="visually-hidden">Search the site</label>
@@ -370,11 +406,12 @@
     <!-- Lead text: the page intro on step 1, then one line per step in the same spot.
          Intro + step 1 line: Jonathan's wording. Steps 2–5: DRAFT, pending Jonathan's approval. -->
     <div id="mr-lead">
-      <p class="mr-intro" data-for="0">Struggling to memorize Scripture or don't know how to start? This tool walks you through an exercise in associating each segment of a verse with an object in a classical painting and crafting a memory or elaborate story for each in a sequence. Then you practice by repeating the story as you journey mentally through the room of objects. New to memory rooms? Start with <a href="/articles/bible-memory-rooms">The Power to Memorize Scripture</a>.</p>
+      <p class="mr-intro" data-for="0">Struggling to memorize Scripture or don't know how to start? This tool walks you through an exercise in associating each segment of a verse with an object in a classical painting and crafting a memory or elaborate story for each in a sequence. Then you practice by repeating the story as you journey mentally through the room of objects. New to memory rooms? Start with <a href="/articles/bible-memory-rooms">The Power to Memorize Scripture</a>.<span class="mr-intro-tip">For long passages (more than about three verses), consider dividing the exercise between two or more rooms, and find a meaningful connection that carries you from one room to the next.</span></p>
       <p class="mr-intro" data-for="1" hidden>Next, break the verse into short phrases. We've suggested the breaks — tap any word to add or remove one.</p>
-      <p class="mr-intro" data-for="2" hidden>Now choose a room and give each phrase a home. Click an object on the painting for the highlighted phrase, in any order you like.</p>
-      <p class="mr-intro" data-for="3" hidden>Then connect each phrase to its object with a line of story. The stranger and more personal, the better it sticks.</p>
-      <p class="mr-intro" data-for="4" hidden>Finally, practice in three stages: walk the room with your story, strengthen it with the drills, then recite the whole verse from memory.</p>
+      <p class="mr-intro" data-for="2" hidden>Next, choose a room. Browse the paintings, get to know their objects, and pick one that suits your verse — or simply one you enjoy.</p>
+      <p class="mr-intro" data-for="3" hidden>Now give each phrase a home. Click an object on the painting for the highlighted phrase, in any order you like.</p>
+      <p class="mr-intro" data-for="4" hidden>Then connect each phrase to its object with a line of story. The stranger and more personal, the better it sticks.</p>
+      <p class="mr-intro" data-for="5" hidden>Finally, practice in three stages: walk the room with your story, strengthen it with the drills, then recite the whole verse from memory.</p>
     </div>
 
     <ol class="mr-steps" id="mr-steps"></ol>
@@ -413,17 +450,17 @@
       <p class="mr-warn" id="mr-split-warn" hidden></p>
       <div class="mr-row">
         <button class="mr-btn quiet" type="button" id="mr-reset-split">Reset to Suggested</button>
-        <button class="mr-btn" type="button" data-go="2">Next: Place</button>
+        <button class="mr-btn" type="button" data-go="2">Next: Choose a Room</button>
       </div>
     </section>
 
-    <!-- 3–5 share the room image -->
+    <!-- steps 3–6 share the room image -->
     <div class="mr-room-layout" id="mr-room-layout" hidden>
       <div>
         <div class="mr-room" id="mr-room">
           <div class="mr-stage" id="mr-stage">
             <img src="images/memory-room-jerome.webp" width="1100" height="1395" alt="Antonello da Messina, Saint Jerome in His Study" draggable="false" id="mr-img">
-            <svg class="mr-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline id="mr-path-line" points=""/></svg>
+            <svg class="mr-path" id="mr-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
             <div class="mr-tools">
               <button type="button" class="mr-peek" id="mr-names" aria-pressed="false">Show Names</button>
               <button type="button" class="mr-peek" id="mr-peek" aria-pressed="false">Hide Stations</button>
@@ -435,9 +472,18 @@
       </div>
 
       <div>
-        <!-- 3 · PLACE -->
+        <!-- 3 · ROOM -->
         <section class="mr-panel" data-step="2" hidden>
-          <div class="mr-rooms" id="mr-rooms"><span class="mr-label">Room</span></div>
+          <div class="mr-gallery" id="mr-rooms"></div>
+          <h3 class="mr-room-title" id="mr-room-title"></h3>
+          <p class="mr-room-about" id="mr-room-about"></p>
+          <p class="mr-label mr-objs-h">Objects in this room</p>
+          <div class="mr-objs" id="mr-room-objs"></div>
+          <div class="mr-row"><button class="mr-btn" type="button" data-go="3">Next: Place</button></div>
+        </section>
+
+        <!-- 4 · PLACE -->
+        <section class="mr-panel" data-step="3" hidden>
           <ul class="mr-list" id="mr-list"></ul>
           <p class="mr-label mr-objs-h">Objects in this room</p>
           <div class="mr-objs" id="mr-objs"></div>
@@ -445,23 +491,31 @@
           <div class="mr-row">
             <button class="mr-btn quiet" type="button" id="mr-autofill">Suggested Path</button>
             <button class="mr-btn quiet" type="button" id="mr-clear">Clear</button>
-            <button class="mr-btn" type="button" data-go="3">Next: Connect</button>
+            <button class="mr-btn" type="button" data-go="4">Next: Connect</button>
           </div>
         </section>
 
-        <!-- 4 · CONNECT -->
-        <section class="mr-panel" data-step="3" hidden>
+        <!-- 5 · CONNECT -->
+        <section class="mr-panel" data-step="4" hidden>
           <table class="mr-table">
             <thead><tr><th>Verse Segment</th><th>Object</th><th>Connection</th></tr></thead>
             <tbody id="mr-conn"></tbody>
           </table>
           <div class="mr-row">
-            <button class="mr-btn" type="button" data-go="4">Next: Walk the Room</button>
+            <button class="mr-btn" type="button" data-go="5">Next: Walk the Room</button>
+          </div>
+          <div class="mr-export">
+            <p class="mr-label">Keep a Copy</p>
+            <p class="mr-note">Save your room — the painting with your path, plus each phrase, object and connection — to study offline.</p>
+            <div class="mr-row">
+              <button class="mr-btn quiet mr-dl" type="button" data-export="png">Download Image</button>
+              <button class="mr-btn quiet mr-dl" type="button" data-export="print">Print or Save as PDF</button>
+            </div>
           </div>
         </section>
 
         <!-- 5 · PRACTICE -->
-        <section class="mr-panel" data-step="4" hidden>
+        <section class="mr-panel" data-step="5" hidden>
           <div class="mr-levels" id="mr-levels"></div>
           <div class="mr-fade" id="mr-fade">
             <label for="mr-hide">Hide words</label>
@@ -507,6 +561,10 @@
             <div class="mr-diff" id="mr-diff"></div>
             <div class="mr-score" id="mr-score"></div>
           </div>
+          <div class="mr-row mr-export-mini">
+            <button class="mr-btn quiet mr-dl" type="button" data-export="png">Download My Room</button>
+            <button class="mr-btn quiet mr-dl" type="button" data-export="print">Print / PDF</button>
+          </div>
         </section>
       </div>
     </div>
@@ -518,8 +576,6 @@
   <div class="footer-nav">
     <a href="about.html">About</a>
     <span>&#183;</span>
-    <a href="/free-grace-glossary.html">Glossary</a>
-    <span>·</span>
     <span>© 2026 Whosoever Believes</span>
   </div>
 </footer>
@@ -574,9 +630,12 @@
   ];
 
   // Rooms. x / y are percentages of the image; station order is only a suggested path.
+  // Rooms. x / y are percentages of the image; station order is only a suggested path.
+  // "about" lines are DRAFT context notes, pending Jonathan's approval.
   var ROOMS = [
     { id: 'jerome', name: 'St. Jerome’s Study', img: 'images/memory-room-jerome.webp', w: 1100, h: 1395,
       credit: 'Antonello da Messina, <i>Saint Jerome in His Study</i> (c. 1475), National Gallery, London. Public domain.',
+      about: 'Jerome, who translated the Bible into Latin, reads in a study built inside a great stone hall. Each creature was chosen with care; the lion in the corridor recalls the legend that Jerome pulled a thorn from its paw.',
       stations: [
         { name: 'Partridge', x: 29, y: 93 }, { name: 'Peacock', x: 62, y: 90 }, { name: 'Brass basin', x: 78, y: 91 },
         { name: 'Slippers by the steps', x: 60, y: 82 }, { name: 'Jerome reading', x: 52, y: 57 }, { name: 'Red hat on the bench', x: 73, y: 62 },
@@ -585,30 +644,79 @@
         { name: 'Potted plants', x: 37, y: 66 }, { name: 'Cat on the ledge', x: 21, y: 71 } ] },
     { id: 'augustine', name: 'St. Augustine’s Study', img: 'images/memory-room-augustine.webp', w: 1059, h: 700,
       credit: 'Vittore Carpaccio, <i>Vision of Saint Augustine</i> (1502), Scuola di San Giorgio degli Schiavoni, Venice. Public domain.',
+      about: 'Augustine looks up from his writing as, in the old legend, a light fills the room at the moment of Jerome’s death. The study is crowded with books, instruments and keepsakes, with a little white dog watching from the floor.',
       stations: [
         { name: 'Little white dog', x: 17, y: 82 }, { name: 'Folding chair', x: 5, y: 60 }, { name: 'Lectern', x: 18, y: 64 },
         { name: 'Bookshelf', x: 12, y: 27 }, { name: 'Candle sconce', x: 12, y: 14 }, { name: 'Open cabinet', x: 30, y: 48 },
         { name: 'Statue in the niche', x: 49, y: 37 }, { name: 'Bishop’s staff', x: 54, y: 51 }, { name: 'Stool with a book', x: 49, y: 81 },
         { name: 'Book on the floor', x: 60, y: 92 }, { name: 'Augustine writing', x: 74, y: 38 }, { name: 'Red cabinet', x: 68, y: 24 },
         { name: 'Armillary sphere', x: 89, y: 19 }, { name: 'Open music books', x: 88, y: 81 } ] },
+    { id: 'arnolfini', name: 'The Arnolfini Room', img: 'images/memory-room-arnolfini.webp', w: 1023, h: 1400,
+      credit: 'Jan van Eyck, <i>The Arnolfini Portrait</i> (1434), National Gallery, London. Public domain.',
+      about: 'A merchant and his wife stand in their home in Bruges. Van Eyck filled the room with small, exact details: the round mirror shows two more visitors in the doorway, and he signed his name on the wall above it.',
+      stations: [
+        { name: 'Wooden clogs', x: 7, y: 89 }, { name: 'Little dog', x: 51, y: 88 }, { name: 'Red slippers', x: 52, y: 63 },
+        { name: 'Oranges by the window', x: 10, y: 52 }, { name: 'Window', x: 9, y: 22 }, { name: 'Tall black hat', x: 28, y: 17 },
+        { name: 'Joined hands', x: 55, y: 40 }, { name: 'White headdress', x: 76, y: 22 }, { name: 'Green gown', x: 76, y: 68 },
+        { name: 'Chandelier', x: 50, y: 13 }, { name: 'Signature on the wall', x: 50, y: 21 }, { name: 'Round mirror', x: 50, y: 30 },
+        { name: 'Prayer beads', x: 42, y: 31 }, { name: 'Red bed', x: 94, y: 47 } ] },
+    { id: 'vermeer', name: 'The Painter’s Studio', img: 'images/memory-room-vermeer.webp', w: 1178, h: 1400,
+      credit: 'Johannes Vermeer, <i>The Art of Painting</i> (c. 1666–68), Kunsthistorisches Museum, Vienna. Public domain.',
+      about: 'An artist, seen from behind, paints a model posed as Clio, the muse of history, with her laurel wreath, trumpet and book. A large map of the Netherlands hangs on the wall, and a heavy curtain is pulled back as if to let us in.',
+      stations: [
+        { name: 'Heavy curtain', x: 18, y: 30 }, { name: 'Studded chair', x: 32, y: 92 }, { name: 'Trumpet', x: 30, y: 50 },
+        { name: 'Laurel wreath', x: 47, y: 41 }, { name: 'Yellow book', x: 44, y: 52 }, { name: 'Blue gown', x: 47, y: 63 },
+        { name: 'Things on the table', x: 38, y: 66 }, { name: 'Wall map', x: 60, y: 30 }, { name: 'Brass chandelier', x: 64, y: 17 },
+        { name: 'Easel', x: 80, y: 42 }, { name: 'Black beret', x: 72, y: 44 }, { name: 'Striped doublet', x: 68, y: 56 },
+        { name: 'Red stockings', x: 81, y: 79 }, { name: 'Checkered floor', x: 55, y: 93 } ] },
     { id: 'bedroom', name: 'The Bedroom', img: 'images/memory-room-bedroom.webp', w: 1400, h: 1111,
       credit: 'Vincent van Gogh, <i>The Bedroom</i> (1888), Van Gogh Museum, Amsterdam. Public domain.',
+      about: 'Van Gogh painted his own bedroom in the Yellow House at Arles, France, and wrote that it should suggest rest. Its few, bold objects make it an easy first room.',
       stations: [
         { name: 'Front chair', x: 9, y: 60 }, { name: 'Hanging towel', x: 12, y: 37 }, { name: 'Mirror', x: 19, y: 15 },
         { name: 'Window', x: 32, y: 14 }, { name: 'Pitcher & basin', x: 23, y: 31 }, { name: 'Table', x: 30, y: 45 },
         { name: 'Back chair', x: 40, y: 42 }, { name: 'Coat hooks', x: 44, y: 25 }, { name: 'Landscape picture', x: 49, y: 13 },
         { name: 'Two portraits', x: 70, y: 10 }, { name: 'Sketches', x: 79, y: 19 }, { name: 'Red blanket', x: 53, y: 44 },
         { name: 'Bed footboard', x: 76, y: 58 }, { name: 'Door', x: 96, y: 38 } ] },
+    { id: 'larsson', name: 'Breakfast in the Garden', img: 'images/memory-room-larsson.webp', w: 1400, h: 915,
+      credit: 'Carl Larsson, <i>Breakfast under the Big Birch</i> (1896), Nationalmuseum, Stockholm. Public domain.',
+      about: 'Swedish artist Carl Larsson painted his own family eating breakfast outdoors at their home in Sundborn, part of a series on everyday family life. The whole household is here, down to the dog and a hen.',
+      stations: [
+        { name: 'Birch trunk', x: 18, y: 55 }, { name: 'Carved initials', x: 19, y: 9 }, { name: 'Flower box', x: 8, y: 12 },
+        { name: 'Open window', x: 28, y: 8 }, { name: 'Ladder', x: 47, y: 12 }, { name: 'Empty chair', x: 34, y: 45 },
+        { name: 'White hen', x: 38, y: 37 }, { name: 'Boy in a white cap', x: 46, y: 32 }, { name: 'Boy in a dark cap', x: 57, y: 30 },
+        { name: 'Straw hat', x: 63, y: 22 }, { name: 'Dog at the table', x: 71, y: 30 }, { name: 'Girl in a red hat', x: 77, y: 42 },
+        { name: 'Mother pouring', x: 86, y: 32 }, { name: 'Bottles in the grass', x: 28, y: 84 } ] },
     { id: 'hunters', name: 'Hunters in the Snow', img: 'images/memory-room-hunters.webp', w: 1400, h: 996,
       credit: 'Pieter Bruegel the Elder, <i>Hunters in the Snow</i> (1565), Kunsthistorisches Museum, Vienna. Public domain.',
+      about: 'From Bruegel’s series on the seasons: tired hunters trudge home with their dogs through a village in deep winter while the townspeople skate on the frozen ponds below.',
       stations: [
         { name: 'Inn sign', x: 10, y: 35 }, { name: 'Fire at the inn', x: 13, y: 59 }, { name: 'Hunting dogs', x: 11, y: 82 },
         { name: 'Hunters with spears', x: 31, y: 70 }, { name: 'Crow in the treetop', x: 23, y: 7 }, { name: 'Bramble in the snow', x: 57, y: 90 },
         { name: 'Horse cart', x: 62, y: 56 }, { name: 'Flying magpie', x: 71, y: 25 }, { name: 'Village church', x: 75, y: 44 },
         { name: 'Skaters on the pond', x: 81, y: 57 }, { name: 'Lower pond', x: 74, y: 68 }, { name: 'Stone bridge', x: 80, y: 82 },
         { name: 'Water mill', x: 92, y: 76 }, { name: 'Jagged mountains', x: 90, y: 20 } ] },
+    { id: 'harvesters', name: 'The Harvesters', img: 'images/memory-room-harvesters.webp', w: 1400, h: 1019,
+      credit: 'Pieter Bruegel the Elder, <i>The Harvesters</i> (1565), The Metropolitan Museum of Art, New York. Public domain.',
+      about: 'Another of Bruegel’s seasons: on a hot summer day, peasants cut and bundle the wheat, and the rest stop for a midday meal in the shade of a pear tree.',
+      stations: [
+        { name: 'Reaper with a sickle', x: 17, y: 82 }, { name: 'Mower', x: 22, y: 72 }, { name: 'Man carrying jugs', x: 34, y: 70 },
+        { name: 'Birds over the field', x: 13, y: 65 }, { name: 'Hay wagon', x: 8, y: 51 }, { name: 'Farmhouses', x: 30, y: 44 },
+        { name: 'Sea and ships', x: 38, y: 35 }, { name: 'Sheaf of wheat', x: 49, y: 79 }, { name: 'Sleeping man', x: 55, y: 90 },
+        { name: 'Pear tree', x: 63, y: 55 }, { name: 'Lunch under the tree', x: 77, y: 81 }, { name: 'Women binding sheaves', x: 78, y: 63 },
+        { name: 'Stacked sheaves', x: 90, y: 62 }, { name: 'Village church', x: 72, y: 33 } ] },
+    { id: 'noah', name: 'The Animals Enter the Ark', img: 'images/memory-room-noah.webp', w: 1400, h: 887,
+      credit: 'Jan Brueghel the Elder, <i>The Entry of the Animals into Noah’s Ark</i> (1613), J. Paul Getty Museum, Los Angeles. Public domain.',
+      about: 'Pairs of animals from every corner of the world gather to board the ark, as in Genesis 7. Brueghel studied many of these creatures from life, from parrots and an owl in the tree to lions, leopards and a turkey.',
+      stations: [
+        { name: 'Owl', x: 15, y: 7 }, { name: 'Red macaw', x: 8, y: 16 }, { name: 'Blue macaw', x: 33, y: 10 },
+        { name: 'Monkey in the tree', x: 35, y: 52 }, { name: 'Swans', x: 8, y: 70 }, { name: 'Lions', x: 40, y: 78 },
+        { name: 'Tortoise', x: 41, y: 92 }, { name: 'Woman with a basket', x: 43, y: 59 }, { name: 'White horse', x: 54, y: 58 },
+        { name: 'Cows', x: 65, y: 60 }, { name: 'Turkey', x: 70, y: 80 }, { name: 'Man leading the animals', x: 83, y: 62 },
+        { name: 'Leopards', x: 86, y: 78 }, { name: 'Elephant', x: 96, y: 52 } ] },
     { id: 'tabernacle', name: 'The Tabernacle', img: 'images/memory-room-tabernacle.webp', w: 1400, h: 1032,
-      credit: '<i>The Tabernacle in the Wilderness</i>, illustration from the Holman Bible (c. 1890). Public domain.',
+      credit: '<i>The Tabernacle in the Wilderness</i>, 19th-century Bible illustration. Public domain.',
+      about: 'The tent of meeting that Israel carried through the wilderness (Exodus 25–40), with the pillar of cloud above it. Its layout follows the path a worshipper took: through the gate, past the altar and laver, toward the holy place.',
       stations: [
         { name: 'Worshippers', x: 12, y: 88 }, { name: 'Lambs', x: 54, y: 81 }, { name: 'Oxen', x: 70, y: 83 },
         { name: 'Gate curtain', x: 40, y: 64 }, { name: 'Bronze altar', x: 50, y: 66 }, { name: 'Laver', x: 50, y: 58 },
@@ -618,7 +726,7 @@
   ];
   var ROOM = ROOMS[0], STATIONS = ROOM.stations;
 
-  var STEPS = ['Choose', 'Split', 'Place', 'Connect', 'Walk'];
+  var STEPS = ['Choose', 'Split', 'Room', 'Place', 'Connect', 'Walk'];
   // Step 5 follows three stages: learn with cues → strengthen by removing them → test.
   var LEVELS = [
     { stage: 'Learn', name: 'Walk the Room' },
@@ -639,8 +747,8 @@
   function canReach(i) {
     if (i === 0) return true;
     if (!st.verse) return false;
-    if (i <= 2) return itemsOk();
-    if (i >= 3) return placeOk() === '';
+    if (i <= 3) return itemsOk();
+    if (i >= 4) return placeOk() === '';
     return true;
   }
   function renderSteps() {
@@ -658,15 +766,18 @@
     document.querySelectorAll('.mr-panel').forEach(function (p) { p.hidden = +p.dataset.step !== i; });
     document.querySelectorAll('#mr-lead [data-for]').forEach(function (p) { p.hidden = +p.dataset.for !== i; });
     $('mr-room-layout').hidden = i < 2;
-    $('mr-room').classList.toggle('walking', i === 4 && st.mode < M_FIND); $('mr-room').classList.toggle('finding', i === 4 && st.mode === M_FIND);
+    $('mr-room').classList.toggle('walking', i === 5 && st.mode < M_FIND); $('mr-room').classList.toggle('finding', i === 5 && st.mode === M_FIND);
+    $('mr-room').classList.toggle('choosing', i === 2);
+    if (i >= 2) setNames(namesPref === null ? i === 2 : namesPref);
     if (i === 1) renderSplit();
-    if (i === 2) { if (st.active == null || st.place[st.active] != null) st.active = nextEmpty(0); renderPlace(); }
-    if (i === 3) renderConn();
-    if (i === 4) { setMode(st.mode); }
+    if (i === 2) renderRoomInfo();
+    if (i === 3) { if (st.active == null || st.place[st.active] != null) st.active = nextEmpty(0); renderPlace(); }
+    if (i === 4) renderConn();
+    if (i === 5) { setMode(st.mode); }
     renderStations();
     renderSteps();
     if (i > 0) document.getElementById('mr-lead').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (i >= 3) save();
+    if (i >= 4) save();
     showSaveState();
   }
   document.querySelectorAll('[data-go]').forEach(function (b) {
@@ -852,10 +963,10 @@ function autoSplit(text) {
   function renderStations() {
     var stage = $('mr-stage');
     stage.querySelectorAll('.mr-stn').forEach(function (n) { n.remove(); });
-    var walkStn = st.step === 4 ? st.place[st.walk] : -1;
+    var walkStn = st.step === 5 ? st.place[st.walk] : -1;
     STATIONS.forEach(function (s, si) {
-      var finding = st.step === 4 && st.mode === M_FIND;
-      var it = st.step >= 2 && !finding ? stationItem(si) : -1;
+      var finding = st.step === 5 && st.mode === M_FIND;
+      var it = st.step >= 3 && !finding ? stationItem(si) : -1;
       var b = el('button', 'mr-stn', it >= 0 ? String(it + 1) : ''); b.type = 'button';
       b.style.left = s.x + '%'; b.style.top = s.y + '%';
       b.dataset.stn = si; b.dataset.name = s.name;
@@ -864,16 +975,83 @@ function autoSplit(text) {
       b.setAttribute('aria-label', b.title);
       b.classList.add(it >= 0 ? 'filled' : 'empty');
       if (si === walkStn && !finding) b.classList.add('cur');
-      b.addEventListener('click', function (e) { e.stopPropagation(); if (st.step === 2) pickStation(si); else if (finding) findPick(si, b); });
+      b.addEventListener('click', function (e) { e.stopPropagation(); if (st.step === 3) pickStation(si); else if (finding) findPick(si, b); else if (st.step === 2) flashObj(si); });
       stage.appendChild(b);
     });
-    // faint line tracing the user's path in verse order
+    // Bold line tracing the reader's path in verse order, with an arrow on each leg.
+    // The SVG uses the painting's own pixel size, so arrows keep their shape.
+    var svg = $('mr-path'), NS = 'http://www.w3.org/2000/svg', W = ROOM.w, H = ROOM.h;
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.textContent = '';
     var pts = [];
-    if (st.step >= 2 && !(st.step === 4 && st.mode === M_FIND)) st.items.forEach(function (_, i) {
-      if (st.place[i] != null) pts.push(STATIONS[st.place[i]].x + ',' + STATIONS[st.place[i]].y);
+    if (st.step >= 3 && !(st.step === 5 && st.mode === M_FIND)) st.items.forEach(function (_, i) {
+      if (st.place[i] != null) pts.push([W * STATIONS[st.place[i]].x / 100, H * STATIONS[st.place[i]].y / 100]);
     });
-    $('mr-path-line').setAttribute('points', pts.join(' '));
+    if (pts.length > 1) {
+      var shown = svg.getBoundingClientRect().width || 600, k = W / shown;   // image px per screen px
+      var under = document.createElementNS(NS, 'polyline'), line = document.createElementNS(NS, 'polyline');
+      var ps = pts.map(function (q) { return q[0] + ',' + q[1]; }).join(' ');
+      under.setAttribute('points', ps); under.setAttribute('class', 'mr-path-under');
+      line.setAttribute('points', ps); line.setAttribute('class', 'mr-path-line');
+      svg.appendChild(under); svg.appendChild(line);
+      for (var j = 1; j < pts.length; j++) {
+        var a = pts[j - 1], b = pts[j], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy);
+        if (len < 28 * k) continue;                                       // too short to fit an arrow
+        var ux = dx / len, uy = dy / len, mx = a[0] + dx * 0.55, my = a[1] + dy * 0.55, L = 11 * k, Wd = 7 * k;
+        var tri = document.createElementNS(NS, 'polygon');
+        tri.setAttribute('points', [
+          (mx + ux * L) + ',' + (my + uy * L),
+          (mx - ux * L * 0.4 - uy * Wd) + ',' + (my - uy * L * 0.4 + ux * Wd),
+          (mx - ux * L * 0.4 + uy * Wd) + ',' + (my - uy * L * 0.4 - ux * Wd)].join(' '));
+        tri.setAttribute('class', 'mr-path-arrow');
+        svg.appendChild(tri);
+      }
+    }
+    layoutLabels();
   }
+
+  // Object-name labels: real elements placed around each circle so they never overlap.
+  function showingLabels() { return $('mr-room').classList.contains('labels'); }
+  // Names start on in the Room step and off elsewhere, unless the reader has chosen for themselves.
+  var namesPref = null;
+  function setNames(on) {
+    $('mr-room').classList.toggle('labels', on);
+    $('mr-names').textContent = on ? 'Hide Names' : 'Show Names';
+    $('mr-names').setAttribute('aria-pressed', on);
+    layoutLabels();
+  }
+  function layoutLabels() {
+    var stage = $('mr-stage');
+    stage.querySelectorAll('.mr-lbl').forEach(function (n) { n.remove(); });
+    if (!showingLabels() || $('mr-room').classList.contains('peek')) return;
+    var W = stage.clientWidth, H = stage.clientHeight, placed = [];
+    stage.querySelectorAll('.mr-stn').forEach(function (m) {
+      var x = m.offsetLeft, y = m.offsetTop, r = m.offsetWidth / 2 + 2;   // circle centre (translate -50%)
+      placed.push({ l: x - r, t: y - r, r: x + r, b: y + r });
+    });
+    function hits(b) {
+      if (b.l < 2 || b.t < 2 || b.r > W - 2 || b.b > H - 2) return true;
+      for (var i = 0; i < placed.length; i++) { var p = placed[i]; if (b.l < p.r && b.r > p.l && b.t < p.b && b.b > p.t) return true; }
+      return false;
+    }
+    stage.querySelectorAll('.mr-stn').forEach(function (m) {
+      var lbl = el('span', 'mr-lbl', m.dataset.name); lbl.dataset.for = m.dataset.stn;
+      if (m.classList.contains('hot')) lbl.classList.add('hot');
+      stage.appendChild(lbl);
+      var w = lbl.offsetWidth, h = lbl.offsetHeight, x = m.offsetLeft, y = m.offsetTop, g = m.offsetWidth / 2 + 4;
+      var tries = [[g, -h / 2], [-g - w, -h / 2], [-w / 2, -g - h], [-w / 2, g], [g, -h - 2], [g, 2], [-g - w, -h - 2], [-g - w, 2],
+                   [g, -h * 1.6], [g, h * 0.6], [-g - w, -h * 1.6], [-g - w, h * 0.6], [-w / 2, -g - h * 2], [-w / 2, g + h]];
+      var best = null;
+      for (var i = 0; i < tries.length; i++) {
+        var b = { l: x + tries[i][0], t: y + tries[i][1] }; b.r = b.l + w; b.b = b.t + h;
+        if (!hits(b)) { best = b; break; }
+      }
+      if (!best) { best = { l: Math.min(Math.max(x + g, 2), W - w - 2), t: Math.min(Math.max(y - h / 2, 2), H - h - 2) }; best.r = best.l + w; best.b = best.t + h; lbl.classList.add('crowded'); }
+      lbl.style.left = best.l + 'px'; lbl.style.top = best.t + 'px';
+      placed.push(best);
+    });
+  }
+  window.addEventListener('resize', function () { clearTimeout(layoutLabels._t); layoutLabels._t = setTimeout(function () { if (st.step >= 2) renderStations(); else layoutLabels(); }, 120); });
 
   // ── 3 · PLACE ─────────────────────────────────────────────────────
   // The verse is the frame: phrases stay in order, and the user fills each
@@ -932,11 +1110,18 @@ function autoSplit(text) {
       bindObjDrag(b, si);
       objs.appendChild(b);
     });
-    document.querySelector('[data-go="3"]').disabled = !!placeOk();
+    document.querySelector('[data-go="4"]').disabled = !!placeOk();
   }
   function hotStation(si, on) {
     var m = $('mr-stage').querySelector('.mr-stn[data-stn="' + si + '"]');
     if (m) m.classList.toggle('hot', on);
+    var l = $('mr-stage').querySelector('.mr-lbl[data-for="' + si + '"]');
+    if (l) l.classList.toggle('hot', on);
+  }
+  function flashObj(si) {
+    hotStation(si, true); setTimeout(function () { hotStation(si, false); }, 900);
+    var c = $('mr-room-objs').querySelector('[data-obj="' + si + '"]');
+    if (c) { c.classList.add('hot'); setTimeout(function () { c.classList.remove('hot'); }, 900); }
   }
   $('mr-autofill').addEventListener('click', function () {
     st.place = {}; st.items.forEach(function (_, i) { st.place[i] = i; }); st.active = null;
@@ -1175,9 +1360,8 @@ function autoSplit(text) {
 
   $('mr-names').addEventListener('click', function (e) {
     e.stopPropagation();
-    var on = $('mr-room').classList.toggle('labels');
-    this.textContent = on ? 'Hide Names' : 'Show Names';
-    this.setAttribute('aria-pressed', on);
+    namesPref = !$('mr-room').classList.contains('labels');
+    setNames(namesPref);
   });
   $('mr-peek').addEventListener('click', function (e) {
     e.stopPropagation();
@@ -1196,6 +1380,7 @@ function autoSplit(text) {
     else if (roomHome) { roomHome.parentNode.insertBefore(room, roomHome); roomHome.remove(); roomHome = null; }
     room.classList.toggle('full', on);
     document.body.classList.toggle('mr-noscroll', on);
+    setTimeout(function () { renderStations(); }, 30);
     $('mr-full').innerHTML = on ? '&#x2715; Close' : '&#x26F6; Full Screen';
     $('mr-full').setAttribute('aria-pressed', on);
   }
@@ -1206,14 +1391,28 @@ function autoSplit(text) {
 
   function renderRooms() {
     var box = $('mr-rooms');
-    box.querySelectorAll('button').forEach(function (b) { b.remove(); });
+    box.textContent = '';
     ROOMS.forEach(function (r) {
       var b = el('button', 'mr-room-pick' + (r === ROOM ? ' is-on' : '')); b.type = 'button';
-      b.title = r.name; b.setAttribute('aria-label', 'Room: ' + r.name);
+      b.title = r.name; b.setAttribute('aria-label', 'Room: ' + r.name); b.setAttribute('aria-pressed', r === ROOM);
       var im = el('img'); im.src = r.img.replace('.webp', '-thumb.webp'); im.alt = ''; im.loading = 'lazy';
       b.appendChild(im); b.appendChild(el('span', null, r.name));
       b.addEventListener('click', function () { setRoom(r); });
       box.appendChild(b);
+    });
+  }
+  function renderRoomInfo() {
+    $('mr-room-title').textContent = ROOM.name;
+    $('mr-room-about').textContent = ROOM.about || '';
+    var box = $('mr-room-objs'); box.textContent = '';
+    STATIONS.forEach(function (s, si) {
+      var c = el('span', 'mr-obj', s.name); c.dataset.obj = si; c.tabIndex = 0;
+      c.addEventListener('mouseenter', function () { hotStation(si, true); });
+      c.addEventListener('mouseleave', function () { hotStation(si, false); });
+      c.addEventListener('focus', function () { hotStation(si, true); });
+      c.addEventListener('blur', function () { hotStation(si, false); });
+      c.addEventListener('click', function () { flashObj(si); });
+      box.appendChild(c);
     });
   }
   function setRoom(r, quiet) {
@@ -1228,7 +1427,8 @@ function autoSplit(text) {
     lay.style.setProperty('--ar', (r.w / r.h).toFixed(4));
     lay.classList.toggle('wide', r.w > r.h);
     renderRooms();
-    if (st.step === 2) renderPlace();
+    if (st.step === 3) renderPlace();
+    renderRoomInfo();
     renderStations(); renderSteps();
   }
 
@@ -1336,7 +1536,7 @@ function autoSplit(text) {
     (r.placements || []).forEach(function (si, i) { if (si >= 0 && si < STATIONS.length && i < st.items.length) st.place[i] = si; });
     (r.notes || []).forEach(function (t, i) { if (t) st.notes[i] = t; });
     st.active = nextEmpty(0);
-    go(placeOk() === '' ? 4 : 2);
+    go(placeOk() === '' ? 5 : 3);
   }
 
   function renderMine() {
@@ -1387,10 +1587,128 @@ function autoSplit(text) {
       if (!user) { db = null; mine = {}; st.savedId = null; st.rec = null; renderMine(); showSaveState(); return; }
       if (was === user.id) return;
       WBAuth.client().then(function (c) { db = c; return loadMine(); })
-        .then(function () { showSaveState(); if (st.step >= 3) save(); });
+        .then(function () { showSaveState(); if (st.step >= 4) save(); });
     });
   } else { renderMine(); }
 
+
+  // ── EXPORT: the room as an image (or printed / saved as PDF) ──────
+  // Works for guests too — a way to keep the room without an account.
+  function loadImg(src) {
+    return new Promise(function (res, rej) { var im = new Image(); im.onload = function () { res(im); }; im.onerror = rej; im.src = src; });
+  }
+  function wrap(ctx, text, maxW) {
+    var words = String(text || '').split(/\s+/).filter(Boolean), lines = [], cur = '';
+    words.forEach(function (w) {
+      var t = cur ? cur + ' ' + w : w;
+      if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t;
+    });
+    if (cur) lines.push(cur);
+    return lines.length ? lines : [''];
+  }
+  function buildExport() {
+    var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    return fontsReady.then(function () { return loadImg(ROOM.img); }).then(function (img) {
+      var W = 1600, pad = 60, inner = W - pad * 2;
+      // Printer-friendly: white page, dark text; only the painting carries color.
+      var dark = '#ffffff', gold = '#8a6a1f', text = '#1f1a14', mid = '#5a5044', rule = 'rgba(138,106,31,0.45)';
+      var serif = "'EB Garamond', Georgia, serif", display = "'Cormorant Garamond', Georgia, serif", caps = "'Cinzel', Georgia, serif";
+      // painting size
+      var maxH = 1100, pw = inner, ph = pw * img.height / img.width;
+      if (ph > maxH) { ph = maxH; pw = ph * img.width / img.height; }
+      var px = (W - pw) / 2, py = 190;
+      // measure table
+      var c = document.createElement('canvas'), ctx = c.getContext('2d');
+      var colN = 50, colSeg = 430, colObj = 300, colConn = inner - colN - colSeg - colObj - 30, lineH = 34;
+      ctx.font = '26px ' + serif;
+      var rows = st.items.map(function (it, i) {
+        var seg = wrap(ctx, it.text, colSeg - 20), obj = wrap(ctx, STATIONS[st.place[i]].name, colObj - 20), con = wrap(ctx, st.notes[i] || '—', colConn - 10);
+        return { seg: seg, obj: obj, con: con, h: Math.max(seg.length, obj.length, con.length) * lineH + 26 };
+      });
+      var tableTop = py + ph + 90, tableH = 60 + rows.reduce(function (a, r) { return a + r.h; }, 0);
+      var H = Math.ceil(tableTop + tableH + 120);
+      c.width = W; c.height = H;
+      ctx.fillStyle = dark; ctx.fillRect(0, 0, W, H);
+      // header
+      ctx.textAlign = 'center'; ctx.fillStyle = gold; ctx.font = '600 22px ' + caps;
+      ctx.fillText('MEMORY ROOM', W / 2, 70);
+      ctx.fillStyle = text; ctx.font = '600 54px ' + display;
+      ctx.fillText(st.verse.ref + (st.verse.ver ? ' (' + verLabel(st.verse.ver) + ')' : ''), W / 2, 128);
+      ctx.fillStyle = mid; ctx.font = 'italic 26px ' + serif;
+      ctx.fillText(ROOM.name, W / 2, 166);
+      // painting + path + markers
+      ctx.drawImage(img, px, py, pw, ph);
+      var pts = st.items.map(function (_, i) { var s2 = STATIONS[st.place[i]]; return [px + pw * s2.x / 100, py + ph * s2.y / 100]; });
+      ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      function trace() { ctx.beginPath(); pts.forEach(function (p2, i) { if (i) ctx.lineTo(p2[0], p2[1]); else ctx.moveTo(p2[0], p2[1]); }); ctx.stroke(); }
+      ctx.lineWidth = 11; ctx.strokeStyle = 'rgba(10,12,16,0.75)'; trace();
+      ctx.lineWidth = 6; ctx.strokeStyle = '#f2c14e'; trace();
+      for (var j = 1; j < pts.length; j++) {
+        var a = pts[j - 1], b = pts[j], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy);
+        if (len < 70) continue;
+        var ux = dx / len, uy = dy / len, mx = a[0] + dx * 0.55, my = a[1] + dy * 0.55, L = 20, Wd = 13;
+        ctx.beginPath(); ctx.moveTo(mx + ux * L, my + uy * L);
+        ctx.lineTo(mx - ux * L * 0.4 - uy * Wd, my - uy * L * 0.4 + ux * Wd);
+        ctx.lineTo(mx - ux * L * 0.4 + uy * Wd, my - uy * L * 0.4 - ux * Wd); ctx.closePath();
+        ctx.fillStyle = '#f2c14e'; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = 'rgba(10,12,16,0.85)'; ctx.stroke();
+      }
+      ctx.restore();
+      pts.forEach(function (p2, i) {
+        ctx.beginPath(); ctx.arc(p2[0], p2[1], 20, 0, Math.PI * 2);
+        ctx.fillStyle = '#f2c14e'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#fff'; ctx.stroke();
+        ctx.fillStyle = '#1a1406'; ctx.font = '600 20px ' + caps; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(i + 1), p2[0], p2[1] + 1); ctx.textBaseline = 'alphabetic';
+      });
+      ctx.textAlign = 'left'; ctx.fillStyle = mid; ctx.font = 'italic 18px ' + serif;
+      ctx.fillText(ROOM.credit.replace(/<[^>]+>/g, ''), px, py + ph + 30);
+      // table
+      var x0 = pad, y = tableTop;
+      ctx.fillStyle = gold; ctx.font = '600 18px ' + caps;
+      ctx.fillText('#', x0, y); ctx.fillText('VERSE SEGMENT', x0 + colN, y); ctx.fillText('OBJECT', x0 + colN + colSeg, y); ctx.fillText('CONNECTION', x0 + colN + colSeg + colObj, y);
+      y += 22; ctx.strokeStyle = rule; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(W - pad, y); ctx.stroke();
+      rows.forEach(function (r, i) {
+        var ty = y + 38;
+        ctx.fillStyle = gold; ctx.font = '600 20px ' + caps; ctx.fillText(String(i + 1), x0, ty);
+        ctx.font = (st.items[i].ref ? 'italic ' : '') + '26px ' + serif; ctx.fillStyle = text;
+        r.seg.forEach(function (l, k) { ctx.fillText(l, x0 + colN, ty + k * lineH); });
+        ctx.fillStyle = mid; ctx.font = '26px ' + serif;
+        r.obj.forEach(function (l, k) { ctx.fillText(l, x0 + colN + colSeg, ty + k * lineH); });
+        ctx.fillStyle = text; ctx.font = 'italic 26px ' + serif;
+        r.con.forEach(function (l, k) { ctx.fillText(l, x0 + colN + colSeg + colObj, ty + k * lineH); });
+        y += r.h; ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(W - pad, y); ctx.stroke();
+      });
+      ctx.textAlign = 'center'; ctx.fillStyle = gold; ctx.font = '600 18px ' + caps;
+      ctx.fillText('WHOSOEVERBELIEVES.COM/MEMORY-ROOMS', W / 2, H - 50);
+      return c;
+    });
+  }
+  function exportName() { return 'memory-room-' + (st.verse.ref + '-' + ROOM.id).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.png'; }
+  document.querySelectorAll('[data-export]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (!st.verse || placeOk()) return;
+      var kind = btn.dataset.export, label = btn.textContent;
+      var win = kind === 'print' ? window.open('', '_blank') : null;   // open now, while the click still counts
+      btn.disabled = true; btn.textContent = 'Preparing…';
+      buildExport().then(function (c) {
+        if (kind === 'png') {
+          c.toBlob(function (blob) {
+            var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = exportName();
+            document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+          }, 'image/png');
+        } else if (win) {
+          win.document.write('<!doctype html><title>' + st.verse.ref + ' — Memory Room</title>' +
+            '<style>@page{margin:0.4in}html,body{margin:0;background:#fff}img{width:100%;display:block}</style>' +
+            '<img src="' + c.toDataURL('image/jpeg', 0.92) + '" onload="setTimeout(function(){print()},200)">');
+          win.document.close();
+        }
+      }).catch(function () {
+        if (win) win.close();
+        showSaveState('Couldn’t prepare the export just now.');
+      }).then(function () { btn.disabled = false; btn.textContent = label; });
+    });
+  });
+
+  $('mr-img').addEventListener('load', layoutLabels);
   setRoom(ROOMS[0], true);
   renderVersions();
   renderPicker();
