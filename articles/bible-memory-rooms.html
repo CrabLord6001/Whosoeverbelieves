@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   gtag('config', 'G-05VNP2PXN4');
+  // Analytics loads just after the page finishes, so it doesn't slow the first paint.
+  window.addEventListener('load', function () { setTimeout(function () { var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4'; document.head.appendChild(s); }, 1500); });
 </script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,7 +17,9 @@
 <meta name="description" content="Learn how to memorize Bible verses using the ancient memory palace technique." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" /></noscript>
 <link rel="stylesheet" href="../styles.css" />
 <style>
 .memory-table-wrap { overflow-x: auto; margin: 1.5rem 0; }
@@ -389,7 +392,20 @@ table.memory-table td:nth-child(2) { color: var(--text-mid); white-space: nowrap
 
 </div><!-- /.site-wrapper -->
 
-<script src="../search-index.js"></script>
+<script>
+/* Site search data loads when someone clicks into the search box, or right after the page finishes loading. */
+(function () {
+  var asked = false;
+  function load() {
+    if (asked) return; asked = true;
+    var s = document.createElement('script'); s.src = '../search-index.js';
+    s.onload = function () { var b = document.getElementById('site-search'); if (b && b.value.trim() && window.runSearch) window.runSearch(b.value); };
+    document.head.appendChild(s);
+  }
+  document.addEventListener('focusin', function (e) { if (e.target.id === 'site-search') load(); });
+  window.addEventListener('load', function () { setTimeout(load, 0); });
+})();
+</script>
 <script src="../scripts.js"></script>
 <script src="/auth.js" defer></script>
 <div id="verse-tooltip" role="tooltip">
