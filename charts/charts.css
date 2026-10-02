@@ -210,3 +210,42 @@ svg.cv[data-show="1"] .rt1,svg.cv[data-show="2"] .rt2,svg.cv[data-show="3"] .rt3
 .mp-btn .sw{margin-right:0}
 .sw1{background:var(--hl)}.sw2{background:var(--gr)}.sw3{background:var(--gn)}
 .sw4{background:repeating-linear-gradient(90deg,var(--rd) 0 7px,transparent 7px 11px)}
+svg.cv .cv-river{fill:none;stroke:var(--gr);stroke-width:1.6;opacity:.75}
+svg.cv .cv-lake{fill:var(--sea);stroke:var(--coast);stroke-width:.8}
+svg.cv .rt0{stroke:var(--text-faint);stroke-dasharray:2 5;stroke-width:2.2}
+
+/* Plain links inside chart pages match the site's gold links */
+.ch-main :is(p, td, th, small, .notes li) a:not([class]){color:var(--gold);text-decoration:underline;text-decoration-color:rgba(201,168,76,.35);text-underline-offset:3px;transition:color .2s}
+.ch-main :is(p, td, th, small, .notes li) a:not([class]):hover{color:var(--gold-light)}
+.ch-main .related li a:not([class]){color:var(--text);text-decoration:none}
+.ch-main .related li a:not([class]):hover{color:var(--gold)}
+svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
+
+.cz-key{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.4rem;padding:.6rem 1rem;border-bottom:1px solid var(--rule)}
+.cz-key .ch-legend{margin:0;font-size:1rem}
+.cz-key .mp-controls{margin:0}
+
+/* Avoid lone words and hanging characters */
+.ch-main p,.ch-main td,.ch-main li,.ch-main small,.vt-body p,.fit-note,.adv-card p{text-wrap:pretty}
+.ch-main h1,.ch-main h2,.ch-main h3,.ctable th,.ch-sub{text-wrap:balance}
+/* "On this page" sidebar (wide screens only; sits in the margin, never over the text) */
+.ch-toc{display:none}
+.ch-main .ch-head h2[id],.ch-main>section>h2[id]{scroll-margin-top:5.5rem}
+@media (min-width:1400px){
+  .ch-toc{display:block;position:fixed;top:7.5rem;left:calc(50% - 690px);width:212px;z-index:5;transition:opacity .3s ease}
+  .ch-toc.hide{opacity:0;pointer-events:none}
+  .ch-toc b{display:block;font-family:'Cinzel',serif;font-weight:600;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint);margin:0 0 .6rem .9rem}
+  .ch-toc ol{list-style:none;margin:0;padding:0;border-left:1px solid var(--rule)}
+  .ch-toc a{display:block;margin-left:-1px;padding:.38rem 0 .38rem .9rem;border-left:2px solid transparent;color:var(--text-mid);text-decoration:none;font-size:.95rem;line-height:1.3;transition:color .2s,border-color .2s}
+  .ch-toc a:hover{color:var(--gold)}
+  .ch-toc a.on{color:var(--gold);border-left-color:var(--gold)}
+}
+/* At a Glance: who / what / where / when / why / how */
+.stack.glance .stack-row{grid-template-columns:4.4rem minmax(0,1fr) auto;align-items:baseline;color:var(--text);line-height:1.45;font-size:.97rem}
+.stack.glance .stack-row span{text-wrap:pretty}
+.stack.glance .stack-row em{white-space:nowrap}
+.glance-card{margin-top:1.25rem}
+@media (min-width:761px){.stack.glance{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.45rem}.stack.glance .stack-row{height:100%;box-sizing:border-box}}
+.stack.glance .stack-row i{font-size:.74rem;font-weight:600;letter-spacing:.12em;color:var(--gold)}
+.ch-verse{text-wrap:pretty}
+.ch-toc a{text-wrap:balance}

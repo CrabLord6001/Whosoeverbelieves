@@ -364,26 +364,119 @@
   // markup stays if the service can't be reached.
   var verse = null;
 
-  // A different public-domain landscape behind the verse each day of the week.
+  // A different public-domain landscape behind the verse each day. When the
+  // verse mentions something one of the paintings shows (snow, sheep, the sea,
+  // a rainbow...), that painting is chosen; otherwise the day of the year picks
+  // one, so the image still changes daily. Runs in the visitor's browser only.
+  // [file, credit, background-position, themes, bright (needs a darker scrim)]
   var BACKDROPS = [
-    ['adams-tetons', 'Ansel Adams, The Tetons and the Snake River (1942)', 'center 35%'],
-    ['bierstadt-sierra', 'Albert Bierstadt, Among the Sierra Nevada (1868)', 'center 40%'],
-    ['church-twilight', 'Frederic Edwin Church, Twilight in the Wilderness (1860)', 'center 45%'],
-    ['moran-yellowstone', 'Thomas Moran, The Grand Canyon of the Yellowstone (1872)', 'center 40%'],
-    ['bierstadt-landers', 'Albert Bierstadt, The Rocky Mountains, Lander\u2019s Peak (1863)', 'center 30%'],
-    ['cole-oxbow', 'Thomas Cole, The Oxbow (1836)', 'center 50%'],
-    ['kuindzhi-moonlit', 'Arkhip Kuindzhi, Moonlit Night on the Dnieper (1880)', 'center 45%']
+    ['adams-tetons', 'Photo: Ansel Adams, The Tetons and the Snake River (1942)', 'center 35%', 'mountain water snow', 0],
+    ['bierstadt-sierra', 'Painting: Albert Bierstadt, Among the Sierra Nevada (1868)', 'center 40%', 'mountain water rest creation', 0],
+    ['church-twilight', 'Painting: Frederic Edwin Church, Twilight in the Wilderness (1860)', 'center 45%', 'light night wilderness', 0],
+    ['moran-yellowstone', 'Painting: Thomas Moran, The Grand Canyon of the Yellowstone (1872)', 'center 40%', 'mountain waterfall creation wilderness', 0],
+    ['bierstadt-landers', 'Painting: Albert Bierstadt, The Rocky Mountains, Lander’s Peak (1863)', 'center 30%', 'mountain waterfall creation', 0],
+    ['cole-oxbow', 'Painting: Thomas Cole, The Oxbow (1836)', 'center 50%', 'storm water harvest rain', 0],
+    ['kuindzhi-moonlit', 'Painting: Arkhip Kuindzhi, Moonlit Night on the Dnieper (1880)', 'center 45%', 'night water rest', 0],
+    ['aivazovsky-crimea-moon', 'Painting: Ivan Aivazovsky, Moonlit Night on the Crimean Coast (1852)', 'center 50%', 'sea night light island', 0],
+    ['aivazovsky-ischia', 'Painting: Ivan Aivazovsky, Sunset over Ischia (1857)', 'center 50%', 'sea island light rest', 1],
+    ['aivazovsky-ninth-wave', 'Painting: Ivan Aivazovsky, The Ninth Wave (1850)', 'center 50%', 'sea storm light', 0],
+    ['bierstadt-bridal-veil', 'Painting: Albert Bierstadt, Bridal Veil Falls, Yosemite Valley (c. 1871)', 'center 40%', 'mountain waterfall tree', 1],
+    ['bierstadt-nassau', 'Painting: Albert Bierstadt, View of Nassau, the Bahamas (c. 1877)', 'center 50%', 'island sea tree', 0],
+    ['bierstadt-puget', 'Painting: Albert Bierstadt, Puget Sound on the Pacific Coast (1870)', 'center 50%', 'storm sea light', 0],
+    ['bierstadt-rosalie', 'Painting: Albert Bierstadt, A Storm in the Rocky Mountains, Mt. Rosalie (1866)', 'center 45%', 'storm mountain creation', 0],
+    ['bierstadt-sunrise', 'Painting: Albert Bierstadt, Sunrise, Yosemite Valley (c. 1870)', 'center 45%', 'light mountain tree rest', 0],
+    ['bierstadt-yosemite', 'Painting: Albert Bierstadt, Looking Down Yosemite Valley (1865)', 'center 45%', 'mountain light creation', 0],
+    ['bonheur-sheep', 'Painting: Rosa Bonheur, Sheep by the Sea (1865)', 'center 55%', 'sheep sea rest', 0],
+    ['church-andes', 'Painting: Frederic Edwin Church, The Heart of the Andes (1859)', 'center 45%', 'mountain waterfall tree creation', 0],
+    ['church-aurora', 'Painting: Frederic Edwin Church, Aurora Borealis (1865)', 'center 40%', 'night snow creation', 0],
+    ['church-cotopaxi', 'Painting: Frederic Edwin Church, Cotopaxi (1862)', 'center 45%', 'light fire mountain wilderness', 0],
+    ['church-icebergs', 'Painting: Frederic Edwin Church, The Icebergs (1861)', 'center 45%', 'snow sea', 1],
+    ['church-niagara', 'Painting: Frederic Edwin Church, Niagara (1857)', 'center 50%', 'waterfall water rainbow', 0],
+    ['church-rainy-season', 'Painting: Frederic Edwin Church, Rainy Season in the Tropics (1866)', 'center 35%', 'rainbow rain mountain', 0],
+    ['church-river-light', 'Painting: Frederic Edwin Church, The River of Light (1877)', 'center 50%', 'water light tree rest', 0],
+    ['constable-hay-wain', 'Painting: John Constable, The Hay Wain (1821)', 'center 50%', 'water harvest tree rest', 0],
+    ['friedrich-watzmann', 'Painting: Caspar David Friedrich, The Watzmann (1824–25)', 'center 35%', 'mountain snow', 0],
+    ['heade-marsh-sunset', 'Painting: Martin Johnson Heade, Marsh Sunset, Newburyport (c. 1866)', 'center 50%', 'harvest light rest', 0],
+    ['heade-narragansett', 'Painting: Martin Johnson Heade, Thunder Storm on Narragansett Bay (1868)', 'center 50%', 'storm sea', 0],
+    ['homer-bermuda', 'Painting: Winslow Homer, Salt Kettle, Bermuda (1899)', 'center 50%', 'island water rest', 1],
+    ['homer-northeaster', 'Painting: Winslow Homer, Northeaster (1895)', 'center 50%', 'sea storm mountain', 0],
+    ['inness-delaware', 'Painting: George Inness, Delaware Water Gap (1861)', 'center 40%', 'rainbow water sheep', 0],
+    ['inness-peace-plenty', 'Painting: George Inness, Peace and Plenty (1865)', 'center 50%', 'harvest rest', 0],
+    ['kensett-lake-george', 'Painting: John Frederick Kensett, Lake George (1869)', 'center 50%', 'rest water mountain island', 1],
+    ['kuindzhi-after-rain', 'Painting: Arkhip Kuindzhi, After a Rain (1879)', 'center 55%', 'rain storm sheep', 0],
+    ['kuindzhi-red-sunset', 'Painting: Arkhip Kuindzhi, Red Sunset on the Dnieper (1905–08)', 'center 45%', 'light water night', 0],
+    ['lane-braces-rock', 'Painting: Fitz Henry Lane, Brace’s Rock (1864)', 'center 50%', 'rest water mountain', 1],
+    ['lane-owls-head', 'Painting: Fitz Henry Lane, Owl’s Head, Penobscot Bay (1862)', 'center 50%', 'sea rest light island', 1],
+    ['levitan-golden-autumn', 'Painting: Isaac Levitan, Golden Autumn, Slobodka (1889)', 'center 50%', 'autumn harvest tree', 1],
+    ['millet-spring', 'Painting: Jean-François Millet, Spring (1868–73)', 'center 40%', 'rainbow tree harvest rain', 0],
+    ['monet-argenteuil', 'Painting: Claude Monet, Snow at Argenteuil (1875)', 'center 50%', 'snow', 1],
+    ['monet-magpie', 'Painting: Claude Monet, The Magpie (1868–69)', 'center 50%', 'snow light', 1],
+    ['moran-holy-cross', 'Painting: Thomas Moran, Mountain of the Holy Cross (1890)', 'center 40%', 'cross mountain waterfall snow', 1],
+    ['richards-surf', 'Painting: William Trost Richards, Surf on Rocks (c. 1890–1900)', 'center 50%', 'sea storm', 0],
+    ['shishkin-oak-grove', 'Painting: Ivan Shishkin, Oak Grove (1887)', 'center 45%', 'tree rest', 0],
+    ['shishkin-rye', 'Painting: Ivan Shishkin, Rye (1878)', 'center 50%', 'harvest tree', 1],
+    ['shishkin-ship-grove', 'Painting: Ivan Shishkin, Ship Grove (1898)', 'center 50%', 'tree water', 0],
+    ['shishkin-winter', 'Painting: Ivan Shishkin, Winter (1890)', 'center 50%', 'snow tree', 1]
   ];
-  (function () {
-    var b = BACKDROPS[new Date().getDay()];
-    var card = $('hp-votd');
+  // Words in a verse that point to each theme, and how strongly.
+  var THEMES = {
+    cross:     [3, /\b(cross|crucified|blood)\b/g],
+    sheep:     [3, /\b(sheep|shepherds?|flocks?|lambs?|pastures?|green)\b/g],
+    snow:      [3, /\b(snow|white|whiter|wash|washed|cleanse[sd]?|frost|ice|winter|hail)\b/g],
+    rainbow:   [3, /\b(rainbow|covenant|promise[sd]?)\b/g],
+    harvest:   [2, /\b(harvest|fields?|grain|wheat|seeds?|sows?|sown|reaps?|fruit|bread|plenty|vines?|vineyard)\b/g],
+    island:    [2, /\b(islands?|isles|coasts?|coastlands|shores?|nations|ends of the earth)\b/g],
+    fire:      [2, /\b(fire|burning|flames?|smoke|consuming)\b/g],
+    waterfall: [2, /\b(torrents?|floods?|overflows?|poured|deep calls)\b/g],
+    autumn:    [2, /\b(withers?|fades?|grass|seasons?|flowers?)\b/g],
+    sea:       [1, /\b(seas?|waves|ocean|ships?|boats?|deep|depths)\b/g],
+    storm:     [1, /\b(storms?|tempest|winds?|thunder|lightning|whirlwind|troubles?|afraid|fear|anxious)\b/g],
+    rain:      [1, /\b(rain|showers|dew|clouds?)\b/g],
+    mountain:  [1, /\b(mountains?|hills?|rock|fortress|stronghold|refuge|heights|zion)\b/g],
+    water:     [1, /\b(waters?|rivers?|streams?|springs?|fountains?|wells?|thirsts?|thirsty|drink)\b/g],
+    tree:      [1, /\b(trees?|forest|cedars?|oaks?|branch(es)?|roots?|rooted|planted|leaf|leaves)\b/g],
+    light:     [1, /\b(light|shines?|shining|sun|dawn|morning|bright|glory|lamp)\b/g],
+    night:     [1, /\b(night|darkness|dark|moon|stars|watches)\b/g],
+    rest:      [1, /\b(rest|still|quiet|peace|calm|wait|waits)\b/g],
+    creation:  [1, /\b(created?|creation|maker|made|heavens|earth|works of your hands|majesty|beauty)\b/g],
+    wilderness:[1, /\b(wilderness|desert|dry|barren|wander(ed)?)\b/g]
+  };
+  function dayNumber(y, m, d) { return Math.floor(Date.UTC(y, m - 1, d) / 86400000); }
+  function pickBackdrop(text, day) {
+    var n = BACKDROPS.length;
+    // Fixed shuffle so neighbouring days don't land on similar paintings.
+    var rot = BACKDROPS[(day * 17) % n];
+    if (!text) return rot;
+    var t = text.toLowerCase(), hits = {}, best = 0, top = [];
+    Object.keys(THEMES).forEach(function (k) {
+      var m = t.match(THEMES[k][1]);
+      hits[k] = m ? m.length * THEMES[k][0] : 0;
+    });
+    BACKDROPS.forEach(function (b) {
+      var s = 0;
+      // A painting's first-listed theme is its main subject, so it counts most.
+      b[3].split(' ').forEach(function (k, i) { s += (hits[k] || 0) * (1 - 0.15 * i); });
+      if (s > best) { best = s; top = [b]; } else if (s === best && s > 0) top.push(b);
+    });
+    return best > 0 ? top[day % top.length] : rot;
+  }
+  var card = $('hp-votd'), backdropSet = false;
+  function setBackdrop(b) {
+    if (backdropSet) return;
+    backdropSet = true;
     card.style.setProperty('--votd-img', 'url("/images/votd/' + b[0] + '.webp")');
     card.style.setProperty('--votd-pos', b[2]);
     card.classList.add('has-image');
-    $('hp-votd-art').textContent = 'Painting: ' + b[1];
-  })();
+    if (b[4]) card.classList.add('is-bright');
+    $('hp-votd-art').textContent = b[1];
+  }
+  var today = new Date();
+  var todayNum = dayNumber(today.getFullYear(), today.getMonth() + 1, today.getDate());
+  // Give the verse a moment to arrive so the painting can match it; if the
+  // service is slow, fall back to the daily rotation.
+  setTimeout(function () { setBackdrop(pickBackdrop(null, todayNum)); }, 1200);
   fetch(FN + 'verse-of-the-day').then(function (r) { return r.ok ? r.json() : null; }).then(function (v) {
-    if (!v || !v.text) return;
+    if (!v || !v.text) { setBackdrop(pickBackdrop(null, todayNum)); return; }
     verse = v;
     $('hp-votd-text').textContent = '“' + v.text + '”';
     $('hp-votd-ref').textContent = v.reference + ' · WEB';
@@ -392,7 +485,8 @@
     var p = v.date.split('-').map(Number);
     $('hp-votd-date').textContent = new Date(p[0], p[1] - 1, p[2]).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
     if (v.selection === 'YouVersion') $('hp-votd-credit').textContent = 'Selected by YouVersion · World English Bible';
-  }).catch(function () {});
+    setBackdrop(pickBackdrop(v.text, dayNumber(p[0], p[1], p[2])));
+  }).catch(function () { setBackdrop(pickBackdrop(null, todayNum)); });
 
   $('hp-votd-share').addEventListener('click', function () {
     var btn = this;

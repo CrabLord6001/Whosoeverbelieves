@@ -1922,6 +1922,11 @@ nav #search-results a::after { display: none; }
   background:
     linear-gradient(180deg, rgba(6,10,18,0.35) 0%, rgba(6,10,18,0.55) 45%, rgba(6,10,18,0.85) 100%);
 }
+/* lighter paintings (snow, hazy coasts) get a deeper scrim so the verse stays legible */
+.hp-votd.has-image.is-bright::before {
+  background:
+    linear-gradient(180deg, rgba(6,10,18,0.48) 0%, rgba(6,10,18,0.62) 45%, rgba(6,10,18,0.86) 100%);
+}
 .hp-votd > * { position: relative; }
 .hp-votd.has-image .hp-votd-text { text-shadow: 0 2px 14px rgba(0,0,0,0.55); }
 .hp-votd.has-image .hp-votd-date,

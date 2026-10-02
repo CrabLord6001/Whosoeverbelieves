@@ -331,7 +331,7 @@ const searchIndex = [
     excerpt: "All 150 psalms by book and author, and the Messianic psalms",
     url: "/charts/psalms-five-books.html",
     tags: ["Bible Charts"],
-    content: "Psalms five books David Asaph sons of Korah Solomon Moses doxology Songs of Ascents Hallel Messianic psalms"
+    content: "Psalms five books David Asaph sons of Korah Solomon Moses doxology Songs of Ascents Hallel Messianic psalms types genres lament imprecatory thanksgiving praise enthronement royal wisdom trust penitential"
   },
   {
     title: "Daniel's Seventy Weeks",
@@ -367,5 +367,40 @@ const searchIndex = [
     url: "/charts/pauls-journeys.html",
     tags: ["Bible Charts"],
     content: "Map of Paul's missionary journeys Acts 13-28 first second third journey voyage to Rome Antioch Cyprus Galatia Philippi Thessalonica Athens Corinth Ephesus Malta Rome progress reports Acts 1:8"
+  },
+  {
+    title: "The Exodus and the Wilderness",
+    excerpt: "A map of Israel's route from Egypt to the plains of Moab, and the forty years",
+    url: "/charts/exodus-route.html",
+    tags: ["Bible Charts"],
+    content: "Exodus map wilderness wanderings Rameses Succoth Red Sea crossing Marah Elim Rephidim Mount Sinai Kadesh Barnea forty years spies Mount Hor Edom Moab Nebo Jordan Gilgal 1446 BC 1406 BC Hebrews rest"
+  },
+  {
+    title: "Kings of Israel and Judah",
+    excerpt: "Both kingdoms side by side, 931-586 BC, with the prophets",
+    url: "/charts/kings-israel-judah.html",
+    tags: ["Bible Charts"],
+    content: "Kings of Israel and Judah timeline divided kingdom Thiele dates Jeroboam Rehoboam Ahab Jehu Hezekiah Josiah Manasseh good evil kings co-regency prophets Elijah Elisha Isaiah Jeremiah Hosea Amos fall of Samaria 722 fall of Jerusalem 586 dynasties"
+  },
+  {
+    title: "The Judges: A Descending Spiral",
+    excerpt: "The cycle of sin and deliverance, Othniel to Samson",
+    url: "/charts/judges-cycle.html",
+    tags: ["Bible Charts"],
+    content: "Judges cycle sin servitude supplication salvation silence descending spiral Othniel Ehud Shamgar Deborah Barak Gideon Abimelech Tola Jair Jephthah Ibzan Elon Abdon Samson no king in Israel oppression rest"
+  },
+  {
+    title: "The Book of Zechariah",
+    excerpt: "Eight night visions, four messages, two burdens, and the coming King",
+    url: "/charts/zechariah.html",
+    tags: ["Bible Charts"],
+    content: "Zechariah chart eight night visions Branch Joshua high priest lampstand flying scroll four chariots four messages fasting two burdens King on a donkey thirty pieces of silver pierced shepherd struck Mount of Olives Day of the Lord Feast of Booths two advents Haggai Darius 520 BC"
+  },
+  {
+    title: "The Debate in Job",
+    excerpt: "Who speaks, for how long, and what each one argues, plus the book's themes and why Scripture treats Job as a real man",
+    url: "/charts/job-debate.html",
+    tags: ["Bible Charts"],
+    content: "Job chart speech map debate three rounds Eliphaz Bildad Zophar Elihu Yahweh Satan council in heaven whirlwind Behemoth Leviathan my Redeemer lives umpire mediator witness in heaven hymn to wisdom fear of the Lord suffering retribution patriarchs Uz James 5:11 perseverance of Job themes faith for nothing suffering not punishment lament Ezekiel 14:14 Noah Daniel Job real man not a parable 1 Corinthians 3:19 Romans 11:35 crown of life James 1:12 judgment seat rewards resurrection dinosaurs sauropod Behemoth Leviathan sea reptile"
   }
 ];
