@@ -350,9 +350,36 @@
 
 </div>
 
-<script src="search-index.js" defer></script>
 <script src="scripts.js" defer></script>
-<script src="/auth.js" defer></script>
+<script>
+/* The search index (~140 KB) and sign-in (which pulls in Supabase) load right after the page has
+   finished loading, so they don't compete with the first paint on phones. The search index also
+   loads the moment someone clicks into the search box. */
+(function () {
+  function add(src, done) {
+    var s = document.createElement('script');
+    s.src = src;
+    if (done) s.onload = done;
+    document.body.appendChild(s);
+  }
+  var searchRequested = false;
+  function loadSearch() {
+    if (searchRequested) return;
+    searchRequested = true;
+    add('search-index.js', function () {
+      window.WB_SEARCH_READY = true;
+      document.dispatchEvent(new Event('wb:search-ready'));
+      var box = document.getElementById('site-search');   // re-run anything typed while it was loading
+      if (box && box.value.trim() && window.runSearch) window.runSearch(box.value);
+    });
+  }
+  document.addEventListener('focusin', function (e) { if (e.target.id === 'site-search') loadSearch(); });
+  window.addEventListener('load', function () {
+    loadSearch();
+    add('/auth.js', function () { document.dispatchEvent(new Event('wb:auth-ready')); });
+  });
+})();
+</script>
 <script>
 /* ── HOMEPAGE: verse of the day ──────────────────────────────────────────────
    Runs straight away (no waiting on the other scripts) so the painting behind
@@ -511,15 +538,15 @@
 
 <script>
 /* ── HOMEPAGE: theology blog, reader progress, mailing list ───────────────── */
-/* Runs once the deferred scripts above (search index, site scripts, sign-in) have loaded. */
-/* Runs once the deferred scripts above (search index, site scripts, sign-in) have loaded. */
+/* Runs once the page is parsed; the blog cards and sign-in parts wait for their scripts (loaded above). */
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
   var FN = 'https://tgzsyfmnzagqijjlzxsa.supabase.co/functions/v1/';
   var $ = function (id) { return document.getElementById(id); };
 
   // ── Theology Blog: newest four articles from search-index.js ──
-  (function () {
+  // (The cards written into the page show until the search index arrives.)
+  function renderBlog() {
     if (typeof searchIndex === 'undefined') return;
     var posts = searchIndex.filter(function (a) { return a.date && /^\/?articles\//.test(a.url); })
       .sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; })
@@ -552,7 +579,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var grid = $('hp-writing');
     grid.innerHTML = '';
     grid.appendChild(feature); grid.appendChild(side);
-  })();
+  }
+  if (window.WB_SEARCH_READY) renderBlog();
+  else document.addEventListener('wb:search-ready', renderBlog);
 
   // ── Signed-in readers ──
   function todayISO() {
@@ -625,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function withAuth(fn) {
     if (window.WBAuth) return fn(window.WBAuth);
-    window.addEventListener('load', function () { if (window.WBAuth) fn(window.WBAuth); });
+    document.addEventListener('wb:auth-ready', function () { if (window.WBAuth) fn(window.WBAuth); });
   }
 
   $('hp-sub-btn').addEventListener('click', function () {
