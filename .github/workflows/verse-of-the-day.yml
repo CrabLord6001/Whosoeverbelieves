@@ -1,0 +1,45 @@
+# Saves the day's verse to votd.json so the homepage can show it (and its
+# matching painting) without waiting on Supabase. Runs every 3 hours but only
+# commits when the verse actually changes, so it makes about one commit a day.
+# If this ever stops running, the homepage falls back to asking Supabase directly.
+name: Verse of the day
+
+on:
+  schedule:
+    - cron: '7 */3 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verse-of-the-day
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch today's verse
+        run: |
+          curl -fsS --retry 3 --max-time 30 \
+            https://tgzsyfmnzagqijjlzxsa.supabase.co/functions/v1/verse-of-the-day -o votd.new.json
+          # Only accept a real answer (has a date, reference and text).
+          jq -e '.date and .reference and .text' votd.new.json > /dev/null
+          jq -c . votd.new.json > votd.json
+          rm votd.new.json
+
+      - name: Commit if it changed
+        run: |
+          if git diff --quiet -- votd.json; then
+            echo "Verse unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add votd.json
+          git commit -m "Verse of the day: $(jq -r .date votd.json)"
+          git pull --rebase
+          git push

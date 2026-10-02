@@ -4,13 +4,22 @@
 <link rel="canonical" href="https://whosoeverbelieves.com/" />
 <link rel="icon" type="image/png" href="/images/Bible-Book-32.png">
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4"></script>
+<!-- Loaded after the page has finished loading so it doesn't slow the first paint.
+     Page views are queued in dataLayer right away and sent once the tag arrives. -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   gtag('config', 'G-05VNP2PXN4');
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4';
+      document.head.appendChild(s);
+    }, 1500);
+  });
 </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,7 +37,35 @@
   <meta name="twitter:description" content="Free Grace theology blog, tools for spiritual growth (Greek flashcards, custom Bible reading plans, etc...), and hub for our Discord community." />
   <meta name="twitter:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://tgzsyfmnzagqijjlzxsa.supabase.co" crossorigin />
+  <!-- Ask for the verse of the day as early as possible; the homepage script below picks up the answer.
+       votd.json is saved on the site each day by .github/workflows/verse-of-the-day.yml, so it loads fast.
+       If that file is missing or out of date, ask Supabase directly instead. -->
+  <script>
+    window.WB_VOTD = (function () {
+      function live() {
+        return fetch('https://tgzsyfmnzagqijjlzxsa.supabase.co/functions/v1/verse-of-the-day')
+          .then(function (r) { return r.ok ? r.json() : null; });
+      }
+      var d = new Date(), today = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+      return fetch('/votd.json?d=' + (today / 86400000))   // the ?d= changes daily so browsers don't reuse yesterday's copy
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (v) {
+          if (v && v.text && v.date) {
+            var p = v.date.split('-').map(Number);
+            // Allow one day either way for time zones; anything older means the daily update stalled.
+            if (Math.abs(Date.UTC(p[0], p[1] - 1, p[2]) - today) <= 86400000) return v;
+          }
+          return live();
+        })
+        .catch(live)
+        .catch(function () { return null; });
+    })();
+  </script>
+  <!-- Fonts load without holding up the first paint (text shows in the fallback serif for a moment, then swaps). -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" /></noscript>
   <link rel="stylesheet" href="styles.css" />
   <!-- SEO metadata -->
   <script type="application/ld+json">
@@ -156,7 +193,7 @@
 
     <a class="hp-start" href="/articles/free-grace-gospel.html">
       <span class="hp-eyebrow">New here? Start here</span>
-      <img src="/images/opt/flowers-cross-800.webp" alt="Purple flowers by a cross" loading="lazy" decoding="async">
+      <img src="/images/opt/flowers-cross-800.webp" srcset="/images/opt/flowers-cross-400.webp 400w, /images/opt/flowers-cross-680.webp 680w, /images/opt/flowers-cross-800.webp 800w" sizes="(max-width: 760px) calc(100vw - 85px), 230px" alt="Purple flowers by a cross" loading="lazy" decoding="async">
       <span class="hp-start-title">The Gospel: Good News of Jesus Christ</span>
       <span class="hp-start-excerpt">Explanation of salvation, how eternal life is received</span>
       <span class="hp-start-go">Read &#8594;</span>
@@ -171,21 +208,21 @@
     </div>
     <div class="hp-tools">
       <a class="hp-tool" href="/bible-reading-plans.html">
-        <img src="/images/card-reading-plans.jpg" alt="Rembrandt, Old Woman Reading, probably the Prophetess Anna" loading="lazy" decoding="async" style="object-position: center 40%;">
+        <img src="/images/card-reading-plans.jpg" srcset="/images/opt/card-reading-plans-400.webp 400w, /images/opt/card-reading-plans-680.webp 680w, /images/card-reading-plans.jpg 800w" sizes="(max-width: 760px) calc(100vw - 32px), 280px" alt="Rembrandt, Old Woman Reading, probably the Prophetess Anna" loading="lazy" decoding="async" style="object-position: center 40%;">
         <div class="hp-tool-body">
           <span class="hp-tool-title">Bible Reading Plans</span>
           <span class="hp-tool-desc">Create Custom Bible Reading Plans</span>
         </div>
       </a>
       <a class="hp-tool" href="/greek/">
-        <img src="/images/card-greek.webp" alt="Greek uncial text of Mark 6 in Codex Alexandrinus" loading="lazy" decoding="async">
+        <img src="/images/card-greek.webp" srcset="/images/opt/card-greek-400.webp 400w, /images/opt/card-greek-680.webp 680w, /images/card-greek.webp 720w" sizes="(max-width: 760px) calc(100vw - 32px), 280px" alt="Greek uncial text of Mark 6 in Codex Alexandrinus" loading="lazy" decoding="async">
         <div class="hp-tool-body">
           <span class="hp-tool-title">Greek Studies</span>
           <span class="hp-tool-desc">Drill Vocab, Parsing, and More</span>
         </div>
       </a>
       <a class="hp-tool" href="/discipleship-challenge.html">
-        <img src="/images/card-discipleship.jpg" alt="James Tissot, The Calling of Saint Peter and Saint Andrew" loading="lazy" decoding="async" style="object-position: center 30%;">
+        <img src="/images/card-discipleship.jpg" srcset="/images/opt/card-discipleship-400.webp 400w, /images/card-discipleship.jpg 520w" sizes="(max-width: 760px) calc(100vw - 32px), 280px" alt="James Tissot, The Calling of Saint Peter and Saint Andrew" loading="lazy" decoding="async" style="object-position: center 30%;">
         <div class="hp-tool-body">
           <span class="hp-tool-title">Discipleship Challenge</span>
           <span class="hp-tool-desc">Practical Steps to Grow in Faith</span>
@@ -193,21 +230,21 @@
       </a>
       <!-- Card descriptions below: DRAFT, pending Jonathan's approval -->
       <a class="hp-tool" href="/memory-rooms.html">
-        <img src="/images/card-memory-rooms.webp" alt="Vittore Carpaccio, Vision of Saint Augustine" loading="lazy" decoding="async" style="object-position: center 40%;">
+        <img src="/images/card-memory-rooms.webp" srcset="/images/opt/card-memory-rooms-400.webp 400w, /images/opt/card-memory-rooms-680.webp 680w, /images/card-memory-rooms.webp 800w" sizes="(max-width: 760px) calc(100vw - 32px), 280px" alt="Vittore Carpaccio, Vision of Saint Augustine" loading="lazy" decoding="async" style="object-position: center 40%;">
         <div class="hp-tool-body">
           <span class="hp-tool-title">Memory Rooms</span>
           <span class="hp-tool-desc">Memorize Scripture Verse by Verse</span>
         </div>
       </a>
       <a class="hp-tool" href="/free-grace-glossary.html">
-        <img src="/images/card-glossary.webp" alt="Carl Spitzweg, The Bookworm" loading="lazy" decoding="async" style="object-position: center 45%;">
+        <img src="/images/card-glossary.webp" srcset="/images/opt/card-glossary-400.webp 400w, /images/opt/card-glossary-680.webp 680w, /images/card-glossary.webp 800w" sizes="(max-width: 760px) calc(100vw - 32px), 280px" alt="Carl Spitzweg, The Bookworm" loading="lazy" decoding="async" style="object-position: center 45%;">
         <div class="hp-tool-body">
           <span class="hp-tool-title">Theological Glossary</span>
           <span class="hp-tool-desc">Key Terms Clearly Defined</span>
         </div>
       </a>
       <a class="hp-tool" href="/charts/">
-        <img src="/images/card-charts.webp" alt="Anna Boberg, study of Jerusalem" loading="lazy" decoding="async" style="object-position: center 45%;">
+        <img src="/images/card-charts.webp" srcset="/images/opt/card-charts-400.webp 400w, /images/opt/card-charts-680.webp 680w, /images/card-charts.webp 800w" sizes="(max-width: 760px) calc(100vw - 32px), 280px" alt="Anna Boberg, study of Jerusalem" loading="lazy" decoding="async" style="object-position: center 45%;">
         <div class="hp-tool-body">
           <span class="hp-tool-title">Maps &amp; Charts</span>
           <span class="hp-tool-desc">Bible Timelines, Charts, and Maps</span>
@@ -224,7 +261,7 @@
     </div>
     <div class="hp-writing" id="hp-writing">
       <a class="hp-feature" href="/articles/bookending-the-ot.html">
-        <img src="/images/opt/bookending-the-ot-diptych-800.webp" alt="Jan Luyken etchings of Cain killing Abel and the stoning of Zechariah" decoding="async">
+        <img src="/images/opt/bookending-the-ot-diptych-800.webp" alt="Jan Luyken etchings of Cain killing Abel and the stoning of Zechariah" loading="lazy" decoding="async">
         <div class="hp-feature-body">
           <span class="hp-tagline">Bibliology &middot; Apologetics</span>
           <span class="hp-feature-title">How Jesus Bookended the Old Testament</span>
@@ -273,7 +310,7 @@
         <span class="hp-subscribe-msg" id="hp-sub-msg" aria-live="polite"></span>
       </div>
     </div>
-    <img class="hp-subscribe-art" src="/images/paul-writing-epistles.webp" alt="Valentin de Boulogne, Saint Paul Writing His Epistles" loading="lazy" decoding="async">
+    <img class="hp-subscribe-art" src="/images/paul-writing-epistles.webp" srcset="/images/opt/paul-writing-epistles-400.webp 400w, /images/opt/paul-writing-epistles-680.webp 680w, /images/paul-writing-epistles.webp 1000w" sizes="(max-width: 760px) calc(100vw - 32px), 440px" alt="Valentin de Boulogne, Saint Paul Writing His Epistles" loading="lazy" decoding="async">
   </section>
 
   <!-- COMMUNITY + AUTHOR -->
@@ -313,52 +350,17 @@
 
 </div>
 
-<script src="search-index.js"></script>
-<script src="scripts.js"></script>
+<script src="search-index.js" defer></script>
+<script src="scripts.js" defer></script>
 <script src="/auth.js" defer></script>
-
 <script>
-/* ── HOMEPAGE: verse of the day, reader progress, mailing list ───────────── */
+/* ── HOMEPAGE: verse of the day ──────────────────────────────────────────────
+   Runs straight away (no waiting on the other scripts) so the painting behind
+   the verse starts downloading as early as possible. */
 (function () {
   'use strict';
   var FN = 'https://tgzsyfmnzagqijjlzxsa.supabase.co/functions/v1/';
   var $ = function (id) { return document.getElementById(id); };
-
-  // ── Theology Blog: newest four articles from search-index.js ──
-  (function () {
-    if (typeof searchIndex === 'undefined') return;
-    var posts = searchIndex.filter(function (a) { return a.date && /^\/?articles\//.test(a.url); })
-      .sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; })
-      .slice(0, 4);
-    if (posts.length < 4) return;   // keep the cards written into the page
-    function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
-    function shortDate(iso) { var p = iso.split('-').map(Number); return p[1] + '/' + p[2] + '/' + String(p[0]).slice(2); }
-    function tagline(a) { return (a.tags || []).filter(function (t) { return t !== 'Featured'; }).join(' \u00B7 '); }
-
-    var f = posts[0];
-    var feature = el('a', 'hp-feature'); feature.href = f.url;
-    var img = el('img'); img.src = f.image; img.alt = f.imageAlt || ''; img.decoding = 'async';
-    if (f.imagePosition) img.style.objectPosition = f.imagePosition;
-    var body = el('div', 'hp-feature-body');
-    body.appendChild(el('span', 'hp-tagline', tagline(f)));
-    body.appendChild(el('span', 'hp-feature-title', f.title));
-    body.appendChild(el('span', 'hp-excerpt', f.blurb || f.excerpt));
-    body.appendChild(el('span', 'hp-date', 'Jonathan Crow \u00B7 ' + shortDate(f.date)));
-    feature.appendChild(img); feature.appendChild(body);
-
-    var side = el('div', 'hp-side');
-    posts.slice(1).forEach(function (a) {
-      var m = el('a', 'hp-mini'); m.href = a.url;
-      m.appendChild(el('span', 'hp-tagline', tagline(a)));
-      m.appendChild(el('span', 'hp-mini-title', a.title));
-      m.appendChild(el('span', 'hp-date', shortDate(a.date)));
-      side.appendChild(m);
-    });
-
-    var grid = $('hp-writing');
-    grid.innerHTML = '';
-    grid.appendChild(feature); grid.appendChild(side);
-  })();
 
   // Verse of the day (YouVersion's pick, WEB text). The John 3:16 in the
   // markup stays if the service can't be reached.
@@ -464,7 +466,9 @@
   function setBackdrop(b) {
     if (backdropSet) return;
     backdropSet = true;
-    card.style.setProperty('--votd-img', 'url("/images/votd/' + b[0] + '.webp")');
+    // Phones and regular desktop screens get the 800px-wide copy (about a quarter of the download); high-res screens get the full image.
+    var dir = card.offsetWidth * (window.devicePixelRatio || 1) <= 900 ? '/images/votd/800/' : '/images/votd/';
+    card.style.setProperty('--votd-img', 'url("' + dir + b[0] + '.webp")');
     card.style.setProperty('--votd-pos', b[2]);
     card.classList.add('has-image');
     if (b[4]) card.classList.add('is-bright');
@@ -475,7 +479,7 @@
   // Give the verse a moment to arrive so the painting can match it; if the
   // service is slow, fall back to the daily rotation.
   setTimeout(function () { setBackdrop(pickBackdrop(null, todayNum)); }, 1200);
-  fetch(FN + 'verse-of-the-day').then(function (r) { return r.ok ? r.json() : null; }).then(function (v) {
+  (window.WB_VOTD || fetch(FN + 'verse-of-the-day').then(function (r) { return r.ok ? r.json() : null; })).then(function (v) {
     if (!v || !v.text) { setBackdrop(pickBackdrop(null, todayNum)); return; }
     verse = v;
     $('hp-votd-text').textContent = '“' + v.text + '”';
@@ -501,6 +505,54 @@
       });
     }
   });
+
+})();
+</script>
+
+<script>
+/* ── HOMEPAGE: theology blog, reader progress, mailing list ───────────────── */
+/* Runs once the deferred scripts above (search index, site scripts, sign-in) have loaded. */
+/* Runs once the deferred scripts above (search index, site scripts, sign-in) have loaded. */
+document.addEventListener('DOMContentLoaded', function () {
+  'use strict';
+  var FN = 'https://tgzsyfmnzagqijjlzxsa.supabase.co/functions/v1/';
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ── Theology Blog: newest four articles from search-index.js ──
+  (function () {
+    if (typeof searchIndex === 'undefined') return;
+    var posts = searchIndex.filter(function (a) { return a.date && /^\/?articles\//.test(a.url); })
+      .sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; })
+      .slice(0, 4);
+    if (posts.length < 4) return;   // keep the cards written into the page
+    function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+    function shortDate(iso) { var p = iso.split('-').map(Number); return p[1] + '/' + p[2] + '/' + String(p[0]).slice(2); }
+    function tagline(a) { return (a.tags || []).filter(function (t) { return t !== 'Featured'; }).join(' \u00B7 '); }
+
+    var f = posts[0];
+    var feature = el('a', 'hp-feature'); feature.href = f.url;
+    var img = el('img'); img.src = f.image; img.alt = f.imageAlt || ''; img.decoding = 'async';
+    if (f.imagePosition) img.style.objectPosition = f.imagePosition;
+    var body = el('div', 'hp-feature-body');
+    body.appendChild(el('span', 'hp-tagline', tagline(f)));
+    body.appendChild(el('span', 'hp-feature-title', f.title));
+    body.appendChild(el('span', 'hp-excerpt', f.blurb || f.excerpt));
+    body.appendChild(el('span', 'hp-date', 'Jonathan Crow \u00B7 ' + shortDate(f.date)));
+    feature.appendChild(img); feature.appendChild(body);
+
+    var side = el('div', 'hp-side');
+    posts.slice(1).forEach(function (a) {
+      var m = el('a', 'hp-mini'); m.href = a.url;
+      m.appendChild(el('span', 'hp-tagline', tagline(a)));
+      m.appendChild(el('span', 'hp-mini-title', a.title));
+      m.appendChild(el('span', 'hp-date', shortDate(a.date)));
+      side.appendChild(m);
+    });
+
+    var grid = $('hp-writing');
+    grid.innerHTML = '';
+    grid.appendChild(feature); grid.appendChild(side);
+  })();
 
   // ── Signed-in readers ──
   function todayISO() {
@@ -609,7 +661,7 @@
       });
     });
   });
-})();
+});
 </script>
 
 </body>
