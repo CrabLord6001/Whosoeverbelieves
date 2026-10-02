@@ -2,13 +2,12 @@
 <html lang="en">
 <head>
   <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-05VNP2PXN4');
-    // Analytics loads just after the page finishes, so it doesn't slow the first paint.
-    window.addEventListener('load', function () { setTimeout(function () { var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4'; document.head.appendChild(s); }, 1500); });
   </script>
 
   <meta charset="UTF-8" />
@@ -16,11 +15,9 @@
   <title>The Debate in Job — Whosoever Believes</title>
   <meta name="description" content="The Book of Job: a speech map drawn to scale by verses, the debate round by round from the council in heaven to the whirlwind, the book’s major themes, and why the rest of Scripture treats Job as a real man." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" /></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles.css" />
-  <link rel="stylesheet" href="charts.css?v=f03dac97" />
+  <link rel="stylesheet" href="charts.css?v=46d6a0c8" />
   <style>
 :root{--pu:#b08ad8;--pu-soft:rgba(176,138,216,.16)}
   :root.light-mode{--pu:#6b46a8;--pu-soft:rgba(107,70,168,.1)}
@@ -46,24 +43,12 @@
   .deb .sp-fr .vt-date b{color:var(--gn)} .deb .sp-elh .vt-date b{color:var(--pu)}
   .deb .vt-row.silent .vt-node{border-style:dashed;background:transparent}
   .deb .vt-row.silent h3{font-style:italic;color:var(--text-mid)}
-  .th-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
-  .th-card{border:1px solid var(--glass-border);border-radius:10px;background:var(--glass);padding:1rem 1.15rem 1.1rem}
-  .th-card>i{font-style:normal;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.2em;color:var(--hl)}
-  .th-card h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.35rem;margin:.15rem 0 .35rem;color:var(--text);line-height:1.2}
-  .th-card p{margin:0;color:var(--text-mid);line-height:1.6;font-size:1.02rem;text-wrap:pretty}
-  .th-card.grace{grid-column:1/-1;border-color:var(--hl);background:var(--hl-soft)}
-  .th-card.grace p{color:var(--text)}
   .ref-list{display:grid;gap:.8rem}
   .ref-card{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:.3rem 1.2rem;border:1px solid var(--glass-border);border-left:3px solid var(--hl);border-radius:8px;background:var(--glass);padding:.85rem 1.1rem}
   .ref-card b{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600}
   .ref-card q{display:block;quotes:none;font-style:italic;color:var(--text);line-height:1.5;font-size:1.05rem}
   .ref-card span{display:block;color:var(--text-mid);margin-top:.25rem;line-height:1.5}
-  .real{margin-top:1.4rem;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass);padding:1.1rem 1.3rem}
-  .real h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.4rem;margin:0 0 .4rem;color:var(--text)}
-  .real p,.real li{color:var(--text-mid);line-height:1.6;font-size:1.02rem;text-wrap:pretty}
-  .real ul{margin:.4rem 0 0;padding-left:1.2rem}
-  .real li{margin-bottom:.4rem}
-  @media (max-width:760px){.th-grid{grid-template-columns:minmax(0,1fr)}.ref-card{grid-template-columns:minmax(0,1fr)}}
+  @media (max-width:760px){.ref-card{grid-template-columns:minmax(0,1fr)}}
   </style>
 
   <!-- SEO metadata -->
@@ -683,22 +668,9 @@
   </footer>
 </div><!-- /.site-wrapper -->
 
-<script>
-/* Site search data loads when someone clicks into the search box, or right after the page finishes loading. */
-(function () {
-  var asked = false;
-  function load() {
-    if (asked) return; asked = true;
-    var s = document.createElement('script'); s.src = '../search-index.js';
-    s.onload = function () { var b = document.getElementById('site-search'); if (b && b.value.trim() && window.runSearch) window.runSearch(b.value); };
-    document.head.appendChild(s);
-  }
-  document.addEventListener('focusin', function (e) { if (e.target.id === 'site-search') load(); });
-  window.addEventListener('load', function () { setTimeout(load, 0); });
-})();
-</script>
+<script src="../search-index.js"></script>
 <script src="../scripts.js"></script>
-<script src="charts.js?v=f03dac97"></script>
+<script src="charts.js?v=46d6a0c8"></script>
 <script src="/auth.js" defer></script>
 </body>
 </html>

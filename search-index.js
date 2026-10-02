@@ -313,18 +313,18 @@ const searchIndex = [
     content: "Maps charts timelines Bible study Seven Acts dispensations Law History Wisdom Prophets Gospels Epistles Revelation"
   },
   {
-    title: "The Generations of Genesis",
-    excerpt: "How Genesis narrows from all creation to the family of promise",
+    title: "The Book of Genesis",
+    excerpt: "Lifespans from Adam to Joseph, the story as a flowchart, Abraham's journeys, and the Messianic thread",
     url: "/charts/genesis-generations.html",
     tags: ["Bible Charts"],
-    content: "Genesis structure toledot generations prologue Adam Noah Shem Terah Abraham Ishmael Isaac Esau Jacob Joseph line of promise Messianic thread seed of the woman Melchizedek Judah"
+    content: "Genesis structure toledot generations prologue Adam Noah Shem Terah Abraham Ishmael Isaac Esau Jacob Joseph line of promise Messianic thread seed of the woman Melchizedek Judah Abraham journeys map Ur Haran Canaan Egypt walk of faith Hagar Ishmael God who sees El Roi Beer Lahai Roi Moriah lifespans patriarchs Methuselah flood ages years from creation flowchart story nation of Israel twelve tribes"
   },
   {
     title: "Esther in Context",
     excerpt: "The Persian kings, the three returns from exile, and where Esther fits",
     url: "/charts/esther-in-context.html",
     tags: ["Bible Charts"],
-    content: "Esther Xerxes Ahasuerus Persian period timeline Cyrus Darius Artaxerxes Ezra Nehemiah Zerubbabel Haman Mordecai Purim great reversal Amalek Agag Saul"
+    content: "Esther Xerxes Ahasuerus Persian period timeline Cyrus Darius Artaxerxes Ezra Nehemiah Zerubbabel Haman Mordecai Purim great reversal Amalek Agag Saul Greek additions Septuagint apocrypha deuterocanonical Catholic canon Jerome Vulgate Trent Mordecai dream Macedonian"
   },
   {
     title: "The Five Books of Psalms",

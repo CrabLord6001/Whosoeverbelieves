@@ -130,7 +130,7 @@ svg.cv .cv-line.hl{stroke:var(--hl);stroke-width:2}
 .ctable th,.ctable td{padding:.75rem 1rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule);line-height:1.45}
 .ctable tr:last-child td,.ctable tr:last-child th{border-bottom:0}
 .ctable thead th{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-mid);background:var(--band);font-weight:600}
-.ctable tbody th{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600;width:8.5rem}
+.ctable tbody th{font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600;width:8.5rem}
 .ctable td{color:var(--text)}
 .ctable small{display:block;color:var(--text-faint);font-size:.85rem;margin-top:.15rem}
 .ctable tr.on td,.ctable tr.on th{background:var(--hl-soft)}
@@ -215,8 +215,8 @@ svg.cv .cv-lake{fill:var(--sea);stroke:var(--coast);stroke-width:.8}
 svg.cv .rt0{stroke:var(--text-faint);stroke-dasharray:2 5;stroke-width:2.2}
 
 /* Plain links inside chart pages match the site's gold links */
-.ch-main :is(p, td, th, small, .notes li) a:not([class]){color:var(--gold);text-decoration:underline;text-decoration-color:rgba(201,168,76,.35);text-underline-offset:3px;transition:color .2s}
-.ch-main :is(p, td, th, small, .notes li) a:not([class]):hover{color:var(--gold-light)}
+.ch-main :is(p, td, th, small, li, h3, h4) a:not([class]):not(:is(.mc-list, .related, .ch-crumb) a){color:var(--gold);text-decoration:underline;text-decoration-color:rgba(201,168,76,.35);text-underline-offset:3px;transition:color .2s}
+.ch-main :is(p, td, th, small, li, h3, h4) a:not([class]):not(:is(.mc-list, .related, .ch-crumb) a):hover{color:var(--gold-light)}
 .ch-main .related li a:not([class]){color:var(--text);text-decoration:none}
 .ch-main .related li a:not([class]):hover{color:var(--gold)}
 svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
@@ -249,3 +249,22 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
 .stack.glance .stack-row i{font-size:.74rem;font-weight:600;letter-spacing:.12em;color:var(--gold)}
 .ch-verse{text-wrap:pretty}
 .ch-toc a{text-wrap:balance}
+/* Shared cards: themes, questions, and boxed lists */
+.th-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.th-card{border:1px solid var(--glass-border);border-radius:10px;background:var(--glass);padding:1rem 1.15rem 1.1rem}
+.th-card>i{font-style:normal;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.2em;color:var(--hl)}
+.th-card h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.35rem;margin:.15rem 0 .35rem;color:var(--text);line-height:1.2}
+.th-card p{margin:0;color:var(--text-mid);line-height:1.6;font-size:1.02rem;text-wrap:pretty}
+.th-card.grace{grid-column:1/-1;border-color:var(--hl);background:var(--hl-soft)}
+.th-card.grace p{color:var(--text)}
+.real{margin-top:1.4rem;border:1px solid var(--glass-border);border-radius:10px;background:var(--glass);padding:1.1rem 1.3rem}
+.real h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.4rem;margin:0 0 .4rem;color:var(--text)}
+.real p,.real li{color:var(--text-mid);line-height:1.6;font-size:1.02rem;text-wrap:pretty}
+.real ul{margin:.4rem 0 0;padding-left:1.2rem}
+.real li{margin-bottom:.4rem}
+@media (max-width:760px){.th-grid{grid-template-columns:minmax(0,1fr)}}
+.ch-h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.45rem;color:var(--text);margin:1.8rem 0 .8rem}
+.real li b{color:var(--text);font-weight:500}
+.ctable tbody th{width:auto;text-wrap:balance}
+.fit-card .ctable tbody th,.fit .ctable tbody th{width:auto}
+.nw{white-space:nowrap}
