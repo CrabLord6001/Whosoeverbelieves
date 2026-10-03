@@ -1592,6 +1592,20 @@ body.page-article .header-ornament {
   fill: white;
 }
 
+/* ── Social Icons (Discord, X, Instagram — one row, equal size) ── */
+.social-icons { display: flex; gap: 1.5rem; align-items: center; }
+.social-icons a { color: var(--text-mid); display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; transition: color 0.2s, transform 0.1s; }
+.social-icons a:hover, .social-icons a:focus-visible { transform: translateY(-1px); }
+/* brand colors on hover */
+.social-discord:hover, .social-discord:focus-visible { color: #5865F2; }
+.social-icons .social-x svg { width: 32px; height: 32px; padding: 5px; box-sizing: border-box; border-radius: 7px; transition: background-color 0.2s, box-shadow 0.2s; }
+.social-x:hover, .social-x:focus-visible { color: #ffffff; }
+.social-x:hover svg, .social-x:focus-visible svg { background: #000000; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18); }
+:root.light-mode .social-x:hover svg, :root.light-mode .social-x:focus-visible svg { box-shadow: none; }
+.social-ig:hover rect, .social-ig:hover circle, .social-ig:focus-visible rect, .social-ig:focus-visible circle { stroke: url(#ig-grad); }
+.social-ig:hover circle:last-of-type, .social-ig:focus-visible circle:last-of-type { fill: #d62976; }
+.social-icons svg { width: 30px; height: 30px; display: block; }
+
 
 /* ── NAV TOOLS (text size + theme, beside Sign In) ─────────────────────── */
 
