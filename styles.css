@@ -1966,7 +1966,10 @@ nav #search-results a::after { display: none; }
 .hp-votd-about > span:empty { display: none; }
 .hp-votd-about .hp-votd-credit { color: #b9b2a3; font-size: 0.8rem; margin-top: 0.15rem; }
 @media (max-width: 720px) {
-  /* buttons wrap to two rows on phones: open just above the ⓘ's row, not over the verse */
+  /* phones: reference on its own line, all three buttons together on the next,
+     so the row never splits (long references like 1 Thessalonians fit too) */
+  .hp-votd-foot { row-gap: 0.85rem; }
+  .hp-votd-foot .hp-votd-ref { flex-basis: 100%; margin-right: 0; }
   .hp-votd .hp-votd-about { left: 0; right: 0; max-width: none; bottom: calc(38px + 10px); }
 }
 
