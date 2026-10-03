@@ -216,8 +216,12 @@
         <span class="hp-votd-ref" id="hp-votd-ref">John 3:16 &middot; WEB</span>
         <button type="button" class="hp-pill" id="hp-votd-share">Share</button>
         <a class="hp-pill" id="hp-votd-read" href="https://www.biblegateway.com/passage/?search=John+3&amp;version=WEB" target="_blank" rel="noopener">Read chapter</a>
+        <button type="button" class="hp-pill hp-votd-info" id="hp-votd-info" aria-label="Verse and painting credits" aria-expanded="false" aria-controls="hp-votd-about">i</button>
+        <div class="hp-votd-about" id="hp-votd-about" role="note">
+          <span class="hp-votd-art" id="hp-votd-art"></span>
+          <span class="hp-votd-credit" id="hp-votd-credit"></span>
+        </div>
       </div>
-      <p class="hp-votd-credit"><span id="hp-votd-credit">World English Bible</span> <span class="hp-votd-art" id="hp-votd-art"></span></p>
     </article>
 
     <a class="hp-start" href="/articles/free-grace-gospel.html">
@@ -433,53 +437,53 @@
   // one, so the image still changes daily. Runs in the visitor's browser only.
   // [file, credit, background-position, themes, bright (needs a darker scrim)]
   var BACKDROPS = [
-    ['adams-tetons', 'Photo: Ansel Adams, The Tetons and the Snake River (1942)', 'center 35%', 'mountain water snow', 0],
-    ['bierstadt-sierra', 'Painting: Albert Bierstadt, Among the Sierra Nevada (1868)', 'center 40%', 'mountain water rest creation', 0],
-    ['church-twilight', 'Painting: Frederic Edwin Church, Twilight in the Wilderness (1860)', 'center 45%', 'light night wilderness', 0],
-    ['moran-yellowstone', 'Painting: Thomas Moran, The Grand Canyon of the Yellowstone (1872)', 'center 40%', 'mountain waterfall creation wilderness', 0],
-    ['bierstadt-landers', 'Painting: Albert Bierstadt, The Rocky Mountains, Lander’s Peak (1863)', 'center 30%', 'mountain waterfall creation', 0],
-    ['cole-oxbow', 'Painting: Thomas Cole, The Oxbow (1836)', 'center 50%', 'storm water harvest rain', 0],
-    ['kuindzhi-moonlit', 'Painting: Arkhip Kuindzhi, Moonlit Night on the Dnieper (1880)', 'center 45%', 'night water rest', 0],
-    ['aivazovsky-crimea-moon', 'Painting: Ivan Aivazovsky, Moonlit Night on the Crimean Coast (1852)', 'center 50%', 'sea night light island', 0],
-    ['aivazovsky-ischia', 'Painting: Ivan Aivazovsky, Sunset over Ischia (1857)', 'center 50%', 'sea island light rest', 1],
-    ['aivazovsky-ninth-wave', 'Painting: Ivan Aivazovsky, The Ninth Wave (1850)', 'center 50%', 'sea storm light', 0],
-    ['bierstadt-bridal-veil', 'Painting: Albert Bierstadt, Bridal Veil Falls, Yosemite Valley (c. 1871)', 'center 40%', 'mountain waterfall tree', 1],
-    ['bierstadt-nassau', 'Painting: Albert Bierstadt, View of Nassau, the Bahamas (c. 1877)', 'center 50%', 'island sea tree', 0],
-    ['bierstadt-puget', 'Painting: Albert Bierstadt, Puget Sound on the Pacific Coast (1870)', 'center 50%', 'storm sea light', 0],
-    ['bierstadt-rosalie', 'Painting: Albert Bierstadt, A Storm in the Rocky Mountains, Mt. Rosalie (1866)', 'center 45%', 'storm mountain creation', 0],
-    ['bierstadt-sunrise', 'Painting: Albert Bierstadt, Sunrise, Yosemite Valley (c. 1870)', 'center 45%', 'light mountain tree rest', 0],
-    ['bierstadt-yosemite', 'Painting: Albert Bierstadt, Looking Down Yosemite Valley (1865)', 'center 45%', 'mountain light creation', 0],
-    ['bonheur-sheep', 'Painting: Rosa Bonheur, Sheep by the Sea (1865)', 'center 55%', 'sheep sea rest', 0],
-    ['church-andes', 'Painting: Frederic Edwin Church, The Heart of the Andes (1859)', 'center 45%', 'mountain waterfall tree creation', 0],
-    ['church-aurora', 'Painting: Frederic Edwin Church, Aurora Borealis (1865)', 'center 40%', 'night snow creation', 0],
-    ['church-cotopaxi', 'Painting: Frederic Edwin Church, Cotopaxi (1862)', 'center 45%', 'light fire mountain wilderness', 0],
-    ['church-icebergs', 'Painting: Frederic Edwin Church, The Icebergs (1861)', 'center 45%', 'snow sea', 1],
-    ['church-niagara', 'Painting: Frederic Edwin Church, Niagara (1857)', 'center 50%', 'waterfall water rainbow', 0],
-    ['church-rainy-season', 'Painting: Frederic Edwin Church, Rainy Season in the Tropics (1866)', 'center 35%', 'rainbow rain mountain', 0],
-    ['church-river-light', 'Painting: Frederic Edwin Church, The River of Light (1877)', 'center 50%', 'water light tree rest', 0],
-    ['constable-hay-wain', 'Painting: John Constable, The Hay Wain (1821)', 'center 50%', 'water harvest tree rest', 0],
-    ['friedrich-watzmann', 'Painting: Caspar David Friedrich, The Watzmann (1824–25)', 'center 35%', 'mountain snow', 0],
-    ['heade-marsh-sunset', 'Painting: Martin Johnson Heade, Marsh Sunset, Newburyport (c. 1866)', 'center 50%', 'harvest light rest', 0],
-    ['heade-narragansett', 'Painting: Martin Johnson Heade, Thunder Storm on Narragansett Bay (1868)', 'center 50%', 'storm sea', 0],
-    ['homer-bermuda', 'Painting: Winslow Homer, Salt Kettle, Bermuda (1899)', 'center 50%', 'island water rest', 1],
-    ['homer-northeaster', 'Painting: Winslow Homer, Northeaster (1895)', 'center 50%', 'sea storm mountain', 0],
-    ['inness-delaware', 'Painting: George Inness, Delaware Water Gap (1861)', 'center 40%', 'rainbow water sheep', 0],
-    ['inness-peace-plenty', 'Painting: George Inness, Peace and Plenty (1865)', 'center 50%', 'harvest rest', 0],
-    ['kensett-lake-george', 'Painting: John Frederick Kensett, Lake George (1869)', 'center 50%', 'rest water mountain island', 1],
-    ['kuindzhi-after-rain', 'Painting: Arkhip Kuindzhi, After a Rain (1879)', 'center 55%', 'rain storm sheep', 0],
-    ['kuindzhi-red-sunset', 'Painting: Arkhip Kuindzhi, Red Sunset on the Dnieper (1905–08)', 'center 45%', 'light water night', 0],
-    ['lane-braces-rock', 'Painting: Fitz Henry Lane, Brace’s Rock (1864)', 'center 50%', 'rest water mountain', 1],
-    ['lane-owls-head', 'Painting: Fitz Henry Lane, Owl’s Head, Penobscot Bay (1862)', 'center 50%', 'sea rest light island', 1],
-    ['levitan-golden-autumn', 'Painting: Isaac Levitan, Golden Autumn, Slobodka (1889)', 'center 50%', 'autumn harvest tree', 1],
-    ['millet-spring', 'Painting: Jean-François Millet, Spring (1868–73)', 'center 40%', 'rainbow tree harvest rain', 0],
-    ['monet-argenteuil', 'Painting: Claude Monet, Snow at Argenteuil (1875)', 'center 50%', 'snow', 1],
-    ['monet-magpie', 'Painting: Claude Monet, The Magpie (1868–69)', 'center 50%', 'snow light', 1],
-    ['moran-holy-cross', 'Painting: Thomas Moran, Mountain of the Holy Cross (1890)', 'center 40%', 'cross mountain waterfall snow', 1],
-    ['richards-surf', 'Painting: William Trost Richards, Surf on Rocks (c. 1890–1900)', 'center 50%', 'sea storm', 0],
-    ['shishkin-oak-grove', 'Painting: Ivan Shishkin, Oak Grove (1887)', 'center 45%', 'tree rest', 0],
-    ['shishkin-rye', 'Painting: Ivan Shishkin, Rye (1878)', 'center 50%', 'harvest tree', 1],
-    ['shishkin-ship-grove', 'Painting: Ivan Shishkin, Ship Grove (1898)', 'center 50%', 'tree water', 0],
-    ['shishkin-winter', 'Painting: Ivan Shishkin, Winter (1890)', 'center 50%', 'snow tree', 1]
+    ['adams-tetons', 'Ansel Adams, The Tetons and the Snake River (1942)', 'center 35%', 'mountain water snow', 0],
+    ['bierstadt-sierra', 'Albert Bierstadt, Among the Sierra Nevada (1868)', 'center 40%', 'mountain water rest creation', 0],
+    ['church-twilight', 'Frederic Edwin Church, Twilight in the Wilderness (1860)', 'center 45%', 'light night wilderness', 0],
+    ['moran-yellowstone', 'Thomas Moran, The Grand Canyon of the Yellowstone (1872)', 'center 40%', 'mountain waterfall creation wilderness', 0],
+    ['bierstadt-landers', 'Albert Bierstadt, The Rocky Mountains, Lander’s Peak (1863)', 'center 30%', 'mountain waterfall creation', 0],
+    ['cole-oxbow', 'Thomas Cole, The Oxbow (1836)', 'center 50%', 'storm water harvest rain', 0],
+    ['kuindzhi-moonlit', 'Arkhip Kuindzhi, Moonlit Night on the Dnieper (1880)', 'center 45%', 'night water rest', 0],
+    ['aivazovsky-crimea-moon', 'Ivan Aivazovsky, Moonlit Night on the Crimean Coast (1852)', 'center 50%', 'sea night light island', 0],
+    ['aivazovsky-ischia', 'Ivan Aivazovsky, Sunset over Ischia (1857)', 'center 50%', 'sea island light rest', 1],
+    ['aivazovsky-ninth-wave', 'Ivan Aivazovsky, The Ninth Wave (1850)', 'center 50%', 'sea storm light', 0],
+    ['bierstadt-bridal-veil', 'Albert Bierstadt, Bridal Veil Falls, Yosemite Valley (c. 1871)', 'center 40%', 'mountain waterfall tree', 1],
+    ['bierstadt-nassau', 'Albert Bierstadt, View of Nassau, the Bahamas (c. 1877)', 'center 50%', 'island sea tree', 0],
+    ['bierstadt-puget', 'Albert Bierstadt, Puget Sound on the Pacific Coast (1870)', 'center 50%', 'storm sea light', 0],
+    ['bierstadt-rosalie', 'Albert Bierstadt, A Storm in the Rocky Mountains, Mt. Rosalie (1866)', 'center 45%', 'storm mountain creation', 0],
+    ['bierstadt-sunrise', 'Albert Bierstadt, Sunrise, Yosemite Valley (c. 1870)', 'center 45%', 'light mountain tree rest', 0],
+    ['bierstadt-yosemite', 'Albert Bierstadt, Looking Down Yosemite Valley (1865)', 'center 45%', 'mountain light creation', 0],
+    ['bonheur-sheep', 'Rosa Bonheur, Sheep by the Sea (1865)', 'center 55%', 'sheep sea rest', 0],
+    ['church-andes', 'Frederic Edwin Church, The Heart of the Andes (1859)', 'center 45%', 'mountain waterfall tree creation', 0],
+    ['church-aurora', 'Frederic Edwin Church, Aurora Borealis (1865)', 'center 40%', 'night snow creation', 0],
+    ['church-cotopaxi', 'Frederic Edwin Church, Cotopaxi (1862)', 'center 45%', 'light fire mountain wilderness', 0],
+    ['church-icebergs', 'Frederic Edwin Church, The Icebergs (1861)', 'center 45%', 'snow sea', 1],
+    ['church-niagara', 'Frederic Edwin Church, Niagara (1857)', 'center 50%', 'waterfall water rainbow', 0],
+    ['church-rainy-season', 'Frederic Edwin Church, Rainy Season in the Tropics (1866)', 'center 35%', 'rainbow rain mountain', 0],
+    ['church-river-light', 'Frederic Edwin Church, The River of Light (1877)', 'center 50%', 'water light tree rest', 0],
+    ['constable-hay-wain', 'John Constable, The Hay Wain (1821)', 'center 50%', 'water harvest tree rest', 0],
+    ['friedrich-watzmann', 'Caspar David Friedrich, The Watzmann (1824–25)', 'center 35%', 'mountain snow', 0],
+    ['heade-marsh-sunset', 'Martin Johnson Heade, Marsh Sunset, Newburyport (c. 1866)', 'center 50%', 'harvest light rest', 0],
+    ['heade-narragansett', 'Martin Johnson Heade, Thunder Storm on Narragansett Bay (1868)', 'center 50%', 'storm sea', 0],
+    ['homer-bermuda', 'Winslow Homer, Salt Kettle, Bermuda (1899)', 'center 50%', 'island water rest', 1],
+    ['homer-northeaster', 'Winslow Homer, Northeaster (1895)', 'center 50%', 'sea storm mountain', 0],
+    ['inness-delaware', 'George Inness, Delaware Water Gap (1861)', 'center 40%', 'rainbow water sheep', 0],
+    ['inness-peace-plenty', 'George Inness, Peace and Plenty (1865)', 'center 50%', 'harvest rest', 0],
+    ['kensett-lake-george', 'John Frederick Kensett, Lake George (1869)', 'center 50%', 'rest water mountain island', 1],
+    ['kuindzhi-after-rain', 'Arkhip Kuindzhi, After a Rain (1879)', 'center 55%', 'rain storm sheep', 0],
+    ['kuindzhi-red-sunset', 'Arkhip Kuindzhi, Red Sunset on the Dnieper (1905–08)', 'center 45%', 'light water night', 0],
+    ['lane-braces-rock', 'Fitz Henry Lane, Brace’s Rock (1864)', 'center 50%', 'rest water mountain', 1],
+    ['lane-owls-head', 'Fitz Henry Lane, Owl’s Head, Penobscot Bay (1862)', 'center 50%', 'sea rest light island', 1],
+    ['levitan-golden-autumn', 'Isaac Levitan, Golden Autumn, Slobodka (1889)', 'center 50%', 'autumn harvest tree', 1],
+    ['millet-spring', 'Jean-François Millet, Spring (1868–73)', 'center 40%', 'rainbow tree harvest rain', 0],
+    ['monet-argenteuil', 'Claude Monet, Snow at Argenteuil (1875)', 'center 50%', 'snow', 1],
+    ['monet-magpie', 'Claude Monet, The Magpie (1868–69)', 'center 50%', 'snow light', 1],
+    ['moran-holy-cross', 'Thomas Moran, Mountain of the Holy Cross (1890)', 'center 40%', 'cross mountain waterfall snow', 1],
+    ['richards-surf', 'William Trost Richards, Surf on Rocks (c. 1890–1900)', 'center 50%', 'sea storm', 0],
+    ['shishkin-oak-grove', 'Ivan Shishkin, Oak Grove (1887)', 'center 45%', 'tree rest', 0],
+    ['shishkin-rye', 'Ivan Shishkin, Rye (1878)', 'center 50%', 'harvest tree', 1],
+    ['shishkin-ship-grove', 'Ivan Shishkin, Ship Grove (1898)', 'center 50%', 'tree water', 0],
+    ['shishkin-winter', 'Ivan Shishkin, Winter (1890)', 'center 50%', 'snow tree', 1]
   ];
   // Words in a verse that point to each theme, and how strongly.
   var THEMES = {
@@ -533,8 +537,38 @@
     card.style.setProperty('--votd-pos', b[2]);
     card.classList.add('has-image');
     if (b[4]) card.classList.add('is-bright');
-    $('hp-votd-art').textContent = b[1];
+    // Credit reads "Artist, Title (date)"; shown in a small popover behind the
+    // ⓘ button so long titles never push the card's credit line onto two lines.
+    var art = $('hp-votd-art'), m = b[1].match(/^([^,]+), (.+?)(?: (\([^)]*\)))?$/);
+    art.textContent = '';
+    if (m) {
+      var em = document.createElement('i');
+      em.textContent = m[2];
+      art.append(m[1] + ', ', em);
+      if (m[3]) {
+        var yr = document.createElement('span');
+        yr.style.whiteSpace = 'nowrap';
+        yr.textContent = m[3];
+        art.append(' ', yr);
+      }
+    } else art.textContent = b[1];
   }
+  (function () {
+    var btn = $('hp-votd-info');
+    if (!btn) return;
+    function setOpen(open) {
+      card.classList.toggle('art-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(!card.classList.contains('art-open'));
+    });
+    document.addEventListener('click', function (e) {
+      if (!$('hp-votd-about').contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  })();
   var today = new Date();
   var todayNum = dayNumber(today.getFullYear(), today.getMonth() + 1, today.getDate());
   // Give the verse a moment to arrive so the painting can match it; if the
@@ -543,13 +577,16 @@
   (window.WB_VOTD || fetch(FN + 'verse-of-the-day').then(function (r) { return r.ok ? r.json() : null; })).then(function (v) {
     if (!v || !v.text) { setBackdrop(pickBackdrop(null, todayNum)); return; }
     verse = v;
-    $('hp-votd-text').textContent = '“' + v.text + '”';
+    // WEB opens a quotation mark at each new paragraph of a long speech
+    // (e.g. Exod 20:8 starts with “ and no closing mark), so strip any
+    // double quotes at the edges before adding our own pair.
+    $('hp-votd-text').textContent = '“' + v.text.replace(/^[\s“”"]+|[\s“”"]+$/g, '') + '”';
     $('hp-votd-ref').textContent = v.reference + ' · WEB';
     var chapter = v.reference.replace(/:.*$/, '');
     $('hp-votd-read').href = 'https://www.biblegateway.com/passage/?search=' + encodeURIComponent(chapter) + '&version=WEB';
     var p = v.date.split('-').map(Number);
     $('hp-votd-date').textContent = new Date(p[0], p[1] - 1, p[2]).toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-    if (v.selection === 'YouVersion') $('hp-votd-credit').textContent = 'Selected by YouVersion · World English Bible';
+    if (v.selection === 'YouVersion') $('hp-votd-credit').textContent = 'Selected by YouVersion';
     setBackdrop(pickBackdrop(v.text, dayNumber(p[0], p[1], p[2])));
   }).catch(function () { setBackdrop(pickBackdrop(null, todayNum)); });
 

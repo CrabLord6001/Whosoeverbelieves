@@ -1743,7 +1743,6 @@ nav a:hover::after { left: 0.9rem; right: 0.9rem; }
   text-decoration: none; cursor: pointer;
 }
 .hp-pill:hover { border-color: #e5c97a; color: #e5c97a; }
-.hp-votd-credit { font-size: 0.8rem; color: #9a927f; margin: -0.5rem 0 0; }
 
 .hp-start {
   display: flex; flex-direction: column; gap: 0.8rem;
@@ -1943,11 +1942,33 @@ nav #search-results a::after { display: none; }
 }
 .hp-votd > * { position: relative; }
 .hp-votd.has-image .hp-votd-text { text-shadow: 0 2px 14px rgba(0,0,0,0.55); }
-.hp-votd.has-image .hp-votd-date,
-.hp-votd.has-image .hp-votd-credit { color: #d6cfbf; }
+.hp-votd.has-image .hp-votd-date { color: #d6cfbf; }
 .hp-votd.has-image .hp-pill { background: rgba(6,10,18,0.35); border-color: rgba(255,255,255,0.35); }
-.hp-votd-art::before { content: '\00B7\00A0'; }
-.hp-votd-art:empty { display: none; }
+/* credits (YouVersion + painting) sit behind an ⓘ pill in the button row */
+.hp-votd .hp-votd-info {
+  width: 38px; padding: 0; justify-content: center;
+  font: italic 600 1.05rem/1 Georgia, serif;
+}
+.hp-votd.art-open .hp-votd-info { border-color: #e5c97a; color: #e5c97a; }
+.hp-votd .hp-votd-about {
+  position: absolute; right: 0; bottom: calc(100% + 10px); z-index: 2;
+  max-width: min(380px, 100%); padding: 0.55rem 0.8rem;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(10,8,6,0.92); color: #e8e0cc;
+  font-size: 0.85rem; line-height: 1.4; text-align: left;
+  display: none;
+}
+.hp-votd.art-open .hp-votd-about { display: block; }
+@media (hover: hover) {
+  .hp-votd .hp-votd-info:hover + .hp-votd-about { display: block; }
+}
+.hp-votd-about > span { display: block; }
+.hp-votd-about > span:empty { display: none; }
+.hp-votd-about .hp-votd-credit { color: #b9b2a3; font-size: 0.8rem; margin-top: 0.15rem; }
+@media (max-width: 720px) {
+  /* buttons wrap to two rows on phones: open just above the ⓘ's row, not over the verse */
+  .hp-votd .hp-votd-about { left: 0; right: 0; max-width: none; bottom: calc(38px + 10px); }
+}
 
 /* fit links, search, tools and Sign In on one line at desktop width */
 @media (min-width: 721px) {
