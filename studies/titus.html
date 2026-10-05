@@ -131,12 +131,11 @@
 
   <main class="study-body">
     <div class="study-toolbar">
-      <button type="button" id="study-expand-all">Expand all</button>
-      <button type="button" id="study-collapse-all">Collapse all</button>
+      <button type="button" id="study-toggle-all" aria-pressed="false">Expand all</button>
     </div>
 
     <!-- ===== TITUS 1 ===== -->
-    <details class="study-chapter" id="titus-1" open>
+    <details class="study-chapter" id="titus-1">
       <summary>
         <span class="study-chapter-text"><span class="study-chapter-ch">Titus 1</span><span class="study-chapter-title">Marks of Healthy Churches</span></span>
         <svg class="study-chev" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -317,12 +316,19 @@
 (function () {
   var chapters = Array.prototype.slice.call(document.querySelectorAll('details.study-chapter'));
 
-  document.getElementById('study-expand-all').addEventListener('click', function () {
-    chapters.forEach(function (d) { d.open = true; });
+  // One button: "Expand all" until every chapter is open, then "Collapse all"
+  var toggleAll = document.getElementById('study-toggle-all');
+  function syncToggle() {
+    var allOpen = chapters.every(function (d) { return d.open; });
+    toggleAll.textContent = allOpen ? 'Collapse all' : 'Expand all';
+    toggleAll.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
+  }
+  toggleAll.addEventListener('click', function () {
+    var open = !chapters.every(function (d) { return d.open; });
+    chapters.forEach(function (d) { d.open = open; });
+    syncToggle();
   });
-  document.getElementById('study-collapse-all').addEventListener('click', function () {
-    chapters.forEach(function (d) { d.open = false; });
-  });
+  chapters.forEach(function (d) { d.addEventListener('toggle', syncToggle); });
 
   function openFromHash() {
     var id = location.hash.slice(1);

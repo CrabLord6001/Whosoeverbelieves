@@ -2138,3 +2138,18 @@ nav a:hover { color: var(--gold-light); }
   .nav-drop-menu a:hover { background: none; }
   .nav-links .nav-drop-menu a:first-child { padding-left: 0.7rem; }
 }
+
+/* ── NAV: tablets (iPad portrait) — tighten spacing so Sign In stays on one row ── */
+@media (min-width: 721px) and (max-width: 1100px) {
+  nav { letter-spacing: 0.1em; }
+  nav a, nav .nav-drop-btn { padding-left: 0.5rem; padding-right: 0.5rem; }
+  nav a:hover::after { left: 0.5rem; right: 0.5rem; }
+  nav .nav-search { width: 7rem; margin-left: 0.3rem; }
+}
+@media (min-width: 721px) and (max-width: 760px) {
+  nav { letter-spacing: 0.08em; }
+  nav a, nav .nav-drop-btn { padding-left: 0.42rem; padding-right: 0.42rem; }
+  nav a:hover::after { left: 0.42rem; right: 0.42rem; }
+  nav .nav-search { width: 6.5rem; }
+  nav .nav-tools { padding-left: 0.3rem; }
+}
