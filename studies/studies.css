@@ -17,8 +17,7 @@
   margin-bottom: 1.25rem;
 }
 
-.study-toolbar button,
-.study-print-btn {
+.study-toolbar button {
   font-family: 'Cinzel', serif;
   font-size: 0.6rem;
   letter-spacing: 0.14em;
@@ -32,8 +31,7 @@
   transition: background 0.2s, color 0.2s;
 }
 
-.study-toolbar button:hover,
-.study-print-btn:hover {
+.study-toolbar button:hover {
   background: var(--gold-faint);
   color: var(--gold-light);
 }
@@ -110,12 +108,29 @@
 }
 
 .study-chapter-tools {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 1rem;
+  float: right;
+  margin: 0.55rem 0 0.4rem 1.25rem;
 }
 
-.study-print-btn { font-size: 0.58rem; padding: 0.45rem 0.85rem; }
+/* Same look as the Print button on article pages */
+.study-print-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  transition: color 0.2s;
+}
+.study-print-btn svg { color: var(--gold); flex-shrink: 0; }
+.study-print-btn:hover,
+.study-print-btn:focus-visible { color: var(--gold-light); }
 
 .study-chapter-content p,
 .study-chapter-content li {
