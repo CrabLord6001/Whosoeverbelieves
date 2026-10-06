@@ -286,6 +286,23 @@
    "Print this chapter" prints only that chapter, text only, with writing
    space under each discussion question. */
 @media print {
+  /* Our own footer (web address + page number) replaces the browser's header and
+     footer. Defining page margin boxes turns off Chrome's built-in date/title header. */
+  @page {
+    margin: 0.6in 0.75in 0.7in;
+    @top-left { content: none; }
+    @top-center { content: none; }
+    @top-right { content: none; }
+    @bottom-left {
+      content: "whosoeverbelieves.com/studies/titus";
+      font-family: Georgia, serif; font-size: 8pt; color: #555;
+    }
+    @bottom-right {
+      content: counter(page) "/" counter(pages);
+      font-family: Georgia, serif; font-size: 8pt; color: #555;
+    }
+  }
+
   nav, header, footer, .study-hero img, .study-hero::after, .study-hero-verse,
   .study-toolbar, .study-chapter-tools,
   .study-chev, #verse-tooltip, #search-results, .article-byline,
@@ -317,6 +334,9 @@
   /* Tighter text on paper so each chapter fits on fewer sheets */
   .study-chapter-content p, .study-chapter-content li { line-height: 1.55; }
   .study-chapter-content h3 { margin: 1.1rem 0 0.4rem; }
+  /* keep each subheading on the same sheet as the text under it */
+  .study-chapter-content h3 { break-after: avoid; page-break-after: avoid; break-inside: avoid; }
+  .study-chapter-content h3 + p, .study-chapter-content h3 + ul, .study-chapter-content h3 + ol { break-before: avoid; page-break-before: avoid; }
   .study-chapter-content li { margin-bottom: 0.35rem; }
 
   .study-questions { border-left: 0; padding: 0; margin-top: 1.5rem; }
