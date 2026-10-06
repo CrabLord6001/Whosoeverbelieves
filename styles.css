@@ -2130,13 +2130,43 @@ nav a:hover { color: var(--gold-light); }
 .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu, .nav-drop.open .nav-drop-menu { display: flex; }
 :root.light-mode .nav-drop-menu { background: rgba(245, 239, 224, 0.98); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
 
-/* phones: no dropdown; the tool links join the sideways-swiping row */
+/* phones: the dropdowns stay as tap-to-open menus, so the link row fits (almost always) without sideways swiping */
 @media (max-width: 720px) {
-  .nav-drop, .nav-drop-menu, .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu, .nav-drop.open .nav-drop-menu { display: contents; }
-  .nav-drop-btn { display: none; }
-  .nav-drop-menu a { padding: 0.85rem 0.7rem; }
-  .nav-drop-menu a:hover { background: none; }
-  .nav-links .nav-drop-menu a:first-child { padding-left: 0.7rem; }
+  nav { letter-spacing: 0.05em; }
+  .nav-links {
+    font-size: 0.64rem;
+    position: static;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+  /* centered when the row fits; on very narrow phones it can still swipe */
+  .nav-links > :first-child { margin-left: auto; }
+  .nav-links > :last-child { margin-right: auto; }
+  .nav-links > a, .nav-links > a:first-child, .nav-links > a:last-child { padding-left: 0.4rem; padding-right: 0.4rem; }
+  .nav-drop { position: static; }
+  .nav-drop-btn { padding: 0.85rem 0.4rem; }
+  /* tap opens the menu; ignore sticky hover/focus on touch screens */
+  .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu { display: none; }
+  .nav-drop.open .nav-drop-menu { display: flex; }
+  /* the menu hangs from the whole nav bar, just under the link row */
+  .nav-drop-menu {
+    top: 2.85rem; left: 0; right: 0; transform: none; min-width: 0;
+    border-left: 0; border-right: 0; border-radius: 0 0 6px 6px;
+    font-size: 0.66rem; letter-spacing: 0.1em;
+    background: #0d1117;
+  }
+  :root.light-mode .nav-drop-menu { background: #f5efe0; }
+  .nav-links .nav-drop-menu a { padding: 0.8rem 1.25rem; text-align: center; }
+}
+@media (max-width: 380px) {
+  .nav-links > a, .nav-links > a:first-child, .nav-links > a:last-child { padding-left: 0.3rem; padding-right: 0.3rem; }
+  .nav-drop-btn { padding-left: 0.3rem; padding-right: 0.3rem; }
+}
+@media (max-width: 340px) {
+  nav { letter-spacing: 0.02em; }
+  .nav-links { font-size: 0.6rem; }
+  .nav-links > a, .nav-links > a:first-child, .nav-links > a:last-child, .nav-drop-btn { padding-left: 0.22rem; padding-right: 0.22rem; }
+  .nav-drop-menu { top: 2.78rem; }
 }
 
 /* ── NAV: tablets (iPad portrait) — tighten spacing so Sign In stays on one row ── */
