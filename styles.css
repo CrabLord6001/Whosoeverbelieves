@@ -2158,6 +2158,20 @@ nav a:hover { color: var(--gold-light); }
   :root.light-mode .nav-drop-menu { background: #f5efe0; }
   .nav-links .nav-drop-menu a { padding: 0.8rem 1.25rem; text-align: center; }
 }
+/* phones (except the narrowest): a compact menu that drops from the tab you tapped, sized to its items */
+@media (min-width: 341px) and (max-width: 720px) {
+  .nav-links { overflow: visible; }
+  .nav-drop { position: relative; }
+  .nav-drop-menu {
+    top: 100%; left: 50%; right: auto; transform: translateX(-50%);
+    width: max-content; min-width: 100%;
+    border: 1px solid var(--rule); border-top: 0; border-radius: 0 0 6px 6px;
+    padding: 0.3rem 0;
+  }
+  /* the right-hand menu lines up with its tab's right edge so it never runs off screen */
+  .nav-drop + .nav-drop .nav-drop-menu { left: auto; right: 0; transform: none; }
+  .nav-links .nav-drop-menu a { padding: 0.65rem 1.2rem; text-align: left; }
+}
 @media (max-width: 380px) {
   .nav-links > a, .nav-links > a:first-child, .nav-links > a:last-child { padding-left: 0.3rem; padding-right: 0.3rem; }
   .nav-drop-btn { padding-left: 0.3rem; padding-right: 0.3rem; }
