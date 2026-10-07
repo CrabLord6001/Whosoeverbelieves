@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.1rem 1.4rem;
+  padding: 0.9rem 1.4rem;
   transition: background 0.2s;
 }
 
@@ -75,14 +75,9 @@
   min-width: 0;
 }
 
-.study-chapter-ch {
-  display: block;
-  font-family: 'Cinzel', serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
+/* "Titus 1 – Marks of Healthy Churches" on one line; the chapter number in gold */
+.study-chapter-ch { color: var(--gold); font-variant-numeric: lining-nums; } /* a plain "1", not the old-style figure that reads like "I" */
+.study-chapter-sep { color: var(--gold); opacity: 0.6; }
 
 .study-chapter-title {
   display: block;
@@ -187,7 +182,7 @@
   .study-chapter > summary { padding: 1rem; }
   .study-chapter-content { padding: 0.25rem 1rem 1.25rem; }
   .study-questions { padding: 1rem; }
-  .study-chapter-title { font-size: 1.35rem; }
+  .study-chapter-title { font-size: 1.2rem; text-wrap: pretty; }
 }
 
 @media (prefers-reduced-motion: reduce) {
