@@ -2,7 +2,7 @@ const searchIndex = [
   {
     title: "How Jesus Bookended the Old Testament",
     excerpt: "How Jesus framed the Old Testament from cover to cover, and why the Apocrypha falls outside it",
-    url: "/articles/bookending-the-ot.html",
+    url: "/articles/bookending-the-ot",
     date: "2026-09-26",
     image: "/images/opt/bookending-the-ot-diptych-800.webp",
     imageAlt: "Jan Luyken etchings of Cain killing Abel and the stoning of Zechariah",
@@ -13,7 +13,7 @@ const searchIndex = [
   {
     title: "The Implications of God's Transcendence",
     excerpt: "Why a God above creation must reveal Himself, keep His word, and save by grace alone",
-    url: "/articles/implications-of-gods-transcendence.html",
+    url: "/articles/implications-of-gods-transcendence",
     date: "2026-09-11",
     image: "/images/opt/adams-the-tetons-and-the-snake-river-800.webp",
     imageAlt: "The Tetons and the Snake River by Ansel Adams",
@@ -24,7 +24,7 @@ const searchIndex = [
   {
     title: "Dragons in the King James Version",
     excerpt: "Why the KJV renders both tan and tannin as dragon, and what the Hebrew words actually described",
-    url: "/articles/kjv-dragons-tannin.html",
+    url: "/articles/kjv-dragons-tannin",
     date: "2026-08-27",
     image: "/images/opt/matham-beached-whale-1598-800.webp",
     imageAlt: "1598 engraving of a beached sperm whale surrounded by crowds on the Dutch coast",
@@ -35,7 +35,7 @@ const searchIndex = [
   {
     title: "Synthetic Outline of the Gospel of John",
     excerpt: "Tracing the theme of believing Christ in the Gospel of John: the seven signs, the world's reaction, and John's stated purpose in 20:30-31",
-    url: "/articles/Gospel-Of-John-Outline.html",
+    url: "/articles/Gospel-Of-John-Outline",
     date: "2026-08-17",
     image: "/images/opt/tanner-nicodemus-visiting-jesus-800.webp",
     imageAlt: "Nicodemus Visiting Jesus by Henry Ossawa Tanner",
@@ -47,7 +47,7 @@ const searchIndex = [
   {
     title: "Abraham: Father of Faith",
     excerpt: "Tracing the life of Abraham through Genesis 12-23: the call, the Melchizedek blessing, justification by faith, the unconditional covenant, and the rewards of obedience",
-    url: "/articles/Abraham-Father-Of-Faith.html",
+    url: "/articles/Abraham-Father-Of-Faith",
     date: "2026-08-12",
     image: "/images/opt/abraham-journey-from-ur-to-canaan-1850-800.webp",
     imageAlt: "Jozsef Molnar's 1850 painting of Abraham's caravan journeying from Ur to Canaan",
@@ -59,7 +59,7 @@ const searchIndex = [
   {
     title: "Unicorns in the King James Version",
     excerpt: "Why the KJV renders re'em as unicorn nine times, and the real animal the Hebrew word described",
-    url: "/articles/kjv-unicorns-reem.html",
+    url: "/articles/kjv-unicorns-reem",
     date: "2026-08-04",
     image: "/images/opt/ur-painting-800.webp",
     imageAlt: "Engraving of an aurochs bull, the animal behind the Hebrew re'em",
@@ -71,7 +71,7 @@ const searchIndex = [
   {
     title: "Jesus Challenging Presuppositions",
     excerpt: "How Jesus used hypothetical argumentation with the Rich Young Ruler to expose false assumptions about earning eternal life",
-    url: "/articles/Jesus-Challenging-Presuppositions.html",
+    url: "/articles/Jesus-Challenging-Presuppositions",
     date: "2026-06-09",
     image: "/images/opt/hoffman-christandtherichyoungruler-800.webp",
     imageAlt: "Christ and the Rich Young Ruler by Heinrich Hofmann",
@@ -83,7 +83,7 @@ const searchIndex = [
   {
     title: "Time Problems and Solutions for Biblicists",
     excerpt: "Survey of responses to old-earth cosmology: Day-Age, Gap Theory, Mature Creation, and Time Dilation",
-    url: "/articles/Age-Of-The-Universe-Problems-Solutions.html",
+    url: "/articles/Age-Of-The-Universe-Problems-Solutions",
     date: "2026-06-03",
     image: "/images/opt/eagle-nebula-800.webp",
     imageAlt: "Eagle Nebula",
@@ -94,7 +94,7 @@ const searchIndex = [
   {
     title: "Profiting for the Kingdom",
     excerpt: "Mark 8:35\u201338 is about discipleship and rewards, not conditions for eternal life",
-    url: "/articles/Profiting-For-The-Kingdom-Mark-8.html",
+    url: "/articles/Profiting-For-The-Kingdom-Mark-8",
     date: "2026-03-27",
     image: "/images/opt/profit-loss-800.webp",
     imageAlt: "Businessman pointing at a rising bar chart",
@@ -106,7 +106,7 @@ const searchIndex = [
   {
     title: "House, Throne & Kingdom",
     excerpt: `Brief summary of God's promise to David`,
-    url: "/articles/Davidic-Covenant-Overview.html",
+    url: "/articles/Davidic-Covenant-Overview",
     date: "2026-02-24",
     image: "/images/opt/crown-800.webp",
     imageAlt: "Crown of King Jesus on Table",
@@ -117,7 +117,7 @@ const searchIndex = [
   {
     title: "There is a God (Book Review)",
     excerpt: "My thoughts on Flew's testimony converting to deism",
-    url: "/articles/There-Is-A-God-Review.html",
+    url: "/articles/There-Is-A-God-Review",
     date: "2026-02-26",
     image: "/images/opt/flew-book-800.webp",
     imageAlt: "Anthony Flew Book Next to Bible",
@@ -129,7 +129,7 @@ const searchIndex = [
   {
     title: "The Kingdom in Isaiah",
     excerpt: "Tracing the Kingdom through Isaiah",
-    url: "/articles/Millennial-Kingdom-Isaiah.html",
+    url: "/articles/Millennial-Kingdom-Isaiah",
     date: "2026-02-23",
     image: "/images/opt/isaiah-45-800.webp",
     imageAlt: "Bible Open to Isaiah 45",
@@ -140,7 +140,7 @@ const searchIndex = [
   {
     title: "The Calling of Romans 10:9",
     excerpt: "Examination of Romans 10:9-10 in context",
-    url: "/articles/Call-On-The-Lord-Romans-10.html",
+    url: "/articles/Call-On-The-Lord-Romans-10",
     date: "2026-02-23",
     image: "/images/opt/calling-to-god-older-man-800.webp",
     imageAlt: "Elderly Man Praying to God",
@@ -151,7 +151,7 @@ const searchIndex = [
   {
     title: "New Covenant Promise to Israel",
     excerpt: "Overview of Jeremiah 31",
-    url: "/articles/New-Covenant-Jeremiah-31.html",
+    url: "/articles/New-Covenant-Jeremiah-31",
     date: "2026-02-23",
     image: "/images/sun-art.jpg",
     imageAlt: "Artistic Sun Representing God's Promise to Israel",
@@ -162,7 +162,7 @@ const searchIndex = [
   {
     title: "Synthetic Outline of Daniel",
     excerpt: "The Book of Daniel Overviewed",
-    url: "/articles/Book-Of-Daniel-Outline.html",
+    url: "/articles/Book-Of-Daniel-Outline",
     date: "2026-02-23",
     image: "/images/daniel-lions-den.jpg",
     imageAlt: "Daniel in the Lions' Den",
@@ -174,7 +174,7 @@ const searchIndex = [
   {
     title: "The Faithful Saying in Context",
     excerpt: "Examination of 2 Timothy 2:11-13 as a chiasm",
-    url: "/articles/Faithful-Saying-2-Timothy-211-13.html",
+    url: "/articles/Faithful-Saying-2-Timothy-211-13",
     date: "2026-02-23",
     image: "/images/opt/endurance-in-faith-race-800.webp",
     imageAlt: "Cartoon Men Running a Race",
@@ -186,7 +186,7 @@ const searchIndex = [
   {
     title: "Holy Spirit's Role in Salvation",
     excerpt: "Examining the Holy Spirit in securing eternal life",
-    url: "/articles/Holy-Spirit-Role-in-Believers.html",
+    url: "/articles/Holy-Spirit-Role-in-Believers",
     date: "2026-03-01",
     image: "/images/Pentecost-Holy-Spirit.jpg",
     imageAlt: "Apostles Receiving Holy Spirit at Pentecost",
@@ -198,7 +198,7 @@ const searchIndex = [
   {
     title: "Understanding the Gospel Clearly",
     excerpt: "How eternal life is received and secured forever because of Jesus",
-    url: "/articles/free-grace-gospel.html",
+    url: "/articles/free-grace-gospel",
     date: "2026-03-03",
     image: "/images/opt/flowers-cross-800.webp",
     imageAlt: "Purple Flowers By Cross",
@@ -210,7 +210,7 @@ const searchIndex = [
   {
     title: "The Hermeneutical Spiral",
     excerpt: "Method of analyzing the Scripture in a 10-step process",
-    url: "/articles/osborne-hermeneutical-spiral.html",
+    url: "/articles/osborne-hermeneutical-spiral",
     date: "2026-03-16",
     image: "/images/opt/colorful-spiral-800.webp",
     imageAlt: "Osborne Hermeneutical Spiral Diagram",
@@ -222,7 +222,7 @@ const searchIndex = [
   {
     title: "God's Forever Dwelling (Psalm 132)",
     excerpt: "A study of Psalm 132 exploring God's oath to David, the Ark of the Covenant, and the Messiah's future reign from Zion",
-    url: "/articles/Gods-Forever-Dwelling-Psalm-132.html",
+    url: "/articles/Gods-Forever-Dwelling-Psalm-132",
     date: "2026-04-04",
     image: "/images/opt/red-plush-chair-800.webp",
     imageAlt: "Red throne representing God's dwelling in Zion",
@@ -233,7 +233,7 @@ const searchIndex = [
   {
     title: "The Power to Memorize Scripture",
     excerpt: "How to use the ancient method of loci, or memory rooms, to make Scripture stick",
-    url: "/articles/bible-memory-rooms.html",
+    url: "/articles/bible-memory-rooms",
     date: "2026-03-21",
     image: "/images/opt/the-philosopher-in-meditation-800.webp",
     imageAlt: "The Philosopher in Meditation as a memory room to learn Scripture",
@@ -245,63 +245,63 @@ const searchIndex = [
   {
     title: "James 1:1–12 — Greek Exegesis",
     excerpt: "Epistolary Salutation & The Theology of Trials, Wisdom, and the Crown of Life",
-    url: "/greek/james/james-1-1-12.html",
+    url: "/greek/james/james-1-1-12",
     tags: ["Greek Exegesis"],
     content: `James 1:1 — Epistolary Salutation James 1:2 — Joy in Trials James 1:3 — The Testing of Faith James 1:4 — Let Endurance Be Complete James 1:5 — Ask God for Wisdom James 1:6 — Ask in Faith, Without Doubting James 1:7 — The Doubter Receives Nothing James 1:8 — The Double-Minded Man James 1:9 — The Humble Brother's Boast James 1:10 — The Rich and Transience James 1:11 — The Grass Withers James 1:12 — The Crown of Life Overall Exegesis: James 1:1–12 Introduction to the Epistle of James The Epistle of James presents one of the most vigorous debates in New Testament theology. Addressed to "the twelve tribes which are in the Dispersion" (1:1), the letter is conventionally attributed to James the Lord's brother, who led the Jerusalem church until his martyrdom c. AD 62 (Josephus, Antiquities 20.9.1). This identification, favored by the majority of patristic sources and defended by modern scholars including Peter Davids ( NIGTC ), Douglas Moo ( Pillar ), and Ralph Martin ( WBC ), locates the letter within Jewish-Christian wisdom tradition and situates its hortatory imperatives as pastorally urgent rather than theologically systematic. From a Free Grace perspective, the epistle is addressed throughout to already-regenerate believers. The imperatives of 1:2–12 are discipleship commands, not soteriological conditions. Zane Hodges ( The Epistle of James: Proven Character Through Testing , GES) argued decisively that James's concern is with the quality of Christian living under trial — specifically, whether believers will access God's wisdom, maintain undivided trust, and thereby earn eschatological rewards. The " στέφανος τῆς ζωῆς " (crown of life, 1:12) is a prize for perseverance, not a synonym for regenerating faith. This document traces those themes verse by verse through the Byzantine Majority Text.`
   },
   {
     title: "James 1:13–27 — Greek Exegesis",
     excerpt: "Temptation and New Birth; Hearing and Doing the Implanted Word",
-    url: "/greek/james/james-1-13-27.html",
+    url: "/greek/james/james-1-13-27",
     tags: ["Greek Exegesis"],
     content: `James 1:13 — God Tempts No One James 1:14 — Drawn Away by One's Own Desire James 1:15 — Desire, Sin, Death James 1:16 — Do Not Be Deceived James 1:17 — Every Perfect Gift from the Father of Lights James 1:18 — Brought Forth by the Word of Truth James 1:19 — Swift to Hear, Slow to Speak James 1:20 — Man's Anger and God's Righteousness James 1:21 — The Implanted Word, Able to Save Your Souls James 1:22 — Doers, Not Hearers Only James 1:23 — The Man in the Mirror James 1:24 — He Forgets What He Was Like James 1:25 — The Perfect Law of Liberty James 1:26 — Worthless Religion James 1:27 — Pure and Undefiled Religion Overall Exegesis: James 1:13–27 Introduction to James 1:13–27 James 1:13–27 completes the letter's opening chapter and supplies the theological foundation for chapter 2. It falls into two movements. In 1:13–18 , James turns the word πειρασμός from external trial (1:2, 12) to inner temptation: God is not its source; human desire is, and it gives birth to sin and death. Against that dark genealogy James sets a second birth — God "brought us forth by the word of truth" (1:18). In 1:19–27 , he applies this: believers must receive the implanted word, which is "able to save your souls" (1:21), and must be doers of it, not hearers only (1:22–25), expressing true religion in controlled speech and practical mercy (1:26–27). For the Free Grace reading of the whole letter, two verses here are decisive. Verse 18 establishes that the readers are already regenerate: their new birth is God's sovereign act, accomplished by the word. Verse 21 then speaks of a salvation of the ψυχή that these regenerate people still need — which cannot be regeneration itself. That distinction, established here, governs how σῶσαι is read in 2:14. Likewise, the "perfect law of liberty" (1:25) is the standard by which believers will be judged in 2:12, and the "orphans and widows in their affliction" (1:27) anticipate the destitute brother and sister of 2:15–16.`
   },
   {
     title: "James 2:1–13 — Greek Exegesis",
     excerpt: "Partiality, the Royal Law, and Judgment by the Law of Liberty",
-    url: "/greek/james/james-2-1-13.html",
+    url: "/greek/james/james-2-1-13",
     tags: ["Greek Exegesis"],
     content: `James 2:1 — The Thesis: No Partiality with the Faith of the Glorious Lord James 2:2 — The Two Visitors James 2:3 — The Seating Chart James 2:4 — Divided Judges James 2:5 — God Chose the Poor James 2:6 — Dishonoring the Poor, Courting the Oppressor James 2:7 — Blaspheming the Good Name James 2:8 — The Royal Law James 2:9 — Partiality Is Sin James 2:10 — Stumbling in One Point James 2:11 — The One Lawgiver James 2:12 — Judged by a Law of Liberty James 2:13 — Mercy Triumphs over Judgment Overall Exegesis: James 2:1–13 Introduction to James 2:1–13 James 2:1–13 is the letter's first sustained argument. Where 1:2–27 moved rapidly through a chain of wisdom themes, 2:1–13 takes a single topic — προσωπολημψία , favoritism based on outward appearance — and develops it through an illustration (vv. 2–4), a theological argument from God's election (vv. 5–7), a legal argument from the unity of the Law (vv. 8–11), and an eschatological warning and promise (vv. 12–13). The unit is framed by an inclusio on judging: the partial believers become κριταί (judges, v. 4), and they will themselves be judged ( κρίνεσθαι , v. 12; κρίσις , v. 13). The passage continues threads already laid down in 1:1–12. The poor/rich reversal of 1:9–11 becomes a concrete congregational scenario; the δίψυχος of 1:8 reappears as the believer who is διεκρίθητε — divided — in 2:4; and the promise formula "which he promised to those who love him" (1:12) is repeated verbatim in 2:5, now attached to the kingdom rather than the crown. From a Free Grace perspective, the addressees remain ἀδελφοί μου throughout (vv. 1, 5), and the judgment of vv. 12–13 is best understood as the evaluation of believers' works at the Judgment Seat of Christ, not as a test that determines whether they possess eternal life. That reading is argued below, with the major alternative presented in honesty notes.`
   },
   {
     title: "James 2:14–26 — Greek Exegesis",
     excerpt: "Faith, Works, and Justification — \"Can That Faith Save Him?\"",
-    url: "/greek/james/james-2-14-26.html",
+    url: "/greek/james/james-2-14-26",
     tags: ["Greek Exegesis"],
     content: `James 2:14 — "Can That Faith Save Him?" James 2:15 — The Destitute Brother or Sister James 2:16 — Empty Words James 2:17 — Faith Dead by Itself James 2:18 — The Objector James 2:19 — The Demons Believe and Shudder James 2:20 — Faith Apart from Works Is Dead James 2:21 — Abraham Justified by Works James 2:22 — Faith Perfected by Works James 2:23 — The Scripture Fulfilled; the Friend of God James 2:24 — Not by Faith Only James 2:25 — Rahab Justified by Works James 2:26 — The Body without the Spirit Overall Exegesis: James 2:14–26 Introduction to James 2:14–26 No passage in the New Testament has been more contested in the debate over faith and works. Luther found it hard to reconcile with Paul; the Council of Trent cited 2:24 in support of the increase of justification through works; Reformed theology has read it as teaching that genuine faith necessarily produces works, so that a faith without works shows itself to be spurious. The Free Grace tradition, represented especially by Zane Hodges ( The Epistle of James ; Dead Faith: What Is It? ), Robert Wilkin, and Joseph Dillow, offers a distinct reading: James is addressing believers ( ἀδελφοί μου , v. 14) about the usefulness of their faith in the face of the judgment just described in 2:12–13, not about how a person obtains eternal life. The passage flows directly from 2:1–13. The partiality section ended with judgment by the law of liberty and the maxim "mercy triumphs over judgment." James now asks what faith that is not expressed in works of mercy can accomplish in that setting — "Can that faith save him?" His first illustration (vv. 15–16) is precisely a failure of mercy toward a destitute brother or sister. The questions this document tracks verse by verse are: (1) what "save" means in v. 14; (2) what "dead" faith is (vv. 17, 20, 26); (3) who is speaking in vv. 18–19, where the Byzantine and critical texts diverge significantly; and (4) what "justified by works" means in vv. 21–25. Where the Free Grace reading differs from the majority of commentators, the alternative is stated in honesty notes.`
   },
   {
     title: "James 3:1–12 — Greek Exegesis",
     excerpt: "Teachers, the Tongue, and the Double-Sourced Mouth",
-    url: "/greek/james/james-3-1-12.html",
+    url: "/greek/james/james-3-1-12",
     tags: ["Greek Exegesis"],
     content: `James 3:1 — Not Many Teachers James 3:2 — We All Stumble James 3:3 — The Horse's Bit James 3:4 — The Ship's Rudder James 3:5 — A Small Fire, a Great Forest James 3:6 — The Tongue Is a Fire James 3:7 — Every Creature Tamed James 3:8 — No One Can Tame the Tongue James 3:9 — Blessing God, Cursing His Image James 3:10 — These Things Ought Not to Be So James 3:11 — The Spring James 3:12 — Fig Tree, Vine, and Salt Water Overall Exegesis: James 3:1–12 Introduction to James 3:1–12 James 3:1–12 is the Bible's most sustained treatment of speech. It develops two earlier seeds: "slow to speak" (1:19) and the religious man who "doesn't bridle his tongue" (1:26). James begins with teachers — whose work is done with the tongue and who therefore face stricter judgment (v. 1) — and broadens to all believers, himself included: "we all stumble in many things" (v. 2). A series of images follows: the horse's bit and the ship's rudder (small things that steer great ones, vv. 3–4), the spark that burns a forest and the fire lit from Gehenna (vv. 5–6), the untamable creature (vv. 7–8), and the spring and tree that cannot yield two kinds of product (vv. 11–12). At the center stands the scandal of the double-sourced mouth: "With it we bless our God and Father, and with it we curse men who are made in the image of God" (v. 9). Two features matter especially for a Free Grace reading. First, James speaks in the first person plural: " we will receive heavier judgment" (v. 1), " we all stumble" (v. 2), " we bless … we curse" (v. 9). The judgment and the failures in view belong to believers, and to James himself. Second, the closing images of vv. 11–12 are often read as a test of genuine conversion ("a fig tree cannot produce olives"). But James frames them with the words "My brothers, these things ought not to be so" (v. 10) — which concedes that they are happening among the brothers. The images argue from what is fitting, not from what is impossible. Both points are developed below, with the alternative views stated in honesty notes.`
   },
   {
     title: "James 3:13–4:6 — Greek Exegesis",
     excerpt: "Two Wisdoms, the Source of Quarrels, and the Grace That Is Greater",
-    url: "/greek/james/james-3-13-4-6.html",
+    url: "/greek/james/james-3-13-4-6",
     tags: ["Greek Exegesis"],
     content: `James 3:13 — Show It by Good Conduct James 3:14 — Bitter Jealousy and Selfish Ambition James 3:15 — Earthly, Unspiritual, Demonic James 3:16 — Disorder and Every Evil Practice James 3:17 — The Wisdom from Above James 3:18 — The Fruit of Righteousness Sown in Peace James 4:1 — Where Do Quarrels Come From? James 4:2 — You Do Not Have Because You Do Not Ask James 4:3 — You Ask Wrongly James 4:4 — Adulterers and Adulteresses James 4:5 — The Spirit Who Dwells in Us James 4:6 — He Gives More Grace Overall Exegesis: James 3:13–4:6 Introduction to James 3:13–4:6 This section traces the problem of the tongue (3:1–12) to its root in the heart. James contrasts two kinds of wisdom (3:13–18): one "earthly, unspiritual, demonic," marked by bitter jealousy and selfish ambition, which produces disorder; the other "from above," pure, peaceable, and full of mercy, which produces a harvest of righteousness. He then diagnoses the quarrels in the community (4:1–3) as the fruit of warring desires and prayerless or self-serving prayer, and names the underlying condition in the strongest covenant language: "adulterers and adulteresses" whose friendship with the world is enmity with God (4:4). The section closes with one of the most difficult verses in the letter (4:5), where the Byzantine and critical texts differ, and with the great assurance that God "gives more grace" to the humble (4:6). From a Free Grace perspective, three points are central. First, the wisdom from above is the answer to 3:8 ("no human can tame the tongue") and the fulfilment of 1:5 ("if any of you lacks wisdom, let him ask God"). Second, the "adulterers" of 4:4 are the brothers of 4:11 — believers in covenant relationship with God who are being unfaithful to Him, as Israel was called an adulteress by the prophets while remaining His people. "Enemy of God" describes their functional stance, not the loss of eternal life. Third, 4:6 is the letter's clearest statement that the whole Christian life of wisdom, speech, and humility rests on grace.`
   },
   {
     title: "James 4:7–17 — Greek Exegesis",
     excerpt: "Submit and Draw Near; Judging a Brother; \"If the Lord Wills\"",
-    url: "/greek/james/james-4-7-17.html",
+    url: "/greek/james/james-4-7-17",
     tags: ["Greek Exegesis"],
     content: `James 4:7 — Submit to God, Resist the Devil James 4:8 — Draw Near to God James 4:9 — Laughter Turned to Mourning James 4:10 — Humble Yourselves and He Will Exalt You James 4:11 — Do Not Speak Against One Another James 4:12 — One Lawgiver, Able to Save and Destroy James 4:13 — "Today and Tomorrow We Will Go" James 4:14 — Your Life Is a Vapor James 4:15 — "If the Lord Wills" James 4:16 — Arrogant Boasting James 4:17 — Knowing the Good and Not Doing It Overall Exegesis: James 4:7–17 Introduction to James 4:7–17 Having announced that God "gives greater grace … to the humble" (4:6), James now spells out what humility looks like. Verses 7–10 form a rapid series of ten aorist imperatives — submit, resist, draw near, cleanse, purify, lament, mourn, weep, let your laughter be turned, humble yourselves — framed by "submit to God" (v. 7) and "humble yourselves before the Lord" (v. 10), with the promise "he will exalt you." This is a call to repentance addressed to believers who have been double-minded and worldly (4:4, 8). Two short paragraphs then apply humility to specific sins. In vv. 11–12, speaking against a brother is shown to be an arrogant usurpation of God's role as the one Lawgiver and Judge. In vv. 13–17, the merchant who plans his year without reference to God is reminded that life is a vapor and told to say, "If the Lord wills." The section ends with a general principle: to know the good and not do it is sin (v. 17). For a Free Grace reading, the key observations are: (1) "sinners" and "double-minded" in v. 8 are the brothers of v. 11, called to return , not to initial faith; (2) the exaltation promised in v. 10 recalls the reward themes of 1:9, 12 and 2:5; and (3) the God "able to save and to destroy" (v. 12) uses the same σῴζω language found in 1:21, 2:14, and 5:15, 20, and should be read in light of that usage.`
   },
   {
     title: "James 5:1–11 — Greek Exegesis",
     excerpt: "Woe to the Rich Oppressors; Patience until the Coming of the Lord",
-    url: "/greek/james/james-5-1-11.html",
+    url: "/greek/james/james-5-1-11",
     tags: ["Greek Exegesis"],
     content: `James 5:1 — Weep and Howl James 5:2 — Rotted Riches, Moth-Eaten Garments James 5:3 — Corroded Gold as a Witness James 5:4 — The Wages That Cry Out James 5:5 — Fattened for the Day of Slaughter James 5:6 — You Condemned the Righteous One James 5:7 — Be Patient Like the Farmer James 5:8 — Establish Your Hearts James 5:9 — The Judge Stands at the Door James 5:10 — The Prophets as an Example James 5:11 — The Endurance of Job Overall Exegesis: James 5:1–11 Introduction to James 5:1–11 This section falls into two sharply contrasting halves. In 5:1–6 , James turns from the merchants of 4:13–17 to the wealthy oppressors, introduced with the same "Come now" but addressed in the manner of an OT prophetic oracle of doom: their wealth has rotted, their withheld wages cry out to the Lord of Hosts, and they have fattened themselves for a day of slaughter. Notably, there is no call to repent here — only announcement of judgment — which distinguishes this paragraph from every other address in the letter. In 5:7–11 , James turns back to "brothers" with the word that governs the rest of the letter: μακροθυμήσατε , "be patient." The farmer waiting for the early and late rains, the prophets who suffered, and Job who endured become models for believers awaiting the παρουσία of the Lord. In the middle stands a warning that ties the section to the whole letter: do not grumble against one another, "so that you may not be judged — behold, the Judge stands at the door" (v. 9). For the Free Grace reader, three threads converge here. First, the oppressors of vv. 1–6 appear to stand outside the believing community, which sharpens the contrast with the erring brothers James addresses elsewhere. Second, the warning of v. 9 is the fourth in the letter's chain of judgment texts addressed to believers (2:12–13; 3:1; 4:11–12), and the Judge who "stands at the door" is the Lord whose Judgment Seat evaluates His own. Third, v. 11 closes the circle opened in 1:2–4, 12: Job's ὑπομονή is the endurance under trial that James commended at the outset, and "the end of the Lord" shows what that endurance yields.`
   },
   {
     title: "James 5:12–20 — Greek Exegesis",
     excerpt: "Oaths, Prayer, Healing, and the Restoration of a Wandering Brother",
-    url: "/greek/james/james-5-12-20.html",
+    url: "/greek/james/james-5-12-20",
     tags: ["Greek Exegesis"],
     content: `James 5:12 — Above All, Do Not Swear James 5:13 — Suffering? Pray. Cheerful? Sing. James 5:14 — Call the Elders James 5:15 — The Prayer of Faith Will Save the Sick James 5:16 — Confess and Pray for One Another James 5:17 — Elijah, a Man Like Us James 5:18 — He Prayed Again James 5:19 — If Anyone Wanders from the Truth James 5:20 — Saving a Soul from Death Overall Exegesis: James 5:12–20 Introduction to James 5:12–20 The letter ends without a formal farewell — no benediction, no greetings, no travel plans. It simply stops, with its last word about restoring a brother who has wandered. That abruptness is itself instructive: James is a sermon in letter form, and its conclusion is a pastoral charge rather than an epistolary courtesy. Three movements close the letter. Verse 12 returns a final time to the tongue (1:19, 26; 3:1–12; 4:11): let your yes be yes. Verses 13–18 gather the letter's teaching on prayer, begun at 1:5–8 and resumed at 4:2–3, and apply it to every condition — suffering, cheerfulness, sickness, sin — with Elijah as the example of what an ordinary praying person can accomplish. Verses 19–20 close with the recovery of a wandering brother. For this series, v. 20 is the destination. The verb σῴζω has run through the letter — the implanted word "able to save your souls" (1:21), "can that faith save him?" (2:14), "the one able to save and to destroy" (4:12), "the prayer of faith will save the sick" (5:15) — and here it arrives at its clearest statement: turning back a sinning brother "will save a soul from death." Verse 15 and verse 20 together give the letter's own definition of what James means by salvation, and that definition has governed the Free Grace readings offered throughout this series.`
   },
@@ -315,112 +315,112 @@ const searchIndex = [
   {
     title: "The Book of Genesis",
     excerpt: "Lifespans from Adam to Joseph, the story as a flowchart, Abraham's journeys, and the Messianic thread",
-    url: "/charts/genesis-generations.html",
+    url: "/charts/genesis-generations",
     tags: ["Bible Charts"],
     content: "Genesis structure toledot generations prologue Adam Noah Shem Terah Abraham Ishmael Isaac Esau Jacob Joseph line of promise Messianic thread seed of the woman Melchizedek Judah Abraham journeys map Ur Haran Canaan Egypt walk of faith Hagar Ishmael God who sees El Roi Beer Lahai Roi Moriah lifespans patriarchs Methuselah flood ages years from creation flowchart story nation of Israel twelve tribes"
   },
   {
     title: "Esther in Context",
     excerpt: "The Persian kings, the three returns from exile, and where Esther fits",
-    url: "/charts/esther-in-context.html",
+    url: "/charts/esther-in-context",
     tags: ["Bible Charts"],
     content: "Esther Xerxes Ahasuerus Persian period timeline Cyrus Darius Artaxerxes Ezra Nehemiah Zerubbabel Haman Mordecai Purim great reversal Amalek Agag Saul Greek additions Septuagint apocrypha deuterocanonical Catholic canon Jerome Vulgate Trent Mordecai dream Macedonian"
   },
   {
     title: "The Five Books of Psalms",
     excerpt: "All 150 psalms by book and author, and the Messianic psalms",
-    url: "/charts/psalms-five-books.html",
+    url: "/charts/psalms-five-books",
     tags: ["Bible Charts"],
     content: "Psalms five books David Asaph sons of Korah Solomon Moses doxology Songs of Ascents Hallel Messianic psalms types genres lament imprecatory thanksgiving praise enthronement royal wisdom trust penitential"
   },
   {
     title: "Daniel's Seventy Weeks",
     excerpt: "Daniel 9:24-27: sixty-nine weeks fulfilled, one still to come",
-    url: "/charts/seventy-weeks.html",
+    url: "/charts/seventy-weeks",
     tags: ["Bible Charts"],
     content: "Daniel 9 seventy weeks 490 years 69 weeks Messiah cut off 445 BC Artaxerxes decree Anderson Hoehner gap Church Age seventieth week Tribulation abomination of desolation"
   },
   {
     title: "The Eight Signs of John",
     excerpt: "The eight signs, the feasts, and Jesus' travels through John",
-    url: "/charts/john-eight-signs.html",
+    url: "/charts/john-eight-signs",
     tags: ["Bible Charts"],
     content: "Gospel of John eight signs water into wine Lazarus believe eternal life John 20:31 Passover feasts Galilee Jerusalem Samaria"
   },
   {
     title: "When Paul Wrote His Letters",
     excerpt: "Paul's thirteen letters placed in Acts and his life",
-    url: "/charts/pauls-letters.html",
+    url: "/charts/pauls-letters",
     tags: ["Bible Charts"],
     content: "Paul epistles timeline missionary journeys Galatians Thessalonians Corinthians Romans prison epistles Ephesians Colossians Philemon Philippians pastoral Timothy Titus"
   },
   {
     title: "The Order of Future Events",
     excerpt: "Rapture, Tribulation, Second Coming, Kingdom, and the judgments of Revelation",
-    url: "/charts/future-events.html",
+    url: "/charts/future-events",
     tags: ["Bible Charts"],
     content: "Revelation future events Rapture Judgment Seat of Christ rewards Tribulation seals trumpets bowls Second Coming Millennium Great White Throne pretribulational premillennial"
   },
   {
     title: "Paul's Missionary Journeys",
     excerpt: "A map of Paul's three journeys and his voyage to Rome in Acts",
-    url: "/charts/pauls-journeys.html",
+    url: "/charts/pauls-journeys",
     tags: ["Bible Charts"],
     content: "Map of Paul's missionary journeys Acts 13-28 first second third journey voyage to Rome Antioch Cyprus Galatia Philippi Thessalonica Athens Corinth Ephesus Malta Rome progress reports Acts 1:8"
   },
   {
     title: "The Exodus and the Wilderness",
     excerpt: "A map of Israel's route from Egypt to the plains of Moab, and the forty years",
-    url: "/charts/exodus-route.html",
+    url: "/charts/exodus-route",
     tags: ["Bible Charts"],
     content: "Exodus map wilderness wanderings Rameses Succoth Red Sea crossing Marah Elim Rephidim Mount Sinai Kadesh Barnea forty years spies Mount Hor Edom Moab Nebo Jordan Gilgal 1446 BC 1406 BC Hebrews rest"
   },
   {
     title: "Kings of Israel and Judah",
     excerpt: "Both kingdoms side by side, 931-586 BC, with the prophets",
-    url: "/charts/kings-israel-judah.html",
+    url: "/charts/kings-israel-judah",
     tags: ["Bible Charts"],
     content: "Kings of Israel and Judah timeline divided kingdom Thiele dates Jeroboam Rehoboam Ahab Jehu Hezekiah Josiah Manasseh good evil kings co-regency prophets Elijah Elisha Isaiah Jeremiah Hosea Amos fall of Samaria 722 fall of Jerusalem 586 dynasties"
   },
   {
     title: "The Judges: A Descending Spiral",
     excerpt: "The cycle of sin and deliverance, Othniel to Samson",
-    url: "/charts/judges-cycle.html",
+    url: "/charts/judges-cycle",
     tags: ["Bible Charts"],
     content: "Judges cycle sin servitude supplication salvation silence descending spiral Othniel Ehud Shamgar Deborah Barak Gideon Abimelech Tola Jair Jephthah Ibzan Elon Abdon Samson no king in Israel oppression rest"
   },
   {
     title: "The Book of Zechariah",
     excerpt: "Eight night visions, four messages, two burdens, and the coming King",
-    url: "/charts/zechariah.html",
+    url: "/charts/zechariah",
     tags: ["Bible Charts"],
     content: "Zechariah chart eight night visions Branch Joshua high priest lampstand flying scroll four chariots four messages fasting two burdens King on a donkey thirty pieces of silver pierced shepherd struck Mount of Olives Day of the Lord Feast of Booths two advents Haggai Darius 520 BC"
   },
   {
     title: "The Debate in Job",
     excerpt: "Who speaks, for how long, and what each one argues, plus the book's themes and why Scripture treats Job as a real man",
-    url: "/charts/job-debate.html",
+    url: "/charts/job-debate",
     tags: ["Bible Charts"],
     content: "Job chart speech map debate three rounds Eliphaz Bildad Zophar Elihu Yahweh Satan council in heaven whirlwind Behemoth Leviathan my Redeemer lives umpire mediator witness in heaven hymn to wisdom fear of the Lord suffering retribution patriarchs Uz James 5:11 perseverance of Job themes faith for nothing suffering not punishment lament Ezekiel 14:14 Noah Daniel Job real man not a parable 1 Corinthians 3:19 Romans 11:35 crown of life James 1:12 judgment seat rewards resurrection dinosaurs sauropod Behemoth Leviathan sea reptile"
   },
   {
     title: "Titus 1: Marks of Healthy Churches",
     excerpt: "Small group study notes and discussion questions on Titus 1",
-    url: "/studies/titus.html#titus-1",
+    url: "/studies/titus#titus-1",
     tags: ["Small Group Studies"],
     content: `Titus was a Gentile companion of Paul’s missionary journeys ( Gal. 2:3 ) who had ministered in Corinth ( 2 Cor. 8:6, 16 ). After his release from Rome, Paul appoints Titus to establish churches throughout Crete (62-67 AD). The Preface (1-4) Central in the greeting is the reminder of the promise of eternal life as the content of faith Paul calls both the Father and Jesus Christ Savior. They share the same role with the same authority God called Paul as an apostle according to the same faith of the elect people, or the Jewish race. Abraham, Jacob, and Moses each held the same faith in eternal life through the Seed of the woman ( Gen. 3:15 , Gal. 3:8 ). Elder Qualifications (5-9) - Are Your Leaders Qualified? Blameless Husband of one wife (or “one-wife husband”, μιᾶς γυναικὸς ἀνήρ . Faithfulness or monogamy?) Faithful children (obedient to parents or believing unto the Lord?) Not accused of dissipation ( ἀσωτία = “not saving”, wastefully or extravagant) Nor insubordination (who has authority over elders?) Not self-willed (arrogant) Not quick tempered Not greedy Hospitable Lover of good Not given to wine ( πάροινος = “for wine”) Just and holy Self-controlled Holding fast to the Word, that he may teach to exhort and convict Case in Point for Teaching (10-16) Those of the circumcision (Jewish legalists) had infiltrated households (likely house churches) & taught heresies. 1:15 may refer to keeping Kosher dietary laws. They thought they were acting “clean”, but their own minds were defiled from distorting the gospel - the free gift of eternal life ( 1:2 ). Those who are spiritually clean ( John 15:3 , Titus 3:5 ) are free from the Law ( Col. 2:20-23 ) and all foods are permissible ( Mark 7:18-19 ). The Law was given to Israel to set them apart from surrounding nations for worship, not for believers to obtain righteousness before God ( Gal. 3:21 ). Perhaps best we can summarize these false teachers as promoting the doctrines of demons in 1 Timothy 4:1-4 . Titus 1 - Discussion / Application Questions Compare the list of qualifications to the one in 1 Timothy 3:2-7 . Are they different? Are these lists exhaustive? What other qualities could be added? Although this list of qualifications is for elder selections, 2 Timothy 4:2 says to be ready to preach the word “season or out of season” or no matter your circumstances! Are you prepared to lead others to Christ? How can we guard against legalism as believers? What other kinds of false teachers are a threat to churches today? How should we respond?`
   },
   {
     title: "Titus 2: Salvation for All People",
     excerpt: "Small group study notes and discussion questions on Titus 2",
-    url: "/studies/titus.html#titus-2",
+    url: "/studies/titus#titus-2",
     tags: ["Small Group Studies"],
     content: `Instruction for Sound Doctrine (1-9) As for Titus’ congregation, the primary tool against heresy is unity with high moral expectations. When we sin against others, we’ve departed from truth. Sound church doctrine begins with reverence at home. Men have many of the same qualities expected of elders, being sober and above reproach. Everyone should be ready for the call of leadership. Being a leader of your family prepares you for potential church leadership. Women are likewise expected to be moral so they can teach other women. While the office of elder is reserved for qualified men, Paul never means women cannot teach at all. Indeed, they should be leaders in their own context so the Word of God might be respected. Again, they have to lead by example in loving their husbands and children. 1st Century slaves (boundservants, δούλους ) here is far different from racial American slavery. Most slaves in the Old Testament were debtors, though Roman society had outlawed that practice centuries before Titus. Slaves of the empire were generally war captives, born into bondage, or victims of piracy. Treatment varied and they had few civil rights in the Roman world. Slave trading by kidnapping (or man-stealing) is condemned in 1 Timothy 1:10 (as well as Exodus 21:16 and Deuteronomy 24:7 ). Further, Paul encourages masters to not abuse slaves in Ephesians 6:9 . Even in a condition of lowly servitude, we are able to glorify God in our actions. God is Savior in all walks of life, whether man or woman, rich or poor, Jew or Gentile. All are able to live qualified for good works yet free of legalism. The Teaching of Grace (11-15) The words grace ( χάρις ) and salvation ( σωτηρία ) are usually not associated with deliverance from Hell. However, salvation is used again in 3:5 clearly about our spiritual regeneration, being born again through the washing of the Spirit. The revelation of God’s grace is evident generally through creation ( Rom. 1:20 ) but the special use of God’s Word illuminates the mind to persuade people concerning the gospel ( Rom. 10:14 ). It’s offered to all people, not just hypothetically! Jesus died to atone for sins of the whole world ( John 1:29 , 1 Jn. 2:2 ), making possible the gift of eternal life to any who believes in Him for it ( John 3:16 , 5:24 ). Further, Titus 3:2 also uses “all people” and certainly means we should be humble to all without exception, not just in theory! Since all have been offered salvation, we should not bicker or discriminate among ourselves. Love others as Jesus has loved us ( John 13:34 ). This grace instructs us, through the yearning of the indwelling Holy Spirit, to live righteously now and yet eagerly expect the coming of Jesus Christ. Unfaithful stewards may face shame then ( 1 Jn. 2:28 , Matt. 25:15-28 ), and loss of rewards ( Hebrews 10:35-36 ) Paul again emphasizes Jesus as God, our great God and Savior who will rescue us from this age at the Rapture! See 1 Thessalonians 1:10 , 4:16-17 , 5:9-10 , & Revelation 3:10 . We can rest assured of our deliverance because we serve an all-powerful Messiah-King who will take His throne in the age to come. Wait for this blessed hope! Titus 2 - Discussion / Application Questions Do our church families meet Paul’s expectations for Titus? How can we improve? God’s grace is for all people. Do we make it a priority to share the hope of eternal life? What is our purpose in Titus 2:14 ? Do we live up to this goal? What practical steps do we need to take to be “zealous for good works”? Are you eagerly expecting the return of Christ? How different should our lives be knowing this?`
   },
   {
     title: "Titus 3: The Hope of Eternal Life",
     excerpt: "Small group study notes and discussion questions on Titus 3",
-    url: "/studies/titus.html#titus-3",
+    url: "/studies/titus#titus-3",
     tags: ["Small Group Studies"],
     content: `Pastoral Reminders (1-2) While Paul last addressed instructions to servants ( 2:9-10 ), the role of submission to government is applied to all believers. This doesn’t imply passivity to abuses of corrupt rulers, but insists we use every opportunity to do good. Being an ideal citizen involves humility as an example of Christ. Looking for the appearance of Christ ( 2:13 ) is not an excuse to no longer be involved in societal affairs. Romans 13:1-7 details a general design of a just government we should honor and obey. They praise good, punish wickedness, and are a terror to evil. Civil disobedience has Biblical precedent, for example the Israelite midwives ( Exodus 1:15–21 ), Daniel’s commitment to pray ( Daniel 6:1–28 ), and Queen Esther approaching the king unsummoned ( Esther 4:11–5:2 ). “Speak evil of no one” as to not slander, gossip, or harshly condemn anyone. While the pagan culture in Crete may have been hostile, Paul commands to control the tongue to live peaceably with gentleness and humility. “Towards all” is a consistent theme of God’s love and grace. Just as He extends the gospel to all, we must demonstrate godly character without discrimination. Life and death are in the power of the tongue ( Prov. 18:21 ). Salvation Reminders (3-8) Treat people well because we’ve all had struggles like them. Sin is also not a discriminator! God’s mercy, not our works, has given us cleansing of the Holy Spirit through salvation. By His grace we’ve been born again (regenerated) into a new identity with Christ. Notice all the descriptors of the believer: saved, washed clean, renewed, justified, and now made heirs of eternal life. This is somewhat of a controversial passage, so here are some clarifying notes: Godly desires don’t come automatically (or else why would Paul command good works). This isn’t a passage supporting that some specific measure of works necessarily will flow out of faith and prove salvation. Rather, the gracious opportunity to resist sin is available to all believers. No temptation is without a way out ( 1 Cor. 10:13 ). Some traditions use Titus 3:5 as a proof text of baptismal regeneration - that water baptism is required to be saved from Hell. However, baptism isn’t literally in the text but loosely inferred. Ezekiel 36:25–27 foretells of the Spirit’s work as a spiritual washing. Similarly, Ephesians 5:26 speaks of the “washing of the word”. Grammatically, the single preposition διά (“through”) governs the whole phrase, presenting one saving act described two ways: regeneration and renewing, both the work of the Holy Spirit ( πνεύματος ἁγίου ). The genitive should best be taken epexegetically - that is, the “washing which is the regeneration and renewing,” rather than a genitive of product (“washing which produces or creates…”). In other words, the washing is the Spirit’s work itself, not a separate rite of water that brings it about. Paul implores good works for believers simply because they are good and profitable! They save us from ineffective witnessing and fruitless ministries (see James 2:14-17 ). The “faithful saying” expression ( 1 Tim. 1:15 , 3:1 , 4:8-9 ; 2 Tim. 2:11–13 ) may signify an early church hymn or doctrinal creed. Avoid Dissension (9-11) On the flip side, contentions over foolish things are unprofitable. Ministry involves planning events, organizing people, and often budgeting for materials. It’s easy for pride to make us domineering in management - and yet that is primarily not what Paul addresses! Disputing details in a management process might be understandable, but they become foolish when legalism and mysticism become the focal point. It was common for Jews to establish authority from a prestigious lineage. We shouldn’t rank people by their ancestry, since we are all one in Christ ( Col. 3:11 ). The obsession with genealogies extended to speculations on Biblical narratives with Jewish legends (like Jubilees, Genesis Apocryphon, and Enoch). Earlier, in Titus 1:14 , Paul referred to these kinds of writings as fables. Disputes about them are utterly useless for any Christian growth and have no grounding in inspired revelation. Gnostics would later develop an elaborate twisted version of the faith from similar traditions. Those who strive and contend about the law likely refer back to “those of the circumcision” from Titus 1:10 . Remember, they not only reject all things made pure but also are dishonest and subversive. Cultic leaders generally entice people with sensationalism and sophistry while having ill motives to control and manipulate people. Rejecting such a divisive member of the church after the second correction echoes a pattern illustrated in Matthew 18:15-17 . The KJV renders αἱρετικός as “heretic,” a simple transliteration; most modern versions translate it “divisive man”. However, the issue is not denying a core doctrine of orthodoxy, like the Trinity or virgin birth. Paul commands that we reject someone who compulsively argues about unprofitable speculations to the point they are creating heated factions in the church. Farewell Message (12-15) Paul desired to lodge the winter in Nicopolis, which is on the west coast of Greece. There is no record in Acts of him spending time there or returning to Crete to minister. Many conservative scholars therefore place Titus as written sometime after his release from house arrest in Rome in 62 AD. Titus is instructed to send Zenas and Apollos on their journey with everything they need. By providing for them, the Cretan believers learn the theme of the epistle: believers should maintain good works to not be unfruitful in ministry. Titus 3 - Discussion / Application Questions Paul reminds us of what we once were ( 3:3 ). How should remembering this shape the way we treat unbelievers and people in authority? How does the text comfort us that salvation is secure? Try to define each of these terms in your own words: mercy, regeneration and renewing of the Holy Spirit, justified, heir according to the hope of eternal life. How can we tell healthy theological discussion apart from “foolish disputes”? When is it right to separate from a divisive person? Paul depended on coworkers like Zenas and Apollos. How can we support the people who serve alongside us in ministry?`
   }
