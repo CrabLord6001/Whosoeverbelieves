@@ -212,11 +212,16 @@
 
     /* Expanded body */
     .glossary-body {
-      max-height: 0;
+      display: grid;
+      grid-template-rows: 0fr;
       overflow: hidden;
-      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1);
+      transition: grid-template-rows 0.35s cubic-bezier(0.4,0,0.2,1);
     }
-    .glossary-item.open .glossary-body { max-height: 600px; }
+    .glossary-body > * { min-height: 0; }
+    .glossary-item.open .glossary-body { grid-template-rows: 1fr; }
+    @media (prefers-reduced-motion: reduce) {
+      .glossary-body { transition: none; }
+    }
 
     .glossary-body-inner {
       padding: 0 0.5rem 1.5rem 0.5rem;
@@ -369,6 +374,7 @@
         <a href="/charts/">Maps &amp; Charts</a>
         <a href="/discipleship-challenge.html">Discipleship</a>
         <a href="/memory-rooms.html">Bible Memory</a>
+        <a href="/free-grace-glossary.html" aria-current="page">Glossary</a>
       </div>
     </div>
   </div>
