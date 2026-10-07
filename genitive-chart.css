@@ -1,0 +1,485 @@
+/* ==========================================================================
+   GENITIVE USES CHART — component styles
+   Loaded after styles.css. Colors, fonts and light mode come from there;
+   everything here is scoped under .gu-chart.
+
+   Sizes are in rem/em, so the site's A- / A / A+ toggle scales the chart.
+   The chart's own A- / A / A+ scale it further via --gu-scale (needed in
+   full screen, where the site nav is out of reach).
+   ========================================================================== */
+
+.gu-chart {
+  --gu-scale: 1;
+  --gu-gal-bg: rgba(201, 168, 76, 0.13);
+  --gu-gal-edge: var(--gold);
+  --gu-attr: #7fb896;          /* A5 Attributive */
+  --gu-attrd: #d8876e;         /* A6 Attributed  */
+  --gu-band: rgba(255, 255, 255, 0.03);
+  --gu-zebra: rgba(255, 255, 255, 0.018);
+
+  font-size: calc(1rem * var(--gu-scale));
+  font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  color: var(--text);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: var(--glass);
+  margin: 2rem 0;
+  overflow: hidden;
+}
+
+:root.light-mode .gu-chart {
+  --gu-gal-bg: rgba(154, 118, 33, 0.15);
+  --gu-attr: #2c7350;
+  --gu-attrd: #a8503a;
+  --gu-band: rgba(0, 0, 0, 0.035);
+  --gu-zebra: rgba(0, 0, 0, 0.02);
+}
+
+.gu-chart *,
+.gu-chart *::before,
+.gu-chart *::after { box-sizing: border-box; }
+
+/* The chart sits inside .article-body, whose h2 / p / table rules would
+   otherwise reach in (3rem heading margins, a rule under every h2, 1.85
+   paragraph line-height). Neutralize them once, here. */
+.gu-chart h2,
+.gu-chart h3,
+.gu-chart p,
+.gu-chart dl,
+.gu-chart dd,
+.gu-chart table {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  max-width: none;
+  line-height: 1.5;
+  font-weight: inherit;
+  letter-spacing: normal;
+}
+
+.gu-chart a { color: var(--gold); text-decoration-color: rgba(201, 168, 76, 0.45); }
+.gu-chart a:hover { color: var(--gold-light); }
+
+/* ── The bar you click to collapse the table ────────────────────────────── */
+
+.gu-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.15rem;
+  cursor: pointer;
+  list-style: none;
+  background: var(--gu-band);
+}
+.gu-bar::-webkit-details-marker { display: none; }
+.gu-bar:hover .gu-title { color: var(--gold); }
+.gu-bar:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+.gu-wrap[open] > .gu-bar { border-bottom: 1px solid var(--rule); }
+
+.gu-chev {
+  flex: none;
+  width: 0.6em;
+  height: 0.6em;
+  border-right: 2px solid var(--text-mid);
+  border-bottom: 2px solid var(--text-mid);
+  transform: rotate(45deg);
+  transition: transform 0.18s ease;
+  margin: 0 0.15em 0.2em 0.15em;
+}
+.gu-wrap[open] > .gu-bar .gu-chev { transform: rotate(-135deg); margin-bottom: 0; }
+
+.gu-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 1.35em;
+  line-height: 1.2;
+  color: var(--text);
+  flex: 1 1 auto;
+  text-wrap: balance;
+}
+
+.gu-count {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+/* ── Source line + toolbar ──────────────────────────────────────────────── */
+
+.gu-source {
+  padding: 0.85rem 1.15rem 0;
+  font-size: 0.86em;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--text-faint);
+  text-wrap: pretty;
+}
+
+.gu-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.7rem;
+  padding: 0.8rem 1.15rem;
+}
+
+.gu-tgroup {
+  display: flex;
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.gu-chart button {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  min-height: 2.9em;
+  padding: 0 0.95em;
+  border: 0;
+  background: transparent;
+  color: var(--text-mid);
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.gu-tgroup button + button { border-left: 1px solid var(--glass-border); }
+.gu-chart button:hover { color: var(--gold); background: var(--gu-band); }
+.gu-chart button[aria-pressed="true"] { color: var(--gold); background: var(--gold-faint); }
+.gu-chart button:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+
+.gu-tlabel {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.gu-spacer { flex: 1 1 auto; }
+
+/* Sorting on phones and iPad portrait, where the table header is swapped
+   out for cards. Hidden on wide screens — there you click a column header. */
+.gu-sortsel {
+  display: none;
+  align-items: center;
+  gap: 0.5em;
+  font-family: 'Cinzel', serif;
+  font-size: 0.58em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.gu-sortsel select {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.55em;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 0.5em 0.6em;
+  min-height: 2.9em;
+}
+.gu-sortsel select:focus-visible { outline: 2px solid var(--gold); outline-offset: -2px; }
+:root.light-mode .gu-sortsel select { background: var(--surface); }
+
+.gu-chart button.gu-reset {
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+}
+
+.gu-chart button.gu-primary {
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold);
+}
+.gu-chart button.gu-primary:hover { background: var(--gold); color: #0d1117; }
+:root.light-mode .gu-chart button.gu-primary:hover { color: #f5efe0; }
+
+/* ── Legend ─────────────────────────────────────────────────────────────── */
+
+.gu-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.3rem;
+  padding: 0 1.15rem 0.85rem;
+  font-size: 0.88em;
+  color: var(--text-mid);
+}
+
+.gu-legend > span { display: inline-flex; align-items: center; gap: 0.45em; }
+
+.gu-key-gal::before {
+  content: "";
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 2px;
+  border-left: 3px solid var(--gu-gal-edge);
+  background: var(--gu-gal-bg);
+  flex: none;
+}
+
+.gu-key-pair::before {
+  content: "\21C4";
+  color: var(--text-mid);
+  font-size: 1.05em;
+  line-height: 1;
+}
+
+/* ── Table ──────────────────────────────────────────────────────────────── */
+
+.gu-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid var(--rule);
+}
+
+.gu-table th {
+  padding: 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  background: var(--gu-zebra);
+}
+
+.gu-chart button.gu-sort {
+  width: 100%;
+  text-align: left;
+  font-size: 0.6em;
+  letter-spacing: 0.16em;
+  color: var(--text-mid);
+  padding: 0.85em 0.85em;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.gu-chart button.gu-sort:hover { background: var(--gu-band); color: var(--gold); }
+.gu-chart button.gu-sort.on { color: var(--gold); }
+
+.gu-arrow { font-size: 1.1em; line-height: 1; }
+.gu-chart button.gu-sort:not(.on) .gu-arrow::before {
+  content: "\2195";
+  opacity: 0.3;
+}
+
+.gu-table td {
+  padding: 0.8rem 0.85rem;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.5;
+  color: var(--text);
+  text-wrap: pretty;
+}
+.gu-table tbody tr:last-child td { border-bottom: 0; }
+.gu-table tbody tr:nth-child(even) td { background: var(--gu-zebra); }
+
+.gu-c-cat   { width: 10.5em; }
+.gu-c-ref   { width: 4em; }
+.gu-c-use   { width: 13em; }
+.gu-c-gloss { width: auto; }
+.gu-c-ex    { width: 8.5em; }
+
+.gu-cat {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  white-space: nowrap;   /* keeps "After Certain Words" off a second line */
+}
+
+.gu-ref {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82em;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.gu-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 1.1em;
+  line-height: 1.25;
+  color: var(--text);
+  display: block;
+  text-wrap: pretty;
+}
+
+.gu-alt {
+  display: block;
+  font-size: 0.82em;
+  font-style: italic;
+  color: var(--text-faint);
+  line-height: 1.35;
+  margin-top: 0.15em;
+  text-wrap: pretty;
+}
+
+.gu-gloss { font-style: italic; color: var(--text-mid); text-wrap: pretty; }
+.gu-todo { color: var(--text-faint); }
+.gu-empty { color: var(--text-faint); }
+
+/* A note runs the full width of the table, under the row it belongs to */
+.gu-table tr.gu-noterow td {
+  padding-top: 0;
+  padding-left: 0.85rem;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.55;
+}
+.gu-table tr:not(.gu-noterow) + tr.gu-noterow td { border-top: 0; }
+.gu-table tbody tr:not(.gu-noterow):has(+ .gu-noterow) td { border-bottom: 0; }
+
+.gu-notelabel {
+  font-family: 'Cinzel', serif;
+  font-size: 0.56em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-right: 0.9em;
+  vertical-align: 0.15em;
+}
+.gu-notetext { color: var(--text-mid); text-wrap: pretty; }
+
+/* Galatians 3:2, 5 — soft gold wash and a gold edge */
+.gu-table tbody tr.gu-gal td,
+.gu-table tbody tr.gu-gal:nth-child(even) td { background: var(--gu-gal-bg); }
+.gu-table tbody tr.gu-gal td:first-child { box-shadow: inset 3px 0 0 var(--gu-gal-edge); }
+
+/* A5 Attributive / A6 Attributed — the pair readers mix up */
+tr.gu-p-attr  .gu-name { box-shadow: inset 0 -0.14em 0 var(--gu-attr); }
+tr.gu-p-attrd .gu-name { box-shadow: inset 0 -0.14em 0 var(--gu-attrd); }
+
+/* ── Cards (iPhone, iPad portrait) ──────────────────────────────────────── */
+
+.gu-cards { display: none; border-top: 1px solid var(--rule); }
+
+.gu-card { padding: 0.85rem 1.15rem; border-bottom: 1px solid var(--rule); }
+.gu-card:last-child { border-bottom: 0; }
+.gu-card:nth-child(even) { background: var(--gu-zebra); }
+
+.gu-card.gu-gal,
+.gu-card.gu-gal:nth-child(even) {
+  background: var(--gu-gal-bg);
+  box-shadow: inset 3px 0 0 var(--gu-gal-edge);
+}
+
+.gu-card-cat {
+  font-family: 'Cinzel', serif;
+  font-size: 0.56em;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+
+.gu-card-top {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  margin-bottom: 0.35rem;
+}
+.gu-card-top .gu-ref { flex: none; }
+.gu-card-top .gu-name { font-size: 1.18em; }
+
+.gu-fields > div {
+  display: grid;
+  grid-template-columns: 7em minmax(0, 1fr);
+  gap: 0.15rem 0.7rem;
+  padding: 0.28rem 0;
+  border-top: 1px dashed var(--rule);
+}
+.gu-fields > div:first-child { border-top: 0; }
+
+.gu-fields dt {
+  font-family: 'Cinzel', serif;
+  font-size: 0.56em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  padding-top: 0.45em;
+}
+
+.gu-fields dd { margin: 0; line-height: 1.45; color: var(--text); text-wrap: pretty; }
+
+.gu-card.gu-p-attr .gu-name  { box-shadow: inset 0 -0.14em 0 var(--gu-attr); }
+.gu-card.gu-p-attrd .gu-name { box-shadow: inset 0 -0.14em 0 var(--gu-attrd); }
+
+/* ── Full screen ────────────────────────────────────────────────────────── */
+
+.gu-chart.gu-fs {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--bg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-bottom: 2rem;
+}
+
+.gu-chart:fullscreen {
+  background: var(--bg);
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+
+body.gu-fs-open { overflow: hidden; }
+
+.gu-chart.gu-fs .gu-bar,
+.gu-chart:fullscreen .gu-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface);
+  padding-top: max(0.9rem, env(safe-area-inset-top));
+}
+
+/* ── Breakpoints ────────────────────────────────────────────────────────── */
+
+/* Below 900px the columns become stacked cards, so nothing scrolls sideways
+   and no cell squeezes down to one word a line. */
+@media (max-width: 899px) {
+  .gu-table { display: none; }
+  .gu-cards { display: block; }
+  .gu-sortsel { display: inline-flex; }
+}
+
+@media (max-width: 560px) {
+  .gu-chart { margin: 1.5rem 0; border-radius: 8px; }
+  .gu-bar { padding: 0.85rem 0.95rem; gap: 0.6rem; }
+  .gu-title { font-size: 1.2em; }
+  .gu-source { padding: 0.75rem 0.95rem 0; }
+  .gu-toolbar { padding: 0.7rem 0.95rem; gap: 0.45rem 0.5rem; }
+  .gu-legend { padding: 0 0.95rem 0.75rem; }
+  .gu-card { padding: 0.8rem 0.95rem; }
+  .gu-fields > div { grid-template-columns: minmax(0, 1fr); gap: 0.05rem; }
+  .gu-fields dt { padding-top: 0.1em; }
+  .gu-spacer { display: none; }
+  .gu-tlabel { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gu-chev { transition: none; }
+}
+
+@media print {
+  .gu-toolbar { display: none; }
+  .gu-chart { border-color: #999; }
+  .gu-bar { background: none; }
+}
