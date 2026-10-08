@@ -1282,7 +1282,7 @@ body.page-article .header-ornament {
   font-weight: 300;
   color: var(--text);
   letter-spacing: 0.02em;
-  margin-top: 3rem;
+  margin-top: 4rem;
   margin-bottom: 1.25rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--rule);
@@ -1290,12 +1290,15 @@ body.page-article .header-ornament {
 
 .article-body h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   font-weight: 600;
   color: var(--text);
   letter-spacing: 0.02em;
-  margin-top: 2.25rem;
-  margin-bottom: 1rem;
+  margin-top: 3.25rem;
+  margin-bottom: 0.75rem;
+  border-left: 2px solid var(--gold);
+  padding-left: 0.8rem;
+  margin-left: -0.95rem;
 }
 
 .article-body h4 {
