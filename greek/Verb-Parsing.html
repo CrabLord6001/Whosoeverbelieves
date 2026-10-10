@@ -184,11 +184,11 @@
 
   <!-- QUIZ MODE -->
   <div id="qzMode" class="hidden">
-    <div class="streak-wrap"><div class="streak-badge" id="streakBadge"><span class="streak-num" id="streakNum">0</span><span class="streak-lbl">STREAK</span></div></div>
     <div class="scorebar">
       <div class="si"><span class="sn ok" id="qC">0</span><span class="sl">Correct</span></div>
       <div class="si"><span class="sn bad" id="qW">0</span><span class="sl">Wrong</span></div>
       <div class="si"><span class="sn rem" id="qR">0</span><span class="sl">Remaining</span></div>
+      <div class="si" id="streakBadge"><span class="sn streak" id="streakNum">0</span><span class="sl">Streak</span></div>
     </div>
     <div class="qbox" style="margin:1rem 0">
       <div class="qlabel">IDENTIFY THE FULL PARSING</div>
@@ -836,6 +836,7 @@ function setMode(m,btn){
   document.getElementById('spMode').classList.toggle('hidden',m!=='speed');
   if(m==='flashcard'){initDeck();}
   if(m==='quiz'){startQ();}
+  document.querySelector('.vt-prog').classList.toggle('bar-only', m==='quiz');
   if(m==='speed'){resetSp();setProg(0,0,'');}
 }
 
@@ -950,7 +951,7 @@ function showQ(){
     document.getElementById('qWord').innerHTML='<span style="font-size:1.2rem;font-family:\'EB Garamond\',serif">'+emptyMsg()+'</span>';
     document.getElementById('qMoodChip').textContent='';document.getElementById('qMoodChip').className='qmoodchip hidden';
     document.getElementById('cgrid').innerHTML='';
-    setProg(0,0,'Question 0 of 0');return;
+    setProg(0,0,'');return;
   }
   if(qI>=qData.length){endQ();return}
   qA=false;
@@ -960,18 +961,21 @@ function showQ(){
   document.getElementById('qWord').textContent=w.f;
   document.getElementById('qR').textContent=qData.length-qI;
   const chip=document.getElementById('qMoodChip');
-  chip.textContent=w.mood.toUpperCase();
-  chip.className='qmoodchip '+moodChipClass(w.mood);
-  setProg(qI,qData.length,`Question ${qI+1} of ${qData.length}`);
+  chip.textContent='';
+  chip.className='qmoodchip hidden';
+  setProg(qI,qData.length,'');
   const correct=parseLabel(w);
-  const sameMood=FORMS.filter(x=>x.mood===w.mood&&parseLabel(x)!==correct);
-  const other=FORMS.filter(x=>x.mood!==w.mood&&parseLabel(x)!==correct);
-  let pool=shuffle(sameMood).slice(0,3);
-  if(pool.length<3)pool=[...pool,...shuffle(other)].slice(0,3);
-  const seen=new Set([correct]);
-  const distractors=[];
-  for(const x of pool){const l=parseLabel(x);if(!seen.has(l)){seen.add(l);distractors.push(l);if(distractors.length===3)break;}}
-  while(distractors.length<3){distractors.push(`${FORMS[Math.floor(Math.random()*FORMS.length)].mood} — other`);}
+  // Distractors: 1-2 from other moods so the mood must be read off the form,
+  // the rest same-mood so person/number/tense/voice still get drilled.
+  const labels=f=>[...new Set(FORMS.filter(f).map(parseLabel))].filter(l=>l!==correct);
+  const sameMood=shuffle(labels(x=>x.mood===w.mood));
+  const other=shuffle(labels(x=>x.mood!==w.mood));
+  const nOther=Math.min(other.length, 1+Math.floor(Math.random()*2));
+  const distractors=[...other.slice(0,nOther), ...sameMood.slice(0,3-nOther)];
+  for(const l of [...sameMood,...other]){
+    if(distractors.length>=3) break;
+    if(!distractors.includes(l)) distractors.push(l);
+  }
   const choices=shuffle([correct,...distractors]);
   const grid=document.getElementById('cgrid');
   grid.innerHTML='';
@@ -1019,14 +1023,13 @@ function endQ(){
   const tot=qCorrect+qWrong,pct=tot?Math.round(qCorrect/tot*100):0;
   document.getElementById('qFS').textContent=qCorrect;
   document.getElementById('qFM').textContent=`forms correctly parsed · ${pct}% accuracy`;
-  setProg(tot,tot,`Question ${tot} of ${tot}`);
+  setProg(tot,tot,'');
 }
 
 function updateStreak(correct){
   if(correct===null)streak=0;
   const b=document.getElementById('streakBadge');
   document.getElementById('streakNum').textContent=streak;
-  b.classList.toggle('visible',streak>=2);
   b.classList.remove('hot','fire');
   if(streak>=10)b.classList.add('fire');
   else if(streak>=5)b.classList.add('hot');

@@ -46,6 +46,9 @@
 .cbtn2,.fbtn{font-family:'EB Garamond',serif;font-size:.95rem;padding:.25rem .65rem;border:1px solid var(--rule);background:none;color:var(--text-mid);border-radius:999px;cursor:pointer}
 .cbtn2:hover,.fbtn:hover{color:var(--text);border-color:rgba(201,168,76,.5)}
 .cbtn2.on,.fbtn.on{background:rgba(201,168,76,.16);border-color:var(--gold);color:var(--text)}
+/* frequency row: tighter than the chapter pills so all six bands hold one line on phones */
+.fil-grid{gap:.25rem}
+.fil-grid .fbtn{padding:.25rem .4rem}
 .chap-count{margin-top:.7rem;color:var(--text-mid);font-size:.95rem}
 .chap-count span{color:var(--gold);font-weight:600}
 .fil-section{margin-bottom:.8rem}
@@ -98,16 +101,20 @@ kbd{font-family:'Cinzel',serif;font-size:.62rem;border:1px solid var(--rule);bor
 .vt-sync a{color:var(--gold);cursor:pointer}
 
 /* ── Quiz ── */
-.streak-wrap{display:flex;justify-content:center;min-height:36px;align-items:center}
-.streak-badge{display:flex;align-items:center;gap:.45rem;font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.12em;padding:.3rem 1rem;border-radius:999px;border:1px solid rgba(201,168,76,.4);color:var(--gold);opacity:0;transform:scale(.9);transition:all .3s}
-.streak-badge.visible{opacity:1;transform:scale(1)}
-.streak-badge.hot,.streak-badge.fire{background:rgba(201,168,76,.14);border-color:var(--gold)}
-.streak-num{font-size:1.15rem;font-weight:700}
+.vt-prog.bar-only #pl,.vt-prog.bar-only .m{display:none}
+.vt-prog.bar-only .bar{flex:1}
+.sn.streak{color:var(--gold)}
+/* Streak milestones. The number sits in a fixed line box (1.8rem x 1.1 = the base .sn height),
+   so it can grow at 5+ and 10+ without pushing the STREAK label out of line with its neighbours. */
+.sn.streak{height:1.98rem;line-height:1.98rem;transition:font-size .18s ease,color .18s ease,text-shadow .18s ease}
+.si.hot .sn.streak{font-size:2.1rem;font-weight:700}
+.si.fire .sn.streak{font-size:2.35rem;font-weight:700;color:#f0d98a;text-shadow:0 0 14px rgba(201,168,76,.8)}
 .scorebar,.sstats{display:flex;justify-content:center;gap:2.4rem}
+@media (max-width:430px){.scorebar{gap:1.5rem}}  /* four items (incl. Streak) on one line */
 .si{text-align:center}
 .sn{font-family:'Cinzel',serif;font-size:1.8rem;font-weight:600;display:block;line-height:1.1;color:var(--text)}
 .sl{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mid)}
-.sn.ok{color:#6fae7a}.sn.bad{color:#d0736a}.sn.rem{color:var(--gold)}
+.sn.ok{color:#6fae7a}.sn.bad{color:#d0736a}.sn.rem{color:var(--text)}
 .qbox{border-radius:10px;padding:1.8rem 1.5rem;text-align:center;background:linear-gradient(180deg,#f6eedc 0%,#efe3c8 100%);border:1px solid #c9a84c;box-shadow:0 14px 40px rgba(0,0,0,.4),inset 0 0 0 6px #f6eedc,inset 0 0 0 7px rgba(160,125,50,.45);color:#14110c}
 .qlabel{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#7a5f22;margin-bottom:.6rem}
 .qword{font-family:'Gentium Book Plus','EB Garamond',serif;font-size:clamp(2.4rem,7vw,3.6rem);line-height:1.15;color:#14110c;margin-bottom:.4rem}
@@ -235,7 +242,6 @@ body.focus .cmeaning{font-size:clamp(2.8rem,7vw,4.6rem)}
 .scene{height:370px}@media (max-width:640px){.scene{height:340px}}
 
 /* ── Focus mode for Multiple Choice / Parsing Drill / Speed Round ── */
-.streak-wrap{margin-bottom:.35rem}
 body.focus #qzMode,body.focus #spMode,body.focus #qzRes{flex:1;display:flex;flex-direction:column;gap:1rem;min-height:0}
 body.focus #qzMode .qbox{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;margin:0!important;min-height:220px}
 body.focus #qzMode .fbbox{margin:0!important}
