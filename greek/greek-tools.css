@@ -168,6 +168,10 @@ body.focus .cmeaning{font-size:clamp(2.2rem,6vw,4rem)}
 body.focus .qword,body.focus .sword{font-size:clamp(3rem,9vw,6rem)}
 body.focus .vt-exit{display:inline-flex;align-items:center;position:absolute;top:1rem;right:1.2rem;z-index:2}
 body.focus .vt-prog{padding-right:7rem}
+/* Focus mode puts the Exit button at top:1rem as an absolute, so it is not in the flow.
+   With #pl and .m hidden the row collapses to the 4px bar and the scorebar rides up under
+   the button. Hold the row open to the button's own height so Exit keeps its own band. */
+body.focus .vt-prog.bar-only{min-height:2.75rem}
 
 /* ── Phones ── */
 @media (max-width:640px){
