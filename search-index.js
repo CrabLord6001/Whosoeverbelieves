@@ -116,7 +116,7 @@ const searchIndex = [
   },
   {
     title: "House, Throne & Kingdom",
-    excerpt: `Brief summary of God's promise to David`,
+    excerpt: `Summary of God's promise to David`,
     url: "/articles/Davidic-Covenant-Overview",
     date: "2026-02-24",
     image: "/images/opt/crown-800.webp",

@@ -1222,6 +1222,7 @@ a.scripture-ref:hover {
   letter-spacing: 0.02em;
   line-height: 1.3;
   margin-bottom: 0.5rem;
+  text-wrap: balance; /* evens the lines so no title ends on a single word */
 }
 
 .article-subtitle {
@@ -1323,6 +1324,33 @@ body.page-article .header-ornament {
   background: var(--glass);
   border-radius: 0 4px 4px 0;
   margin: 1.5rem 0;
+}
+
+/* ── Reading-plan call to action, end of book-themed articles ── */
+.plan-cta {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-mid);
+  border-left: 2px solid var(--gold);
+  padding: 1rem 1.5rem;
+  background: var(--glass);
+  border-radius: 0 4px 4px 0;
+  margin: 2.5rem 0 0;
+  text-wrap: balance; /* pretty still left "today." alone on line 3 at 360px */
+}
+.plan-cta a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.4);
+  transition: color 0.2s, border-color 0.2s;
+}
+.plan-cta a:hover {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold-light);
+}
+@media (max-width: 640px) {
+  .plan-cta { padding: 0.9rem 1.1rem; font-size: 1rem; margin-top: 2rem; }
 }
 
 .article-tag {

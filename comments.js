@@ -60,6 +60,7 @@
   function pageSlug() {
     var path = window.location.pathname.toLowerCase();
     path = path.replace(/\/index\.html?$/, '/');
+    path = path.replace(/\.html?$/, '');
     if (path.length > 1) path = path.replace(/\/+$/, '');
     return path || '/';
   }

@@ -226,6 +226,10 @@ body.focus .vt-prog.bar-only{min-height:2.75rem}
 .vt-sep{width:1px;align-self:stretch;margin:.35rem .2rem;background:var(--rule);flex:none}
 .vt-icon{font-size:.95rem;padding:.4rem .7rem!important;line-height:1}
 @media (max-width:860px){.vt-bar{flex-wrap:wrap}.vt-sep{display:none}}
+/* .vt-right keeps flex-wrap:nowrap, so at 360px its row measured 374px and
+   dragged the page sideways. Tighten the control padding instead of letting
+   it wrap to a second line. */
+@media (max-width:430px){.vt-right{gap:.35rem}.vt-bar .vt-seg button{padding:.55rem .6rem;letter-spacing:.06em}.vt-bar .vt-pill{padding:.55rem .62rem}}
 
 /* ── Verse on the back of vocab cards ── */
 .cquote{max-width:40rem;display:flex;flex-direction:column;align-items:center;margin:.35rem 0 .15rem}

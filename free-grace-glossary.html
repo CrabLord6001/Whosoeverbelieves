@@ -322,7 +322,13 @@
       .glossary-body-inner { grid-template-columns: 1fr; }
       .term-snippet { display: none; }
       .term-tags { display: none; }
-      .term-chevron { margin-left: auto; }
+      .term-chevron { margin-left: auto; flex-shrink: 0; }
+      /* flex-shrink:0 on .term-name let long terms push the row past the
+         viewport (scrollWidth 450px at 360px wide). Let it give way, and
+         drop the Greek/Latin parenthetical onto its own line so the term
+         never wraps mid-parenthesis. */
+      .term-name { flex-shrink: 1; min-width: 0; }
+      .term-greek { display: block; margin-top: 0.1rem; }
     }
   </style>
   <!-- SEO metadata -->
