@@ -1306,14 +1306,14 @@
   .sp-body::-webkit-scrollbar { width: 6px; }
   .sp-body::-webkit-scrollbar-track { background: transparent; }
   .sp-body::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
-  /* Hold the line length near 60 characters however wide the screen gets. */
-  .sp-body > * { max-width: 32rem; margin-left: auto; margin-right: auto; }
+  /* Measure grows with the window instead of stranding it in a narrow column. */
+  .sp-body > * { max-width: 40rem; margin-left: auto; margin-right: auto; }
   body.audio-active .sp-body { padding-bottom: 7rem; }
 
   .sp-chapter {
     font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.12em;
     text-transform: uppercase; color: var(--gold);
-    padding-bottom: 0.35rem; margin: 2rem 0 0.9rem;
+    padding-bottom: 0.35rem; margin: 2rem auto 0.9rem;
     border-bottom: 1px solid var(--rule);
   }
   .sp-chapter:first-child { margin-top: 0; }
@@ -1326,7 +1326,7 @@
   .sv {
     display: block;
     font-family: 'EB Garamond', Georgia, serif;
-    font-size: 1.02rem; line-height: 1.85; color: var(--text);
+    font-size: 1.12rem; line-height: 1.8; color: var(--text);
     padding: 0.18rem 0.5rem 0.18rem 0.6rem;
     border-left: 2px solid transparent;
     border-radius: 2px;
@@ -1363,6 +1363,11 @@
   .sp-msg {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
     font-size: 0.95rem; color: var(--text-mid); padding: 1rem 0;
+  }
+
+  @media (min-width: 1200px) {
+    .sp-body > * { max-width: 46rem; }
+    .sv { font-size: 1.2rem; }
   }
 
   @media (max-width: 600px) {
@@ -5325,13 +5330,17 @@ let _syncActive   = -1;    // index of the currently highlighted verse
 let _spScrolledAt = 0;     // last manual scroll, so we don't fight the reader
 let _syncOffset   = parseFloat(_lsGet('wb-sync-offset', '0')) || 0;
 
-const SYNC_LEAD_MAX = 4.5; // seconds of "The book of … chapter …" up front
+// Measured by forced-aligning this narration against the text: verse 1 begins
+// 10.7s into Psalm 23 and 7.5s into Psalm 117, against the 1-3s the old
+// proportional lead allowed. The announcement is roughly a fixed cost, not a
+// share of the chapter, so it is modelled as one.
+const SYNC_LEAD_FLAT = 8.0;
 const SYNC_TAIL_MAX = 2.0;
 const SYNC_OFFSET_MIN = -5;
 const SYNC_OFFSET_MAX = 20;
 
 function _syncBuildStarts(verses, duration) {
-  const lead = Math.min(SYNC_LEAD_MAX, duration * 0.02);
+  const lead = Math.min(duration * 0.15, SYNC_LEAD_FLAT);
   const tail = Math.min(SYNC_TAIL_MAX, duration * 0.01);
   const span = Math.max(1, duration - lead - tail);
   const lens = verses.map(v => Math.max(12, v.length));
