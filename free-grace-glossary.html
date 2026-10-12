@@ -133,6 +133,7 @@
     }
 
     /* Accordion item */
+    .glossary-item { scroll-margin-top: 90px; }
     .glossary-item {
       border-bottom: 1px solid rgba(201,168,76,0.07);
       transition: background 0.2s;
@@ -427,7 +428,7 @@
   <!-- ── A ── -->
   <div class="alpha-divider" data-alpha="A">A</div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="amyraldianism amyraut hypothetical universalism four-point calvinism atonement">
+  <div class="glossary-item" id="amyraldianism" data-tags="Soteriology" data-term="amyraldianism amyraut hypothetical universalism four-point calvinism atonement">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Amyraldianism</span>
       <span class="term-snippet">Four-point Calvinism, or hypothetical universalism</span>
@@ -454,7 +455,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="antinomianism antinomian lawless license to sin agricola">
+  <div class="glossary-item" id="antinomianism" data-tags="Soteriology" data-term="antinomianism antinomian lawless license to sin agricola">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Antinomianism</span>
       <span class="term-snippet">"Against the law" — a charge often made against Free Grace</span>
@@ -481,7 +482,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="apocrypha deuterocanonical maccabees tobit sirach wisdom canon">
+  <div class="glossary-item" id="apocrypha" data-tags="Bibliology" data-term="apocrypha deuterocanonical maccabees tobit sirach wisdom canon">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Apocrypha</span>
       <span class="term-snippet">Books in Catholic and Orthodox Bibles not in the Hebrew canon</span>
@@ -508,7 +509,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Theology Proper" data-term="aseity self-existence independence a se attributes of god">
+  <div class="glossary-item" id="aseity" data-tags="Theology Proper" data-term="aseity self-existence independence a se attributes of god">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Aseity</span>
       <span class="term-snippet">God's self-existence and independence</span>
@@ -535,7 +536,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="assurance of salvation">
+  <div class="glossary-item" id="assurance-of-salvation" data-tags="Soteriology" data-term="assurance of salvation">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Assurance of Salvation</span>
       <span class="term-snippet">Confidence in one's eternal destiny</span>
@@ -565,7 +566,7 @@
   <!-- ── B ── -->
   <div class="alpha-divider" data-alpha="B">B</div>
 
-  <div class="glossary-item" data-tags="Soteriology Eschatology" data-term="bema seat judgment">
+  <div class="glossary-item" id="bema-seat" data-tags="Soteriology Eschatology" data-term="bema seat judgment">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Bema Seat</span>
       <span class="term-snippet">The judgment of believers for rewards, not salvation</span>
@@ -595,7 +596,7 @@
   <!-- ── C ── -->
   <div class="alpha-divider" data-alpha="C">C</div>
 
-  <div class="glossary-item" data-tags="Theology Proper" data-term="cessationism cessationist sign gifts ceased tongues prophecy healing apostles miraculous pneumatology">
+  <div class="glossary-item" id="cessationism" data-tags="Theology Proper" data-term="cessationism cessationist sign gifts ceased tongues prophecy healing apostles miraculous pneumatology">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Cessationism</span>
       <span class="term-snippet">The view that the sign gifts ended with the apostolic age</span>
@@ -622,7 +623,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="chiasm chiasmus chiastic inverted parallelism abba structure literary center hermeneutics">
+  <div class="glossary-item" id="chiasm" data-tags="Bibliology" data-term="chiasm chiasmus chiastic inverted parallelism abba structure literary center hermeneutics">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Chiasm <span class="term-greek">(χιασμός / chiasmos)</span></span>
       <span class="term-snippet">Inverted parallelism, where elements repeat in reverse</span>
@@ -649,7 +650,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Theology Proper" data-term="continuationism continuationist gifts continue charismatic pentecostal third wave spirit baptism tongues prophecy pneumatology">
+  <div class="glossary-item" id="continuationism" data-tags="Theology Proper" data-term="continuationism continuationist gifts continue charismatic pentecostal third wave spirit baptism tongues prophecy pneumatology">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Continuationism</span>
       <span class="term-snippet">The view that all the spiritual gifts continue today</span>
@@ -679,7 +680,7 @@
   <!-- ── D ── -->
   <div class="alpha-divider" data-alpha="D">D</div>
 
-   <div class="glossary-item" data-tags="Soteriology" data-term="decisionism">
+   <div class="glossary-item" id="decisionism" data-tags="Soteriology" data-term="decisionism">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Decisionism</span>
       <span class="term-snippet">Common misunderstanding that salvation involves ritual decisions</span>
@@ -704,7 +705,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="diatribe diatribe style imaginary objector interlocutor rhetoric romans may it never be what shall we say">
+  <div class="glossary-item" id="diatribe" data-tags="Bibliology" data-term="diatribe diatribe style imaginary objector interlocutor rhetoric romans may it never be what shall we say">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Diatribe <span class="term-greek">(διατριβή / diatribē)</span></span>
       <span class="term-snippet">Arguing by answering an imagined objector</span>
@@ -734,7 +735,7 @@
   <!-- ── E ── -->
   <div class="alpha-divider" data-alpha="E">E</div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="eternal conscious torment">
+  <div class="glossary-item" id="eternal-conscious-torment" data-tags="Soteriology" data-term="eternal conscious torment">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Eternal Conscious Torment (ECT)</span>
       <span class="term-snippet">Traditional view of Hell</span>
@@ -761,7 +762,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="eternal life eternal security">
+  <div class="glossary-item" id="eternal-security" data-tags="Soteriology" data-term="eternal life eternal security">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Eternal Security</span>
       <span class="term-snippet">Once saved, always saved — the biblical basis explained</span>
@@ -791,7 +792,7 @@
   <!-- ── F ── -->
   <div class="alpha-divider" data-alpha="F">F</div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="faith believe pistis pisteuo">
+  <div class="glossary-item" id="faith" data-tags="Soteriology" data-term="faith believe pistis pisteuo">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Faith <span class="term-greek">(πίστις / pisteúō)</span></span>
       <span class="term-snippet">Belief, being persuaded of a truth</span>
@@ -821,7 +822,7 @@
   <!-- ── G ── -->
   <div class="alpha-divider" data-alpha="G">G</div>
 
-  <div class="glossary-item" data-tags="Theology Proper" data-term="glossolalia speaking in tongues glossa laleo xenoglossy interpretation pentecost corinthians pneumatology">
+  <div class="glossary-item" id="glossolalia" data-tags="Theology Proper" data-term="glossolalia speaking in tongues glossa laleo xenoglossy interpretation pentecost corinthians pneumatology">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Glossolalia <span class="term-greek">(γλώσσαις λαλεῖν / glōssais lalein)</span></span>
       <span class="term-snippet">Speaking in tongues, and the debate over what it was</span>
@@ -851,7 +852,7 @@
   <!-- ── I ── -->
   <div class="alpha-divider" data-alpha="I">I</div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="inclusio bookend envelope structure bracket repeated phrase framing literary unit hermeneutics">
+  <div class="glossary-item" id="inclusio" data-tags="Bibliology" data-term="inclusio bookend envelope structure bracket repeated phrase framing literary unit hermeneutics">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Inclusio <span class="term-greek">(Latin: &ldquo;a shutting in&rdquo;)</span></span>
       <span class="term-snippet">A repeated phrase that brackets a passage</span>
@@ -878,7 +879,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="ipsissima verba exact words of jesus very words gospels inspiration transcript quotation red letter">
+  <div class="glossary-item" id="ipsissima-verba" data-tags="Bibliology" data-term="ipsissima verba exact words of jesus very words gospels inspiration transcript quotation red letter">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Ipsissima Verba <span class="term-greek">(Latin: &ldquo;the very words themselves&rdquo;)</span></span>
       <span class="term-snippet">The view that a Gospel records Jesus' exact words</span>
@@ -905,7 +906,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="ipsissima vox very voice of jesus meaning wording gospels summary inspiration">
+  <div class="glossary-item" id="ipsissima-vox" data-tags="Bibliology" data-term="ipsissima vox very voice of jesus meaning wording gospels summary inspiration">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Ipsissima Vox <span class="term-greek">(Latin: &ldquo;the very voice&rdquo;)</span></span>
       <span class="term-snippet">Jesus' own meaning in the Gospel writer's wording</span>
@@ -935,7 +936,7 @@
   <!-- ── J ── -->
   <div class="alpha-divider" data-alpha="J">J</div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="justification justified imputation righteousness">
+  <div class="glossary-item" id="justification" data-tags="Soteriology" data-term="justification justified imputation righteousness">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Justification</span>
       <span class="term-snippet">God's legal declaration of righteousness by faith alone</span>
@@ -965,7 +966,7 @@
   <!-- ── K ── -->
   <div class="alpha-divider" data-alpha="K">K</div>
 
-    <div class="glossary-item" data-tags="Theology Proper" data-term="Theology Proper Christology Kenosis">
+    <div class="glossary-item" id="kenosis" data-tags="Theology Proper" data-term="Theology Proper Christology Kenosis">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Kenosis</span>
       <span class="term-snippet">The self-emptying of Christ in His incarnation</span>
@@ -995,7 +996,7 @@
   <!-- ── L ── -->
   <div class="alpha-divider" data-alpha="L">L</div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="lordship salvation commitment surrender obedience">
+  <div class="glossary-item" id="lordship-salvation" data-tags="Soteriology" data-term="lordship salvation commitment surrender obedience">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Lordship Salvation</span>
       <span class="term-snippet">The view Free Grace theology directly challenges</span>
@@ -1024,7 +1025,7 @@
 
   <!-- ── O ── -->
   <div class="alpha-divider" data-alpha="O">O</div>
-  <div class="glossary-item" data-tags="Soteriology" data-term="original sin adam fall sin nature imputation hamartiology">
+  <div class="glossary-item" id="original-sin" data-tags="Soteriology" data-term="original sin adam fall sin nature imputation hamartiology">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Original Sin</span>
       <span class="term-snippet">The effect of Adam's sin on all humanity</span>
@@ -1053,7 +1054,7 @@
 
   <!-- ── P ── -->
   <div class="alpha-divider" data-alpha="P">P</div>
-  <div class="glossary-item" data-tags="Theology Proper Apologetics" data-term="panentheism process theology all in god whitehead">
+  <div class="glossary-item" id="panentheism" data-tags="Theology Proper Apologetics" data-term="panentheism process theology all in god whitehead">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Panentheism</span>
       <span class="term-snippet">The belief that the world exists within God</span>
@@ -1080,7 +1081,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Theology Proper Apologetics" data-term="pantheism god is everything spinoza hinduism monism">
+  <div class="glossary-item" id="pantheism" data-tags="Theology Proper Apologetics" data-term="pantheism god is everything spinoza hinduism monism">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Pantheism</span>
       <span class="term-snippet">The belief that God and the universe are the same</span>
@@ -1107,7 +1108,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="plenary verbal inspiration theopneustos god-breathed inerrancy dictation dynamic conceptual partial autographs">
+  <div class="glossary-item" id="plenary-verbal-inspiration" data-tags="Bibliology" data-term="plenary verbal inspiration theopneustos god-breathed inerrancy dictation dynamic conceptual partial autographs">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Plenary Verbal Inspiration <span class="term-greek">(θεόπνευστος / theopneustos)</span></span>
       <span class="term-snippet">All of Scripture inspired, down to its words</span>
@@ -1134,7 +1135,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="propitiation hilasmos hilasterion atonement wrath mercy seat unlimited atonement">
+  <div class="glossary-item" id="propitiation" data-tags="Soteriology" data-term="propitiation hilasmos hilasterion atonement wrath mercy seat unlimited atonement">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Propitiation <span class="term-greek">(ἱλασμός / hilasmos)</span></span>
       <span class="term-snippet">Christ's satisfaction of God's wrath against sin</span>
@@ -1161,7 +1162,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="pseudepigrapha pseudepigraphy forgery enoch false attribution canon">
+  <div class="glossary-item" id="pseudepigrapha" data-tags="Bibliology" data-term="pseudepigrapha pseudepigraphy forgery enoch false attribution canon">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Pseudepigrapha</span>
       <span class="term-snippet">Writings falsely attributed to a famous author</span>
@@ -1191,7 +1192,7 @@
   <!-- ── R ── -->
   <div class="alpha-divider" data-alpha="R">R</div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="regeneration new birth born again palingenesia born of god">
+  <div class="glossary-item" id="regeneration" data-tags="Soteriology" data-term="regeneration new birth born again palingenesia born of god">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Regeneration <span class="term-greek">(παλιγγενεσία / palingenesia)</span></span>
       <span class="term-snippet">The new birth that happens at the moment of faith</span>
@@ -1218,7 +1219,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="repentance metanoia turn change mind">
+  <div class="glossary-item" id="repentance" data-tags="Soteriology" data-term="repentance metanoia turn change mind">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Repentance <span class="term-greek">(μετάνοια / metanoia)</span></span>
       <span class="term-snippet">Turning towards God, though never a condition of eternal life.</span>
@@ -1245,7 +1246,7 @@
     </div>
   </div>
 
-    <div class="glossary-item" data-tags="Bibliology" data-term="Word fallacy biblical illiteracy">
+    <div class="glossary-item" id="root-fallacy" data-tags="Bibliology" data-term="Word fallacy biblical illiteracy">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Root Fallacy</span>
       <span class="term-snippet">The assumption that the word parts define the meaning</span>
@@ -1273,7 +1274,7 @@
   <!-- ── S ── -->
   <div class="alpha-divider" data-alpha="S">S</div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="sanctification holiness growth discipleship carnal">
+  <div class="glossary-item" id="sanctification" data-tags="Soteriology" data-term="sanctification holiness growth discipleship carnal">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Sanctification</span>
       <span class="term-snippet">Growth in holiness — distinct from justification</span>
@@ -1302,7 +1303,7 @@
 
 
 
-  <div class="glossary-item" data-tags="Bibliology" data-term="septuagint lxx greek old testament alexandria aristeas ptolemy masoretic text translation deuterocanonical codices">
+  <div class="glossary-item" id="septuagint" data-tags="Bibliology" data-term="septuagint lxx greek old testament alexandria aristeas ptolemy masoretic text translation deuterocanonical codices">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Septuagint <span class="term-greek">(Latin: septuaginta, &ldquo;seventy&rdquo;)</span></span>
       <span class="term-snippet">The Greek Old Testament the apostles quoted</span>
@@ -1331,7 +1332,7 @@
 
  <!-- ── T ── -->
  <div class="alpha-divider" data-alpha="T">T</div>
- <div class="glossary-item" data-tags="Apologetics" data-term="omnipotence God's goodness problem of evil">
+ <div class="glossary-item" id="theodicy" data-tags="Apologetics" data-term="omnipotence God's goodness problem of evil">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Theodicy</span>
       <span class="term-snippet">Defending God's goodness in light of the problem of evil</span>
@@ -1358,7 +1359,7 @@
     </div>
   </div>
 
-  <div class="glossary-item" data-tags="Soteriology" data-term="total depravity inability tulip calvinism sin nature">
+  <div class="glossary-item" id="total-depravity" data-tags="Soteriology" data-term="total depravity inability tulip calvinism sin nature">
     <button class="glossary-trigger" onclick="toggleItem(this.parentElement)">
       <span class="term-name">Total Depravity</span>
       <span class="term-snippet">The "T" in TULIP and the Reformed doctrine of inability</span>
@@ -1468,6 +1469,17 @@
     document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
   }
   filterGlossary();
+
+  function openFromHash() {
+    const slug = decodeURIComponent(location.hash.slice(1));
+    if (!slug) return;
+    const el = document.getElementById(slug);
+    if (!el || !el.classList.contains('glossary-item')) return;
+    if (!el.classList.contains('open')) toggleItem(el);
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  window.addEventListener('hashchange', openFromHash);
+  openFromHash();
 </script>
 </body>
 </html>
