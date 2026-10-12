@@ -1194,6 +1194,126 @@
   .listen-btn:hover { background: rgba(201,168,76,0.18); border-color: var(--gold); }
   .listen-btn.playing { background: rgba(201,168,76,0.22); border-color: var(--gold); }
 
+  /* ══════════════════════════════════════════════════════════
+     IN-CARD SCRIPTURE READER
+     ══════════════════════════════════════════════════════════ */
+  .read-btn {
+    display: inline-block; margin-top: 0.4rem; margin-right: 0.35rem;
+    font-size: 0.62rem; font-family: 'Cinzel', serif; letter-spacing: 0.08em;
+    padding: 0.28rem 0.65rem; border: 1px solid var(--rule); border-radius: 2px;
+    background: none; color: var(--text-faint); cursor: pointer; transition: all 0.15s;
+  }
+  .read-btn:hover { background: var(--gold-faint); border-color: var(--gold); color: var(--gold); }
+  .read-btn.open { background: var(--gold-faint); border-color: var(--gold); color: var(--gold); }
+
+  /* An open reader needs room: the card spans the grid, the popover widens. */
+  .day-card.reading { grid-column: 1 / -1; }
+  .day-popover.reading { width: min(680px, 94vw); }
+
+  .scripture-panel {
+    display: none;
+    margin-top: 0.7rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: rgba(0,0,0,0.14);
+  }
+  :root.light-mode .scripture-panel { background: rgba(255,255,255,0.45); }
+  .scripture-panel.open { display: block; animation: fadeUp 0.25s ease both; }
+
+  .sp-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.5rem; flex-wrap: wrap;
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .sp-trans { display: flex; gap: 0.3rem; }
+  .sp-trans button {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.08em;
+    padding: 0.22rem 0.5rem; border: 1px solid var(--rule); border-radius: 2px;
+    background: none; color: var(--text-faint); cursor: pointer; transition: all 0.15s;
+  }
+  .sp-trans button:hover { border-color: var(--gold); color: var(--gold); }
+  .sp-trans button.active { background: var(--gold-faint); border-color: var(--gold); color: var(--gold); }
+  .sp-sync-note {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.74rem; color: var(--text-faint);
+  }
+
+  .sp-body {
+    max-height: min(55vh, 430px);
+    overflow-y: auto;
+    padding: 0.7rem 0.85rem 0.9rem;
+    scrollbar-width: thin;
+  }
+  /* Hold the line length near 60 characters however wide the card gets. */
+  .sp-body > * { max-width: 31rem; margin-left: auto; margin-right: auto; }
+  .sp-body::-webkit-scrollbar { width: 5px; }
+  .sp-body::-webkit-scrollbar-track { background: transparent; }
+  .sp-body::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  .sp-chapter {
+    font-family: 'Cinzel', serif; font-size: 0.66rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold);
+    padding-bottom: 0.3rem; margin: 0.9rem 0 0.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .sp-chapter:first-child { margin-top: 0; }
+
+  .sp-psalm-title {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.88rem; color: var(--text-mid);
+    margin-bottom: 0.5rem;
+  }
+
+  .sv {
+    display: block;
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 0.95rem; line-height: 1.75; color: var(--text);
+    padding: 0.12rem 0.4rem 0.12rem 0.5rem;
+    border-left: 2px solid transparent;
+    border-radius: 2px;
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .sv-num {
+    font-family: 'Cinzel', serif; font-size: 0.58rem;
+    color: var(--gold); vertical-align: super;
+    margin-right: 0.22rem; user-select: none;
+  }
+  .sv-absent {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.85rem; color: var(--text-faint);
+  }
+  .scripture-panel.synced .sv { cursor: pointer; }
+  @media (hover: hover) {
+    .scripture-panel.synced .sv:hover { background: rgba(201,168,76,0.07); }
+  }
+  .sv.active {
+    background: var(--gold-faint);
+    border-left-color: var(--gold);
+  }
+  :root.light-mode .sv.active { background: rgba(138,106,31,0.14); }
+
+  .sp-foot {
+    padding: 0.5rem 0.85rem 0.6rem;
+    border-top: 1px solid var(--rule);
+    font-family: 'Cormorant Garamond', serif; font-size: 0.76rem;
+    color: var(--text-faint); line-height: 1.6;
+    display: flex; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap;
+  }
+  .sp-foot a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+
+  .sp-msg {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.9rem; color: var(--text-mid); padding: 0.5rem 0;
+  }
+
+  @media (max-width: 600px) {
+    .sp-body { max-height: 46vh; padding: 0.6rem 0.7rem 0.8rem; }
+    .sv { font-size: 0.92rem; line-height: 1.7; }
+    .sp-head { padding: 0.4rem 0.5rem; }
+  }
+
+
   #audio-player-bar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
     background: #111827; border-top: 1px solid rgba(201,168,76,0.3);
@@ -1904,7 +2024,7 @@ const BIBLE = {
   // ── OLD TESTAMENT ──
   "Genesis":      {t:"OT", chapters:[31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,23,57,38,34,34,28,34,31,22,33,26]},
   "Exodus":       {t:"OT", chapters:[22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38]},
-  "Leviticus":    {t:"OT", chapters:[17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,24,46,34,17,15,12,14,18,20,10,15,9,21,16,18,26,17,17,20,19,12,21]},
+  "Leviticus":    {t:"OT", chapters:[17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,37,27,24,33,44,23,55,46,34,0,0,0,0,0,0,0,0,0,0,0,0,0]},
   "Numbers":      {t:"OT", chapters:[54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,40,16,54,42,56,29,34,13]},
   "Deuteronomy":  {t:"OT", chapters:[46,37,29,49,33,25,26,20,29,22,32,32,18,29,23,22,20,22,21,20,23,30,25,22,19,19,26,68,29,20,30,52,29,12]},
   "Joshua":       {t:"OT", chapters:[18,24,17,24,15,27,26,35,27,43,23,24,33,15,63,10,18,28,51,9,45,34,16,33]},
@@ -1918,16 +2038,16 @@ const BIBLE = {
   "2 Chronicles": {t:"OT", chapters:[17,18,17,22,14,42,22,18,31,19,23,16,22,15,19,14,19,34,11,37,20,12,21,27,28,23,9,27,36,27,21,33,25,33,27,23]},
   "Ezra":         {t:"OT", chapters:[11,70,13,24,17,22,28,36,15,44]},
   "Nehemiah":     {t:"OT", chapters:[11,20,32,23,19,19,73,18,38,39,36,47,31]},
-  "Esther":       {t:"OT", chapters:[22,28,23,31,10,16,12,14,8,17,21,18]},
+  "Esther":       {t:"OT", chapters:[22,23,15,17,14,14,10,17,32,3,0,0]},
   "Job":          {t:"OT", chapters:[22,13,26,21,27,30,21,22,35,22,20,25,28,22,35,22,16,21,29,29,34,30,17,25,6,14,23,28,25,31,40,22,33,37,16,33,24,41,30,24,34,17]},
-  "Psalms":       {t:"OT", chapters:[6,12,8,8,12,10,17,9,20,18,7,8,6,7,5,11,15,50,14,9,13,31,6,10,22,12,14,9,11,13,25,11,22,23,28,13,40,23,14,18,14,12,5,27,18,12,10,15,21,23,21,11,7,9,24,14,12,12,18,14,9,13,12,11,14,20,8,36,37,6,24,20,28,23,11,13,21,72,13,20,17,8,19,13,14,17,7,19,53,17,16,16,5,23,11,13,12,9,9,5,8,28,22,35,45,48,43,13,31,7,10,10,9,8,18,19,2,29,176,7,8,9,4,8,5,6,5,6,8,8,3,18,3,3,21,26,9,8,24,14,10,8,12,15,21,10,20,14,9,6]},
-  "Proverbs":     {t:"OT", chapters:[33,22,35,27,23,35,27,36,18,32,31,28,25,35,33,33,28,24,29,30,31,29,35,34,28,28,27,28,62,35,31,31,26]},
+  "Psalms":       {t:"OT", chapters:[6,12,8,8,12,10,17,9,20,18,7,8,6,7,5,11,15,50,14,9,13,31,6,10,22,12,14,9,11,12,24,11,22,22,28,12,40,22,13,17,13,11,5,26,17,11,9,14,20,23,19,9,6,7,23,13,11,11,17,12,8,12,11,10,13,20,7,35,36,5,24,20,28,23,10,12,20,72,13,19,16,8,18,12,13,17,7,18,52,17,16,15,5,23,11,13,12,9,9,5,8,28,22,35,45,48,43,13,31,7,10,10,9,8,18,19,2,29,176,7,8,9,4,8,5,6,5,6,8,8,3,18,3,3,21,26,9,8,24,13,10,7,12,15,21,10,20,14,9,6]},
+  "Proverbs":     {t:"OT", chapters:[33,22,35,27,23,35,27,36,18,32,31,28,25,35,33,33,28,24,29,30,31,29,35,34,28,28,27,28,27,33,31,0,0]},
   "Ecclesiastes": {t:"OT", chapters:[18,26,22,16,20,12,29,17,18,20,10,14]},
   "Song of Songs":{t:"OT", chapters:[17,17,11,16,16,13,13,14]},
   "Isaiah":       {t:"OT", chapters:[31,22,26,6,30,13,25,22,21,34,16,6,22,32,9,14,14,7,25,6,17,25,18,23,12,21,13,29,24,33,9,20,24,17,10,22,38,22,8,31,29,25,28,28,25,13,15,22,26,11,23,15,12,17,13,12,21,14,21,22,11,12,19,12,25,24]},
   "Jeremiah":     {t:"OT", chapters:[19,37,25,31,31,30,34,22,26,25,23,17,27,22,21,21,27,23,15,18,14,30,40,10,38,24,22,17,32,24,40,44,26,22,19,32,21,28,18,16,18,22,13,30,5,28,7,47,39,46,64,34]},
   "Lamentations": {t:"OT", chapters:[22,22,66,22,22]},
-  "Ezekiel":      {t:"OT", chapters:[28,10,27,21,17,17,14,20,28,22,35,46,33,33,31,22,26,20,21,28,22,27,15,17,14,15,21,16,17,14,14,10,17,21,6,9,20,22,14,14,11,15,17,17,15,13,9,6]},
+  "Ezekiel":      {t:"OT", chapters:[28,10,27,17,17,14,27,18,11,22,25,28,23,23,8,63,24,32,14,49,32,31,49,27,17,21,36,26,21,26,18,32,33,31,15,38,28,23,29,49,26,20,27,31,25,24,23,35]},
   "Daniel":       {t:"OT", chapters:[21,49,30,37,31,28,28,27,27,21,45,13]},
   "Hosea":        {t:"OT", chapters:[11,23,5,19,15,11,16,14,17,15,12,14,16,9]},
   "Joel":         {t:"OT", chapters:[20,32,21]},
@@ -1952,8 +2072,8 @@ const BIBLE = {
   "1 Corinthians":{t:"NT", chapters:[31,16,23,21,13,20,40,13,27,33,34,31,13,40,58,24]},
   "2 Corinthians":{t:"NT", chapters:[24,17,18,18,21,18,16,24,15,18,33,21,14]},
   "Galatians":    {t:"NT", chapters:[24,21,29,31,26,18]},
-  "Ephesians":    {t:"NT", chapters:[23,22,21,28,30,14]},
-  "Philippians":  {t:"NT", chapters:[30,18,19,16]},
+  "Ephesians":    {t:"NT", chapters:[23,22,21,32,33,24]},
+  "Philippians":  {t:"NT", chapters:[30,30,21,23]},
   "Colossians":   {t:"NT", chapters:[29,23,25,18]},
   "1 Thessalonians":{t:"NT",chapters:[10,20,13,18,28]},
   "2 Thessalonians":{t:"NT",chapters:[12,17,18]},
@@ -2662,6 +2782,7 @@ function renderListView(grid) {
         <button class="reflection-open-btn" onclick="openJournal(${idx})" id="refl-btn-${idx}">
           ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
         </button>
+        <button class="read-btn" data-day="${idx}" onclick="toggleReader(${idx})">📖 Read</button>
         <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})">🔊 Listen</button>`;
     }
 
@@ -2670,9 +2791,12 @@ function renderListView(grid) {
       ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
     </button>`;
 
+    if (!day.isGrace) inner += `<div class="scripture-panel" data-day="${idx}"></div>`;
+
     card.innerHTML = inner;
     grid.appendChild(card);
   });
+  _readerRestoreAll();
 }
 
 // ── COMPACT CALENDAR CELL ──────────────────────────────────────
@@ -2932,6 +3056,7 @@ function openDayPopover(idx) {
       <button class="reflection-open-btn" style="margin-top:0.4rem;" onclick="closeDayPopover(); setTimeout(()=>openJournal(${idx}),150);">
         ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
       </button>
+      <button class="read-btn" data-day="${idx}" onclick="toggleReader(${idx})" style="margin-top:0.4rem;">📖 Read</button>
       <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})" style="margin-top:0.4rem;">🔊 Listen</button>`;
   }
 
@@ -2940,7 +3065,10 @@ function openDayPopover(idx) {
     ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
   </button>`;
 
+  if (!day.isGrace) html += `<div class="scripture-panel" data-day="${idx}"></div>`;
+
   body.innerHTML = html;
+  _readerRestore(idx);
   document.getElementById('popover-overlay').classList.add('open');
   document.getElementById('day-popover').classList.add('open');
 }
@@ -4903,6 +5031,338 @@ const EBIBLE_FOLDER = {
   'Revelation':      '66_Revelations',
 };
 
+
+// ══════════════════════════════════════════════════════════════
+// IN-CARD SCRIPTURE READER  (WEB + KJV, both public domain)
+// Text is served from this site at /bible/<trans>/<book>.json — no
+// third-party API, no rate limit, cached by the browser after first load.
+// ══════════════════════════════════════════════════════════════
+
+const READER_TRANSLATIONS = {
+  WEB: { label: 'WEB', name: 'World English Bible', note: 'public domain' },
+  KJV: { label: 'KJV', name: 'King James Version',  note: 'public domain' }
+};
+
+let _readerTrans = 'WEB';
+try {
+  const saved = localStorage.getItem('wb-reader-translation');
+  if (saved && READER_TRANSLATIONS[saved]) _readerTrans = saved;
+} catch (e) {}
+
+const _bibleCache = {};   // "WEB|John" -> book doc
+const _bibleFetch = {};   // in-flight promises, so a card opened twice fetches once
+const _openReaders = {};  // dayIdx -> true
+
+function _bibleSlug(book) {
+  return book.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function _escHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function _bibleLoad(trans, book) {
+  const key = trans + '|' + book;
+  if (_bibleCache[key]) return Promise.resolve(_bibleCache[key]);
+  if (_bibleFetch[key]) return _bibleFetch[key];
+
+  const url = `/bible/${trans.toLowerCase()}/${_bibleSlug(book)}.json`;
+  _bibleFetch[key] = fetch(url)
+    .then(r => { if (!r.ok) throw new Error(`${r.status} for ${url}`); return r.json(); })
+    .then(doc => { _bibleCache[key] = doc; delete _bibleFetch[key]; return doc; })
+    .catch(err => { delete _bibleFetch[key]; throw err; });
+  return _bibleFetch[key];
+}
+
+// ── Panel lookup (a day may be on screen as a card and in the popover) ──
+function _readerPanels(dayIdx) {
+  return Array.from(document.querySelectorAll(`.scripture-panel[data-day="${dayIdx}"]`));
+}
+
+function toggleReader(dayIdx) {
+  const open = !_openReaders[dayIdx];
+  _openReaders[dayIdx] = open;
+
+  document.querySelectorAll(`.read-btn[data-day="${dayIdx}"]`).forEach(b => {
+    b.classList.toggle('open', open);
+    b.textContent = open ? '📖 Hide Text' : '📖 Read';
+  });
+
+  _readerPanels(dayIdx).forEach(p => {
+    p.classList.toggle('open', open);
+    _readerWiden(p, open);
+    if (open && !p.dataset.rendered) renderScripture(dayIdx);
+  });
+
+  if (open) _syncPrepare();
+}
+
+// A 280px grid cell is no place to read 35 verses. Opening the reader lets the
+// card span the grid, and widens the day popover to a comfortable measure.
+function _readerWiden(panel, open) {
+  const card = panel.closest('.day-card');
+  if (card) card.classList.toggle('reading', open);
+  const pop = panel.closest('.day-popover');
+  if (pop) pop.classList.toggle('reading', open);
+}
+
+function setReaderTranslation(dayIdx, trans) {
+  if (!READER_TRANSLATIONS[trans]) return;
+  _readerTrans = trans;
+  try { localStorage.setItem('wb-reader-translation', trans); } catch (e) {}
+  // Re-render every open panel so the whole page agrees on one translation
+  Object.keys(_openReaders).forEach(i => {
+    if (_openReaders[i]) _readerPanels(i).forEach(p => { delete p.dataset.rendered; });
+  });
+  Object.keys(_openReaders).forEach(i => { if (_openReaders[i]) renderScripture(Number(i)); });
+}
+
+function renderScripture(dayIdx) {
+  const day = currentPlan[dayIdx];
+  const panels = _readerPanels(dayIdx);
+  if (!day || day.isGrace || !panels.length) return;
+
+  const trans = _readerTrans;
+  const meta  = READER_TRANSLATIONS[trans];
+  const books = [...new Set(day.chapters.map(c => c.book))];
+
+  panels.forEach(p => {
+    p.dataset.rendered = '1';
+    p.innerHTML = _spHead(dayIdx, trans);
+    const body = p.querySelector('.sp-body');
+    if (body) body.innerHTML = `<div class="sp-msg">Loading ${_escHtml(meta.name)}…</div>`;
+  });
+
+  Promise.all(books.map(b => _bibleLoad(trans, b)))
+    .then(docs => {
+      const byBook = {};
+      books.forEach((b, i) => { byBook[b] = docs[i]; });
+
+      let html = '';
+      day.chapters.forEach(ch => {
+        const doc = byBook[ch.book];
+        const verses = (doc.c || [])[ch.chapter - 1] || [];
+        html += `<div class="sp-chapter">${_escHtml(ch.book)} ${ch.chapter}</div>`;
+        const title = doc.titles && doc.titles[String(ch.chapter)];
+        if (title) html += `<div class="sp-psalm-title">${_escHtml(title)}</div>`;
+        if (!verses.length) {
+          html += `<div class="sp-msg">This chapter isn't available in ${_escHtml(meta.label)}.</div>`;
+          return;
+        }
+        verses.forEach((text, i) => {
+          // A handful of verses (Luke 17:36, Acts 8:37, 15:34, 24:7) are absent from
+          // the Greek text the WEB follows and sit in its footnotes. Say so rather
+          // than printing a bare verse number.
+          const body = text
+            ? _escHtml(text)
+            : `<span class="sv-absent">Not in the text this translation follows.</span>`;
+          html += `<span class="sv${text ? '' : ' empty'}" data-book="${_escHtml(ch.book)}" ` +
+                  `data-ch="${ch.chapter}" data-v="${i + 1}">` +
+                  `<span class="sv-num">${i + 1}</span>${body}</span>`;
+        });
+      });
+
+      panels.forEach(p => {
+        const body = p.querySelector('.sp-body');
+        if (body) body.innerHTML = html;
+        _wireVerseTaps(p);
+      });
+      _syncPrepare();
+      _syncUpdate(true);
+    })
+    .catch(err => {
+      console.warn('[reader] load failed:', err);
+      const { url } = formatPassage(day.chapters);
+      panels.forEach(p => {
+        const body = p.querySelector('.sp-body');
+        if (body) {
+          body.innerHTML = `<div class="sp-msg">The text couldn't be loaded just now. ` +
+            `<a href="${_escHtml(url)}" target="_blank" rel="noopener" style="color:var(--gold);">Open it on BibleGateway</a> instead.</div>`;
+        }
+      });
+    });
+}
+
+function _spHead(dayIdx, trans) {
+  const day = currentPlan[dayIdx];
+  const { url } = formatPassage(day.chapters);
+  const planTrans = (document.getElementById('translation') || {}).value || 'WEB';
+  const meta = READER_TRANSLATIONS[trans];
+
+  const buttons = Object.keys(READER_TRANSLATIONS).map(t =>
+    `<button class="${t === trans ? 'active' : ''}" onclick="setReaderTranslation(${dayIdx}, '${t}')">${t}</button>`
+  ).join('');
+
+  const otherLink = READER_TRANSLATIONS[planTrans]
+    ? `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Open on BibleGateway</a>`
+    : `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Read in ${_escHtml(planTrans)} on BibleGateway</a>`;
+
+  return `
+    <div class="sp-head">
+      <div class="sp-trans">${buttons}</div>
+      <span class="sp-sync-note" data-sync-note="${dayIdx}"></span>
+    </div>
+    <div class="sp-body"></div>
+    <div class="sp-foot">
+      <span>${_escHtml(meta.name)} — ${_escHtml(meta.note)}</span>
+      ${otherLink}
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// AUDIO ↔ VERSE SYNC
+//
+// The WEB recordings carry no verse timing data, so verse starts are
+// estimated: the chapter's duration is divided across its verses in
+// proportion to how long each verse is, after a short allowance for the
+// spoken chapter announcement. That drifts over a long chapter, so tapping
+// a verse both seeks the audio there and re-anchors the estimate from that
+// point on — one tap and the highlight tracks again.
+// ══════════════════════════════════════════════════════════════
+
+let _syncStarts  = null;   // estimated start time (s) of each verse
+let _syncKey     = '';     // "John|1" the starts were built for
+let _syncAnchor  = null;   // {i, t} a verse the reader confirmed
+let _syncActive  = -1;     // index of the currently highlighted verse
+let _spScrolledAt = 0;     // last manual scroll, so we don't fight the reader
+
+const SYNC_LEAD_MAX = 4.5; // seconds of "The book of ... chapter ..." up front
+const SYNC_TAIL_MAX = 2.0;
+
+function _syncBuildStarts(verses, duration) {
+  const lead = Math.min(SYNC_LEAD_MAX, duration * 0.02);
+  const tail = Math.min(SYNC_TAIL_MAX, duration * 0.01);
+  const span = Math.max(1, duration - lead - tail);
+  const lens = verses.map(v => Math.max(12, v.length));
+  const total = lens.reduce((a, b) => a + b, 0) || 1;
+  const starts = [];
+  let acc = 0;
+  for (const L of lens) { starts.push(lead + (acc / total) * span); acc += L; }
+  return starts;
+}
+
+// Shift the estimate so it passes exactly through the verse the reader tapped,
+// keeping it monotonic on both sides of that anchor.
+function _syncRemap(starts, duration, anchor) {
+  if (!anchor || !starts || !starts.length) return starts;
+  const { i, t } = anchor;
+  const s0 = starts[i];
+  return starts.map((s, j) => {
+    if (j === i) return t;
+    if (j < i) return s0 > 0 ? (s / s0) * t : 0;
+    const rem = duration - s0;
+    return rem > 0 ? t + (s - s0) * ((duration - t) / rem) : t;
+  });
+}
+
+function _syncCurrentTrack() {
+  if (!_audioQueue.length || _audioIdx < 0 || _audioIdx >= _audioQueue.length) return null;
+  return _audioQueue[_audioIdx];
+}
+
+function _syncPrepare() {
+  const track = _syncCurrentTrack();
+  const panelOpen = _activeDayIdx >= 0 && _openReaders[_activeDayIdx];
+  _readerPanels(_activeDayIdx).forEach(p => p.classList.toggle('synced', !!track && panelOpen));
+
+  if (!track || !panelOpen || !_audio.duration || !isFinite(_audio.duration)) {
+    _syncStarts = null;
+    _syncNote('');
+    return;
+  }
+
+  const key = `${track.book}|${track.chapter}`;
+  const doc = _bibleCache[_readerTrans + '|' + track.book];
+  if (!doc) { _syncStarts = null; return; }
+  const verses = (doc.c || [])[track.chapter - 1] || [];
+  if (!verses.length) { _syncStarts = null; return; }
+
+  if (key !== _syncKey) { _syncAnchor = null; _syncActive = -1; }
+  _syncKey = key;
+  _syncStarts = _syncBuildStarts(verses, _audio.duration);
+  _syncNote('Tap a verse to jump there');
+}
+
+function _syncNote(msg) {
+  document.querySelectorAll('[data-sync-note]').forEach(el => { el.textContent = msg; });
+}
+
+function _syncUpdate(force) {
+  if (!_syncStarts || _activeDayIdx < 0 || !_openReaders[_activeDayIdx]) return;
+  const track = _syncCurrentTrack();
+  if (!track) return;
+
+  const starts = _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
+  const t = _audio.currentTime;
+  let idx = 0;
+  for (let i = 0; i < starts.length; i++) { if (t >= starts[i]) idx = i; else break; }
+  if (idx === _syncActive && !force) return;
+  _syncActive = idx;
+
+  const sel = `.sv[data-book="${CSS.escape(track.book)}"][data-ch="${track.chapter}"]`;
+  _readerPanels(_activeDayIdx).forEach(p => {
+    p.querySelectorAll('.sv.active').forEach(el => el.classList.remove('active'));
+    const target = p.querySelectorAll(sel)[idx];
+    if (!target) return;
+    target.classList.add('active');
+    if (Date.now() - _spScrolledAt > 6000) {
+      const body = p.querySelector('.sp-body');
+      if (body && body.scrollHeight > body.clientHeight) {
+        const top = target.offsetTop - body.offsetTop - body.clientHeight / 2 + target.offsetHeight / 2;
+        body.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+    }
+  });
+}
+
+function _wireVerseTaps(panel) {
+  const body = panel.querySelector('.sp-body');
+  if (body && !body.dataset.wired) {
+    body.dataset.wired = '1';
+    body.addEventListener('scroll', () => { _spScrolledAt = Date.now(); }, { passive: true });
+  }
+  panel.querySelectorAll('.sv').forEach(el => {
+    el.onclick = () => {
+      const track = _syncCurrentTrack();
+      if (!track || !_syncStarts) return;                       // not playing — plain text
+      const book = el.dataset.book, ch = Number(el.dataset.ch);
+      if (book !== track.book || ch !== track.chapter) return;   // other chapter of the day
+
+      const i = Number(el.dataset.v) - 1;
+      const starts = _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
+      const target = starts[i];
+      if (!isFinite(target)) return;
+
+      _audio.currentTime = target;
+      _syncAnchor = { i, t: target };   // this verse is now a fixed point
+      _spScrolledAt = 0;
+      _syncActive = -1;
+      _syncUpdate(true);
+      if (_audio.paused) _audio.play().catch(() => {});
+      _syncNote('Synced from verse ' + (i + 1));
+    };
+  });
+}
+
+// Re-open a panel after the plan re-renders (month view, tab switch, save…)
+function _readerRestore(dayIdx) {
+  if (!_openReaders[dayIdx]) return;
+  document.querySelectorAll(`.read-btn[data-day="${dayIdx}"]`).forEach(b => {
+    b.classList.add('open');
+    b.textContent = '📖 Hide Text';
+  });
+  _readerPanels(dayIdx).forEach(p => {
+    p.classList.add('open');
+    _readerWiden(p, true);
+    if (!p.dataset.rendered) renderScripture(dayIdx);
+  });
+}
+
+function _readerRestoreAll() {
+  Object.keys(_openReaders).forEach(i => { if (_openReaders[i]) _readerRestore(Number(i)); });
+}
+
 function getAudioUrl(book, chapter) {
   const folder = EBIBLE_FOLDER[book] || ('00_' + book.replace(/\s+/g, '_'));
   return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${folder}/${folder}_${chapter}.mp3`;
@@ -5034,6 +5494,8 @@ function listenDay(dayIdx) {
   }
   _activeDayIdx = dayIdx;
   _audioSetListenBtn(dayIdx, true);
+  _syncAnchor = null;
+  _syncKey = '';
 
   _audioLoadTrack(0);
 }
@@ -5078,6 +5540,10 @@ function audioClose() {
   _audio.src = '';          // release the media resource
   document.getElementById('audio-player-bar').style.display = 'none';
   document.body.classList.remove('audio-active');
+  document.querySelectorAll('.sv.active').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.scripture-panel.synced').forEach(el => el.classList.remove('synced'));
+  _syncStarts = null; _syncAnchor = null; _syncKey = ''; _syncActive = -1;
+  _syncNote('');
   if (_activeDayIdx >= 0) {
     _audioSetListenBtn(_activeDayIdx, false);
     _activeDayIdx = -1;
@@ -5099,8 +5565,13 @@ function audioClose() {
   // Live scrubber updates
   _audio.addEventListener('timeupdate', () => {
     if (!_audioSeeking) _audioRefreshScrubber();
+    _syncUpdate();
   });
-  _audio.addEventListener('loadedmetadata', _audioRefreshScrubber);
+  _audio.addEventListener('loadedmetadata', () => {
+    _audioRefreshScrubber();
+    _syncPrepare();
+    _syncUpdate(true);
+  });
   _audio.addEventListener('pause', () => {
     document.getElementById('audio-play-btn').textContent = '▶';
   });
