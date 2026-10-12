@@ -1213,6 +1213,10 @@
   #reader-overlay.open { display: flex; flex-direction: column; animation: fadeUp 0.2s ease both; }
   body.reader-open { overflow: hidden; }
 
+  /* The notes window is z-index 300, under the reader. Lift it while the reader
+     is open so writing a note keeps your place in the text instead of closing it. */
+  body.reader-open .journal-overlay { z-index: 560; }
+
   .reader-head {
     flex-shrink: 0;
     display: flex; align-items: flex-start; justify-content: space-between;
@@ -2856,7 +2860,7 @@ function renderListView(grid) {
         </div>
         ${reflections[idx] ? `<div class="reflection-preview" id="refl-preview-${idx}">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
         <button class="reflection-open-btn" onclick="openJournal(${idx})" id="refl-btn-${idx}">
-          ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
+          ${reflections[idx] ? '✎ Notes' : '✦ Notes'}
         </button>
         <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})">🔊 Listen</button>`;
     }
@@ -3128,7 +3132,7 @@ function openDayPopover(idx) {
       </div>
       ${reflections[idx] ? `<div class="reflection-preview" style="margin-top:0.4rem;">${reflections[idx].replace(/<[^>]*>/g,'').slice(0,120)}${reflections[idx].replace(/<[^>]*>/g,'').length > 120 ? '…' : ''}</div>` : ''}
       <button class="reflection-open-btn" style="margin-top:0.4rem;" onclick="closeDayPopover(); setTimeout(()=>openJournal(${idx}),150);">
-        ${reflections[idx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
+        ${reflections[idx] ? '✎ Notes' : '✦ Notes'}
       </button>
       <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})" style="margin-top:0.4rem;">🔊 Listen</button>`;
   }
@@ -3302,7 +3306,7 @@ function openJournal(idx) {
 
   // Set title
   const { label } = day.isGrace ? { label: 'Rest Day' } : formatPassage(day.chapters);
-  document.getElementById('journal-title').textContent = `Day ${day.dayNum} · ${label} — Reflection`;
+  document.getElementById('journal-title').textContent = `Day ${day.dayNum} · ${label} — Notes`;
 
   // Open overlay
   document.getElementById('journal-overlay').classList.add('open');
@@ -3360,7 +3364,7 @@ function closeJournal() {
     // Update preview and button on the day card
     const preview = document.getElementById(`refl-preview-${quillDayIdx}`);
     const btn     = document.getElementById(`refl-btn-${quillDayIdx}`);
-    if (btn) btn.textContent = reflections[quillDayIdx] ? '✎ Edit Reflection' : '✦ Add Reflection';
+    if (btn) btn.textContent = reflections[quillDayIdx] ? '✎ Notes' : '✦ Notes';
     if (preview) {
       preview.textContent = plainText.slice(0, 120) + (plainText.length > 120 ? '…' : '');
       preview.style.display = plainText ? '' : 'none';
@@ -5192,7 +5196,7 @@ function _renderReaderActions(dayIdx) {
       <label class="day-check-label" for="rd-chk-${dayIdx}">${done ? 'Completed' : 'Mark Complete'}</label>
     </div>
     <button class="read-btn" onclick="readerOpenJournal(${dayIdx})">
-      ${reflections[dayIdx] ? '✎ Edit Reflection' : '✦ Add Reflection'}
+      ${reflections[dayIdx] ? '✎ Notes' : '✦ Notes'}
     </button>
     <button class="listen-btn" data-day="${dayIdx}" onclick="listenDay(${dayIdx})">🔊 Listen</button>
     <button class="read-btn" onclick="readerSetRest(${dayIdx})">✕ Set Rest Day</button>`;
@@ -5205,8 +5209,7 @@ function readerToggleCheck(dayIdx, input) {
 }
 
 function readerOpenJournal(dayIdx) {
-  closeReader();
-  setTimeout(() => openJournal(dayIdx), 150);
+  openJournal(dayIdx);   // opens over the reader; the text stays where it was
 }
 
 function readerSetRest(dayIdx) {
@@ -5770,7 +5773,7 @@ function audioClose() {
 <div class="journal-overlay" id="journal-overlay">
   <div class="journal-modal">
     <div class="journal-header">
-      <span class="journal-title" id="journal-title">Reflection</span>
+      <span class="journal-title" id="journal-title">Notes</span>
       <button class="journal-close" onclick="closeJournal()">✕</button>
     </div>
     <div id="quill-editor"></div>
