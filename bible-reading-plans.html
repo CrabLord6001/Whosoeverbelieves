@@ -1289,6 +1289,16 @@
     font-family: 'Cormorant Garamond', serif; font-style: italic;
     font-size: 0.8rem; color: var(--text-mid);
   }
+  /* Only visible while audio is playing, which is when the difference shows up. */
+  .sp-edition-note {
+    display: none;
+    flex: 0 0 100%;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.76rem; color: var(--text-faint); line-height: 1.5;
+  }
+  #reader-overlay.synced .sp-edition-note { display: block; }
+  .sp-edition-note a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+
   .sync-nudge { display: flex; align-items: center; gap: 0.4rem; }
   .sync-nudge button {
     font-family: 'Cinzel', serif; font-size: 0.6rem;
@@ -5266,7 +5276,8 @@ function renderScripture(dayIdx) {
     `<span>${_escHtml(meta.name)} — ${_escHtml(meta.note)}</span>` +
     (READER_TRANSLATIONS[planTrans]
       ? `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Open on BibleGateway</a>`
-      : `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Read in ${_escHtml(planTrans)} on BibleGateway</a>`);
+      : `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Read in ${_escHtml(planTrans)} on BibleGateway</a>`) +
+    `<span class="sp-edition-note">Narration follows an earlier WEB text than the <a href="https://ebible.org/eng-web/copr.htm" target="_blank" rel="noopener">2020 edition</a> shown here; some wording differs.</span>`;
 
   Promise.all(books.map(b => _bibleLoad(trans, b)))
     .then(docs => {
