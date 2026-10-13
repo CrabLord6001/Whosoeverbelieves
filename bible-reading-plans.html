@@ -1238,12 +1238,10 @@
   }
   .reader-tools { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 
-  /* The day's own controls, so opening a day needs no second click. They're a
-     second row of the same header block, not a bar of their own. */
+  /* The day's own controls, so opening a day needs no second click: a third
+     section of the header row, alongside the title and the trans/close tools. */
   .reader-actions {
-    flex-basis: 100%;
     display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
-    margin-top: 0.6rem;
   }
   .reader-actions .read-btn,
   .reader-actions .listen-btn { margin-top: 0; }
@@ -5770,11 +5768,11 @@ function audioClose() {
       <span class="reader-day"></span>
       <span class="reader-ref"></span>
     </div>
+    <div class="reader-actions"></div>
     <div class="reader-tools">
       <div class="sp-trans"></div>
       <button class="reader-close" onclick="closeReader()">ESC &#10005;</button>
     </div>
-    <div class="reader-actions"></div>
   </div>
   <div class="reader-syncbar">
     <span class="sp-sync-note"></span>
