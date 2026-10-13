@@ -1256,15 +1256,6 @@
   }
   .passage-open:hover { color: var(--gold-light); }
 
-  .sp-trans { display: flex; gap: 0.3rem; }
-  .sp-trans button {
-    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.08em;
-    padding: 0.26rem 0.6rem; border: 1px solid var(--rule); border-radius: 2px;
-    background: none; color: var(--text-faint); cursor: pointer; transition: all 0.15s;
-  }
-  .sp-trans button:hover { border-color: var(--gold); color: var(--gold); }
-  .sp-trans button.active { background: var(--gold-faint); border-color: var(--gold); color: var(--gold); }
-
   .reader-close {
     font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em;
     background: none; border: 1px solid var(--rule); border-radius: 2px;
@@ -1460,16 +1451,20 @@
     #audio-player-bar { flex-wrap: wrap; gap: 0.45rem; padding: 0.5rem 0.85rem 0.6rem; }
     .audio-scrub-row { flex: 100%; order: 10; }
     .audio-track-info { flex: 1; }
-    /* The label+note share a line only where there's room (desktop). On a
-       phone the column is too narrow for that, so the note drops back to
-       its own line, and the sentence itself waits behind a small i button. */
+    body.audio-active { padding-bottom: 110px; }
+  }
+
+  /* The label+note share a line only where there's genuinely room (a wide
+     desktop window). Phone AND tablet columns are both too narrow for that,
+     so the note drops back to its own line and waits behind a small i button
+     — otherwise the full sentence wraps across several lines in the bar. */
+  @media (max-width: 900px) {
     .audio-track-line { display: block; }
     .audio-track-line #audio-track-label,
     .audio-track-line .audio-edition-note { display: block; }
     .audio-track-info .audio-edition-note-text { display: none; }
     .audio-track-info .audio-edition-toggle { display: inline-block; }
     .audio-track-info.show-note .audio-edition-note-text { display: inline; }
-    body.audio-active { padding-bottom: 110px; }
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -5106,8 +5101,14 @@ function _lsGet(k, fallback) {
 }
 function _lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
-let _readerTrans = _lsGet('wb-reader-translation', 'WEB');
-if (!READER_TRANSLATIONS[_readerTrans]) _readerTrans = 'WEB';
+// Locked to whatever translation the plan was created with — switching mid-plan
+// would desync the audio narration (always WEB) from the displayed text for no
+// real benefit, so there's no in-reader picker any more.
+function _readerTransForPlan() {
+  const t = (document.getElementById('translation') || {}).value;
+  return READER_TRANSLATIONS[t] ? t : 'WEB';
+}
+let _readerTrans = _readerTransForPlan();
 
 const _bibleCache = {};   // "WEB|John" -> book doc
 const _bibleFetch = {};   // in-flight promises, so opening twice fetches once
@@ -5182,6 +5183,7 @@ function openReader(dayIdx) {
   const day = currentPlan[dayIdx];
   if (!day || day.isGrace) return;
 
+  _readerTrans = _readerTransForPlan();   // re-check in case a different plan is now active
   _readerDay = dayIdx;
   const overlay = document.getElementById('reader-overlay');
   const { label } = formatPassage(day.chapters);
@@ -5197,7 +5199,6 @@ function openReader(dayIdx) {
   overlay.classList.add('open');
   document.body.classList.add('reader-open');
 
-  _renderTransButtons();
   _renderReaderActions(dayIdx);
   _syncRefreshNudge();
   renderScripture(dayIdx);
@@ -5243,21 +5244,6 @@ function toggleReader(dayIdx) {
   else openReader(dayIdx);
 }
 
-function _renderTransButtons() {
-  const wrap = document.querySelector('#reader-overlay .sp-trans');
-  wrap.innerHTML = Object.keys(READER_TRANSLATIONS).map(t =>
-    `<button class="${t === _readerTrans ? 'active' : ''}" ` +
-    `onclick="setReaderTranslation('${t}')">${t}</button>`
-  ).join('');
-}
-
-function setReaderTranslation(trans) {
-  if (!READER_TRANSLATIONS[trans] || trans === _readerTrans) return;
-  _readerTrans = trans;
-  _lsSet('wb-reader-translation', trans);
-  _renderTransButtons();
-  if (_readerDay >= 0) renderScripture(_readerDay);
-}
 
 // ══════════════════════════════════════════════════════════════
 // RENDER
@@ -5770,7 +5756,6 @@ function audioClose() {
     </div>
     <div class="reader-actions"></div>
     <div class="reader-tools">
-      <div class="sp-trans"></div>
       <button class="reader-close" onclick="closeReader()">ESC &#10005;</button>
     </div>
   </div>
