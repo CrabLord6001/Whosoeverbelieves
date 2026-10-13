@@ -1852,22 +1852,10 @@
       </div>
     </div>
 
-    <div class="form-row three">
+    <div class="form-row">
       <div class="form-group">
         <label for="total-days">Total Calendar Days</label>
         <input type="number" id="total-days" min="1" max="3650" value="30" />
-      </div>
-      <div class="form-group">
-        <label>Rest Days</label>
-        <div class="rest-day-toggles">
-          <button class="rest-day-btn" data-day="0" onclick="toggleRestDay(this)">Sun</button>
-          <button class="rest-day-btn" data-day="1" onclick="toggleRestDay(this)">Mon</button>
-          <button class="rest-day-btn" data-day="2" onclick="toggleRestDay(this)">Tue</button>
-          <button class="rest-day-btn" data-day="3" onclick="toggleRestDay(this)">Wed</button>
-          <button class="rest-day-btn" data-day="4" onclick="toggleRestDay(this)">Thu</button>
-          <button class="rest-day-btn" data-day="5" onclick="toggleRestDay(this)">Fri</button>
-          <button class="rest-day-btn" data-day="6" onclick="toggleRestDay(this)">Sat</button>
-        </div>
       </div>
       <div class="form-group">
         <label for="translation">Translation</label>
@@ -1881,13 +1869,6 @@
           <option value="CSB">CSB</option>
           <option value="NKJV">NKJV</option>
         </select>
-      </div>
-    </div>
-
-    <div style="margin-bottom:1.25rem" id="grace-preview-row">
-      <label>Rest Day Pattern</label>
-      <div id="grace-day-pattern-desc" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream-dim);font-size:0.93rem;margin-top:0.25rem;">
-        No rest days — all days are reading days.
       </div>
     </div>
 
@@ -2357,6 +2338,8 @@ function toggleRestDay(btn) {
 }
 
 function updateGracePreview() {
+  // Rest days were removed; this element no longer exists.
+  if (!document.getElementById('grace-day-pattern-desc')) return;
   const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const selected  = getSelectedRestDays();
   const el        = document.getElementById('grace-day-pattern-desc');
@@ -2884,11 +2867,6 @@ function renderListView(grid) {
         <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})">🔊 Listen</button>`;
     }
 
-    inner += `<button class="toggle-grace-btn" onclick="toggleGrace(${idx})"
-      title="${day.isGrace ? 'Convert to reading day' : 'Set as grace day'}">
-      ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
-    </button>`;
-
     card.innerHTML = inner;
     grid.appendChild(card);
   });
@@ -2913,7 +2891,7 @@ function renderCalCell(day, idx) {
     const { label } = formatPassage(day.chapters);
     const short = label.length > 22 ? label.slice(0, 20) + '…' : label;
     html += `<span class="cal-cell-passage">${short}</span>`;
-    html += `<span class="cal-cell-verses">${day.verseCount}v</span>`;
+    html += `<span class="cal-cell-verses" data-day="${idx}">${readingTimeLabel(day)}</span>`;
   }
 
   el.innerHTML = html;
@@ -3155,11 +3133,6 @@ function openDayPopover(idx) {
       </button>
       <button class="listen-btn" data-day="${idx}" onclick="listenDay(${idx})" style="margin-top:0.4rem;">🔊 Listen</button>`;
   }
-
-  html += `<button class="toggle-grace-btn" style="margin-top:0.6rem;" onclick="closeDayPopover(); setTimeout(()=>toggleGrace(${idx}),100);"
-    title="${day.isGrace ? 'Convert to reading day' : 'Set as grace day'}">
-    ${day.isGrace ? '↩ Reading Day' : '✕ Set Rest Day'}
-  </button>`;
 
   body.innerHTML = html;
   document.getElementById('popover-overlay').classList.add('open');
@@ -5176,6 +5149,45 @@ function _bibleLoad(trans, book) {
 // OPEN / CLOSE
 // ══════════════════════════════════════════════════════════════
 
+// ─── ESTIMATED READING TIME ───
+// Calibrated against the narration: across Numbers 21, Psalm 23 and John 1 the
+// narrator runs 0.0889 s per character once the spoken chapter announcement is
+// removed, consistent to within 5%. A reader without the dramatic pauses moves
+// faster, so this uses 80% of that rate.
+
+const READ_SECONDS_PER_CHAR = 0.0711;
+const CHARS_PER_VERSE = 110;        // fallback when the length table is absent
+let _chapLengths = null;
+
+fetch('/bible/lengths.json')
+  .then(r => (r.ok ? r.json() : null))
+  .then(d => { if (d) { _chapLengths = d; _refreshReadingTimes(); } })
+  .catch(() => {});
+
+function readingTimeLabel(day) {
+  if (!day || day.isGrace) return '';
+  let chars = 0;
+  if (_chapLengths && day.chapters) {
+    for (const c of day.chapters) {
+      const book = _chapLengths[c.book];
+      const n = book && book[c.chapter - 1];
+      if (!n) { chars = 0; break; }
+      chars += n;
+    }
+  }
+  if (!chars) chars = (day.verseCount || 0) * CHARS_PER_VERSE;
+  if (!chars) return '';
+  return '~' + Math.max(1, Math.round(chars * READ_SECONDS_PER_CHAR / 60)) + ' min';
+}
+
+// Fill in the exact figures once the table lands, without re-rendering the plan.
+function _refreshReadingTimes() {
+  document.querySelectorAll('.cal-cell-verses[data-day]').forEach(el => {
+    const d = currentPlan[Number(el.dataset.day)];
+    if (d) el.textContent = readingTimeLabel(d);
+  });
+}
+
 function openReader(dayIdx) {
   const day = currentPlan[dayIdx];
   if (!day || day.isGrace) return;
@@ -5217,8 +5229,7 @@ function _renderReaderActions(dayIdx) {
     <button class="read-btn" onclick="readerOpenJournal(${dayIdx})">
       ${reflections[dayIdx] ? '✎ Notes' : '✦ Notes'}
     </button>
-    <button class="listen-btn" data-day="${dayIdx}" onclick="listenDay(${dayIdx})">🔊 Listen</button>
-    <button class="read-btn" onclick="readerSetRest(${dayIdx})">✕ Set Rest Day</button>`;
+    <button class="listen-btn" data-day="${dayIdx}" onclick="listenDay(${dayIdx})">🔊 Listen</button>`;
 }
 
 function readerToggleCheck(dayIdx, input) {
@@ -5229,11 +5240,6 @@ function readerToggleCheck(dayIdx, input) {
 
 function readerOpenJournal(dayIdx) {
   openJournal(dayIdx);   // opens over the reader; the text stays where it was
-}
-
-function readerSetRest(dayIdx) {
-  closeReader();
-  setTimeout(() => toggleGrace(dayIdx), 100);
 }
 
 function closeReader() {
