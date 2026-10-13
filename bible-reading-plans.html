@@ -1393,11 +1393,21 @@
   body.audio-active { padding-bottom: 76px; }
 
   .audio-track-info { flex: 1; min-width: 0; }
-  .audio-track-info span { display: block; }
+  /* label + note share a line, wrapping together as one sentence; the queue
+     label is the one line that still gets its own row, below both. */
+  .audio-track-line {
+    display: flex; align-items: baseline; flex-wrap: wrap;
+    column-gap: 0.45rem; row-gap: 0.1rem; min-width: 0;
+  }
+  #audio-track-label {
+    font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 100%; flex-shrink: 0;
+  }
   .audio-edition-note {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
     font-size: 0.72rem; line-height: 1.4; color: var(--text-faint);
-    white-space: normal;
+    white-space: normal; min-width: 0; flex: 1 1 0%;
   }
   .audio-edition-note a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
   .audio-edition-toggle {
@@ -1409,11 +1419,8 @@
     background: none; color: var(--text-faint); cursor: pointer;
   }
   .audio-edition-toggle:hover { border-color: var(--gold); color: var(--gold); }
-  #audio-track-label {
-    font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
   .audio-queue-label {
+    display: block;
     font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.13em;
     color: var(--gold); text-transform: uppercase; margin-top: 0.1rem;
   }
@@ -1463,8 +1470,12 @@
     #audio-player-bar { flex-wrap: wrap; gap: 0.45rem; padding: 0.5rem 0.85rem 0.6rem; }
     .audio-scrub-row { flex: 100%; order: 10; }
     .audio-track-info { flex: 1; }
-    /* same pattern as before: the sentence is too wide for one line on a
-       phone, so it waits behind a small i button instead of taking a line. */
+    /* The label+note share a line only where there's room (desktop). On a
+       phone the column is too narrow for that, so the note drops back to
+       its own line, and the sentence itself waits behind a small i button. */
+    .audio-track-line { display: block; }
+    .audio-track-line #audio-track-label,
+    .audio-track-line .audio-edition-note { display: block; }
     .audio-track-info .audio-edition-note-text { display: none; }
     .audio-track-info .audio-edition-toggle { display: inline-block; }
     .audio-track-info.show-note .audio-edition-note-text { display: inline; }
@@ -2840,7 +2851,7 @@ function renderListView(grid) {
         <div class="day-passage">
           ${label ? `<button class="passage-open" onclick="openReader(${idx})">${label}</button>` : label}
         </div>
-        <div class="day-verse-count">${day.verseCount} verse${day.verseCount!==1?'s':''}</div>
+        <div class="day-verse-count" data-day="${idx}">${readingTimeLabel(day)}</div>
         <div class="day-check-row">
           <input type="checkbox" class="day-checkbox" id="chk-${idx}"
             ${checkStates[idx] ? 'checked' : ''}
@@ -3107,7 +3118,7 @@ function openDayPopover(idx) {
       <div class="day-passage" style="margin-top:0.5rem;">
         ${url ? `<a href="${url}" target="_blank" rel="noopener">${label}</a>` : label}
       </div>
-      <div class="day-verse-count">${day.verseCount} verse${day.verseCount!==1?'s':''}</div>
+      <div class="day-verse-count" data-day="${idx}">${readingTimeLabel(day)}</div>
       <div class="day-check-row">
         <input type="checkbox" class="day-checkbox" id="pop-chk-${idx}"
           ${checkStates[idx] ? 'checked' : ''}
@@ -4482,8 +4493,8 @@ function downloadPDF() {
       doc.setFontSize(7.5);
       doc.setTextColor(...TEXT_DIM);
       const statusText = isDone
-        ? `✓ Completed  ·  ${day.verseCount} verses`
-        : `${day.verseCount} verses`;
+        ? `✓ Completed  ·  ${readingTimeLabel(day)}`
+        : `${readingTimeLabel(day)}`;
       doc.text(statusText, cx, cy);
       if (isDone) {
         doc.setTextColor(...[80, 140, 90]);
@@ -4537,7 +4548,7 @@ function exportWithNotes() {
     const { label } = day.isGrace ? { label:'Rest Day' } : formatPassage(day.chapters);
     txt += `DAY ${day.dayNum}${day.date ? ` (${day.date})` : ''}\n`;
     txt += `Passage: ${label}\n`;
-    if (!day.isGrace) txt += `Verses: ${day.verseCount} | Completed: ${checkStates[idx] ? 'Yes' : 'No'}\n`;
+    if (!day.isGrace) txt += `Est. reading time: ${readingTimeLabel(day)} | Completed: ${checkStates[idx] ? 'Yes' : 'No'}\n`;
     if (reflections[idx]?.trim()) txt += `\nReflection:\n${reflections[idx]}\n`;
     txt += '\n' + '─'.repeat(40) + '\n\n';
   });
@@ -5171,7 +5182,7 @@ function readingTimeLabel(day) {
 
 // Fill in the exact figures once the table lands, without re-rendering the plan.
 function _refreshReadingTimes() {
-  document.querySelectorAll('.cal-cell-verses[data-day]').forEach(el => {
+  document.querySelectorAll('.cal-cell-verses[data-day], .day-verse-count[data-day]').forEach(el => {
     const d = currentPlan[Number(el.dataset.day)];
     if (d) el.textContent = readingTimeLabel(d);
   });
@@ -5740,8 +5751,10 @@ function audioClose() {
 <!-- AUDIO PLAYER BAR -->
 <div id="audio-player-bar" style="display:none;">
   <div class="audio-track-info" id="audio-track-info">
-    <span id="audio-track-label">—</span>
-    <span class="audio-edition-note">World English Bible, public domain<button class="audio-edition-toggle" onclick="toggleAudioEditionNote(this)" aria-label="About the narration">i</button><span class="audio-edition-note-text"> (the narration predates the 2020 text shown here; some wording differs)</span></span>
+    <div class="audio-track-line">
+      <span id="audio-track-label">—</span>
+      <span class="audio-edition-note">&mdash; World English Bible, public domain<button class="audio-edition-toggle" onclick="toggleAudioEditionNote(this)" aria-label="About the narration">i</button><span class="audio-edition-note-text"> (the narration predates the 2020 text shown here; some wording differs)</span></span>
+    </div>
     <span class="audio-queue-label" id="audio-queue-label"></span>
   </div>
   <div class="audio-controls">
