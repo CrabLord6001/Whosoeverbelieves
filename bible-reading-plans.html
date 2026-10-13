@@ -478,8 +478,9 @@
     display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;
   }
   .cal-cell-verses {
-    font-family: 'Cormorant Garamond', serif; font-size: 0.68rem;
-    color: var(--text-faint); font-style: italic; margin-top: auto;
+    font-family: 'Cinzel', serif; font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--gold); font-style: normal; margin-top: auto;
   }
   .cal-cell-grace-lbl {
     font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.08em;
@@ -1289,20 +1290,6 @@
     font-family: 'Cormorant Garamond', serif; font-style: italic;
     font-size: 0.8rem; color: var(--text-mid);
   }
-  /* Only visible while audio is playing, which is when the difference shows up. */
-  .sp-edition-note { display: none; font-style: italic; }
-  #reader-overlay.synced .sp-edition-note { display: inline; }
-  .sp-edition-note a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
-  .sp-edition-toggle {
-    display: none;
-    font-family: 'Cinzel', serif; font-size: 0.6rem; font-style: normal;
-    width: 1.15rem; height: 1.15rem; line-height: 1; vertical-align: middle;
-    margin-left: 0.35rem; padding: 0;
-    border: 1px solid var(--rule); border-radius: 50%;
-    background: none; color: var(--text-faint); cursor: pointer;
-  }
-  .sp-edition-toggle:hover { border-color: var(--gold); color: var(--gold); }
-
   .sync-nudge { display: flex; align-items: center; gap: 0.4rem; }
   .sync-nudge button {
     font-family: 'Cinzel', serif; font-size: 0.6rem;
@@ -1366,18 +1353,6 @@
   .sv.active { background: var(--gold-faint); border-left-color: var(--gold); }
   :root.light-mode .sv.active { background: rgba(138,106,31,0.14); }
 
-  .sp-foot {
-    flex-shrink: 0;
-    padding: 0.6rem 1.25rem;
-    border-top: 1px solid var(--rule);
-    background: var(--surface);
-    font-family: 'Cormorant Garamond', serif; font-size: 0.78rem;
-    color: var(--text-faint); line-height: 1.6;
-    display: flex; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
-  }
-  .sp-foot a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
-  body.audio-active .sp-foot { margin-bottom: 76px; }
-
   .sp-msg {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
     font-size: 0.95rem; color: var(--text-mid); padding: 1rem 0;
@@ -1389,13 +1364,7 @@
   }
 
   @media (max-width: 600px) {
-    /* the sentence costs three lines here, so it waits behind the i */
-    #reader-overlay.synced .sp-edition-toggle { display: inline-block; }
-    #reader-overlay.synced .sp-edition-note { display: none; }
-    #reader-overlay.synced .sp-foot.show-note .sp-edition-note { display: inline; }
-
-    /* text, then the day's controls at thumb height, then attribution */
-    #reader-overlay.open .sp-foot { order: 6; }
+    /* text, then the day's controls at thumb height */
     #reader-overlay.open .reader-actions {
       order: 5;
       border-bottom: none; border-top: 1px solid var(--rule);
@@ -1425,6 +1394,21 @@
 
   .audio-track-info { flex: 1; min-width: 0; }
   .audio-track-info span { display: block; }
+  .audio-edition-note {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.72rem; line-height: 1.4; color: var(--text-faint);
+    white-space: normal;
+  }
+  .audio-edition-note a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+  .audio-edition-toggle {
+    display: none;
+    font-family: 'Cinzel', serif; font-size: 0.58rem; font-style: normal;
+    width: 1.1rem; height: 1.1rem; line-height: 1; vertical-align: middle;
+    margin-left: 0.3rem; padding: 0;
+    border: 1px solid var(--rule); border-radius: 50%;
+    background: none; color: var(--text-faint); cursor: pointer;
+  }
+  .audio-edition-toggle:hover { border-color: var(--gold); color: var(--gold); }
   #audio-track-label {
     font-family: 'EB Garamond', serif; font-size: 1rem; color: var(--text);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -1479,6 +1463,11 @@
     #audio-player-bar { flex-wrap: wrap; gap: 0.45rem; padding: 0.5rem 0.85rem 0.6rem; }
     .audio-scrub-row { flex: 100%; order: 10; }
     .audio-track-info { flex: 1; }
+    /* same pattern as before: the sentence is too wide for one line on a
+       phone, so it waits behind a small i button instead of taking a line. */
+    .audio-track-info .audio-edition-note-text { display: none; }
+    .audio-track-info .audio-edition-toggle { display: inline-block; }
+    .audio-track-info.show-note .audio-edition-note-text { display: inline; }
     body.audio-active { padding-bottom: 110px; }
   }
 
@@ -5281,17 +5270,9 @@ function renderScripture(dayIdx) {
   const meta  = READER_TRANSLATIONS[trans];
   const books = [...new Set(day.chapters.map(c => c.book))];
   const body  = document.querySelector('#reader-overlay .sp-body');
-  const foot  = document.querySelector('#reader-overlay .sp-foot');
+  const { url } = formatPassage(day.chapters);   // kept only for the load-failure fallback link below
 
   body.innerHTML = `<div class="sp-msg">Loading ${_escHtml(meta.name)}…</div>`;
-
-  const { url } = formatPassage(day.chapters);
-  const planTrans = (document.getElementById('translation') || {}).value || 'WEB';
-  foot.innerHTML =
-    `<span>${_escHtml(meta.name)} — ${_escHtml(meta.note)}<button class="sp-edition-toggle" onclick="toggleEditionNote(this)" aria-label="About the narration">i</button><span class="sp-edition-note"> (narration follows an earlier WEB text than the <a href="https://ebible.org/eng-web/copr.htm" target="_blank" rel="noopener">2020 edition</a> shown here; some wording differs)</span></span>` +
-    (READER_TRANSLATIONS[planTrans]
-      ? `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Open on BibleGateway</a>`
-      : `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Read in ${_escHtml(planTrans)} on BibleGateway</a>`);
 
   Promise.all(books.map(b => _bibleLoad(trans, b)))
     .then(docs => {
@@ -5468,9 +5449,9 @@ function _syncUpdate(force) {
 }
 
 // On a phone the note is behind the i; on desktop it is always on the line.
-function toggleEditionNote(btn) {
-  const foot = btn.closest('.sp-foot');
-  if (foot) foot.classList.toggle('show-note');
+function toggleAudioEditionNote(btn) {
+  const info = btn.closest('.audio-track-info');
+  if (info) info.classList.toggle('show-note');
 }
 
 function _wireVerseTaps() {
@@ -5758,8 +5739,9 @@ function audioClose() {
 <script src="scripts.js"></script>
 <!-- AUDIO PLAYER BAR -->
 <div id="audio-player-bar" style="display:none;">
-  <div class="audio-track-info">
+  <div class="audio-track-info" id="audio-track-info">
     <span id="audio-track-label">—</span>
+    <span class="audio-edition-note">World English Bible, public domain<button class="audio-edition-toggle" onclick="toggleAudioEditionNote(this)" aria-label="About the narration">i</button><span class="audio-edition-note-text"> (the narration predates the 2020 text shown here; some wording differs)</span></span>
     <span class="audio-queue-label" id="audio-queue-label"></span>
   </div>
   <div class="audio-controls">
@@ -5798,7 +5780,6 @@ function audioClose() {
     </div>
   </div>
   <div class="sp-body"></div>
-  <div class="sp-foot"></div>
 </div>
 <!-- JOURNAL MODAL -->
 <div class="journal-overlay" id="journal-overlay">
