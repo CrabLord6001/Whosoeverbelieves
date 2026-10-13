@@ -1226,16 +1226,18 @@
     border-bottom: 1px solid var(--rule);
     background: var(--surface);
   }
-  .reader-title { min-width: 0; }
+  .reader-title {
+    min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.1rem 0.6rem;
+  }
   .reader-day {
-    display: block;
     font-family: 'Cinzel', serif; font-size: 0.62rem;
     letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold);
+    white-space: nowrap;
   }
   .reader-ref {
-    display: block; margin-top: 0.15rem;
     font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--text);
   }
+  .reader-ref::before { content: '\2014'; margin-right: 0.5rem; color: var(--text-faint); font-size: 0.9rem; }
   .reader-tools { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 
   /* The day's own controls, so opening a day needs no second click: a third
@@ -1462,8 +1464,10 @@
     .audio-track-line { display: block; }
     .audio-track-line #audio-track-label,
     .audio-track-line .audio-edition-note { display: block; }
+    .audio-track-info .audio-edition-note-prefix,
     .audio-track-info .audio-edition-note-text { display: none; }
-    .audio-track-info .audio-edition-toggle { display: inline-block; }
+    .audio-track-info .audio-edition-toggle { display: inline-block; margin-left: 0; }
+    .audio-track-info.show-note .audio-edition-note-prefix,
     .audio-track-info.show-note .audio-edition-note-text { display: inline; }
   }
 
@@ -5729,7 +5733,7 @@ function audioClose() {
   <div class="audio-track-info" id="audio-track-info">
     <div class="audio-track-line">
       <span id="audio-track-label">—</span>
-      <span class="audio-edition-note">&mdash; World English Bible, public domain<button class="audio-edition-toggle" onclick="toggleAudioEditionNote(this)" aria-label="About the narration">i</button><span class="audio-edition-note-text"> (the narration predates the 2020 text shown here; some wording differs)</span></span>
+      <span class="audio-edition-note"><span class="audio-edition-note-prefix">&mdash; World English Bible, public domain</span><button class="audio-edition-toggle" onclick="toggleAudioEditionNote(this)" aria-label="About the narration">i</button><span class="audio-edition-note-text"> (the narration predates the 2020 text shown here; some wording differs)</span></span>
     </div>
     <span class="audio-queue-label" id="audio-queue-label"></span>
   </div>
