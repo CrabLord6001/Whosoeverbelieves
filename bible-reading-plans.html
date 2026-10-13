@@ -1293,6 +1293,15 @@
   .sp-edition-note { display: none; font-style: italic; }
   #reader-overlay.synced .sp-edition-note { display: inline; }
   .sp-edition-note a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+  .sp-edition-toggle {
+    display: none;
+    font-family: 'Cinzel', serif; font-size: 0.6rem; font-style: normal;
+    width: 1.15rem; height: 1.15rem; line-height: 1; vertical-align: middle;
+    margin-left: 0.35rem; padding: 0;
+    border: 1px solid var(--rule); border-radius: 50%;
+    background: none; color: var(--text-faint); cursor: pointer;
+  }
+  .sp-edition-toggle:hover { border-color: var(--gold); color: var(--gold); }
 
   .sync-nudge { display: flex; align-items: center; gap: 0.4rem; }
   .sync-nudge button {
@@ -1380,6 +1389,11 @@
   }
 
   @media (max-width: 600px) {
+    /* the sentence costs three lines here, so it waits behind the i */
+    #reader-overlay.synced .sp-edition-toggle { display: inline-block; }
+    #reader-overlay.synced .sp-edition-note { display: none; }
+    #reader-overlay.synced .sp-foot.show-note .sp-edition-note { display: inline; }
+
     /* text, then the day's controls at thumb height, then attribution */
     #reader-overlay.open .sp-foot { order: 6; }
     #reader-overlay.open .reader-actions {
@@ -5268,7 +5282,7 @@ function renderScripture(dayIdx) {
   const { url } = formatPassage(day.chapters);
   const planTrans = (document.getElementById('translation') || {}).value || 'WEB';
   foot.innerHTML =
-    `<span>${_escHtml(meta.name)} — ${_escHtml(meta.note)}<span class="sp-edition-note"> (narration follows an earlier WEB text than the <a href="https://ebible.org/eng-web/copr.htm" target="_blank" rel="noopener">2020 edition</a> shown here; some wording differs)</span></span>` +
+    `<span>${_escHtml(meta.name)} — ${_escHtml(meta.note)}<button class="sp-edition-toggle" onclick="toggleEditionNote(this)" aria-label="About the narration">i</button><span class="sp-edition-note"> (narration follows an earlier WEB text than the <a href="https://ebible.org/eng-web/copr.htm" target="_blank" rel="noopener">2020 edition</a> shown here; some wording differs)</span></span>` +
     (READER_TRANSLATIONS[planTrans]
       ? `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Open on BibleGateway</a>`
       : `<a href="${_escHtml(url)}" target="_blank" rel="noopener">Read in ${_escHtml(planTrans)} on BibleGateway</a>`);
@@ -5445,6 +5459,12 @@ function _syncUpdate(force) {
     const top = target.offsetTop - body.offsetTop - body.clientHeight / 2 + target.offsetHeight / 2;
     body.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }
+}
+
+// On a phone the note is behind the i; on desktop it is always on the line.
+function toggleEditionNote(btn) {
+  const foot = btn.closest('.sp-foot');
+  if (foot) foot.classList.toggle('show-note');
 }
 
 function _wireVerseTaps() {
