@@ -1456,19 +1456,20 @@
     body.audio-active { padding-bottom: 110px; }
   }
 
-  /* The label+note share a line only where there's genuinely room (a wide
-     desktop window). Phone AND tablet columns are both too narrow for that,
-     so the note drops back to its own line and waits behind a small i button
-     — otherwise the full sentence wraps across several lines in the bar. */
+  /* On a phone or tablet, the sentence itself (prefix + disclaimer) waits
+     behind a small i button rather than wrapping across several lines — but
+     with only the icon showing, it still sits right on the label's own line. */
   @media (max-width: 900px) {
-    .audio-track-line { display: block; }
-    .audio-track-line #audio-track-label,
-    .audio-track-line .audio-edition-note { display: block; }
     .audio-track-info .audio-edition-note-prefix,
     .audio-track-info .audio-edition-note-text { display: none; }
-    .audio-track-info .audio-edition-toggle { display: inline-block; margin-left: 0; }
+    .audio-track-info .audio-edition-toggle { display: inline-block; margin-left: 0.3rem; }
     .audio-track-info.show-note .audio-edition-note-prefix,
     .audio-track-info.show-note .audio-edition-note-text { display: inline; }
+    /* once revealed, the full sentence is too wide for the label's line, so
+       it drops to its own line below rather than forcing the bar wider. */
+    .audio-track-info.show-note .audio-track-line { display: block; }
+    .audio-track-info.show-note .audio-track-line #audio-track-label,
+    .audio-track-info.show-note .audio-track-line .audio-edition-note { display: block; }
   }
 
   /* ══════════════════════════════════════════════════════════════

@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root { --bg:#0c0f14; --surface:#161b22; --rule:#2a2f38; --text:#e8e6e0; --text-mid:#b9b4a6; --text-faint:#8a847a; --gold:#c9a84c; }
+body { margin:0; font-family: Georgia, serif; background:#20242b; }
+button { font: inherit; }
+#audio-player-bar { position:relative; background:#111827; border-top:1px solid rgba(201,168,76,0.3); padding:0.55rem 1.25rem 0.65rem; display:flex; align-items:center; gap:1rem; }
+.audio-track-info { flex:1; min-width:0; }
+.audio-track-line { display:flex; align-items:baseline; flex-wrap:wrap; column-gap:0.45rem; row-gap:0.1rem; min-width:0; }
+#audio-track-label { font-family:'EB Garamond',serif; font-size:1rem; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; flex-shrink:0; }
+.audio-edition-note { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:0.72rem; line-height:1.4; color:var(--text-faint); white-space:normal; min-width:0; flex:1 1 0%; }
+.audio-edition-toggle { display:none; font-family:'Cinzel',serif; font-size:0.58rem; font-style:normal; width:1.1rem; height:1.1rem; line-height:1; vertical-align:middle; margin-left:0.3rem; padding:0; border:1px solid var(--rule); border-radius:50%; background:none; color:var(--text-faint); }
+.audio-queue-label { display:block; font-family:'Cinzel',serif; font-size:0.52rem; letter-spacing:0.13em; color:var(--gold); text-transform:uppercase; margin-top:0.1rem; }
+.audio-controls { display:flex; align-items:center; gap:0.35rem; flex-shrink:0; }
+.audio-ctrl-btn { background:none; border:1px solid rgba(201,168,76,0.28); color:var(--text-mid); border-radius:3px; padding:0.28rem 0.55rem; font-size:0.78rem; white-space:nowrap; }
+#audio-play-btn { background:rgba(201,168,76,0.12); border-color:rgba(201,168,76,0.5); color:var(--gold); font-size:0.9rem; padding:0.28rem 0.9rem; }
+.audio-scrub-row { display:flex; align-items:center; gap:0.45rem; flex:1.4; min-width:100px; }
+.audio-scrub-row span { font-family:'Cinzel',serif; font-size:0.54rem; color:var(--text-faint); white-space:nowrap; }
+#audio-scrubber { flex:1; }
+.audio-close-btn { background:none; border:none; color:var(--text-faint); font-size:0.85rem; }
+@media (max-width: 900px) {
+  .audio-track-info .audio-edition-note-prefix,
+  .audio-track-info .audio-edition-note-text { display: none; }
+  .audio-track-info .audio-edition-toggle { display: inline-block; margin-left: 0.3rem; }
+  .audio-track-info.show-note .audio-edition-note-prefix,
+  .audio-track-info.show-note .audio-edition-note-text { display: inline; }
+  .audio-track-info.show-note .audio-track-line { display: block; }
+  .audio-track-info.show-note .audio-track-line #audio-track-label,
+  .audio-track-info.show-note .audio-track-line .audio-edition-note { display: block; }
+}
+@media (max-width: 600px) {
+  #audio-player-bar { flex-wrap: wrap; gap: 0.45rem; padding: 0.5rem 0.85rem 0.6rem; }
+  .audio-scrub-row { flex: 100%; order: 10; }
+}
+.wrap { margin-bottom: 2px; }
+</style></head><body>
+
+<div class="wrap">
+<div id="audio-player-bar">
+  <div class="audio-track-info" id="t1">
+    <div class="audio-track-line">
+      <span id="audio-track-label">Numbers 22</span>
+      <span class="audio-edition-note"><span class="audio-edition-note-prefix">&mdash; World English Bible, public domain</span><button class="audio-edition-toggle" onclick="document.getElementById('t1').classList.toggle('show-note')" aria-label="About the narration">i</button><span class="audio-edition-note-text"> (the narration predates the 2020 text shown here; some wording differs)</span></span>
+    </div>
+    <span class="audio-queue-label"></span>
+  </div>
+  <div class="audio-controls">
+    <button class="audio-ctrl-btn">&#9198;</button>
+    <button class="audio-ctrl-btn">&#8617; 10s</button>
+    <button class="audio-ctrl-btn" id="audio-play-btn">&#9654;</button>
+    <button class="audio-ctrl-btn">&#9197;</button>
+  </div>
+  <div class="audio-scrub-row">
+    <span>0:24</span><input type="range" id="audio-scrubber"><span>8:03</span>
+  </div>
+  <button class="audio-close-btn">&#10005;</button>
+</div>
+</div>
+
+<div class="wrap">
+<div id="audio-player-bar">
+  <div class="audio-track-info" id="t2">
+    <div class="audio-track-line">
+      <span id="audio-track-label">Deuteronomy 28</span>
+      <span class="audio-edition-note"><span class="audio-edition-note-prefix">&mdash; World English Bible, public domain</span><button class="audio-edition-toggle" onclick="document.getElementById('t2').classList.toggle('show-note')" aria-label="About the narration">i</button><span class="audio-edition-note-text"> (the narration predates the 2020 text shown here; some wording differs)</span></span>
+    </div>
+    <span class="audio-queue-label">TRACK 1 OF 3</span>
+  </div>
+  <div class="audio-controls">
+    <button class="audio-ctrl-btn">&#9198;</button>
+    <button class="audio-ctrl-btn">&#8617; 10s</button>
+    <button class="audio-ctrl-btn" id="audio-play-btn">&#9654;</button>
+    <button class="audio-ctrl-btn">&#9197;</button>
+  </div>
+  <div class="audio-scrub-row">
+    <span>0:24</span><input type="range" id="audio-scrubber"><span>8:03</span>
+  </div>
+  <button class="audio-close-btn">&#10005;</button>
+</div>
+</div>
+
+</body></html>
