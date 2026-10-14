@@ -1,2 +1,5 @@
 Claude outputs/
 kjv_upload_progress.txt
+__pycache__/
+*.bak
+*.bak2
