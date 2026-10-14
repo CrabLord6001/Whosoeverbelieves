@@ -1218,45 +1218,104 @@
   /* Sits below the audio bar (z-index 500) so playback stays reachable while reading. */
   #reader-overlay {
     display: none; position: fixed; inset: 0; z-index: 400;
-    background: var(--bg);
+
+    /* The reader carries its own palette, pinned per theme, so the reading keeps
+       the look chosen here whatever the rest of the site is set to. */
+    --r-bg:       #0d1117;
+    --r-surface:  #151d2e;
+    --r-text:     #e8e6e0;
+    --r-text-mid: #a89f8c;
+    --r-faint:    #6a6358;
+    --r-rule:     rgba(255,255,255,0.10);
+    --r-gold:     #c9a84c;
+    --r-hl:       rgba(201,168,76,0.13);
+    --r-btn:      rgba(255,255,255,0.05);
+    --r-btn-br:   rgba(255,255,255,0.13);
+
+    /* Set from the settings sheet; the text scales from these three alone. */
+    --r-size: 1.08rem;
+    --r-lh:   1.8;
+    --r-font: 'EB Garamond', Georgia, serif;
+
+    background: var(--r-bg);
+    color: var(--r-text);
   }
-  #reader-overlay.open { display: flex; flex-direction: column; animation: fadeUp 0.2s ease both; }
+  #reader-overlay[data-rtheme="parchment"] {
+    --r-bg:#f6eedd; --r-surface:#efe5d0; --r-text:#2c2418; --r-text-mid:#5b4e38;
+    --r-faint:#8c7c60; --r-rule:rgba(80,64,36,0.20); --r-gold:#8a6a1f;
+    --r-hl:rgba(138,106,31,0.15); --r-btn:rgba(80,64,36,0.06); --r-btn-br:rgba(80,64,36,0.22);
+  }
+  #reader-overlay[data-rtheme="sepia"] {
+    --r-bg:#2b2318; --r-surface:#352c1f; --r-text:#e3d6bd; --r-text-mid:#b0a086;
+    --r-faint:#7d7059; --r-rule:rgba(227,214,189,0.13); --r-gold:#d4b36a;
+    --r-hl:rgba(212,179,106,0.14); --r-btn:rgba(227,214,189,0.06); --r-btn-br:rgba(227,214,189,0.16);
+  }
+  #reader-overlay[data-rtheme="black"] {
+    --r-bg:#000; --r-surface:#0b0b0c; --r-text:#d6d3cc; --r-text-mid:#908b81;
+    --r-faint:#625e57; --r-rule:rgba(255,255,255,0.10); --r-gold:#c9a84c;
+    --r-hl:rgba(201,168,76,0.12); --r-btn:rgba(255,255,255,0.05); --r-btn-br:rgba(255,255,255,0.14);
+  }
+
+  #reader-overlay.open { display: block; animation: fadeUp 0.2s ease both; }
   body.reader-open { overflow: hidden; }
 
   /* The notes window is z-index 300, under the reader. Lift it while the reader
      is open so writing a note keeps your place in the text instead of closing it. */
   body.reader-open .journal-overlay { z-index: 560; }
 
+  /* ── Header ──
+     Floats over the text rather than sitting above it, so hiding it on scroll
+     hands the whole screen to the reading. Two rows on the left (day, then
+     passage) with the controls spanning both on the right: the close button has
+     a row of its own to land on, which is what used to push it onto its own line. */
   .reader-head {
-    flex-shrink: 0;
-    display: flex; align-items: flex-start; justify-content: space-between;
-    gap: 1rem; flex-wrap: wrap;
-    padding: 0.9rem 1.25rem 0.75rem;
-    border-bottom: 1px solid var(--rule);
-    background: var(--surface);
+    position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center; column-gap: 0.9rem; row-gap: 0.05rem;
+    padding: 0.55rem 1rem 0.6rem;
+    border-bottom: 1px solid var(--r-rule);
+    background: var(--r-surface);
+    transition: transform 0.25s ease, opacity 0.2s ease;
   }
-  .reader-title {
-    min-width: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.1rem 0.6rem;
-  }
+  #reader-overlay.head-hidden .reader-head { transform: translateY(-101%); opacity: 0; }
+
   .reader-day {
-    font-family: 'Cinzel', serif; font-size: 0.62rem;
-    letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold);
-    white-space: nowrap;
+    grid-column: 1; grid-row: 1;
+    font-family: 'Cinzel', serif; font-size: 0.58rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--r-gold);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .reader-ref {
-    font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--text);
+    grid-column: 1; grid-row: 2;
+    font-family: 'Cormorant Garamond', serif; font-size: 1.28rem;
+    line-height: 1.25; color: var(--r-text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .reader-ref::before { content: '\2014'; margin-right: 0.5rem; color: var(--text-faint); font-size: 0.9rem; }
-  .reader-tools { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .reader-tools {
+    grid-column: 2; grid-row: 1 / span 2;
+    display: flex; align-items: center; gap: 0.35rem;
+  }
+  .reader-day-tools { display: flex; align-items: center; gap: 0.35rem; }
 
-  /* The day's own controls, so opening a day needs no second click: a third
-     section of the header row, alongside the title and the trans/close tools. */
-  .reader-actions {
-    display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+  /* One button style for the whole reader: filled, sentence case, no letter-spacing,
+     and a tap target that clears 40px. Labels appear once there is room for them. */
+  .reader-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.4em;
+    min-width: 40px; height: 40px; margin: 0; padding: 0 0.6rem;
+    font-family: 'Cormorant Garamond', serif; font-size: 0.98rem;
+    letter-spacing: 0; text-transform: none; font-weight: 400;
+    background: var(--r-btn); border: 1px solid var(--r-btn-br);
+    color: var(--r-text-mid); border-radius: 9px; cursor: pointer; line-height: 1;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
-  .reader-actions .read-btn,
-  .reader-actions .listen-btn { margin-top: 0; }
-  .reader-actions .day-check-label { font-size: 0.82rem; }
+  .reader-btn:hover { border-color: var(--r-gold); color: var(--r-gold); }
+  .reader-btn.on, .reader-btn.playing {
+    background: var(--r-hl); border-color: var(--r-gold); color: var(--r-gold);
+  }
+  .reader-btn .ico { font-size: 1rem; line-height: 1; }
+  .reader-btn .lbl { display: none; }
+  .reader-btn .aa  { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
+  @media (min-width: 760px) { .reader-btn .lbl { display: inline; } }
 
   /* Passage label on a list card opens the reader */
   .passage-open {
@@ -1267,112 +1326,259 @@
   }
   .passage-open:hover { color: var(--gold-light); }
 
-  .reader-close {
-    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em;
-    background: none; border: 1px solid var(--rule); border-radius: 2px;
-    color: var(--text-faint); cursor: pointer; padding: 0.26rem 0.6rem;
-    transition: all 0.15s;
-  }
-  .reader-close:hover { border-color: var(--gold); color: var(--gold); }
-
-  /* ── Sync strip: only while this day's audio is playing ── */
-  .reader-syncbar {
-    display: none; flex-shrink: 0;
-    align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;
-    padding: 0.45rem 1.25rem;
-    border-bottom: 1px solid var(--rule);
-    background: var(--gold-faint);
-  }
-  #reader-overlay.synced .reader-syncbar { display: flex; }
-  .sp-sync-note {
+  /* ── One-time hint, in place of the old permanent sync strip ── */
+  .reader-hint {
+    position: absolute; z-index: 2; left: 50%;
+    top: calc(var(--r-head-h, 86px) + 0.55rem);
+    max-width: calc(100% - 2rem);
+    display: none; align-items: center; gap: 0.6rem;
+    padding: 0.4rem 0.5rem 0.4rem 0.9rem; border-radius: 999px;
+    background: var(--r-surface); border: 1px solid var(--r-rule);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.3);
     font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 0.8rem; color: var(--text-mid);
+    font-size: 0.85rem; color: var(--r-text-mid);
+    opacity: 0; transform: translateX(-50%) translateY(-0.4rem);
+    transition: opacity 0.25s ease, transform 0.25s ease;
   }
-  .sync-nudge { display: flex; align-items: center; gap: 0.4rem; }
-  .sync-nudge button {
-    font-family: 'Cinzel', serif; font-size: 0.6rem;
-    padding: 0.2rem 0.5rem; border: 1px solid var(--rule); border-radius: 2px;
-    background: none; color: var(--text-mid); cursor: pointer; transition: all 0.15s;
+  #reader-overlay.hint-on .reader-hint {
+    display: flex; opacity: 1; transform: translateX(-50%) translateY(0);
   }
-  .sync-nudge button:hover { border-color: var(--gold); color: var(--gold); }
-  .sync-nudge-val {
-    font-family: 'Cormorant Garamond', serif; font-size: 0.8rem;
-    color: var(--text-mid); min-width: 6.5rem; text-align: center;
+  .reader-hint-x {
+    width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%;
+    background: none; border: 1px solid var(--r-btn-br); color: var(--r-faint);
+    cursor: pointer; line-height: 1; font-size: 0.7rem;
   }
+  .reader-hint-x:hover { border-color: var(--r-gold); color: var(--r-gold); }
 
   /* ── The text ── */
   .sp-body {
-    flex: 1; overflow-y: auto;
-    padding: 1.4rem 1.25rem 2.5rem;
+    position: absolute; inset: 0; overflow-y: auto;
+    padding: calc(var(--r-head-h, 86px) + 1.2rem) 1.25rem 3rem;
     scrollbar-width: thin;
   }
   .sp-body::-webkit-scrollbar { width: 6px; }
   .sp-body::-webkit-scrollbar-track { background: transparent; }
-  .sp-body::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+  .sp-body::-webkit-scrollbar-thumb { background: var(--r-gold); border-radius: 3px; }
   /* Measure grows with the window instead of stranding it in a narrow column. */
   .sp-body > * { max-width: 40rem; margin-left: auto; margin-right: auto; }
-  body.audio-active .sp-body { padding-bottom: 7rem; }
+  body.audio-active .sp-body { padding-bottom: 8rem; }
 
   .sp-chapter {
     font-family: 'Cinzel', serif; font-size: 0.68rem; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--gold);
-    padding-bottom: 0.35rem; margin: 2rem auto 0.9rem;
-    border-bottom: 1px solid var(--rule);
+    text-transform: uppercase; color: var(--r-gold);
+    padding-bottom: 0.35rem; margin: 2.2rem auto 0.9rem;
+    border-bottom: 1px solid var(--r-rule);
   }
   .sp-chapter:first-child { margin-top: 0; }
 
   .sp-psalm-title {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 0.95rem; color: var(--text-mid); margin-bottom: 0.7rem;
+    font-size: 0.95rem; color: var(--r-text-mid); margin-bottom: 0.7rem;
   }
 
+  /* Verses live in their own block so the measure holds in either layout. */
+  .sp-verses {
+    font-family: var(--r-font); font-size: var(--r-size);
+    line-height: var(--r-lh); color: var(--r-text);
+  }
   .sv {
     display: block;
-    font-family: 'EB Garamond', Georgia, serif;
-    font-size: 1.12rem; line-height: 1.8; color: var(--text);
     padding: 0.18rem 0.5rem 0.18rem 0.6rem;
-    border-left: 2px solid transparent;
-    border-radius: 2px;
+    border-left: 2px solid transparent; border-radius: 2px;
     transition: background 0.3s, border-color 0.3s;
   }
+  /* Paragraph layout: verses run on as prose, the way a printed Bible sets them. */
+  #reader-overlay[data-rlayout="paragraph"] .sv {
+    display: inline; padding: 0; border-left: none;
+    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  }
+  #reader-overlay[data-rlayout="paragraph"] .sv.active {
+    background: var(--r-hl); border-radius: 3px;
+  }
   .sv-num {
-    font-family: 'Cinzel', serif; font-size: 0.6rem;
-    color: var(--gold); vertical-align: super;
+    font-family: 'Cinzel', serif; font-size: 0.56em;
+    color: var(--r-gold); vertical-align: super;
     margin-right: 0.25rem; user-select: none;
   }
   .sv-absent {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 0.88rem; color: var(--text-faint);
+    font-size: 0.88em; color: var(--r-faint);
   }
   #reader-overlay.synced .sv { cursor: pointer; }
   @media (hover: hover) {
     #reader-overlay.synced .sv:hover { background: rgba(201,168,76,0.07); }
   }
-  .sv.active { background: var(--gold-faint); border-left-color: var(--gold); }
-  :root.light-mode .sv.active { background: rgba(138,106,31,0.14); }
+  .sv.active { background: var(--r-hl); border-left-color: var(--r-gold); }
 
   .sp-msg {
     font-family: 'Cormorant Garamond', serif; font-style: italic;
-    font-size: 0.95rem; color: var(--text-mid); padding: 1rem 0;
+    font-size: 0.95rem; color: var(--r-text-mid); padding: 1rem 0;
+  }
+
+  /* ── Marking the day done, where you finish rather than where you start ── */
+  .reader-finish {
+    max-width: 40rem; margin: 2.75rem auto 0;
+    padding-top: 1.5rem; border-top: 1px solid var(--r-rule);
+  }
+  .reader-done-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    width: 100%; min-height: 54px; padding: 0.8rem 1rem;
+    font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--r-btn); border: 1px solid var(--r-btn-br);
+    color: var(--r-text-mid); border-radius: 10px; cursor: pointer;
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+  }
+  .reader-done-btn:hover { border-color: var(--r-gold); color: var(--r-gold); }
+  .reader-done-btn.done {
+    background: var(--r-hl); border-color: var(--r-gold); color: var(--r-gold);
+  }
+  .reader-done-btn .tick { font-size: 1rem; line-height: 1; }
+
+  /* ── Settings sheet ── */
+  .reader-sheet-scrim {
+    position: absolute; inset: 0; z-index: 8; background: rgba(0,0,0,0.45);
+    opacity: 0; pointer-events: none; transition: opacity 0.22s ease;
+  }
+  #reader-overlay.sheet-open .reader-sheet-scrim { opacity: 1; pointer-events: auto; }
+
+  .reader-sheet {
+    position: absolute; left: 0; right: 0; z-index: 9;
+    bottom: var(--r-sheet-bottom, 0px);
+    max-height: 85%; overflow-y: auto;
+    padding: 0.5rem 1.1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    background: var(--r-surface); border-top: 1px solid var(--r-rule);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.45);
+    transform: translateY(calc(100% + var(--r-sheet-bottom, 0px)));
+    transition: transform 0.26s cubic-bezier(0.22, 0.8, 0.3, 1);
+  }
+  #reader-overlay.sheet-open .reader-sheet { transform: translateY(0); }
+  @media (min-width: 760px) {
+    #reader-overlay.sheet-open .reader-sheet-scrim { background: rgba(0,0,0,0.12); }
+    .reader-sheet {
+      left: auto; right: 1.25rem; width: 25rem;
+      bottom: calc(var(--r-sheet-bottom, 0px) + 1.25rem);
+      border: 1px solid var(--r-rule); border-radius: 14px;
+      transform: translateY(calc(100% + var(--r-sheet-bottom, 0px) + 2rem));
+    }
+  }
+
+  .reader-sheet-grab {
+    width: 38px; height: 4px; border-radius: 2px; margin: 0.35rem auto 0.9rem;
+    background: var(--r-btn-br);
+  }
+  @media (min-width: 760px) { .reader-sheet-grab { display: none; } }
+
+  .reader-sheet-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; margin-bottom: 1rem;
+  }
+  .reader-sheet-title {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--r-gold);
+  }
+
+  .rs-group { margin-bottom: 1rem; }
+  .rs-group:last-child { margin-bottom: 0.2rem; }
+  .rs-label {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-family: 'Cormorant Garamond', serif; font-size: 0.88rem; color: var(--r-text-mid);
+  }
+  .rs-val { font-size: 0.8rem; color: var(--r-faint); }
+  .rs-row { display: flex; align-items: center; gap: 0.8rem; }
+
+  .rs-themes { display: flex; gap: 0.55rem; }
+  .rs-theme {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+    background: none; border: none; padding: 0; cursor: pointer;
+  }
+  .rs-swatch {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 48px; border-radius: 10px;
+    border: 1px solid var(--r-btn-br);
+    font-family: 'Cormorant Garamond', serif; font-size: 1.15rem;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+  }
+  .rs-theme:hover .rs-swatch { transform: translateY(-1px); }
+  .rs-theme.on .rs-swatch { border-color: var(--r-gold); box-shadow: 0 0 0 1.5px var(--r-gold); }
+  .rs-swatch-name {
+    font-family: 'Cormorant Garamond', serif; font-size: 0.74rem; color: var(--r-faint);
+  }
+  .rs-theme.on .rs-swatch-name { color: var(--r-gold); }
+  .sw-navy      { background: #0d1117; color: #e8e6e0; }
+  .sw-parchment { background: #f6eedd; color: #2c2418; }
+  .sw-sepia     { background: #2b2318; color: #e3d6bd; }
+  .sw-black     { background: #000;    color: #d6d3cc; }
+
+  .rs-seg { display: flex; gap: 0.45rem; }
+  .rs-seg button {
+    flex: 1; min-height: 46px; padding: 0.5rem 0.35rem;
+    background: var(--r-btn); border: 1px solid var(--r-btn-br);
+    color: var(--r-text-mid); border-radius: 9px; cursor: pointer;
+    font-size: 0.92rem; line-height: 1.2;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .rs-seg button:hover { border-color: var(--r-gold); color: var(--r-gold); }
+  .rs-seg button.on {
+    background: var(--r-hl); border-color: var(--r-gold); color: var(--r-gold);
+  }
+
+  .rs-slider {
+    flex: 1; min-width: 0; height: 4px; border-radius: 2px;
+    -webkit-appearance: none; appearance: none;
+    background: var(--r-btn-br); outline: none; cursor: pointer;
+  }
+  .rs-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 26px; height: 26px; border-radius: 50%; border: none;
+    background: var(--r-gold); cursor: pointer;
+  }
+  .rs-slider::-moz-range-thumb {
+    width: 26px; height: 26px; border-radius: 50%; border: none;
+    background: var(--r-gold); cursor: pointer;
+  }
+  .rs-end {
+    flex-shrink: 0; font-family: 'Cormorant Garamond', serif; color: var(--r-text-mid);
+  }
+  .rs-end.sm { font-size: 0.85rem; }
+  .rs-end.lg { font-size: 1.4rem; }
+
+  /* Audio sync lives here now, and only while this day's narration is playing. */
+  .rs-sync { display: none; }
+  #reader-overlay.synced .rs-sync { display: block; }
+  .sp-sync-note {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.84rem; color: var(--r-faint);
+  }
+  .rs-nudge { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
+  #reader-overlay.exact .rs-nudge { display: none; }
+  .rs-nudge button {
+    min-width: 58px; min-height: 42px;
+    background: var(--r-btn); border: 1px solid var(--r-btn-br); color: var(--r-text-mid);
+    border-radius: 8px; cursor: pointer;
+    font-family: 'Cormorant Garamond', serif; font-size: 0.9rem;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .rs-nudge button:hover { border-color: var(--r-gold); color: var(--r-gold); }
+  .sync-nudge-val {
+    flex: 1; text-align: center;
+    font-family: 'Cormorant Garamond', serif; font-size: 0.88rem; color: var(--r-text-mid);
   }
 
   @media (min-width: 1200px) {
-    .sp-body > * { max-width: 46rem; }
-    .sv { font-size: 1.2rem; }
+    .sp-body > * { max-width: 44rem; }
   }
 
   @media (max-width: 600px) {
-    .reader-actions .read-btn, .reader-actions .listen-btn { font-size: 0.58rem; padding: 0.24rem 0.5rem; }
-    .reader-actions .day-check-label { font-size: 0.78rem; }
-    .reader-head { padding: 0.7rem 0.9rem 0.6rem; gap: 0.6rem; }
-    .reader-ref { font-size: 1.02rem; }
-    .reader-syncbar { padding: 0.4rem 0.9rem; }
-    .sp-body { padding: 1.1rem 0.95rem 2rem; }
-    .sv { font-size: 1rem; line-height: 1.8; }
-    .sync-nudge-val { min-width: 5.5rem; font-size: 0.75rem; }
-    body.audio-active .sp-body { padding-bottom: 9rem; }
+    .reader-head { padding: 0.5rem 0.7rem 0.55rem; column-gap: 0.5rem; }
+    .reader-ref { font-size: 1.16rem; }
+    .reader-tools, .reader-day-tools { gap: 0.25rem; }
+    .reader-btn { min-width: 38px; height: 38px; padding: 0 0.42rem; }
+    .sp-body { padding-left: 0.95rem; padding-right: 0.95rem; }
+    body.audio-active .sp-body { padding-bottom: 10rem; }
   }
-
 
   #audio-player-bar {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 500;
@@ -5049,7 +5255,7 @@ const EBIBLE_FOLDER = {
   'Psalms':          '19_Psalms',
   'Proverbs':        '20_Proverbs',
   'Ecclesiastes':    '21_Ecclesiastes',
-  'Song of Solomon': '22_Song_of_Solomon',
+  'Song of Songs':   '22_Song_of_Solomon',
   'Isaiah':          '23_Isaiah',
   'Jeremiah':        '24_Jeremiah',
   'Lamentations':    '25_Lamentations',
@@ -5193,6 +5399,137 @@ function _refreshReadingTimes() {
   });
 }
 
+// ══════════════════════════════════════════════════════════════
+// READER SETTINGS — theme, typeface, size, spacing, layout
+// Scoped to the reader so a reading can be set up for comfort without
+// changing how the rest of the site looks.
+// ══════════════════════════════════════════════════════════════
+const R_FONTS = {
+  garamond:  "'EB Garamond', Georgia, serif",
+  cormorant: "'Cormorant Garamond', Georgia, serif",
+  sans:      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+};
+const R_THEMES   = ['navy', 'parchment', 'sepia', 'black'];
+const R_SIZE_DEF = 1.08;
+
+let _rPrefs = {
+  theme:  _lsGet('wb-reader-theme',  'navy'),
+  font:   _lsGet('wb-reader-font',   'garamond'),
+  size:   parseFloat(_lsGet('wb-reader-size', String(R_SIZE_DEF))) || R_SIZE_DEF,
+  lh:     parseFloat(_lsGet('wb-reader-lh',   '1.8')) || 1.8,
+  layout: _lsGet('wb-reader-layout', 'verse')
+};
+
+function _readerApplyPrefs() {
+  const o = document.getElementById('reader-overlay');
+  if (!o) return;
+  if (R_THEMES.indexOf(_rPrefs.theme) < 0) _rPrefs.theme = 'navy';
+  if (!R_FONTS[_rPrefs.font]) _rPrefs.font = 'garamond';
+  _rPrefs.size = Math.min(1.75, Math.max(0.9, _rPrefs.size));
+  _rPrefs.lh   = Math.min(2.4,  Math.max(1.4, _rPrefs.lh));
+
+  o.setAttribute('data-rtheme', _rPrefs.theme);
+  o.setAttribute('data-rlayout', _rPrefs.layout === 'paragraph' ? 'paragraph' : 'verse');
+  o.style.setProperty('--r-font', R_FONTS[_rPrefs.font]);
+  o.style.setProperty('--r-size', _rPrefs.size.toFixed(2) + 'rem');
+  o.style.setProperty('--r-lh',   _rPrefs.lh.toFixed(2));
+
+  o.querySelectorAll('.rs-theme').forEach(b  => b.classList.toggle('on', b.dataset.v === _rPrefs.theme));
+  o.querySelectorAll('.rs-font').forEach(b   => b.classList.toggle('on', b.dataset.v === _rPrefs.font));
+  o.querySelectorAll('.rs-layout').forEach(b => b.classList.toggle('on', b.dataset.v === _rPrefs.layout));
+
+  const sz = document.getElementById('rs-size'); if (sz) sz.value = _rPrefs.size;
+  const lh = document.getElementById('rs-lh');   if (lh) lh.value = _rPrefs.lh;
+  const szv = document.getElementById('rs-size-val');
+  if (szv) szv.textContent = Math.round((_rPrefs.size / R_SIZE_DEF) * 100) + '%';
+  const lhv = document.getElementById('rs-lh-val');
+  if (lhv) lhv.textContent = _rPrefs.lh.toFixed(2).replace(/0$/, '');
+}
+
+function readerSetPref(key, val) {
+  if (key === 'size' || key === 'lh') val = parseFloat(val);
+  _rPrefs[key] = val;
+  _lsSet('wb-reader-' + key, String(val));
+  _readerApplyPrefs();
+}
+
+function toggleReaderSheet(force) {
+  const o = document.getElementById('reader-overlay');
+  if (!o) return;
+  const open = (force === undefined) ? !o.classList.contains('sheet-open') : !!force;
+
+  // The player bar sits above the reader, so the sheet stops short of it
+  // rather than hiding the controls for whatever is playing.
+  const bar = document.getElementById('audio-player-bar');
+  const barH = (bar && document.body.classList.contains('audio-active')) ? bar.offsetHeight : 0;
+  o.style.setProperty('--r-sheet-bottom', barH + 'px');
+
+  o.classList.toggle('sheet-open', open);
+  const btn = document.getElementById('reader-settings-btn');
+  if (btn) {
+    btn.classList.toggle('on', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  if (open) _readerShowHead();
+}
+
+// ── Header hides as you read down, returns as you read back up ──
+let _rLastScroll  = 0;
+let _rAutoScrollAt = 0;
+let _rHintTimer   = null;
+
+function _readerShowHead() {
+  const o = document.getElementById('reader-overlay');
+  if (o) o.classList.remove('head-hidden');
+}
+
+function _readerWireChrome() {
+  const o    = document.getElementById('reader-overlay');
+  if (!o || o.dataset.chromeWired) return;
+  const head = o.querySelector('.reader-head');
+  const body = o.querySelector('.sp-body');
+  if (!head || !body) return;
+  o.dataset.chromeWired = '1';
+
+  const measure = () => o.style.setProperty('--r-head-h', head.offsetHeight + 'px');
+  measure();
+  if (window.ResizeObserver) new ResizeObserver(measure).observe(head);
+  window.addEventListener('resize', measure);
+
+  body.addEventListener('scroll', () => {
+    const y = body.scrollTop;
+    // Leave the header alone while the sheet is open or the sync is scrolling for us.
+    if (o.classList.contains('sheet-open') || Date.now() - _rAutoScrollAt < 1200) {
+      _rLastScroll = y; return;
+    }
+    if (y < 72)                     o.classList.remove('head-hidden');
+    else if (y > _rLastScroll + 8)  o.classList.add('head-hidden');
+    else if (y < _rLastScroll - 8)  o.classList.remove('head-hidden');
+    _rLastScroll = y;
+  }, { passive: true });
+
+  // Tapping the page brings the header back, which is what a reader reaches for.
+  body.addEventListener('click', e => {
+    if (o.classList.contains('head-hidden') && !e.target.closest('button, a')) _readerShowHead();
+  });
+}
+
+function _readerShowHint() {
+  const o = document.getElementById('reader-overlay');
+  if (!o || _lsGet('wb-reader-hint', '') === 'off') return;
+  if (o.classList.contains('hint-on')) return;
+  o.classList.add('hint-on');
+  clearTimeout(_rHintTimer);
+  _rHintTimer = setTimeout(() => o.classList.remove('hint-on'), 7000);
+}
+
+function readerDismissHint(forever) {
+  const o = document.getElementById('reader-overlay');
+  if (o) o.classList.remove('hint-on');
+  clearTimeout(_rHintTimer);
+  if (forever) _lsSet('wb-reader-hint', 'off');
+}
+
 function openReader(dayIdx) {
   const day = currentPlan[dayIdx];
   if (!day || day.isGrace) return;
@@ -5212,6 +5549,10 @@ function openReader(dayIdx) {
   overlay.querySelector('.reader-ref').textContent = label;
   overlay.classList.add('open');
   document.body.classList.add('reader-open');
+  overlay.classList.remove('head-hidden', 'sheet-open', 'hint-on');
+  _rLastScroll = 0;
+  _readerApplyPrefs();
+  _readerWireChrome();
 
   _renderReaderActions(dayIdx);
   _syncRefreshNudge();
@@ -5220,27 +5561,44 @@ function openReader(dayIdx) {
 }
 
 // The day's own controls live in the reader, so opening a day is one step.
+// Notes and Listen sit in the header; marking the day done waits at the foot of
+// the reading, which is where you actually finish it.
 function _renderReaderActions(dayIdx) {
-  const day = currentPlan[dayIdx];
-  const el = document.querySelector('#reader-overlay .reader-actions');
+  const el = document.querySelector('#reader-overlay .reader-day-tools');
   if (!el) return;
-  const done = !!checkStates[dayIdx];
+  const playing = (_activeDayIdx === dayIdx && !_audio.paused);
   el.innerHTML = `
-    <div class="day-check-row" style="margin:0;">
-      <input type="checkbox" class="day-checkbox" id="rd-chk-${dayIdx}" ${done ? 'checked' : ''}
-        onchange="readerToggleCheck(${dayIdx}, this)">
-      <label class="day-check-label" for="rd-chk-${dayIdx}">${done ? 'Completed' : 'Mark Complete'}</label>
-    </div>
-    <button class="read-btn" onclick="readerOpenJournal(${dayIdx})">
-      ${reflections[dayIdx] ? '✎ Notes' : '✦ Notes'}
+    <button class="reader-btn" onclick="readerOpenJournal(${dayIdx})"
+            aria-label="Notes for this day" title="Notes">
+      <span class="ico">${reflections[dayIdx] ? '✎' : '✦'}</span><span class="lbl">Notes</span>
     </button>
-    <button class="listen-btn" data-day="${dayIdx}" onclick="listenDay(${dayIdx})">🔊 Listen</button>`;
+    <button class="reader-btn listen-btn${playing ? ' playing' : ''}" data-day="${dayIdx}"
+            onclick="listenDay(${dayIdx})"
+            aria-label="Listen to this reading" title="Listen">
+      <span class="ico">▶︎</span><span class="lbl">${playing ? 'Playing' : 'Listen'}</span>
+    </button>`;
+}
+
+function _readerFinishHtml(dayIdx) {
+  const done = !!checkStates[dayIdx];
+  return `<div class="reader-finish">
+    <button class="reader-done-btn${done ? ' done' : ''}" onclick="readerToggleCheck(${dayIdx}, this)">
+      <span class="tick">${done ? '✓' : '○'}</span>
+      <span>${done ? 'Completed' : 'Mark this day complete'}</span>
+    </button>
+  </div>`;
+}
+
+function _refreshReaderFinish(dayIdx) {
+  const wrap = document.querySelector('#reader-overlay .reader-finish');
+  if (wrap) wrap.outerHTML = _readerFinishHtml(dayIdx);
 }
 
 function readerToggleCheck(dayIdx, input) {
   toggleCheck(dayIdx);
   if (checkStates[dayIdx] && typeof launchConfetti === 'function') launchConfetti(input);
   _renderReaderActions(dayIdx);
+  _refreshReaderFinish(dayIdx);
 }
 
 function readerOpenJournal(dayIdx) {
@@ -5248,7 +5606,9 @@ function readerOpenJournal(dayIdx) {
 }
 
 function closeReader() {
-  document.getElementById('reader-overlay').classList.remove('open');
+  const o = document.getElementById('reader-overlay');
+  o.classList.remove('sheet-open', 'head-hidden', 'hint-on');
+  o.classList.remove('open');
   document.body.classList.remove('reader-open');
   _readerDay = -1;
 }
@@ -5292,6 +5652,7 @@ function renderScripture(dayIdx) {
           html += `<div class="sp-msg">This chapter isn't available in ${_escHtml(meta.label)}.</div>`;
           return;
         }
+        html += '<div class="sp-verses">';
         verses.forEach((text, i) => {
           // A few verses (Luke 17:36, Acts 8:37, 15:34, 24:7) are absent from the
           // Greek the WEB follows and sit in its footnotes. Say so rather than
@@ -5301,11 +5662,12 @@ function renderScripture(dayIdx) {
             : `<span class="sv-absent">Not in the text this translation follows.</span>`;
           html += `<span class="sv${text ? '' : ' empty'}" data-book="${_escHtml(ch.book)}" ` +
                   `data-ch="${ch.chapter}" data-v="${i + 1}">` +
-                  `<span class="sv-num">${i + 1}</span>${inner}</span>`;
+                  `<span class="sv-num">${i + 1}</span>${inner}</span> `;
         });
+        html += '</div>';
       });
 
-      body.innerHTML = html;
+      body.innerHTML = html + _readerFinishHtml(dayIdx);
       _wireVerseTaps();
       _syncPrepare();
       _syncUpdate(true);
@@ -5349,9 +5711,55 @@ const SYNC_TAIL_MAX = 2.0;
 const SYNC_OFFSET_MIN = -5;
 const SYNC_OFFSET_MAX = 20;
 
-function _syncBuildStarts(verses, duration) {
-  const lead = Math.min(duration * 0.15, SYNC_LEAD_FLAT);
-  const tail = Math.min(SYNC_TAIL_MAX, duration * 0.01);
+// ── MEASURED VERSE TIMINGS ──────────────────────────────
+// Built by forced-aligning this same narration against this same WEB text, so
+// the highlight follows the voice instead of guessing at it. One file per book:
+//
+//   /bible/timings/web/<book>.json
+//   { "c": { "23": { "dur": 174.76, "v": [11.46, 18.2, ...] } } }
+//
+// "v" holds each verse's start in seconds. Where a chapter has been aligned the
+// reader uses these times and no nudging is needed; anything not yet aligned
+// falls back to the proportional estimate below, with the nudge still offered.
+const _timingCache = {};   // book -> doc | null (null = asked, none published)
+const _timingFetch = {};   // in-flight promises
+let   _syncExact   = false;
+
+// Aligned times belong to the exact file they were measured from, so the
+// duration the browser loaded has to match before they can be trusted.
+const TIMING_DUR_TOLERANCE = 1.5;
+
+// Keyed by narration as well as book: the WEB and KJV recordings are different
+// readers with different pacing, so each has its own timing files.
+function _timingKey(book, trans) { return `${trans || 'WEB'}|${book}`; }
+
+function _timingLoad(book, trans) {
+  const key = _timingKey(book, trans);
+  if (key in _timingCache) return Promise.resolve(_timingCache[key]);
+  if (_timingFetch[key]) return _timingFetch[key];
+  const dir = (trans || 'WEB').toLowerCase();
+  const url = `/bible/timings/${dir}/${_bibleSlug(book)}.json`;
+  _timingFetch[key] = fetch(url)
+    .then(r => (r.ok ? r.json() : null))
+    .then(doc => { _timingCache[key] = doc; delete _timingFetch[key]; return doc; })
+    .catch(() => { _timingCache[key] = null; delete _timingFetch[key]; return null; });
+  return _timingFetch[key];
+}
+
+function _timingFor(book, chapter, duration, trans) {
+  const doc = _timingCache[_timingKey(book, trans)];
+  if (!doc || !doc.c) return null;
+  const rec = doc.c[String(chapter)];
+  if (!rec || !rec.v || !rec.v.length) return null;
+  if (!(Math.abs(rec.dur - duration) <= TIMING_DUR_TOLERANCE)) return null;
+  return rec.v;
+}
+
+function _syncBuildStarts(verses, duration, trans) {
+  // The KJV clips are cut to start at verse 1 and stop after the last word,
+  // so they have no spoken announcement to allow for.
+  const lead = trans === 'KJV' ? 0.4 : Math.min(duration * 0.15, SYNC_LEAD_FLAT);
+  const tail = trans === 'KJV' ? 0.3 : Math.min(SYNC_TAIL_MAX, duration * 0.01);
   const span = Math.max(1, duration - lead - tail);
   const lens = verses.map(v => Math.max(12, v.length));
   const total = lens.reduce((a, b) => a + b, 0) || 1;
@@ -5385,6 +5793,7 @@ function _syncPrepare() {
   const live  = !!track && _readerDay >= 0 && _activeDayIdx === _readerDay;
   const overlay = document.getElementById('reader-overlay');
   if (overlay) overlay.classList.toggle('synced', live);
+  if (live) _readerShowHint(); else readerDismissHint(false);
 
   if (!live || !_audio.duration || !isFinite(_audio.duration)) { _syncStarts = null; return; }
 
@@ -5396,8 +5805,26 @@ function _syncPrepare() {
 
   if (key !== _syncKey) { _syncAnchor = null; _syncActive = -1; }
   _syncKey = key;
-  _syncStarts = _syncBuildStarts(verses, _audio.duration);
-  _syncNote('Tap a verse to jump there');
+
+  const measured = _timingFor(track.book, track.chapter, _audio.duration, track.trans);
+  if (measured) {
+    _syncExact   = true;
+    _syncStarts  = measured;
+    _syncAnchor  = null;          // measured times need no anchoring
+    _syncNote('Timed to this recording \u00b7 tap a verse to jump there');
+  } else {
+    _syncExact  = false;
+    _syncStarts = _syncBuildStarts(verses, _audio.duration, track.trans);
+    _syncNote('Estimated pacing \u00b7 tap a verse to jump there');
+    // First time this book comes up, see whether timings exist for it.
+    if (!(_timingKey(track.book, track.trans) in _timingCache)) {
+      _timingLoad(track.book, track.trans).then(doc => {
+        if (doc && _syncKey === key) { _syncPrepare(); _syncUpdate(true); }
+      });
+    }
+  }
+  if (overlay) overlay.classList.toggle('exact', _syncExact);
+  _syncRefreshNudge();
 }
 
 function _syncNote(msg) {
@@ -5428,8 +5855,12 @@ function _syncUpdate(force) {
   const track = _syncCurrentTrack();
   if (!track) return;
 
-  const starts = _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
-  const t = _audio.currentTime - _syncOffset;
+  // Measured times are used as they are; only the estimate gets remapped to an
+  // anchor, and only the estimate honours the reader's manual delay.
+  const starts = _syncExact
+    ? _syncStarts
+    : _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
+  const t = _audio.currentTime - (_syncExact ? 0 : _syncOffset);
   let idx = 0;
   for (let i = 0; i < starts.length; i++) { if (t >= starts[i]) idx = i; else break; }
   if (idx === _syncActive && !force) return;
@@ -5444,6 +5875,7 @@ function _syncUpdate(force) {
   target.classList.add('active');
 
   if (Date.now() - _spScrolledAt > 6000) {
+    _rAutoScrollAt = Date.now();
     const top = target.offsetTop - body.offsetTop - body.clientHeight / 2 + target.offsetHeight / 2;
     body.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }
@@ -5470,28 +5902,85 @@ function _wireVerseTaps() {
       if (book !== track.book || ch !== track.chapter) return;  // another chapter of the day
 
       const i = Number(el.dataset.v) - 1;
-      const starts = _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
+      const starts = _syncExact
+        ? _syncStarts
+        : _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
       const target = starts[i];
       if (!isFinite(target)) return;
 
-      _audio.currentTime = target + _syncOffset;
-      _syncAnchor = { i, t: target };   // this verse is now a fixed point
+      _audio.currentTime = target + (_syncExact ? 0 : _syncOffset);
+      // On a measured chapter the tap is just a jump; on an estimate it also
+      // re-anchors the guess so the rest of the chapter follows from here.
+      if (!_syncExact) _syncAnchor = { i, t: target };
       _spScrolledAt = 0;
       _syncActive = -1;
       _syncUpdate(true);
       if (_audio.paused) _audio.play().catch(() => {});
-      _syncNote('Synced from verse ' + (i + 1));
+      _syncNote(_syncExact
+        ? 'Timed to this recording \u00b7 jumped to verse ' + (i + 1)
+        : 'Synced from verse ' + (i + 1));
     };
   });
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && _readerDay >= 0) closeReader();
+  if (e.key !== 'Escape' || _readerDay < 0) return;
+  const o = document.getElementById('reader-overlay');
+  if (o && o.classList.contains('sheet-open')) { toggleReaderSheet(false); return; }
+  closeReader();
 });
 
-function getAudioUrl(book, chapter) {
+// ── Chapter → audio file number ─────────────────────────────
+// The chapter MP3s were uploaded in the order their links appeared on eBible's
+// index pages, so wherever that listing repeated or reordered a file, the
+// numbering drifted off the chapter it actually contains. Verified by
+// transcribing the spoken announcement of all 1,189 files (Oct 2026):
+//
+//   Psalms           eBible lists Psalm 71 twice — files 71 and 72 are byte
+//                    identical — so chapters 72-150 sit one file later and
+//                    Psalm 150 is in _151.mp3.
+//   Luke             the same duplicate at chapter 17, so 18-24 sit one later
+//                    and Luke 24 is in _25.mp3.
+//   Isaiah           files 16 and 17 hold each other's chapter.
+//   2 Thessalonians  rotated: ch 1 is in file 2, ch 2 in file 3, ch 3 in file 1.
+//
+// Every other chapter matches its filename. Fixing it here rather than renaming
+// in R2 keeps one source of truth; if the bucket is ever re-uploaded cleanly,
+// delete this function and the call to it.
+function audioFileNumber(book, chapter) {
+  if (book === 'Psalms' && chapter >= 72) return chapter + 1;
+  if (book === 'Luke'   && chapter >= 18) return chapter + 1;
+  if (book === 'Isaiah' && (chapter === 16 || chapter === 17)) return 33 - chapter;
+  if (book === '2 Thessalonians') return { 1: 2, 2: 3, 3: 1 }[chapter] || chapter;
+  return chapter;
+}
+
+// Human-read KJV chapters: LibriVox volunteer recordings (public domain), cut
+// into one file per chapter with the LibriVox intros and outros removed, and
+// hosted beside the WEB audio under kjv/. Each entry is [first, last, reader].
+// A KJV plan plays these where they exist and falls back to the WEB narration
+// for books not yet prepared.
+const KJV_AUDIO = {
+  'Isaiah': [[1, 6, 'Michael Packard'], [7, 12, 'Sundiata'], [13, 15, 'Abigail Rasmussen'],
+             [16, 18, 'Sundiata'], [19, 24, 'Abigail Rasmussen'], [25, 33, 'Beth Thomas'],
+             [34, 36, 'debolee'], [37, 45, 'Sundiata'], [46, 48, 'debolee'], [49, 51, 'Sundiata'],
+             [52, 54, 'TriciaG'], [55, 57, 'Sundiata'], [58, 60, 'Brian Dole'],
+             [61, 66, 'Michael Packard']],
+};
+
+function kjvReader(book, chapter) {
+  const r = (KJV_AUDIO[book] || []).find(([a, b]) => chapter >= a && chapter <= b);
+  return r ? r[2] : null;
+}
+
+function getAudioUrl(book, chapter, trans) {
   const folder = EBIBLE_FOLDER[book] || ('00_' + book.replace(/\s+/g, '_'));
-  return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${folder}/${folder}_${chapter}.mp3`;
+  // KJV files are named by their real chapter, so no eBible renumbering here.
+  if (trans === 'KJV') {
+    return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/kjv/${folder}/${folder}_${chapter}.mp3`;
+  }
+  const fileNo = audioFileNumber(book, chapter);
+  return `https://pub-c4105367c474429f812253bea5afdc20.r2.dev/${folder}/${folder}_${fileNo}.mp3`;
 }
 
 // ── Player state ──────────────────────────────────────────────
@@ -5521,10 +6010,13 @@ function _audioRefreshScrubber() {
 }
 
 function _audioSetListenBtn(dayIdx, playing) {
-  const btn = document.querySelector(`.listen-btn[data-day="${dayIdx}"]`);
-  if (!btn) return;
-  if (playing) { btn.textContent = '🔊 Playing…'; btn.classList.add('playing'); }
-  else         { btn.textContent = '🔊 Listen';   btn.classList.remove('playing'); }
+  // Both the day card and the reader header carry this button, so update each.
+  document.querySelectorAll(`.listen-btn[data-day="${dayIdx}"]`).forEach(btn => {
+    const lbl = btn.querySelector('.lbl');
+    if (lbl) lbl.textContent = playing ? 'Playing' : 'Listen';
+    else     btn.textContent = playing ? '🔊 Playing…' : '🔊 Listen';
+    btn.classList.toggle('playing', playing);
+  });
 }
 
 function _audioLoadTrack(idx) {
@@ -5532,7 +6024,8 @@ function _audioLoadTrack(idx) {
   _audioIdx = idx;
   const loadId = ++_audioLoadId; // bumped on every new load; lets stale retries self-cancel
   const track  = _audioQueue[idx];
-  const url    = getAudioUrl(track.book, track.chapter);
+  const url    = getAudioUrl(track.book, track.chapter, track.trans);
+  _audioSetEditionNote(track);
 
   // ── UI: show loading state ─────────────────────────────────
   const pb    = document.getElementById('audio-play-btn');
@@ -5603,16 +6096,39 @@ function _audioLoadTrack(idx) {
 }
 
 // ── Public API ────────────────────────────────────────────────
+// The note behind the "i" in the player describes the recording now playing.
+function _audioSetEditionNote(track) {
+  const pre = document.querySelector('#audio-player-bar .audio-edition-note-prefix');
+  const txt = document.querySelector('#audio-player-bar .audio-edition-note-text');
+  if (!pre || !txt) return;
+  if (track.trans === 'KJV') {
+    pre.textContent = '\u2014 King James Version, public domain';
+    txt.textContent = ` (read by ${track.reader} for LibriVox)`;
+  } else if (_readerTransForPlan() === 'KJV') {
+    pre.textContent = '\u2014 World English Bible narration';
+    txt.textContent = " (KJV audio for this book isn't ready yet, so the wording differs from the text shown)";
+  } else {
+    pre.textContent = '\u2014 World English Bible, public domain';
+    txt.textContent = ' (the narration predates the 2020 text shown here; some wording differs)';
+  }
+}
+
 function listenDay(dayIdx) {
   const day = currentPlan[dayIdx];
   if (!day || day.isGrace) return;
 
   // Build playlist queue for this day's chapters
-  _audioQueue = day.chapters.map(c => ({
-    book:    c.book,
-    chapter: c.chapter,
-    label:   `${c.book} ${c.chapter}`
-  }));
+  const planKjv = _readerTransForPlan() === 'KJV';
+  _audioQueue = day.chapters.map(c => {
+    const reader = planKjv ? kjvReader(c.book, c.chapter) : null;
+    return {
+      book:    c.book,
+      chapter: c.chapter,
+      label:   `${c.book} ${c.chapter}`,
+      trans:   reader ? 'KJV' : 'WEB',
+      reader:  reader
+    };
+  });
 
   // Clear previous active button
   if (_activeDayIdx >= 0 && _activeDayIdx !== dayIdx) {
@@ -5762,26 +6278,106 @@ function audioClose() {
 </div>
 
 <!-- SCRIPTURE READER -->
-<div id="reader-overlay">
+<div id="reader-overlay" data-rtheme="navy" data-rlayout="verse">
   <div class="reader-head">
-    <div class="reader-title">
-      <span class="reader-day"></span>
-      <span class="reader-ref"></span>
-    </div>
-    <div class="reader-actions"></div>
+    <span class="reader-day"></span>
+    <span class="reader-ref"></span>
     <div class="reader-tools">
-      <button class="reader-close" onclick="closeReader()">ESC &#10005;</button>
+      <span class="reader-day-tools"></span>
+      <button class="reader-btn" id="reader-settings-btn" onclick="toggleReaderSheet()"
+              aria-label="Reading settings" aria-expanded="false" title="Reading settings">
+        <span class="ico aa">Aa</span>
+      </button>
+      <button class="reader-btn reader-close" onclick="closeReader()"
+              aria-label="Close reader" title="Close (Esc)"><span class="ico">&#10005;</span></button>
     </div>
   </div>
-  <div class="reader-syncbar">
-    <span class="sp-sync-note"></span>
-    <div class="sync-nudge">
-      <button onclick="syncNudge(-0.5)" title="Highlight is running behind the voice">&minus;0.5s</button>
-      <span class="sync-nudge-val">no delay</span>
-      <button onclick="syncNudge(0.5)" title="Highlight is running ahead of the voice">+0.5s</button>
-    </div>
+
+  <div class="reader-hint">
+    <span>Tap a verse to jump the audio there</span>
+    <button class="reader-hint-x" onclick="readerDismissHint(true)"
+            aria-label="Don't show this again">&#10005;</button>
   </div>
+
   <div class="sp-body"></div>
+
+  <div class="reader-sheet-scrim" onclick="toggleReaderSheet(false)"></div>
+  <div class="reader-sheet" role="dialog" aria-label="Reading settings">
+    <div class="reader-sheet-grab"></div>
+    <div class="reader-sheet-head">
+      <span class="reader-sheet-title">Reading Settings</span>
+      <button class="reader-btn" onclick="toggleReaderSheet(false)"
+              aria-label="Close settings"><span class="ico">&#10005;</span></button>
+    </div>
+
+    <div class="rs-group">
+      <span class="rs-label">Theme</span>
+      <div class="rs-themes">
+        <button class="rs-theme" data-v="navy" onclick="readerSetPref('theme','navy')">
+          <span class="rs-swatch sw-navy">Aa</span><span class="rs-swatch-name">Navy</span>
+        </button>
+        <button class="rs-theme" data-v="parchment" onclick="readerSetPref('theme','parchment')">
+          <span class="rs-swatch sw-parchment">Aa</span><span class="rs-swatch-name">Parchment</span>
+        </button>
+        <button class="rs-theme" data-v="sepia" onclick="readerSetPref('theme','sepia')">
+          <span class="rs-swatch sw-sepia">Aa</span><span class="rs-swatch-name">Sepia</span>
+        </button>
+        <button class="rs-theme" data-v="black" onclick="readerSetPref('theme','black')">
+          <span class="rs-swatch sw-black">Aa</span><span class="rs-swatch-name">Black</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="rs-group">
+      <span class="rs-label">Typeface</span>
+      <div class="rs-seg">
+        <button class="rs-font" data-v="garamond" onclick="readerSetPref('font','garamond')"
+                style="font-family:'EB Garamond',Georgia,serif;">Garamond</button>
+        <button class="rs-font" data-v="cormorant" onclick="readerSetPref('font','cormorant')"
+                style="font-family:'Cormorant Garamond',Georgia,serif;">Cormorant</button>
+        <button class="rs-font" data-v="sans" onclick="readerSetPref('font','sans')"
+                style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">Sans</button>
+      </div>
+    </div>
+
+    <div class="rs-group">
+      <span class="rs-label">Text size <span class="rs-val" id="rs-size-val"></span></span>
+      <div class="rs-row">
+        <span class="rs-end sm">A</span>
+        <input type="range" class="rs-slider" id="rs-size" min="0.9" max="1.75" step="0.03"
+               oninput="readerSetPref('size', this.value)" aria-label="Text size">
+        <span class="rs-end lg">A</span>
+      </div>
+    </div>
+
+    <div class="rs-group">
+      <span class="rs-label">Line spacing <span class="rs-val" id="rs-lh-val"></span></span>
+      <div class="rs-row">
+        <span class="rs-end sm">&#8803;</span>
+        <input type="range" class="rs-slider" id="rs-lh" min="1.4" max="2.4" step="0.05"
+               oninput="readerSetPref('lh', this.value)" aria-label="Line spacing">
+        <span class="rs-end lg">&#8803;</span>
+      </div>
+    </div>
+
+    <div class="rs-group">
+      <span class="rs-label">Layout</span>
+      <div class="rs-seg">
+        <button class="rs-layout" data-v="verse" onclick="readerSetPref('layout','verse')">Verse per line</button>
+        <button class="rs-layout" data-v="paragraph" onclick="readerSetPref('layout','paragraph')">Paragraph</button>
+      </div>
+    </div>
+
+    <div class="rs-group rs-sync">
+      <span class="rs-label">Audio sync</span>
+      <div class="sp-sync-note"></div>
+      <div class="rs-nudge">
+        <button onclick="syncNudge(-0.5)" title="Highlight is running behind the voice">&minus;0.5s</button>
+        <span class="sync-nudge-val">no delay</span>
+        <button onclick="syncNudge(0.5)" title="Highlight is running ahead of the voice">+0.5s</button>
+      </div>
+    </div>
+  </div>
 </div>
 <!-- JOURNAL MODAL -->
 <div class="journal-overlay" id="journal-overlay">
