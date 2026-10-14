@@ -317,6 +317,90 @@ const searchIndex = [
     content: `James 5:12 — Above All, Do Not Swear James 5:13 — Suffering? Pray. Cheerful? Sing. James 5:14 — Call the Elders James 5:15 — The Prayer of Faith Will Save the Sick James 5:16 — Confess and Pray for One Another James 5:17 — Elijah, a Man Like Us James 5:18 — He Prayed Again James 5:19 — If Anyone Wanders from the Truth James 5:20 — Saving a Soul from Death Overall Exegesis: James 5:12–20 Introduction to James 5:12–20 The letter ends without a formal farewell — no benediction, no greetings, no travel plans. It simply stops, with its last word about restoring a brother who has wandered. That abruptness is itself instructive: James is a sermon in letter form, and its conclusion is a pastoral charge rather than an epistolary courtesy. Three movements close the letter. Verse 12 returns a final time to the tongue (1:19, 26; 3:1–12; 4:11): let your yes be yes. Verses 13–18 gather the letter's teaching on prayer, begun at 1:5–8 and resumed at 4:2–3, and apply it to every condition — suffering, cheerfulness, sickness, sin — with Elijah as the example of what an ordinary praying person can accomplish. Verses 19–20 close with the recovery of a wandering brother. For this series, v. 20 is the destination. The verb σῴζω has run through the letter — the implanted word "able to save your souls" (1:21), "can that faith save him?" (2:14), "the one able to save and to destroy" (4:12), "the prayer of faith will save the sick" (5:15) — and here it arrives at its clearest statement: turning back a sinning brother "will save a soul from death." Verse 15 and verse 20 together give the letter's own definition of what James means by salvation, and that definition has governed the Free Grace readings offered throughout this series.`
   },
   {
+    title: "Galatians 1:1–10 — Greek Exegesis",
+    excerpt: "An Apostleship Not from Men, and a Gospel That Admits No Rival",
+    url: "/greek/galatians/galatians-1-1-10",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 1:1 — An Apostle Not from Men Galatians 1:2 — To the Churches of Galatia Galatians 1:3 — Grace and Peace Galatians 1:4 — Who Gave Himself for Our Sins Galatians 1:5 — Doxology Galatians 1:6 — I Am Astonished Galatians 1:7 — Not That There Is Another Gospel Galatians 1:8 — Though We or an Angel from Heaven Galatians 1:9 — The Curse Restated Galatians 1:10 — Pleasing Men or Serving Christ?`
+  },
+  {
+    title: "Galatians 1:11–24 — Greek Exegesis",
+    excerpt: "The Gospel Received by Revelation, Not from Jerusalem",
+    url: "/greek/galatians/galatians-1-11-24",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 1:11 — The Gospel Is Not According to Man Galatians 1:12 — Received Through Revelation of Jesus Christ Galatians 1:13 — My Former Life in Judaism Galatians 1:14 — Advancing Beyond My Contemporaries Galatians 1:15 — Set Apart from the Womb Galatians 1:16 — To Reveal His Son in Me Galatians 1:17 — Not Up to Jerusalem, but Into Arabia Galatians 1:18 — Three Years Later, Fifteen Days with Peter Galatians 1:19 — Only James, the Lord's Brother Galatians 1:20 — Before God, I Am Not Lying Galatians 1:21 — Into Syria and Cilicia Galatians 1:22 — Unknown by Face to the Churches of Judea Galatians 1:23 — The Persecutor Now Preaches the Faith Galatians 1:24 — And They Glorified God in Me`
+  },
+  {
+    title: "Galatians 2:1–10 — Greek Exegesis",
+    excerpt: "Jerusalem Added Nothing: Titus, the False Brothers, and the Right Hand of Fellowship",
+    url: "/greek/galatians/galatians-2-1-10",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 2:1 — Fourteen Years Later, with Barnabas and Titus Galatians 2:2 — Laying the Gospel Before Them Galatians 2:3 — Titus Was Not Compelled Galatians 2:4 — False Brothers Smuggled In Galatians 2:5 — We Did Not Yield for an Hour Galatians 2:6 — Those of Repute Added Nothing Galatians 2:7 — Entrusted with the Gospel to the Uncircumcised Galatians 2:8 — The Same God Worked in Both Galatians 2:9 — The Right Hand of Fellowship Galatians 2:10 — Only Remember the Poor`
+  },
+  {
+    title: "Galatians 2:11–21 — Greek Exegesis",
+    excerpt: "Antioch, and Justification by Faith Apart from Works of Law",
+    url: "/greek/galatians/galatians-2-11-21",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 2:11 — I Opposed Him to His Face Galatians 2:12 — He Drew Back and Separated Himself Galatians 2:13 — Even Barnabas Was Carried Away Galatians 2:14 — Why Compel the Gentiles to Judaize? Galatians 2:15 — We Are Jews by Nature Galatians 2:16 — Not by Works of Law but Through Faith Galatians 2:17 — Is Christ Then a Servant of Sin? Galatians 2:18 — Rebuilding What I Tore Down Galatians 2:19 — Through the Law I Died to the Law Galatians 2:20 — Crucified with Christ Galatians 2:21 — Then Christ Died for Nothing`
+  },
+  {
+    title: "Galatians 3:1–14 — Greek Exegesis",
+    excerpt: "Spirit, Abraham, and the Curse-Bearing Christ",
+    url: "/greek/galatians/galatians-3-1-14",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 3:1 — The Astonished Rebuke Galatians 3:2 — The One Decisive Question Galatians 3:3 — Spirit Begun, Flesh Completed? Galatians 3:4 — Suffering in Vain Galatians 3:5 — God's Own Present Activity Galatians 3:6 — Abraham Believed God Galatians 3:7 — Sons of Abraham by Faith Galatians 3:8 — Scripture Preached the Gospel Beforehand Galatians 3:9 — Blessed with Faithful Abraham Galatians 3:10 — Under the Law's Curse Galatians 3:11 — The Righteous Shall Live by Faith Galatians 3:12 — The Law Is Not of Faith Galatians 3:13 — Christ Became a Curse for Us Galatians 3:14 — The Twofold Purpose of Redemption`
+  },
+  {
+    title: "Galatians 3:15–29 — Greek Exegesis",
+    excerpt: "The Promise, the Law, and the Seed of Abraham",
+    url: "/greek/galatians/galatians-3-15-29",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 3:15 — A Ratified Covenant Cannot Be Annulled Galatians 3:16 — The Promises Spoken to One Seed Galatians 3:17 — The Law Came 430 Years Later Galatians 3:18 — Inheritance by Promise, Not by Law Galatians 3:19 — Why Then the Law? Galatians 3:20 — A Mediator Implies More Than One Galatians 3:21 — The Law Is Not Against the Promises Galatians 3:22 — Scripture Shut Everything Up Under Sin Galatians 3:23 — Kept in Custody Until Faith Came Galatians 3:24 — The Law as Guardian Leading to Christ Galatians 3:25 — No Longer Under a Guardian Galatians 3:26 — Sons of God Through Faith Galatians 3:27 — Baptized into Christ, Clothed with Christ Galatians 3:28 — Neither Jew nor Greek — All One in Christ Galatians 3:29 — Christ's, Therefore Abraham's Seed`
+  },
+  {
+    title: "Galatians 4:1–16 — Greek Exegesis",
+    excerpt: "From Slaves to Sons, and the Danger of Turning Back",
+    url: "/greek/galatians/galatians-4-1-16",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 4:1 — The Heir Who Is Still a Child Galatians 4:2 — Under Guardians Until the Appointed Day Galatians 4:3 — Enslaved Under the Elemental Principles Galatians 4:4 — The Fullness of Time Galatians 4:5 — Redemption and Adoption as Sons Galatians 4:6 — The Spirit Crying Abba, Father Galatians 4:7 — No Longer a Slave but a Son and Heir Galatians 4:8 — Formerly Enslaved to Non-Gods Galatians 4:9 — Why Turn Back to the Weak Principles? Galatians 4:10 — Observing Days, Months, Seasons, Years Galatians 4:11 — Paul's Fear of Wasted Labor Galatians 4:12 — Become as I Am Galatians 4:13 — Weakness in the Flesh and the First Preaching Galatians 4:14 — Received as an Angel of God Galatians 4:15 — Where Is the Blessing You Spoke Of? Galatians 4:16 — Have I Become Your Enemy?`
+  },
+  {
+    title: "Galatians 4:17–31 — Greek Exegesis",
+    excerpt: "Paul's Perplexity and the Allegory of Two Covenants",
+    url: "/greek/galatians/galatians-4-17-31",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 4:17 — They Court You for Their Own Sake Galatians 4:18 — Zeal Is Good in a Good Cause Galatians 4:19 — In Travail Until Christ Is Formed in You Galatians 4:20 — Paul's Perplexity Galatians 4:21 — You Who Desire the Law — Hear the Law Galatians 4:22 — Abraham's Two Sons Galatians 4:23 — Born of Flesh, Born Through Promise Galatians 4:24 — These Things Are an Allegory Galatians 4:25 — Hagar, Sinai, and the Present Jerusalem Galatians 4:26 — The Jerusalem Above Is Free Galatians 4:27 — Rejoice, Barren One Galatians 4:28 — Children of Promise, as Isaac Was Galatians 4:29 — Persecuted by the Son of the Flesh Galatians 4:30 — Cast Out the Slave and Her Son Galatians 4:31 — Children of the Free Woman`
+  },
+  {
+    title: "Galatians 5:1–12 — Greek Exegesis",
+    excerpt: "Freedom, Circumcision, and Falling from Grace",
+    url: "/greek/galatians/galatians-5-1-12",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 5:1 — Stand Firm in Freedom Galatians 5:2 — Circumcision and the Loss of Christ's Benefit Galatians 5:3 — A Debtor to the Whole Law Galatians 5:4 — Severed from Christ, Fallen from Grace Galatians 5:5 — Awaiting the Hope of Righteousness Galatians 5:6 — Faith Working Through Love Galatians 5:7 — You Were Running Well Galatians 5:8 — This Persuasion Is Not from God Galatians 5:9 — A Little Leaven Galatians 5:10 — Confidence in the Lord, Judgment on the Troubler Galatians 5:11 — The Stumbling Block of the Cross Galatians 5:12 — Paul's Sharpest Word`
+  },
+  {
+    title: "Galatians 5:13–26 — Greek Exegesis",
+    excerpt: "Freedom Used in Love: Flesh and Spirit",
+    url: "/greek/galatians/galatians-5-13-26",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 5:13 — Called to Freedom, Not to the Flesh Galatians 5:14 — The Whole Law Fulfilled in One Word Galatians 5:15 — Biting and Devouring One Another Galatians 5:16 — Walk by the Spirit Galatians 5:17 — Flesh and Spirit in Opposition Galatians 5:18 — Led by the Spirit, Not Under Law Galatians 5:19 — The Works of the Flesh Are Evident Galatians 5:20 — Idolatry, Strife, and Factions Galatians 5:21 — Those Who Practice Such Things Galatians 5:22 — The Fruit of the Spirit Galatians 5:23 — Gentleness and Self-Control Galatians 5:24 — Those of Christ Have Crucified the Flesh Galatians 5:25 — If We Live by the Spirit, Let Us Walk by It Galatians 5:26 — Against Conceit and Envy`
+  },
+  {
+    title: "Galatians 6:1–10 — Greek Exegesis",
+    excerpt: "Bearing Burdens and Sowing to the Spirit",
+    url: "/greek/galatians/galatians-6-1-10",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 6:1 — Restoring the One Caught in a Fault Galatians 6:2 — Bear One Another's Burdens Galatians 6:3 — Self-Deception in Thinking Oneself Something Galatians 6:4 — Let Each Test His Own Work Galatians 6:5 — Each Will Carry His Own Load Galatians 6:6 — Sharing with the One Who Teaches Galatians 6:7 — God Is Not Mocked Galatians 6:8 — Sowing to Flesh or to Spirit Galatians 6:9 — Do Not Grow Weary in Doing Good Galatians 6:10 — Do Good to All, Especially the Household of Faith`
+  },
+  {
+    title: "Galatians 6:11–18 — Greek Exegesis",
+    excerpt: "Paul's Own Hand: Boasting Only in the Cross",
+    url: "/greek/galatians/galatians-6-11-18",
+    tags: ["Greek Exegesis"],
+    content: `Galatians 6:11 — Large Letters in Paul's Own Hand Galatians 6:12 — Compelling Circumcision to Avoid Persecution Galatians 6:13 — They Do Not Keep the Law Themselves Galatians 6:14 — Boasting Only in the Cross Galatians 6:15 — Neither Circumcision nor Uncircumcision, but New Creation Galatians 6:16 — Peace and Mercy on the Israel of God Galatians 6:17 — The Marks of Jesus Galatians 6:18 — Closing Benediction`
+  },
+  {
     title: "Maps, Charts & Timelines",
     excerpt: "Bible charts, timelines, and maps organized by section of Scripture",
     url: "/charts/",
