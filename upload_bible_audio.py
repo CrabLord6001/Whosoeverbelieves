@@ -16,14 +16,14 @@ The script skips files already in R2, so you can stop and resume any time.
 Progress is also written to  upload_progress.txt  in the same folder.
 """
 
-import boto3, requests, time
+import os, boto3, requests, time
 from bs4 import BeautifulSoup
 from botocore.config import Config
 
 # ── Cloudflare R2 credentials ─────────────────────────────────────────────────
 ACCOUNT_ID    = "da3af124ac6391bc777c7880438e7dfb"
-ACCESS_KEY_ID = "ec77c386e4449c6fe52a5946378024a7"
-SECRET_KEY    = "cfdc2f5de1f5eb8f583f4e9ac7c033802660e1de82eb08dae65e5d103c8197b7"
+ACCESS_KEY_ID = os.environ.get("R2_ACCESS_KEY_ID", "")
+SECRET_KEY    = os.environ.get("R2_SECRET_ACCESS_KEY", "")
 BUCKET_NAME   = "bible-audio"
 R2_ENDPOINT   = f"https://{ACCOUNT_ID}.r2.cloudflarestorage.com"
 PUBLIC_BASE   = "https://pub-c4105367c474429f812253bea5afdc20.r2.dev"
@@ -126,8 +126,8 @@ def main():
     s3 = boto3.client(
         "s3",
         endpoint_url="https://da3af124ac6391bc777c7880438e7dfb.r2.cloudflarestorage.com",
-        aws_access_key_id='ec77c386e4449c6fe52a5946378024a7',
-        aws_secret_access_key='cfdc2f5de1f5eb8f583f4e9ac7c033802660e1de82eb08dae65e5d103c8197b7',
+        aws_access_key_id=ACCESS_KEY_ID,
+        aws_secret_access_key=SECRET_KEY,
         config=Config(signature_version="s3v4"),
         region_name="auto",
     )
