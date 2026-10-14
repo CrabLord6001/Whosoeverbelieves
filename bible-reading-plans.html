@@ -43,7 +43,7 @@
     --surface:     #1a2235;
     --text:        #e8e6e0;
     --text-mid:    #a89f8c;
-    --text-faint:  #6a6358;
+    --text-faint:  #90897c;
     --gold:        #c9a84c;
     --gold-light:  #e5c97a;
     --gold-faint:  rgba(201,168,76,0.12);
@@ -54,7 +54,7 @@
     --surface:     #ede8da;
     --text:        #1a1a1a;
     --text-mid:    #4a4035;
-    --text-faint:  #888;
+    --text-faint:  #6b6459;
     --gold:        #8a6a1f;
     --gold-light:  #a07c25;
     --gold-faint:  rgba(138,106,31,0.12);
@@ -347,7 +347,7 @@
   }
   .progress-fill {
     height: 100%; border-radius: 7px;
-    background: linear-gradient(90deg, #c0392b 0%, #e67e22 20%, #f1c40f 40%, #2ecc71 70%, #27ae60 100%);
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 100%);
     transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
   }
   .progress-fill::after {
@@ -355,15 +355,71 @@
     background: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, transparent 100%);
     border-radius: inherit;
   }
-  .progress-stats { display: flex; gap: 1.5rem; margin-top: 0.6rem; }
-  .stat-item { font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; color: var(--text-mid); }
-  .stat-item strong { color: var(--gold); font-weight: 500; }
+  .progress-stats {
+    margin-top: 0.6rem;
+    font-family: 'Cormorant Garamond', serif; font-size: 0.95rem;
+    color: var(--text-mid); line-height: 1.5;
+  }
+  .progress-stats strong { color: var(--gold); font-weight: 500; }
+  .progress-stats .sep { color: var(--text-faint); margin: 0 0.45rem; }
 
   /* ── PLAN SECTION ── */
   #plan-section { display: none; }
   .plan-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
   .plan-header-left { display: flex; flex-direction: column; gap: 0.3rem; }
-  .plan-actions { display: flex; gap: 0.5rem; flex-wrap: nowrap; align-items: flex-start; }
+  .plan-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+
+  /* Matches .hp-btn in styles.css — the site's button. Kept here because this
+     page carries its own copy of the tokens so it also works standalone. */
+  .wb-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45em;
+    min-height: 44px; padding: 0 1.1rem;
+    font-family: 'Cinzel', serif; font-weight: 600;
+    font-size: 0.78rem; letter-spacing: 0.10em; text-transform: uppercase;
+    border-radius: 3px; border: 1px solid var(--gold);
+    background: var(--gold); color: #0d1117; cursor: pointer; white-space: nowrap;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .wb-btn:hover { background: var(--gold-light); border-color: var(--gold-light); }
+  .wb-btn.ghost { background: none; color: var(--text-mid); border-color: var(--rule); }
+  .wb-btn.ghost:hover { background: none; color: var(--gold); border-color: var(--gold); }
+  .wb-btn.wb-icon { min-width: 44px; padding: 0; font-size: 1rem; letter-spacing: 0; }
+  .wb-btn:disabled { opacity: 0.5; cursor: default; }
+  .wb-caret { font-size: 0.6em; opacity: 0.8; }
+
+  /* The hints that used to sit under each button live in these menus now,
+     where each one fits on a single line. */
+  .rp-menu-wrap { position: relative; display: inline-flex; }
+  .rp-menu {
+    display: none; position: absolute; top: calc(100% + 0.4rem); left: 0; z-index: 120;
+    min-width: 15rem; max-width: min(19rem, calc(100vw - 2rem));
+    background: var(--surface); border: 1px solid var(--rule); border-radius: 8px;
+    padding: 0.35rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .rp-menu.open { display: block; }
+  /* Right-aligned only where the row actually sits at the right edge. */
+  @media (min-width: 601px) { .rp-menu.right { left: auto; right: 0; } }
+  /* On a phone the row is narrower than the menu, so anchoring to the
+     button overflowed one edge or the other. Anchor to the row instead
+     and let the menu span it. */
+  @media (max-width: 600px) {
+    .plan-actions-col { width: 100%; }
+    .plan-actions { position: relative; width: 100%; }
+    .rp-menu-wrap { position: static; }
+    .rp-menu, .rp-menu.right {
+      left: 0; right: auto; width: 100%; min-width: 0; max-width: none;
+    }
+  }
+  .rp-mi {
+    display: flex; flex-direction: column; gap: 0.1rem; width: 100%;
+    padding: 0.6rem 0.75rem; border: none; border-radius: 6px;
+    background: none; cursor: pointer; text-align: left;
+  }
+  .rp-mi:hover { background: var(--gold-faint); }
+  .rp-mi b { font-family: 'EB Garamond', serif; font-weight: 400; font-size: 1rem; color: var(--text); }
+  .rp-mi span { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; color: var(--text-mid); }
+  .rp-mi.danger b { color: #d46a6a; }
+  .rp-menu-sep { height: 1px; background: var(--rule); margin: 0.3rem 0.5rem; }
   .plan-actions-col { display: flex; flex-direction: row; gap: 0.35rem; align-items: flex-end; }
   .btn-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .save-hint {
@@ -1240,20 +1296,35 @@
     background: var(--r-bg);
     color: var(--r-text);
   }
-  #reader-overlay[data-rtheme="parchment"] {
+  :root[data-rtheme="parchment"], #reader-overlay[data-rtheme="parchment"] {
     --r-bg:#f6eedd; --r-surface:#efe5d0; --r-text:#2c2418; --r-text-mid:#5b4e38;
     --r-faint:#8c7c60; --r-rule:rgba(80,64,36,0.20); --r-gold:#8a6a1f;
     --r-hl:rgba(138,106,31,0.15); --r-btn:rgba(80,64,36,0.06); --r-btn-br:rgba(80,64,36,0.22);
   }
-  #reader-overlay[data-rtheme="sepia"] {
+  :root[data-rtheme="sepia"], #reader-overlay[data-rtheme="sepia"] {
     --r-bg:#2b2318; --r-surface:#352c1f; --r-text:#e3d6bd; --r-text-mid:#b0a086;
     --r-faint:#7d7059; --r-rule:rgba(227,214,189,0.13); --r-gold:#d4b36a;
     --r-hl:rgba(212,179,106,0.14); --r-btn:rgba(227,214,189,0.06); --r-btn-br:rgba(227,214,189,0.16);
   }
-  #reader-overlay[data-rtheme="black"] {
+  :root[data-rtheme="black"], #reader-overlay[data-rtheme="black"] {
     --r-bg:#000; --r-surface:#0b0b0c; --r-text:#d6d3cc; --r-text-mid:#908b81;
     --r-faint:#625e57; --r-rule:rgba(255,255,255,0.10); --r-gold:#c9a84c;
     --r-hl:rgba(201,168,76,0.12); --r-btn:rgba(255,255,255,0.05); --r-btn-br:rgba(255,255,255,0.14);
+  }
+
+  /* Navy is the default; declared on :root as well so the notes window can
+     pick up the reader's palette while the reader is open. */
+  :root {
+    --r-bg:       #0d1117;
+    --r-surface:  #151d2e;
+    --r-text:     #e8e6e0;
+    --r-text-mid: #a89f8c;
+    --r-faint:    #6a6358;
+    --r-rule:     rgba(255,255,255,0.10);
+    --r-gold:     #c9a84c;
+    --r-hl:       rgba(201,168,76,0.13);
+    --r-btn:      rgba(255,255,255,0.05);
+    --r-btn-br:   rgba(255,255,255,0.13);
   }
 
   #reader-overlay.open { display: block; animation: fadeUp 0.2s ease both; }
@@ -1261,7 +1332,56 @@
 
   /* The notes window is z-index 300, under the reader. Lift it while the reader
      is open so writing a note keeps your place in the text instead of closing it. */
-  body.reader-open .journal-overlay { z-index: 560; }
+  body.reader-open .journal-overlay {
+    z-index: 560;
+    /* The default scrim is navy-tinted, which fought the sepia and
+       parchment themes. Neutral black suits all four. */
+    background: rgba(0,0,0,0.6);
+  }
+
+  /* ── Notes window, themed with the reader ──
+     Opened from the reader it is part of that reading, so it takes the
+     reader's palette rather than the site's. */
+  body.reader-open .journal-modal {
+    background: var(--r-surface); border-color: var(--r-rule);
+  }
+  body.reader-open .journal-header,
+  body.reader-open .journal-footer {
+    background: var(--r-bg); border-color: var(--r-rule);
+  }
+  body.reader-open .journal-title  { color: var(--r-gold); }
+  body.reader-open .journal-close,
+  body.reader-open .journal-hint   { color: var(--r-faint); }
+  body.reader-open .journal-close:hover { color: var(--r-text); }
+  body.reader-open .journal-save-btn {
+    background: var(--r-hl); border-color: var(--r-gold); color: var(--r-gold);
+  }
+  body.reader-open .ql-toolbar.ql-snow {
+    background: var(--r-bg) !important; border-bottom-color: var(--r-rule) !important;
+  }
+  body.reader-open .ql-container.ql-snow { background: var(--r-surface) !important; }
+  body.reader-open .ql-editor { color: var(--r-text) !important; }
+  body.reader-open .ql-editor.ql-blank::before { color: var(--r-faint) !important; }
+  body.reader-open .ql-toolbar.ql-snow button .ql-stroke,
+  body.reader-open .ql-toolbar.ql-snow .ql-picker-label .ql-stroke { stroke: var(--r-text-mid) !important; }
+  body.reader-open .ql-toolbar.ql-snow button .ql-fill { fill: var(--r-text-mid) !important; }
+  body.reader-open .ql-toolbar.ql-snow button:hover .ql-stroke,
+  body.reader-open .ql-toolbar.ql-snow button.ql-active .ql-stroke { stroke: var(--r-gold) !important; }
+  body.reader-open .ql-toolbar.ql-snow button:hover .ql-fill,
+  body.reader-open .ql-toolbar.ql-snow button.ql-active .ql-fill { fill: var(--r-gold) !important; }
+  body.reader-open .ql-toolbar.ql-snow .ql-picker,
+  body.reader-open .ql-toolbar.ql-snow .ql-picker-label { color: var(--r-text-mid) !important; }
+  body.reader-open .ql-toolbar.ql-snow .ql-picker-options {
+    background: var(--r-bg) !important; border-color: var(--r-rule) !important;
+  }
+  body.reader-open .ql-toolbar.ql-snow .ql-picker-item { color: var(--r-text-mid) !important; }
+  body.reader-open .ql-editor h1 { color: var(--r-text) !important; border-bottom-color: var(--r-rule) !important; }
+  body.reader-open .ql-editor h2 { color: var(--r-gold) !important; }
+  body.reader-open .ql-editor h3 { color: var(--r-text-mid) !important; }
+  body.reader-open .ql-editor a  { color: var(--r-gold) !important; }
+  body.reader-open .ql-editor blockquote {
+    border-left-color: var(--r-gold) !important; color: var(--r-text-mid) !important;
+  }
 
   /* ── Header ──
      Floats over the text rather than sitting above it, so hiding it on scroll
@@ -2108,31 +2228,43 @@
       </div>
       <div class="plan-actions-col">
         <div class="plan-actions">
-          <div class="btn-col">
-            <button class="btn-sm gold" onclick="downloadPDF()">PDF</button>
-            <div class="save-hint">Saves printable copy</div>
+
+          <div class="rp-menu-wrap">
+            <button class="wb-btn" id="export-btn" aria-haspopup="true" aria-expanded="false"
+                    onclick="rpToggleMenu('export-menu', this)">Export <span class="wb-caret">&#9660;</span></button>
+            <div class="rp-menu" id="export-menu" role="menu">
+              <button class="rp-mi" role="menuitem" onclick="rpCloseMenus(); downloadPDF();">
+                <b>PDF</b><span>A printable copy of the plan</span>
+              </button>
+              <button class="rp-mi" role="menuitem" onclick="rpCloseMenus(); exportWithNotes();">
+                <b>Text file</b><span>Includes your reflections</span>
+              </button>
+            </div>
           </div>
-          <div class="btn-col">
-            <button class="btn-sm" onclick="exportWithNotes()">Notes</button>
-            <div class="save-hint">Includes reflections</div>
+
+          <span id="save-plan-btn-col">
+            <button class="wb-btn ghost" id="save-plan-btn" onclick="handleSavePlan()">Save</button>
+          </span>
+
+          <div class="rp-menu-wrap" id="plan-more-wrap" style="display:none">
+            <button class="wb-btn ghost wb-icon" id="plan-more-btn" aria-haspopup="true" aria-expanded="false"
+                    aria-label="More plan actions" title="More"
+                    onclick="rpToggleMenu('plan-more-menu', this)">&#8943;</button>
+            <div class="rp-menu right" id="plan-more-menu" role="menu">
+              <button class="rp-mi" role="menuitem" id="copy-plan-btn-col" onclick="rpCloseMenus(); openCopyPlan();">
+                <b>Copy to new dates</b><span>Same books, fresh start date</span>
+              </button>
+              <button class="rp-mi" role="menuitem" id="restart-plan-btn-col" onclick="rpCloseMenus(); restartCurrentPlan();">
+                <b>Restart</b><span>Clears checkmarks, keeps your notes</span>
+              </button>
+              <div class="rp-menu-sep"></div>
+              <button class="rp-mi danger" role="menuitem" id="delete-plan-btn-col" onclick="rpCloseMenus(); deleteCurrentPlan();">
+                <b>Delete plan</b>
+              </button>
+            </div>
           </div>
-          <div class="btn-col" id="save-plan-btn-col">
-            <button class="btn-sm gold" id="save-plan-btn" onclick="handleSavePlan()">Save Plan</button>
-            <div class="save-hint">Save to account</div>
-          </div>
-          <div class="btn-col" id="copy-plan-btn-col" style="display:none">
-            <button class="btn-sm gold" onclick="openCopyPlan()">Copy</button>
-            <div class="save-hint">New start date</div>
-          </div>
-          <div class="btn-col" id="restart-plan-btn-col" style="display:none">
-            <button class="btn-sm" onclick="restartCurrentPlan()">Restart</button>
-            <div class="save-hint">Keep notes</div>
-          </div>
-          <div class="btn-col" id="delete-plan-btn-col" style="display:none">
-            <button class="btn-sm" style="color:#b44;" onclick="deleteCurrentPlan()">Delete</button>
-            <div class="save-hint">Remove plan</div>
-          </div>
-      </div>
+
+        </div>
       </div>
     </div>
     <div id="plan-tabs-inline"></div>
@@ -2152,9 +2284,7 @@
       <div class="progress-fill" id="progress-fill" style="width:0%"></div>
     </div>
     <div class="progress-stats">
-      <div class="stat-item"><strong id="stat-done">0</strong> days completed</div>
-      <div class="stat-item"><strong id="stat-reading">0</strong> reading days total</div>
-      <div class="stat-item"><strong id="stat-verses">0</strong> verses read</div>
+      <strong id="stat-done">0</strong> of <strong id="stat-reading">0</strong> days<span class="sep">·</span><strong id="stat-verses">0</strong> verses read
     </div>
     <button type="button" class="rp-today" id="rp-today-btn" hidden onclick="goToToday()">Today</button>
   </div>
@@ -3777,6 +3907,10 @@ function showMilestoneToast(pct) {
   const m = msgs[pct];
   if (!m) return;
 
+  // The toast markup isn't on the page; without this guard crossing 25/50/75%
+  // threw out of updateProgress() and the check never reached persistCheckState().
+  if (!toast || !document.getElementById('milestone-title')) return;
+
   document.getElementById('milestone-title').textContent = m.title;
   document.getElementById('milestone-sub').textContent = m.sub;
   document.getElementById('milestone-actions').innerHTML =
@@ -4118,7 +4252,7 @@ function flashAutosave(text = 'Auto-saved') {
 async function savePlanToDb() {
   const btn  = document.getElementById('save-plan-btn');
   const name = document.getElementById('plan-name').value || 'Untitled Plan';
-  if (btn) { btn.textContent = '💾 Saving…'; btn.disabled = true; }
+  if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
 
   try {
     // ── 1. Upsert the plan row ──
@@ -4195,7 +4329,7 @@ async function savePlanToDb() {
 
     showToast('Plan saved ✓', 'success');
     if (btn) btn.textContent = '✓ Saved';
-    setTimeout(() => { if (btn) { btn.textContent = '💾 Save Plan'; btn.disabled = false; } }, 2000);
+    setTimeout(() => { if (btn) { btn.textContent = 'Save'; btn.disabled = false; } }, 2000);
 
     // Refresh tab bar to include newly saved plan
     if (currentUser) {
@@ -4210,7 +4344,7 @@ async function savePlanToDb() {
   } catch (err) {
     console.error('Save error:', err);
     showToast('Save failed — please try again.', 'error');
-    if (btn) { btn.textContent = '💾 Save Plan'; btn.disabled = false; }
+    if (btn) { btn.textContent = 'Save'; btn.disabled = false; }
   }
 }
 
@@ -4422,7 +4556,7 @@ async function loadPlanFromDb(planId) {
   showToast(`"${plan.title}" loaded ✓`, 'success');
   document.getElementById('plan-section').scrollIntoView({ behavior:'smooth' });
   const saveBtn = document.getElementById('save-plan-btn');
-  if (saveBtn) saveBtn.textContent = '💾 Save Plan';
+  if (saveBtn) saveBtn.textContent = 'Save';
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -4981,6 +5115,29 @@ function renderPlanTabs() {
 }
 
 // Apply today highlight to calendar cells and list cards
+// ── Plan action menus ──
+function rpCloseMenus() {
+  document.querySelectorAll('.rp-menu.open').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.rp-menu-wrap [aria-expanded="true"]')
+    .forEach(b => b.setAttribute('aria-expanded', 'false'));
+}
+
+function rpToggleMenu(id, btn) {
+  const menu = document.getElementById(id);
+  if (!menu) return;
+  const willOpen = !menu.classList.contains('open');
+  rpCloseMenus();
+  if (willOpen) {
+    menu.classList.add('open');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.rp-menu-wrap')) rpCloseMenus();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') rpCloseMenus(); });
+
 // Show or hide Delete / Restart buttons based on current plan state
 function updatePlanActionButtons() {
   const restartCol = document.getElementById('restart-plan-btn-col');
@@ -4999,6 +5156,9 @@ function updatePlanActionButtons() {
   deleteCol.style.display  = isSaved ? '' : 'none';
   if (saveCol) saveCol.style.display = isSaved ? 'none' : '';
   if (copyCol) copyCol.style.display = isSaved ? '' : 'none';
+  // Nothing behind the ellipsis until a plan is saved, so hide it entirely.
+  const moreWrap = document.getElementById('plan-more-wrap');
+  if (moreWrap) moreWrap.style.display = isSaved ? '' : 'none';
   // Show rename pencil only for saved plans
   if (renameBtn) renameBtn.style.display = isSaved ? '' : 'none';
 }
@@ -5429,6 +5589,9 @@ function _readerApplyPrefs() {
   _rPrefs.lh   = Math.min(2.4,  Math.max(1.4, _rPrefs.lh));
 
   o.setAttribute('data-rtheme', _rPrefs.theme);
+  // Mirrored onto <html> so the notes window, which lives outside the reader
+  // in the DOM, resolves the same palette.
+  document.documentElement.setAttribute('data-rtheme', _rPrefs.theme);
   o.setAttribute('data-rlayout', _rPrefs.layout === 'paragraph' ? 'paragraph' : 'verse');
   o.style.setProperty('--r-font', R_FONTS[_rPrefs.font]);
   o.style.setProperty('--r-size', _rPrefs.size.toFixed(2) + 'rem');

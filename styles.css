@@ -20,7 +20,7 @@
   --rule:         rgba(255,255,255,0.08);
   --text:         #e8e6e0;
   --text-mid:     #a89f8c;
-  --text-faint:   #6a6358;
+  --text-faint:   #90897c;
 }
 
 
@@ -73,7 +73,7 @@ body::before {
   --glass-border: rgba(0,0,0,0.12);
   --text:         #1a1a1a;
   --text-mid:     #4a4035;
-  --text-faint:   #888;
+  --text-faint:   #6b6459;
   --gold:         #8a6a1f;
   --gold-light:   #a07c25;
   --gold-faint:   rgba(138,106,31,0.15);
@@ -1735,7 +1735,7 @@ nav a:hover::after { left: 0.9rem; right: 0.9rem; }
 .hp-btn {
   display: inline-flex; align-items: center; justify-content: center;
   min-height: 44px; padding: 0 1.3rem;
-  font-family: 'Cinzel', serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  font-family: 'Cinzel', serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase;
   border-radius: 3px; border: 1px solid var(--gold);
   background: var(--gold); color: #0d1117; text-decoration: none; cursor: pointer;
   transition: background 0.2s, border-color 0.2s, color 0.2s;
