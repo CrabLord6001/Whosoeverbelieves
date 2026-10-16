@@ -3820,7 +3820,12 @@ const KJV_AUDIO = {
   '1 John':    [[1, 5, 'Rick Tabisz']],
   '2 John':    [[1, 1, 'Rick Tabisz']],
   '3 John':    [[1, 1, 'Rick Tabisz']],
+  'Hosea':     [[1, 14, 'TriciaG']],
+  'Joel':      [[1, 3, 'TriciaG']],
+  'Amos':      [[1, 9, 'TriciaG']],
+  'Obadiah':   [[1, 1, 'TriciaG']],
   'Jonah':     [[1, 4, 'TriciaG']],
+  'Micah':     [[1, 7, 'TriciaG']],
 };
 
 function kjvReader(book, chapter) {
