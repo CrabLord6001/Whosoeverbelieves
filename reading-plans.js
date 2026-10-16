@@ -1383,11 +1383,20 @@ function toggleGrace(idx) {
 // ══════════════════════════════════════════════════════════════
 let lastMilestoneFired = 0; // tracks highest milestone shown this session
 
-function getShareText(pct) {
-  const name = document.getElementById('plan-name').value || 'My Reading Plan';
-  if (pct >= 100) return `I just finished the "${name}" Bible reading plan on WhosoeverBelieves.com! 📖🎉`;
-  if (pct > 0)    return `I'm ${pct}% through the "${name}" Bible reading plan on WhosoeverBelieves.com! 📖`;
-  return `I just started the "${name}" Bible reading plan on WhosoeverBelieves.com! 📖`;
+// Describes the plan, not the reader's progress: the button shares the plan
+// itself, so a percentage would be both off-topic and a little boastful.
+function getPlanShareText() {
+  const nameEl = document.getElementById('plan-name');
+  const name   = (nameEl ? nameEl.value : '').trim();
+  const tail   = ' — a Bible reading plan on WhosoeverBelieves.com';
+  if (name) return '"' + name + '"' + tail;
+  if (!selectedBooks.length) return 'A Bible reading plan on WhosoeverBelieves.com';
+  const days  = currentPlan.length ||
+                parseInt(document.getElementById('total-days').value, 10) || 30;
+  const books = selectedBooks.length === 1 ? selectedBooks[0]
+              : selectedBooks.length <= 3 ? selectedBooks.join(', ')
+              : selectedBooks.length + ' books';
+  return books + ' in ' + days + ' days' + tail;
 }
 
 const SHARE_BASE = 'https://whosoeverbelieves.com/bible-reading-plans';
@@ -1538,19 +1547,20 @@ function applySharedPlanFromUrl() {
   return true;
 }
 
-function shareToX(pct) {
-  const text = encodeURIComponent(getShareText(pct));
+function shareToX() {
+  const text = encodeURIComponent(getPlanShareText());
   const url  = encodeURIComponent(buildPlanShareUrl());
   window.open(`https://x.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=550,height=420');
 }
 
-function shareToFacebook(pct) {
+function shareToFacebook() {
   const url = encodeURIComponent(buildPlanShareUrl());
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=550,height=420');
 }
 
-function copyShareLink(pct) {
-  const text = getShareText(pct) + '\n' + buildPlanShareUrl();
+function copyShareLink() {
+  // Just the link: pasted into a message, the preview does the rest.
+  const text = buildPlanShareUrl();
   navigator.clipboard.writeText(text).then(() => {
     showToast('Copied to clipboard ✓', 'success');
   }).catch(() => {
@@ -1571,29 +1581,31 @@ const ICON_FB = '<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
 
 // context: 'dropdown' | 'milestone' | 'completion'
+// pct is still accepted by the existing call sites but no longer used:
+// the share text describes the plan rather than the reader's progress.
 function buildShareButtons(pct, context) {
   if (context === 'completion') {
     return `
       <span style="font-family:'Cormorant Garamond',serif;font-size:0.88rem;font-style:italic;color:var(--text-mid);">Share:</span>
-      <button onclick="shareToX(${pct})" title="Post on X" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:var(--text-faint);transition:color 0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-faint)'">
+      <button onclick="shareToX()" title="Post on X" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:var(--text-faint);transition:color 0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-faint)'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
       </button>
-      <button onclick="shareToFacebook(${pct})" title="Share on Facebook" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:#1877F2;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+      <button onclick="shareToFacebook()" title="Share on Facebook" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:#1877F2;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
       </button>
-      <button onclick="copyShareLink(${pct})" title="Copy to clipboard" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:var(--text-faint);transition:color 0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-faint)'">
+      <button onclick="copyShareLink()" title="Copy to clipboard" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:var(--text-faint);transition:color 0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-faint)'">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
       </button>`;
   }
   const cls = 'share-option';
   return `
-    <button class="${cls}" onclick="shareToX(${pct})" title="Share on X">
+    <button class="${cls}" onclick="shareToX()" title="Share on X">
       ${ICON_X} Post on X
     </button>
-    <button class="${cls}" onclick="shareToFacebook(${pct})" title="Share on Facebook">
+    <button class="${cls}" onclick="shareToFacebook()" title="Share on Facebook">
       ${ICON_FB} Facebook
     </button>
-    <button class="${cls}" onclick="copyShareLink(${pct})" title="Copy to clipboard">
+    <button class="${cls}" onclick="copyShareLink()" title="Copy to clipboard">
       ${ICON_COPY} Copy Link
     </button>`;
 }
