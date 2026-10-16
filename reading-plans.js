@@ -3826,6 +3826,12 @@ const KJV_AUDIO = {
   'Obadiah':   [[1, 1, 'TriciaG']],
   'Jonah':     [[1, 4, 'TriciaG']],
   'Micah':     [[1, 7, 'TriciaG']],
+  'Nahum':     [[1, 3, 'TriciaG']],
+  'Habakkuk':  [[1, 3, 'TriciaG']],
+  'Zephaniah': [[1, 3, 'TriciaG']],
+  'Haggai':    [[1, 2, 'TriciaG']],
+  'Zechariah': [[1, 14, 'TriciaG']],
+  'Malachi':   [[1, 4, 'TriciaG']],
 };
 
 function kjvReader(book, chapter) {
