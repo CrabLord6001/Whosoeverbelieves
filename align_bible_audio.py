@@ -41,6 +41,10 @@ import soundfile as sf
 import torch, torchaudio
 
 R2_BASE = "https://pub-c4105367c474429f812253bea5afdc20.r2.dev"
+# Set from --translation. WEB is the eBible narration (one narrator, spoken
+# chapter announcements, mis-numbered files in four books); KJV is the LibriVox
+# set (many readers, no announcements, files named by their real chapter).
+TRANS = 'web'
 TEXT_DIR = os.path.join('bible', 'web')
 OUT_DIR = os.path.join('bible', 'timings', 'web')
 MODEL_NAME = 'wav2vec2_base_960h'
@@ -89,6 +93,8 @@ def audio_file_number(book, chapter):
     announcement of all 1,189 files (Oct 2026). Must stay in step with
     audioFileNumber() in bible-reading-plans.html.
     """
+    if TRANS != 'web':
+        return chapter            # the KJV files were cut and named by hand
     if book == 'Psalms' and chapter >= 72:
         return chapter + 1          # Psalm 71 listed twice; 150 is in _151
     if book == 'Luke' and chapter >= 18:
@@ -124,6 +130,11 @@ def norm_words(text):
 
 
 def chapter_announcement(book, chapter):
+    # Verified Oct 2026 across eight reader ranges: every KJV chapter file
+    # opens directly on verse 1, so there is nothing to absorb. Feeding in an
+    # announcement that isn't there would consume real verse-1 audio.
+    if TRANS != 'web':
+        return []
     if book == 'Psalms':
         return ['PSALM'] + say_number(chapter)
     return norm_words(book) + ['CHAPTER'] + say_number(chapter)
@@ -218,7 +229,8 @@ def align_chapter(al, book, chapter, verses, tmp, title=None):
     mp3 = os.path.join(tmp, f'{folder}_{fileno}.mp3')
     wav = mp3[:-4] + '.wav'
     try:
-        if not fetch(f'{R2_BASE}/{folder}/{folder}_{fileno}.mp3', mp3):
+        prefix = '' if TRANS == 'web' else TRANS + '/'
+        if not fetch(f'{R2_BASE}/{prefix}{folder}/{folder}_{fileno}.mp3', mp3):
             return {'error': 'download'}
         if not decode(mp3, wav):
             return {'error': 'decode'}
@@ -290,7 +302,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('books', nargs='*')
     ap.add_argument('--device', default='cpu', help='cpu or cuda')
+    ap.add_argument('--translation', default='web', choices=['web', 'kjv'],
+                    help='which recording to align (default web)')
     args = ap.parse_args()
+
+    global TRANS, TEXT_DIR, OUT_DIR
+    TRANS = args.translation
+    TEXT_DIR = os.path.join('bible', TRANS)
+    OUT_DIR = os.path.join('bible', 'timings', TRANS)
+    print(f'aligning the {TRANS.upper()} recording: text from {TEXT_DIR}, '
+          f'timings to {OUT_DIR}', flush=True)
 
     if not os.path.isdir(TEXT_DIR):
         sys.exit(f'run this from the repo root ({TEXT_DIR} not found)')
