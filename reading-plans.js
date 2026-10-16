@@ -1390,21 +1390,167 @@ function getShareText(pct) {
   return `I just started the "${name}" Bible reading plan on WhosoeverBelieves.com! 📖`;
 }
 
-const SHARE_URL = 'https://whosoeverbelieves.com/bible-reading-plans';
+const SHARE_BASE = 'https://whosoeverbelieves.com/bible-reading-plans';
+
+// ══════════════════════════════════════════════════════════════
+// SHAREABLE PLAN LINKS
+// A plan is a pure function of its settings, so a link only has to
+// carry the settings — no stored row, no share token.
+//   b = books (3-letter codes, ranges allowed)   d = total days
+//   n = plan name (display label only)
+// A shared plan always starts on the day it is opened. The sharer's
+// own start date is deliberately never carried across.
+// ══════════════════════════════════════════════════════════════
+const BOOK_CODES = {
+  "Genesis":"gen","Exodus":"exo","Leviticus":"lev","Numbers":"num","Deuteronomy":"deu",
+  "Joshua":"jos","Judges":"jdg","Ruth":"rut","1 Samuel":"1sa","2 Samuel":"2sa",
+  "1 Kings":"1ki","2 Kings":"2ki","1 Chronicles":"1ch","2 Chronicles":"2ch","Ezra":"ezr",
+  "Nehemiah":"neh","Esther":"est","Job":"job","Psalms":"psa","Proverbs":"pro",
+  "Ecclesiastes":"ecc","Song of Songs":"sng","Isaiah":"isa","Jeremiah":"jer","Lamentations":"lam",
+  "Ezekiel":"ezk","Daniel":"dan","Hosea":"hos","Joel":"jol","Amos":"amo",
+  "Obadiah":"oba","Jonah":"jon","Micah":"mic","Nahum":"nam","Habakkuk":"hab",
+  "Zephaniah":"zep","Haggai":"hag","Zechariah":"zec","Malachi":"mal",
+  "Matthew":"mat","Mark":"mrk","Luke":"luk","John":"jhn","Acts":"act","Romans":"rom",
+  "1 Corinthians":"1co","2 Corinthians":"2co","Galatians":"gal","Ephesians":"eph",
+  "Philippians":"php","Colossians":"col","1 Thessalonians":"1th","2 Thessalonians":"2th",
+  "1 Timothy":"1ti","2 Timothy":"2ti","Titus":"tit","Philemon":"phm","Hebrews":"heb",
+  "James":"jas","1 Peter":"1pe","2 Peter":"2pe","1 John":"1jn","2 John":"2jn",
+  "3 John":"3jn","Jude":"jud","Revelation":"rev"
+};
+const CODE_BOOKS = {};
+Object.keys(BOOK_CODES).forEach(b => { CODE_BOOKS[BOOK_CODES[b]] = b; });
+
+function canonIndex(book) { return Object.keys(BIBLE).indexOf(book); }
+
+// Collapse runs of three or more canonically consecutive books into gen-deu
+function encodeBookList(books) {
+  const canon = Object.keys(BIBLE);
+  const out = [];
+  let i = 0;
+  while (i < books.length) {
+    let j = i;
+    while (j + 1 < books.length &&
+           canonIndex(books[j + 1]) === canonIndex(books[j]) + 1) j++;
+    if (j - i >= 2) out.push(BOOK_CODES[books[i]] + '-' + BOOK_CODES[books[j]]);
+    else for (let k = i; k <= j; k++) out.push(BOOK_CODES[books[k]]);
+    i = j + 1;
+  }
+  return out.filter(Boolean).join(',');
+}
+
+function decodeBookList(str) {
+  const canon = Object.keys(BIBLE);
+  const books = [];
+  String(str).split(',').forEach(tok => {
+    const t = tok.trim().toLowerCase();
+    if (!t) return;
+    if (t.indexOf('-') > 0) {
+      const parts = t.split('-');
+      const a = CODE_BOOKS[parts[0]], b = CODE_BOOKS[parts[1]];
+      if (!a || !b) return;
+      const ia = canon.indexOf(a), ib = canon.indexOf(b);
+      if (ia < 0 || ib < 0 || ib < ia) return;
+      for (let k = ia; k <= ib; k++) books.push(canon[k]);
+    } else if (CODE_BOOKS[t]) {
+      books.push(CODE_BOOKS[t]);
+    }
+  });
+  return books.filter((b, i) => books.indexOf(b) === i);
+}
+
+function buildPlanShareUrl() {
+  if (!selectedBooks.length) return SHARE_BASE;
+  const params = [];
+  params.push('b=' + encodeBookList(selectedBooks));
+  // currentPlan is the source of truth for length: a plan loaded from the
+  // database restores its books but not the total-days input box.
+  const days = currentPlan.length ||
+               parseInt(document.getElementById('total-days').value, 10) || 30;
+  if (days !== 30) params.push('d=' + days);
+  const nameEl = document.getElementById('plan-name');
+  const name   = (nameEl ? nameEl.value : '').trim().slice(0, 60);
+  if (name) params.push('n=' + encodeURIComponent(name).replace(/%20/g, '+'));
+  return SHARE_BASE + '?' + params.join('&');
+}
+
+function todayISO() {
+  const d = new Date();
+  return new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+           .toISOString().slice(0, 10);
+}
+
+function showSharedPlanNote() {
+  const section = document.getElementById('plan-section');
+  if (!section || document.getElementById('shared-plan-note')) return;
+  const note = document.createElement('div');
+  note.id = 'shared-plan-note';
+  note.style.cssText =
+    'border-left:2px solid var(--gold);background:var(--glass);' +
+    'padding:0.75rem 1rem;margin-bottom:1.25rem;border-radius:0 4px 4px 0;' +
+    "font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-mid);";
+  // Fixed copy, no user data - safe to set as markup.
+  note.innerHTML =
+    'Someone shared this Bible reading plan with you! It starts today. ' +
+    '<a href="#" id="shared-plan-later" style="color:var(--gold);' +
+    'text-decoration:underline;text-decoration-color:rgba(201,168,76,0.4);">' +
+    'Start it later</a>';
+  section.insertBefore(note, section.firstChild);
+  const later = document.getElementById('shared-plan-later');
+  if (later) later.addEventListener('click', function (e) {
+    e.preventDefault();
+    openBuilderModal();   // books, length and name are already filled in
+  });
+}
+
+// Returns true when a shared plan was applied, so sign-in does not
+// auto-load a different plan over the top of it.
+function applySharedPlanFromUrl() {
+  let params;
+  try { params = new URLSearchParams(window.location.search); }
+  catch (e) { return false; }
+
+  const b = params.get('b');
+  if (!b) return false;
+
+  const books = decodeBookList(b);
+  if (!books.length) return false;
+
+  selectedBooks = books;
+
+  const days = parseInt(params.get('d'), 10);
+  document.getElementById('total-days').value =
+    (days > 0 && days <= 3650) ? days : 30;
+
+  const name = (params.get('n') || '').slice(0, 60);
+  document.getElementById('plan-name').value = name || 'Shared Reading Plan';
+
+  // A shared plan always begins on the day it is opened.
+  document.getElementById('start-date').value = todayISO();
+
+  renderBookGrid();
+  updateBookSummary();
+  renderOrderCard();
+  generatePlan();
+  showSharedPlanNote();
+  // Rendering the plan leaves the page scrolled down, which would hide the
+  // note behind the sticky header on desktop.
+  window.scrollTo(0, 0);
+  return true;
+}
 
 function shareToX(pct) {
   const text = encodeURIComponent(getShareText(pct));
-  const url  = encodeURIComponent(SHARE_URL);
+  const url  = encodeURIComponent(buildPlanShareUrl());
   window.open(`https://x.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=550,height=420');
 }
 
 function shareToFacebook(pct) {
-  const url = encodeURIComponent(SHARE_URL);
+  const url = encodeURIComponent(buildPlanShareUrl());
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=550,height=420');
 }
 
 function copyShareLink(pct) {
-  const text = getShareText(pct) + '\n' + SHARE_URL;
+  const text = getShareText(pct) + '\n' + buildPlanShareUrl();
   navigator.clipboard.writeText(text).then(() => {
     showToast('Copied to clipboard ✓', 'success');
   }).catch(() => {
@@ -4171,3 +4317,11 @@ _audio.addEventListener('timeupdate', () => {
     scrub.addEventListener('mouseup', () => { _audioSeeking = false; });
   }
 })();
+
+
+// ══════════════════════════════════════════════════════════════
+// Apply a shared plan if this page was opened from a share link.
+// Must run LAST: rendering a plan reaches declarations further down
+// this file, which are still in the temporal dead zone earlier on.
+// ══════════════════════════════════════════════════════════════
+try { applySharedPlanFromUrl(); } catch (e) { console.error('Shared plan link could not be applied:', e); }
