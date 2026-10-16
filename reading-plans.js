@@ -3704,6 +3704,7 @@ const KJV_AUDIO = {
   '1 John':    [[1, 5, 'Rick Tabisz']],
   '2 John':    [[1, 1, 'Rick Tabisz']],
   '3 John':    [[1, 1, 'Rick Tabisz']],
+  'Jonah':     [[1, 4, 'TriciaG']],
 };
 
 function kjvReader(book, chapter) {
