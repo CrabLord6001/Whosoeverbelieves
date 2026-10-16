@@ -4030,7 +4030,8 @@ function audioForward() {
 function _audioRefreshMuteBtn() {
   const b = document.getElementById('audio-mute-btn');
   if (!b) return;
-  b.textContent = _audio.muted ? '🔇 Muted' : '🔊 On';
+  b.textContent = _audio.muted ? '🔇' : '🔊';
+  b.setAttribute('aria-label', _audio.muted ? 'Unmute' : 'Mute');
   b.setAttribute('aria-pressed', _audio.muted ? 'true' : 'false');
 }
 
