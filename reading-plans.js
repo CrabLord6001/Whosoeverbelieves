@@ -1381,7 +1381,7 @@ function toggleGrace(idx) {
   // ══════════════════════════════════════════════════════════════
 // SHARE FEATURES
 // ══════════════════════════════════════════════════════════════
-let lastMilestoneFired = 0; // tracks highest milestone shown this session
+let lastMilestoneFired = 0; // guards the completion modal: fires once per plan
 
 // Describes the plan, not the reader's progress: the button shares the plan
 // itself, so a percentage would be both off-topic and a little boastful.
@@ -1580,7 +1580,7 @@ const ICON_X = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.
 const ICON_FB = '<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>';
 const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
 
-// context: 'dropdown' | 'milestone' | 'completion'
+// context: 'dropdown' | 'completion'
 // pct is still accepted by the existing call sites but no longer used:
 // the share text describes the plan rather than the reader's progress.
 function buildShareButtons(pct, context) {
@@ -1620,40 +1620,6 @@ function toggleShareDropdown() {
   }
 }
 
-// Milestone toast for 25/50/75%
-let milestoneTimer;
-function showMilestoneToast(pct) {
-  const toast = document.getElementById('milestone-toast');
-  const name  = document.getElementById('plan-name').value || 'your plan';
-  const msgs  = {
-    25: { title: "Great start!", sub: `You're a quarter through ${name}. Keep it up!` },
-    50: { title: "Halfway there!", sub: `You're 50% through ${name}!` },
-    75: { title: "Almost there!", sub: `You're 75% through ${name}. The finish line is in sight!` }
-  };
-  const m = msgs[pct];
-  if (!m) return;
-
-  // The toast markup isn't on the page; without this guard crossing 25/50/75%
-  // threw out of updateProgress() and the check never reached persistCheckState().
-  if (!toast || !document.getElementById('milestone-title')) return;
-
-  document.getElementById('milestone-title').textContent = m.title;
-  document.getElementById('milestone-sub').textContent = m.sub;
-  document.getElementById('milestone-actions').innerHTML =
-    buildShareButtons(pct, 'milestone') +
-    '<button class="milestone-dismiss" onclick="dismissMilestone()">Dismiss</button>';
-
-  toast.classList.add('show');
-  clearTimeout(milestoneTimer);
-  milestoneTimer = setTimeout(() => dismissMilestone(), 12000);
-}
-
-function dismissMilestone() {
-  const toast = document.getElementById('milestone-toast');
-  toast.classList.remove('show');
-  clearTimeout(milestoneTimer);
-}
-
 // Completion modal for 100%
 function showCompletionModal() {
   const name = document.getElementById('plan-name').value || 'Your Bible Reading Plan';
@@ -1676,22 +1642,14 @@ function closeCompletion() {
   document.getElementById('completion-overlay').classList.remove('open');
 }
 
-// Milestone detection — called from updateProgress()
+// Completion detection — called from updateProgress().
+// The 25/50/75% congratulatory toasts were removed in Oct 2026: their markup
+// had never been on the page, and the progress bar's own share options cover
+// that ground. lastMilestoneFired stays as the once-only guard for the modal.
 function checkMilestones(pct) {
-  const thresholds = [25, 50, 75, 100];
-  let highest = null;
-  for (const t of thresholds) {
-    if (pct >= t && lastMilestoneFired < t) {
-      highest = t;
-    }
-  }
-  if (highest === null) return;
-  lastMilestoneFired = highest;
-  if (highest === 100) {
-    showCompletionModal();
-  } else {
-    showMilestoneToast(highest);
-  }
+  if (pct < 100 || lastMilestoneFired >= 100) return;
+  lastMilestoneFired = 100;
+  showCompletionModal();
 }
   
 function updateProgress() {

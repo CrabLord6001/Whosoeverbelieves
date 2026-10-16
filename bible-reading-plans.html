@@ -1153,36 +1153,22 @@
   .share-option:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); background: var(--gold-faint); }
   .share-option svg { width: 14px; height: 14px; flex-shrink: 0; }
 
-  /* ── MILESTONE TOAST (richer than standard toast) ── */
-  #milestone-toast {
-    position: fixed; bottom: 2rem; right: 2rem;
-    background: var(--surface); border: 1px solid rgba(58,125,68,0.5);
-    border-left: 3px solid #3a7d44;
-    border-radius: 6px; padding: 1rem 1.25rem;
-    font-family: 'Cormorant Garamond', serif;
-    color: var(--text); z-index: 550;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    transform: translateY(12px); opacity: 0;
-    transition: all 0.35s ease; pointer-events: none;
-    max-width: 360px;
+  /* ── TOASTS OVER THE READER ──────────────────────────────────
+     Both toasts sit outside #reader-overlay in the DOM and were written
+     against the page palette, so a parchment or sepia reading surface still
+     got a navy toast. They follow the reader's tokens while it is open, the
+     same way #audio-player-bar re-points its own. Semantic colors — the green
+     of a save, the red of an error — are not themed. */
+  body.reader-open #toast {
+    background: var(--r-surface); color: var(--r-text); border-color: var(--r-rule);
   }
-  #milestone-toast.show { transform: translateY(0); opacity: 1; pointer-events: auto; }
-  .milestone-title {
-    font-family: 'Cinzel', serif; font-size: 0.85rem;
-    color: var(--text); margin-bottom: 0.25rem;
+  body.reader-open #toast.success { border-color: rgba(58,125,68,0.5); }
+  body.reader-open #toast.error   { border-color: rgba(184,64,64,0.5); }
+
+  body.reader-open #autosave-toast {
+    background: var(--r-surface); color: var(--r-faint); border-color: var(--r-rule);
   }
-  .milestone-sub {
-    font-size: 0.88rem; font-style: italic; color: var(--text-mid);
-    margin-bottom: 0.75rem;
-  }
-  .milestone-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
-  .milestone-dismiss {
-    background: none; border: none; color: var(--text-faint);
-    font-family: 'Cormorant Garamond', serif; font-size: 0.82rem;
-    font-style: italic; cursor: pointer; padding: 0.2rem 0.5rem;
-    transition: color 0.15s;
-  }
-  .milestone-dismiss:hover { color: var(--text); }
+
 
   /* ── COMPLETION MODAL (100% popup) ── */
   .completion-overlay {
