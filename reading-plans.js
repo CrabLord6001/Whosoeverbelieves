@@ -3701,6 +3701,9 @@ const KJV_AUDIO = {
              [13, 17, 'GabrielleC'], [18, 21, 'Sundiata']],
   'Galatians': [[1, 6, 'Kimberly Krause']],
   'James':     [[1, 5, 'Susan Denney']],
+  '1 John':    [[1, 5, 'Rick Tabisz']],
+  '2 John':    [[1, 1, 'Rick Tabisz']],
+  '3 John':    [[1, 1, 'Rick Tabisz']],
 };
 
 function kjvReader(book, chapter) {
@@ -3767,6 +3770,9 @@ function _audioLoadTrack(idx) {
   const label = document.getElementById('audio-track-label');
   const scrub = document.getElementById('audio-scrubber');
   if (label) label.textContent = `${track.label} — loading…`;
+  _audioRefreshSkipBtns();
+  _audioRefreshMuteBtn();
+  _audioUpdateMediaSession(track);
   document.getElementById('audio-queue-label').textContent =
     _audioQueue.length > 1 ? `Track ${idx + 1} of ${_audioQueue.length}` : '';
   document.getElementById('audio-time-cur').textContent = '0:00';
@@ -3782,6 +3788,7 @@ function _audioLoadTrack(idx) {
   // The <audio> element bypasses CORS for media, so direct src always works.
   _audio.pause();
   _audio.src = url;
+  _audio.playbackRate = _audioSpeed;
   _audio.load(); // start buffering immediately
 
   // ── Stall-retry: AudioTreasure throttles streams aggressively ──
@@ -3915,6 +3922,7 @@ function audioClose() {
   _audioLoadId++;           // signals all stall-retry handlers to stop
   _audio.pause();
   _audio.src = '';          // release the media resource
+  audioToggleSettings(false);
   document.getElementById('audio-player-bar').style.display = 'none';
   document.body.classList.remove('audio-active');
   document.querySelectorAll('.sv.active').forEach(el => el.classList.remove('active'));
@@ -3926,6 +3934,181 @@ function audioClose() {
     _activeDayIdx = -1;
   }
 }
+
+// ── Playback speed, skip ahead, mute ──────────────────────────
+// Speed is remembered per browser (localStorage), like the font and theme
+// toggles. Mute deliberately is not: coming back the next day to silence
+// reads as a broken player.
+//
+// Speed needs no special handling in the verse sync. The highlight compares
+// _audio.currentTime against absolute verse start times, and currentTime is
+// media time, so it stays correct at any rate.
+const AUDIO_SPEEDS = [0.75, 1, 1.25, 1.5, 1.75, 2];
+let _audioSpeed = parseFloat(_lsGet('wb-audio-speed', '1')) || 1;
+if (AUDIO_SPEEDS.indexOf(_audioSpeed) === -1) _audioSpeed = 1;
+_audio.playbackRate = _audioSpeed;
+
+function _audioSpeedLabel(r) {
+  return (r === 1 ? '1' : String(r)) + '×';
+}
+
+// The speed pills are built once from AUDIO_SPEEDS, so the list of rates only
+// has to be right in one place.
+function _audioBuildSpeedPills() {
+  const wrap = document.getElementById('audio-speed-pills');
+  if (!wrap || wrap.dataset.built) return;
+  AUDIO_SPEEDS.forEach(r => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = _audioSpeedLabel(r);
+    b.setAttribute('aria-label', 'Play at ' + _audioSpeedLabel(r) + ' speed');
+    b.onclick = () => audioSetSpeed(r);
+    wrap.appendChild(b);
+  });
+  wrap.dataset.built = '1';
+}
+
+function _audioRefreshSpeedPills() {
+  const wrap = document.getElementById('audio-speed-pills');
+  if (!wrap) return;
+  AUDIO_SPEEDS.forEach((r, i) => {
+    const b = wrap.children[i];
+    if (!b) return;
+    b.classList.toggle('on', r === _audioSpeed);
+    b.setAttribute('aria-pressed', r === _audioSpeed ? 'true' : 'false');
+  });
+}
+
+function audioSetSpeed(r) {
+  _audioSpeed = r;
+  _audio.playbackRate = r;
+  _lsSet('wb-audio-speed', String(r));
+  _audioRefreshSpeedPills();
+  _audioUpdatePosition();
+}
+
+// ── Settings sheet ────────────────────────────────────────────
+function audioToggleSettings(force) {
+  const panel = document.getElementById('audio-settings');
+  const btn   = document.getElementById('audio-settings-btn');
+  if (!panel) return;
+  const open = typeof force === 'boolean' ? force : panel.hidden;
+  panel.hidden = !open;
+  if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (open) { _audioBuildSpeedPills(); _audioRefreshSpeedPills(); _audioRefreshMuteBtn(); }
+}
+
+// A tap outside, or Escape, closes it — the reader's own settings sheet
+// behaves this way, so the two feel the same.
+document.addEventListener('click', e => {
+  const panel = document.getElementById('audio-settings');
+  if (!panel || panel.hidden) return;
+  if (e.target.closest('#audio-settings') || e.target.closest('#audio-settings-btn')) return;
+  audioToggleSettings(false);
+});
+document.addEventListener('keydown', e => {
+  const panel = document.getElementById('audio-settings');
+  if (e.key === 'Escape' && panel && !panel.hidden) audioToggleSettings(false);
+});
+
+// Chapter skips earn their place only on a day with more than one chapter.
+function _audioRefreshSkipBtns() {
+  const multi = _audioQueue.length > 1;
+  ['audio-prev-btn', 'audio-next-btn'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) b.style.display = multi ? '' : 'none';
+  });
+}
+
+function audioForward() {
+  const d = _audio.duration;
+  _audio.currentTime = isFinite(d) && d > 0
+    ? Math.min(d - 0.1, _audio.currentTime + 10)
+    : _audio.currentTime + 10;
+}
+
+function _audioRefreshMuteBtn() {
+  const b = document.getElementById('audio-mute-btn');
+  if (!b) return;
+  b.textContent = _audio.muted ? '🔇 Muted' : '🔊 On';
+  b.setAttribute('aria-pressed', _audio.muted ? 'true' : 'false');
+}
+
+function audioToggleMute() {
+  _audio.muted = !_audio.muted;
+  _audioRefreshMuteBtn();
+}
+
+// ── Lock-screen and headphone controls ────────────────────────
+// Media Session puts the chapter on the iOS lock screen and Android
+// notification shade, and wires the hardware play/pause, skip and
+// next-track controls to this player. Everything is feature-detected and
+// wrapped, because Safari throws on action handlers it doesn't implement.
+function _audioUpdateMediaSession(track) {
+  if (!('mediaSession' in navigator)) return;
+  const ms = navigator.mediaSession;
+  try {
+    ms.metadata = new MediaMetadata({
+      title:  track.label,
+      artist: track.trans === 'KJV' ? 'King James Version — LibriVox'
+                                    : 'World English Bible — Winfred W. Henson',
+      album:  'Whosoever Believes — Bible Reading Plan',
+      artwork: [{ src: location.origin + '/images/cross-sunrise.png',
+                  sizes: '512x512', type: 'image/png' }]
+    });
+  } catch (e) { /* MediaMetadata unsupported — controls still work */ }
+
+  const set = (action, fn) => { try { ms.setActionHandler(action, fn); } catch (e) {} };
+  set('play',  () => { _audio.play().catch(() => {}); });
+  set('pause', () => { _audio.pause(); });
+  set('seekbackward', d => {
+    const o = (d && d.seekOffset) || 10;
+    _audio.currentTime = Math.max(0, _audio.currentTime - o);
+  });
+  set('seekforward', () => audioForward());
+  set('seekto', d => {
+    if (!d) return;
+    if (d.fastSeek && typeof _audio.fastSeek === 'function') _audio.fastSeek(d.seekTime);
+    else _audio.currentTime = d.seekTime;
+    _audioUpdatePosition();
+  });
+  // Only offer track skips that actually go somewhere, so the lock screen
+  // greys out the rest instead of showing dead buttons.
+  set('previoustrack', (_audioIdx > 0 || _audio.currentTime > 5) ? () => audioGoPrev() : null);
+  set('nexttrack', _audioIdx < _audioQueue.length - 1 ? () => audioGoNext() : null);
+}
+
+function _audioUpdatePosition() {
+  if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
+  const d = _audio.duration;
+  if (!isFinite(d) || d <= 0) return;
+  try {
+    navigator.mediaSession.setPositionState({
+      duration: d,
+      playbackRate: _audio.playbackRate || 1,
+      position: Math.max(0, Math.min(_audio.currentTime, d))
+    });
+  } catch (e) {}
+}
+
+// Keep the lock screen and the chosen speed in step with the element.
+let _msPosAt = 0;
+_audio.addEventListener('loadedmetadata', () => {
+  _audio.playbackRate = _audioSpeed;   // a new src can reset the rate
+  _audioUpdatePosition();
+});
+_audio.addEventListener('ratechange', _audioUpdatePosition);
+_audio.addEventListener('play', () => {
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+  _audioUpdatePosition();
+});
+_audio.addEventListener('pause', () => {
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+});
+_audio.addEventListener('timeupdate', () => {
+  const now = Date.now();
+  if (now - _msPosAt > 1000) { _msPosAt = now; _audioUpdatePosition(); }
+});
 
 // ── Wire up events ────────────────────────────────────────────
 (function initAudioPlayer() {

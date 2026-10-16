@@ -1784,6 +1784,45 @@
     color: var(--audio-gold); font-size: 0.9rem; padding: 0.28rem 0.9rem;
   }
   #audio-play-btn:hover { filter: brightness(1.25); }
+  /* The settings sheet rides directly above the bar and inherits its tokens. */
+  #audio-settings-btn[aria-expanded="true"] {
+    color: var(--audio-gold); border-color: var(--audio-gold);
+    background: var(--audio-play-bg);
+  }
+  #audio-settings {
+    position: absolute; left: 0; right: 0; bottom: 100%;
+    background: var(--audio-bg); border-top: 1px solid var(--audio-rule);
+    border-bottom: 1px solid var(--audio-rule);
+    padding: 0.7rem 1.25rem 0.85rem;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.35);
+  }
+  #audio-settings[hidden] { display: none; }
+  .as-title {
+    display: block; font-family: 'Cinzel', serif; font-size: 0.52rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--audio-gold); margin-bottom: 0.55rem;
+  }
+  .as-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.75rem; margin-top: 0.5rem;
+  }
+  .as-label {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem; color: var(--audio-text);
+  }
+  .as-speeds { display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: flex-end; }
+  .as-speeds button, .as-btn {
+    min-height: 38px; padding: 0.3rem 0.6rem;
+    background: none; border: 1px solid var(--audio-btn-br);
+    color: var(--audio-text-mid); border-radius: 4px; cursor: pointer;
+    font-family: 'Cinzel', serif; font-size: 0.66rem; letter-spacing: 0.03em;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .as-btn { font-family: 'EB Garamond', serif; font-size: 0.85rem; padding: 0.3rem 0.8rem; }
+  .as-speeds button:hover, .as-btn:hover { color: var(--audio-gold); border-color: var(--audio-gold); }
+  .as-speeds button.on {
+    color: var(--audio-gold); border-color: var(--audio-gold);
+    background: var(--audio-play-bg);
+  }
 
   .audio-scrub-row {
     display: flex; align-items: center; gap: 0.45rem; flex: 1.4; min-width: 100px;
@@ -2474,10 +2513,13 @@
     <span class="audio-queue-label" id="audio-queue-label"></span>
   </div>
   <div class="audio-controls">
-    <button class="audio-ctrl-btn" title="Previous chapter" onclick="audioGoPrev()">⏮</button>
+    <button class="audio-ctrl-btn" id="audio-prev-btn" title="Previous chapter" onclick="audioGoPrev()">⏮</button>
     <button class="audio-ctrl-btn" title="Rewind 10 seconds" onclick="audioRewind()">↩ 10s</button>
     <button class="audio-ctrl-btn" id="audio-play-btn" title="Play / Pause" onclick="audioTogglePlay()">▶</button>
-    <button class="audio-ctrl-btn" title="Next chapter" onclick="audioGoNext()">⏭</button>
+    <button class="audio-ctrl-btn" title="Forward 10 seconds" onclick="audioForward()">10s ↪</button>
+    <button class="audio-ctrl-btn" id="audio-next-btn" title="Next chapter" onclick="audioGoNext()">⏭</button>
+    <button class="audio-ctrl-btn" id="audio-settings-btn" title="Audio settings"
+            aria-haspopup="true" aria-expanded="false" onclick="audioToggleSettings()">⚙</button>
   </div>
   <div class="audio-scrub-row">
     <span id="audio-time-cur">0:00</span>
@@ -2485,6 +2527,20 @@
     <span id="audio-time-dur">0:00</span>
   </div>
   <button class="audio-close-btn" title="Close player" onclick="audioClose()">✕</button>
+
+  <!-- Set-once controls. Chapter skips stay on the bar, but only when the day
+       has more than one chapter to skip between. -->
+  <div id="audio-settings" hidden>
+    <span class="as-title">Audio Settings</span>
+    <div class="as-row">
+      <span class="as-label">Speed</span>
+      <div class="as-speeds" id="audio-speed-pills"></div>
+    </div>
+    <div class="as-row">
+      <span class="as-label">Sound</span>
+      <button class="as-btn" id="audio-mute-btn" onclick="audioToggleMute()">🔊 On</button>
+    </div>
+  </div>
 </div>
 
 <!-- SCRIPTURE READER -->
