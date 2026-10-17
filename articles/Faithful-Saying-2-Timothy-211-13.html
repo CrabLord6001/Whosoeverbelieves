@@ -156,15 +156,15 @@
 
   <article class="article-body">
     
-<audio id="player" src="/audio/2tim-audio.mp3"></audio>
+<audio id="player" src="/audio/2tim-audio.mp3" preload="none"></audio>
 <div style="display: flex; align-items: center; gap: 10px; margin: 1rem 0; max-width: 720px;">
-  <button onclick="togglePlay()" id="playBtn" style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid #b8963e; background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-    <svg id="playIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e"><polygon points="2,1 11,6 2,11"/></svg>
-    <svg id="pauseIcon" width="12" height="12" viewBox="0 0 12 12" fill="#b8963e" style="display:none;"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7" y="1" width="3.5" height="10" rx="1"/></svg>
+  <button onclick="togglePlay()" id="playBtn" aria-label="Play or pause audio" style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--gold); background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+    <svg id="playIcon" width="12" height="12" viewBox="0 0 12 12" style="fill: var(--gold);"><polygon points="2,1 11,6 2,11"/></svg>
+    <svg id="pauseIcon" width="12" height="12" viewBox="0 0 12 12" style="fill: var(--gold); display:none;"><rect x="1" y="1" width="3.5" height="10" rx="1"/><rect x="7" y="1" width="3.5" height="10" rx="1"/></svg>
   </button>
-  <span style="font-size: 12px; color: #888; white-space: nowrap;">🎧 Listen to this article</span>
-  <input type="range" id="progress" value="0" min="0" max="100" step="0.1" style="flex: 1; accent-color: #b8963e; cursor: pointer;" oninput="seek(this.value)"/>
-  <span id="currentTime" style="font-size: 11px; color: #888; white-space: nowrap;">0:00</span>
+  <span style="font-size: 12px; color: var(--text-faint); white-space: nowrap;">&#127911; Listen to this article</span>
+  <input type="range" id="progress" value="0" min="0" max="100" step="0.1" aria-label="Audio position" style="flex: 1; min-width: 0; accent-color: var(--gold); cursor: pointer;" oninput="seek(this.value)"/>
+  <span id="currentTime" style="font-size: 11px; color: var(--text-faint); white-space: nowrap; font-variant-numeric: tabular-nums;">0:00 / 5:28</span>
 </div>
 <script>
 const a = document.getElementById('player');
@@ -172,11 +172,17 @@ const pi = document.getElementById('playIcon');
 const pa = document.getElementById('pauseIcon');
 const pr = document.getElementById('progress');
 const ct = document.getElementById('currentTime');
+const fallbackDuration = 328.9;
 function fmt(s){const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec;}
-function togglePlay(){if(a.paused){a.play();pi.style.display='none';pa.style.display='block';}else{a.pause();pi.style.display='block';pa.style.display='none';}}
-function seek(v){if(a.duration)a.currentTime=(v/100)*a.duration;}
-a.addEventListener('timeupdate',()=>{if(a.duration){pr.value=(a.currentTime/a.duration)*100;ct.textContent=fmt(a.currentTime);}});
-a.addEventListener('ended',()=>{pi.style.display='block';pa.style.display='none';pr.value=0;ct.textContent='0:00';});
+function total(){return (a.duration && isFinite(a.duration)) ? a.duration : fallbackDuration;}
+function paint(){pr.value=(a.currentTime/total())*100;ct.textContent=fmt(a.currentTime)+' / '+fmt(total());}
+function togglePlay(){if(a.paused){a.play();}else{a.pause();}}
+function seek(v){a.currentTime=(v/100)*total();}
+a.addEventListener('play',()=>{pi.style.display='none';pa.style.display='block';});
+a.addEventListener('pause',()=>{pi.style.display='block';pa.style.display='none';});
+a.addEventListener('loadedmetadata',paint);
+a.addEventListener('timeupdate',paint);
+a.addEventListener('ended',()=>{pi.style.display='block';pa.style.display='none';a.currentTime=0;pr.value=0;ct.textContent='0:00 / '+fmt(total());});
 </script>
     
     <p>
