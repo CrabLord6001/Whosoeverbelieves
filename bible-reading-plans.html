@@ -393,7 +393,10 @@
   .rp-menu-wrap { position: relative; display: inline-flex; }
   .rp-menu {
     display: none; position: absolute; top: calc(100% + 0.4rem); left: 0; z-index: 120;
-    min-width: 15rem; max-width: min(19rem, calc(100vw - 2rem));
+    /* Sized for the tightened labels: the widest ('Keeps your notes')
+       needs about 8.25rem including padding, so 10rem leaves comfortable
+       trailing space without the dead gap the old 15rem left behind. */
+    min-width: 10rem; max-width: min(19rem, calc(100vw - 2rem));
     background: var(--surface); border: 1px solid var(--rule); border-radius: 8px;
     padding: 0.35rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   }
