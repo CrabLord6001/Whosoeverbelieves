@@ -534,6 +534,13 @@ function togglePlanBuilder(forceCollapse) {
 // ══════════════════════════════════════════════════════════════
 // MAIN GENERATE FUNCTION
 // ══════════════════════════════════════════════════════════════
+// A plan switch stops the audio: the player's queue and day number belong to
+// the old plan, and left running they mark the wrong day as Playing.
+function _audioStopForPlanChange() {
+  const bar = document.getElementById('audio-player-bar');
+  if (bar && bar.style.display !== 'none') audioClose();
+}
+
 function generatePlan() {
   if (!selectedBooks.length) {
     alert('Please select at least one book.');
@@ -568,6 +575,7 @@ function generatePlan() {
     });
   }
 
+  _audioStopForPlanChange();
   currentPlan   = calendar;
   checkStates   = {};
   reflections   = {};
@@ -2146,6 +2154,7 @@ async function loadPlanFromDb(planId) {
   if (!plan || !days) { showToast('Could not load plan.', 'error'); return; }
 
   // Restore state
+  _audioStopForPlanChange();
   currentPlanId   = planId;
   selectedBooks   = plan.books || [];
   checkStates     = {};
@@ -2634,6 +2643,7 @@ async function confirmCopyPlan() {
   const origTitle = document.getElementById('plan-name').value.trim() || 'Untitled Plan';
   const newTitle  = makeCopyTitle(origTitle);
 
+  _audioStopForPlanChange();
   currentPlan   = redatePlan(currentPlan, startStr);
   checkStates   = {};
   reflections   = {};
