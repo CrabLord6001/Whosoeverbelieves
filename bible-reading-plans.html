@@ -1121,37 +1121,7 @@
   }
   .day-card.completed .day-check-label { color: var(--gold); }
 
-  /* ── SHARE BUTTON (persistent, in progress header) ── */
- .share-btn {
-    display: inline-flex; align-items: center;
-    padding: 0.3rem;
-    background: none; border: none; cursor: pointer;
-    color: var(--gold);
-    opacity: 0.5;
-    transition: opacity 0.2s;
-  }
-  .share-btn:hover { opacity: 1; }
-  .share-btn svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ── SHARE DROPDOWN (appears below share button) ── */
-  .share-dropdown {
-    display: none; gap: 0.5rem; flex-wrap: wrap;
-    margin-top: 0.6rem; padding-top: 0.6rem;
-    margin-bottom: 0.6rem;
-    border-top: 1px solid var(--rule);
-  }
-  .share-dropdown.open { display: flex; }
-  .share-option {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    padding: 0.3rem 0.75rem;
-    font-family: 'Cinzel', serif; font-size: 0.58rem;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--text-faint); border: 1px solid var(--rule);
-    border-radius: 2px; background: none; cursor: pointer;
-    transition: all 0.15s; text-decoration: none;
-  }
-  .share-option:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); background: var(--gold-faint); }
-  .share-option svg { width: 14px; height: 14px; flex-shrink: 0; }
 
   /* ── TOASTS OVER THE READER ──────────────────────────────────
      Both toasts sit outside #reader-overlay in the DOM and were written
@@ -1201,22 +1171,6 @@
     font-family: 'Cormorant Garamond', serif; font-size: 1rem;
     font-style: italic; color: var(--text-mid); margin-bottom: 1.5rem;
   }
-  .completion-share-row {
-    display: flex; gap: 0.25rem; justify-content: center;
-    align-items: center;
-    margin-bottom: 1.25rem;
-  }
-  .completion-share-btn {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    padding: 0.55rem 1.2rem;
-    font-family: 'Cinzel', serif; font-size: 0.62rem;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    border: 1px solid var(--rule); border-radius: 3px;
-    background: none; color: var(--text-faint); cursor: pointer;
-    transition: all 0.15s; text-decoration: none;
-  }
-  .completion-share-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); background: var(--gold-faint); }
-  .completion-share-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
   .completion-secondary {
     display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
   }
@@ -2011,10 +1965,10 @@
   .rp-custom span{color:var(--text-mid)}
   .rp-custom:hover{border-color:var(--gold)}
   .rp-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:3rem;counter-reset:s}
-  .rp-step{padding:1.1rem 1.2rem;border-top:1px solid rgba(201,168,76,.4);display:flex;flex-direction:column;gap:.3rem}
+  .rp-step{padding:1.1rem 1.2rem;border-top:1px solid rgba(201,168,76,.4);display:flex;flex-direction:column;gap:.3rem;text-align:center}
   .rp-step b{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--text);font-weight:600}
   .rp-step b::before{counter-increment:s;content:counter(s) ". ";color:var(--gold)}
-  .rp-step span{color:var(--text-mid);font-size:.95rem}
+  .rp-step span{color:var(--text-mid);font-size:.95rem;text-wrap:balance}
   .rp-signin-note{text-align:center;color:var(--text-mid);margin-top:2rem}
   .rp-signin-note button{background:none;border:0;color:var(--gold-light);font:inherit;text-decoration:underline;cursor:pointer}
   #plan-section #progress-section{margin:1.2rem 0 1.4rem}
@@ -2043,6 +1997,89 @@
   #progress-section{position:relative}
   .rp-today{margin-top:1rem;min-height:40px;padding:0 1.2rem;border-radius:3px;border:0;background:var(--gold);color:#0d1117;font-family:'Cinzel',serif;font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
   .rp-today:hover{background:var(--gold-light)}
+  /* ══ PRINT WORKSHEET ══════════════════════════════════════════
+     A sheet to write on, not a list to look at: every reading day
+     gets ruled lines for notes by hand. Plain readable type rather
+     than the site's display faces, which are hard going at 10pt on
+     paper. Nothing depends on a background fill, since browsers
+     print with background graphics off by default. */
+  #plan-print-view { display: none; }
+
+  @media print {
+    /* @page, with its running footer, is written by downloadPDF() */
+
+    body > *:not(#plan-print-view) { display: none !important; }
+    body { background: #fff !important; }
+
+    #plan-print-view {
+      display: block;
+      color: #111;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 11pt;
+      line-height: 1.3;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── Masthead ── */
+    .pw-eyebrow {
+      font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #6b5214; text-align: center; margin: 0 0 5pt;
+    }
+    .pw-title {
+      font-size: 20pt; font-weight: 700; text-align: center;
+      margin: 0 0 6pt; color: #111;
+    }
+    .pw-meta  { text-align: center; font-size: 9.5pt; color: #333; margin: 0 0 3pt; }
+    .pw-books { text-align: center; font-size: 9.5pt; font-style: italic;
+                color: #444; margin: 0 0 10pt; }
+    .pw-rule      { border: 0; border-top: 1.5pt solid #8a6d1f; margin: 0 0 2pt; }
+    .pw-rule-thin { border: 0; border-top: 0.5pt solid #8a6d1f; margin: 0 0 10pt; }
+
+    /* ── Week headings: plain, larger, indented ── */
+    .pw-week {
+      font-size: 13pt; font-weight: 700; color: #111;
+      padding-left: 10pt; margin: 20pt 0 6pt;
+      break-after: avoid; page-break-after: avoid;
+    }
+    .pw-week:first-of-type { margin-top: 6pt; }
+
+    /* ── One day: heading line, then lines to write on ── */
+    .pw-day {
+      /* bottom padding matches a writing line, so the closing rule is
+         usable as a fifth line rather than crowding the fourth */
+      padding: 8pt 0 19pt;
+      border-bottom: 1.5pt solid #4a4a4a;
+      break-inside: avoid; page-break-inside: avoid;
+    }
+    .pw-head { display: flex; align-items: baseline; gap: 9pt; margin-bottom: 6pt; }
+    .pw-box {
+      width: 11pt; height: 11pt; flex: none;
+      border: 1pt solid #333; border-radius: 1pt;
+      transform: translateY(1pt);
+    }
+    .pw-date {
+      font-size: 9pt; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #6b5214; white-space: nowrap;
+    }
+    .pw-passage { font-size: 12.5pt; font-weight: 700; color: #111; }
+    .pw-time { margin-left: auto; font-size: 9pt; color: #555; white-space: nowrap; }
+
+    /* ── Saved notes, then ruled lines ── */
+    .pw-notes {
+      font-size: 10pt; color: #222; margin: 0 0 5pt;
+      border-left: 2pt solid #8a6d1f; padding-left: 8pt;
+    }
+    .pw-notes p  { margin: 0 0 2pt; }
+    .pw-notes ul, .pw-notes ol { margin: 0 0 2pt 15pt; padding: 0; }
+    .pw-lines span {
+      display: block; height: 19pt; border-bottom: 0.5pt solid #b4b4b4;
+    }
+    .pw-rest { padding: 6pt 0 5pt; }
+    .pw-rest .pw-passage { font-weight: 400; font-style: italic; color: #555; }
+
+  }
+
 </style>
   <!-- SEO metadata -->
   <link rel="canonical" href="https://whosoeverbelieves.com/bible-reading-plans" />
@@ -2093,7 +2130,7 @@
     <div class="nav-drop">
       <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
       <div class="nav-drop-menu">
-        <a href="/bible-reading-plans" aria-current="page">Reading Plans</a>
+        <a href="/bible-reading-plans" aria-current="page">Bible Reading Plans</a>
         <a href="/greek/">Biblical Greek Studies</a>
         <a href="/charts/">Maps &amp; Charts</a>
         <a href="/discipleship-challenge">Discipleship</a>
@@ -2157,7 +2194,7 @@
     <div class="rp-custom-row"><button class="rp-custom" type="button" onclick="openBuilderModal()"><span class="rp-plus">+</span><b>Build Your Own</b><span>Any books, your pace</span></button></div>
     <div class="rp-steps">
       <div class="rp-step"><b>Choose your books</b><span>Start from a plan above or pick any books of the Bible.</span></div>
-      <div class="rp-step"><b>Set your pace</b><span>Choose how many days, a start date, and rest days.</span></div>
+      <div class="rp-step"><b>Set your pace</b><span>Choose how many days and a start date.</span></div>
       <div class="rp-step"><b>Read and track</b><span>Check off each day, keep notes, and get email reminders.</span></div>
     </div>
     <p class="rp-signin-note" id="rp-signin-note">Already have plans? <button type="button" onclick="openAuthModal()">Sign in</button> to load them.</p>
@@ -2290,18 +2327,11 @@
       <div class="plan-actions-col">
         <div class="plan-actions">
 
-          <div class="rp-menu-wrap">
-            <button class="wb-btn" id="export-btn" aria-haspopup="true" aria-expanded="false"
-                    onclick="rpToggleMenu('export-menu', this)">Export <span class="wb-caret">&#9660;</span></button>
-            <div class="rp-menu" id="export-menu" role="menu">
-              <button class="rp-mi" role="menuitem" onclick="rpCloseMenus(); downloadPDF();">
-                <b>PDF</b><span>A printable copy of the plan</span>
-              </button>
-              <button class="rp-mi" role="menuitem" onclick="rpCloseMenus(); exportWithNotes();">
-                <b>Text file</b><span>Includes your reflections</span>
-              </button>
-            </div>
-          </div>
+          <button class="wb-btn" id="export-btn" onclick="downloadPDF()"
+                  title="Print or save this plan as a PDF">Export</button>
+
+          <button class="wb-btn ghost" id="share-plan-btn" onclick="copyShareLink()"
+                  title="Copy a link to this plan"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-1px;margin-right:0.35rem;"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</button>
 
           <span id="save-plan-btn-col">
             <button class="wb-btn ghost" id="save-plan-btn" onclick="handleSavePlan()">Save</button>
@@ -2313,10 +2343,10 @@
                     onclick="rpToggleMenu('plan-more-menu', this)">&#8943;</button>
             <div class="rp-menu right" id="plan-more-menu" role="menu">
               <button class="rp-mi" role="menuitem" id="copy-plan-btn-col" onclick="rpCloseMenus(); openCopyPlan();">
-                <b>Copy to new dates</b><span>Same books, fresh start date</span>
+                <b>Copy</b><span>Fresh start date</span>
               </button>
               <button class="rp-mi" role="menuitem" id="restart-plan-btn-col" onclick="rpCloseMenus(); restartCurrentPlan();">
-                <b>Restart</b><span>Clears checkmarks, keeps your notes</span>
+                <b>Restart</b><span>Keeps your notes</span>
               </button>
               <div class="rp-menu-sep"></div>
               <button class="rp-mi danger" role="menuitem" id="delete-plan-btn-col" onclick="rpCloseMenus(); deleteCurrentPlan();">
@@ -2334,13 +2364,9 @@
     <div class="progress-header">
       <div style="display:flex;align-items:baseline;gap:0.75rem;">
         <span class="progress-label">Plan Completion</span>
-        <button class="share-btn" id="progress-share-btn" onclick="toggleShareDropdown()" title="Share your progress">
-          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </button>
       </div>
       <span class="progress-pct" id="progress-pct-text">0%</span>
     </div>
-    <div class="share-dropdown" id="share-dropdown"></div>
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill" style="width:0%"></div>
     </div>
@@ -2650,10 +2676,10 @@
     <div class="completion-icon">🎉</div>
     <div class="completion-heading" id="completion-heading">You Finished Your Bible Reading Plan!</div>
     <div class="completion-sub" id="completion-sub"></div>
-    <div class="completion-share-row" id="completion-share-row"></div>
     <div class="completion-secondary">
-      <button class="completion-action gold" onclick="closeCompletion(); openBuilderModal();">✦ Start a New Plan</button>
-      <button class="completion-action" onclick="closeCompletion()">Dismiss</button>
+      <button class="completion-action gold" onclick="closeCompletion(); openBuilderModal();">✦ Start New Plan</button>
+      <button class="completion-action" id="completion-restart-btn"
+              onclick="restartFromCompletion()">Restart Same Plan</button>
     </div>
   </div>
 </div>
@@ -2676,7 +2702,7 @@
 <div class="redo-overlay" id="copy-overlay" onclick="if(event.target===this)closeCopyPlan()">
   <div class="redo-modal">
     <h3 id="copy-plan-title">Copy Plan</h3>
-    <p>Makes a new plan with the same readings and rest days. Your original plan stays as it is. The copy starts with no checkmarks or notes.</p>
+    <p>Makes a new plan with the same readings. Your original plan stays as it is. The copy starts with no checkmarks or notes.</p>
     <label>Start Date for the Copy</label>
     <input type="date" id="copy-start-date" />
     <div class="redo-actions">
@@ -2692,8 +2718,8 @@
     <button class="builder-modal-close" onclick="closeBuilderModal()">✕</button>
     <div class="builder-modal-heading">✦ Build a New Plan</div>
     <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--text-mid);font-size:0.95rem;margin-bottom:1.5rem;line-height:1.7;">
-      Choose the books you want to read, set your own schedule, and build in rest days as needed.
-      The narration is voiced by <a href="https://ebible.org/eng-web/audio/" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;" target="_blank" rel="noopener">Winfred W. Henson</a> using the World English Bible.
+      Choose the books you want to read and set your own schedule.
+      Narration for the WEB is voiced by <a href="https://ebible.org/eng-web/audio/" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;" target="_blank" rel="noopener">Winfred W. Henson</a>, and the KJV by various readers for the <a href="https://librivox.org/" style="color:var(--gold);text-decoration:underline;text-underline-offset:2px;" target="_blank" rel="noopener">LibriVox</a> project.
     </p>
     <div id="builder-modal-content">
       <!-- Builder cards get moved here by JS on init -->
@@ -2701,5 +2727,6 @@
   </div>
 </div>
 
+<div id="plan-print-view" aria-hidden="true"></div>
 </body>
 </html>

@@ -1186,7 +1186,6 @@ function loadLib(src, css) {
 }
 const QUILL_JS  = 'https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js';
 const QUILL_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css';
-const JSPDF_JS  = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
 
 function openJournal(idx) {
   if (!window.Quill) {
@@ -1547,22 +1546,11 @@ function applySharedPlanFromUrl() {
   return true;
 }
 
-function shareToX() {
-  const text = encodeURIComponent(getPlanShareText());
-  const url  = encodeURIComponent(buildPlanShareUrl());
-  window.open(`https://x.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'width=550,height=420');
-}
-
-function shareToFacebook() {
-  const url = encodeURIComponent(buildPlanShareUrl());
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=550,height=420');
-}
-
 function copyShareLink() {
   // Just the link: pasted into a message, the preview does the rest.
   const text = buildPlanShareUrl();
   navigator.clipboard.writeText(text).then(() => {
-    showToast('Copied to clipboard ✓', 'success');
+    showToast('Plan link copied ✓', 'success');
   }).catch(() => {
     // Fallback for older browsers
     const ta = document.createElement('textarea');
@@ -1571,54 +1559,12 @@ function copyShareLink() {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('Copied to clipboard ✓', 'success');
+    showToast('Plan link copied ✓', 'success');
   });
 }
 
 // SVG icon strings for share buttons
-const ICON_X = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>';
-const ICON_FB = '<svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>';
-const ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
 
-// context: 'dropdown' | 'completion'
-// pct is still accepted by the existing call sites but no longer used:
-// the share text describes the plan rather than the reader's progress.
-function buildShareButtons(pct, context) {
-  if (context === 'completion') {
-    return `
-      <span style="font-family:'Cormorant Garamond',serif;font-size:0.88rem;font-style:italic;color:var(--text-mid);">Share:</span>
-      <button onclick="shareToX()" title="Post on X" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:var(--text-faint);transition:color 0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-faint)'">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      </button>
-      <button onclick="shareToFacebook()" title="Share on Facebook" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:#1877F2;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-      </button>
-      <button onclick="copyShareLink()" title="Copy to clipboard" style="background:none;border:none;cursor:pointer;padding:4px 8px;color:var(--text-faint);transition:color 0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-faint)'">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      </button>`;
-  }
-  const cls = 'share-option';
-  return `
-    <button class="${cls}" onclick="shareToX()" title="Share on X">
-      ${ICON_X} Post on X
-    </button>
-    <button class="${cls}" onclick="shareToFacebook()" title="Share on Facebook">
-      ${ICON_FB} Facebook
-    </button>
-    <button class="${cls}" onclick="copyShareLink()" title="Copy to clipboard">
-      ${ICON_COPY} Copy Link
-    </button>`;
-}
-
-// Persistent share dropdown in progress bar
-function toggleShareDropdown() {
-  const dd = document.getElementById('share-dropdown');
-  const isOpen = dd.classList.toggle('open');
-  if (isOpen) {
-    const pct = parseInt(document.getElementById('progress-pct-text').textContent) || 0;
-    dd.innerHTML = buildShareButtons(pct, 'dropdown');
-  }
-}
 
 // Completion modal for 100%
 function showCompletionModal() {
@@ -1629,7 +1575,10 @@ function showCompletionModal() {
   document.getElementById('completion-heading').textContent = `You Finished ${name}!`;
   document.getElementById('completion-sub').textContent =
     `${readingDays.length} readings completed · ${totalVerses.toLocaleString()} verses read`;
-  document.getElementById('completion-share-row').innerHTML = buildShareButtons(100, 'completion');
+  // Restarting needs a saved plan to carry notes back into, so the button
+  // only appears for a plan that is actually in the account.
+  document.getElementById('completion-restart-btn').style.display =
+    currentPlanId ? '' : 'none';
   document.getElementById('completion-overlay').classList.add('open');
 
   // Mark plan as completed in DB if saved
@@ -2246,343 +2195,104 @@ async function loadPlanFromDb(planId) {
 // ══════════════════════════════════════════════════════════════
 // EXPORT / DOWNLOAD
 // ══════════════════════════════════════════════════════════════
+function esc(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Build the printable worksheet, then hand off to the browser's print
+// dialog, where "Save as PDF" is the usual destination. Printing rather
+// than drawing a PDF keeps the site's own fonts and renders each saved
+// reflection as the formatted note it already is.
 function downloadPDF() {
-  if (!window.jspdf) {
-    showToast('Preparing PDF…', 'success');
-    loadLib(JSPDF_JS)
-      .then(() => downloadPDF())
-      .catch(() => showToast('Could not load the PDF tool. Check your connection and try again.', 'error'));
-    return;
-  }
   if (!currentPlan.length) { showToast('Generate a plan first.', 'error'); return; }
 
-  const { jsPDF } = window.jspdf;
-  const doc  = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const name = document.getElementById('plan-name').value || 'My Reading Plan';
+  const translation = document.getElementById('translation').value || 'WEB';
+  const readingDays = currentPlan.filter(d => !d.isGrace).length;
+  const restDays    = currentPlan.filter(d =>  d.isGrace).length;
 
-  // ── Page dimensions ──
-  const PW   = 210;  // A4 width mm
-  const PH   = 297;  // A4 height mm
-  const ML   = 18;   // margin left
-  const MR   = 18;   // margin right
-  const MT   = 20;   // margin top
-  const MB   = 18;   // margin bottom
-  const CW   = PW - ML - MR; // content width
+  const fmt = iso => iso
+    ? new Date(iso + 'T00:00:00').toLocaleDateString('en-US',
+        { month: 'short', day: 'numeric' })
+    : '';
+  const fmtLong = iso => iso
+    ? new Date(iso + 'T00:00:00').toLocaleDateString('en-US',
+        { month: 'long', day: 'numeric', year: 'numeric' })
+    : '';
 
-  // ── Colour palette (cream & gold) ──
-  const CREAM    = [250, 246, 235];
-  const NAVY     = [13,  27,  46];
-  const GOLD     = [180, 140, 50];
-  const GOLD_LT  = [220, 185, 100];
-  const RULE     = [210, 200, 180];
-  const GRACE_BG = [253, 245, 240];
-  const GRACE_BD = [210, 170, 160];
-  const TEXT_MID = [100, 90, 70];
-  const TEXT_DIM = [160, 150, 130];
+  // Every day is a reading day unless the plan carries rest days, so the
+  // reading-day count is only worth printing when the two actually differ.
+  let meta = `${currentPlan.length} days`;
+  if (restDays) meta += ` · ${readingDays} reading days · ${restDays} rest days`;
+  const first = currentPlan[0]?.date, last = currentPlan[currentPlan.length - 1]?.date;
+  if (first && last) meta += ` · ${fmtLong(first)} to ${fmtLong(last)}`;
+  meta += ` · ${translation}`;
 
-  let y = MT;  // current Y cursor
-  let pageNum = 1;
+  let html = '';
+  html += `<p class="pw-eyebrow">WhosoeverBelieves.com · Bible Reading Plan</p>`;
+  html += `<h1 class="pw-title">${esc(name)}</h1>`;
+  html += `<hr class="pw-rule"><hr class="pw-rule-thin">`;
+  html += `<p class="pw-meta">${esc(meta)}</p>`;
+  if (selectedBooks.length)
+    html += `<p class="pw-books">${esc(selectedBooks.join(' · '))}</p>`;
 
-  // ── Helper: new page ──
-  function newPage() {
-    drawFooter();
-    doc.addPage();
-    pageNum++;
-    y = MT;
-    drawPageBg();
-  }
-
-  // ── Helper: cream page background ──
-  function drawPageBg() {
-    doc.setFillColor(...CREAM);
-    doc.rect(0, 0, PW, PH, 'F');
-    // subtle top gold rule
-    doc.setDrawColor(...GOLD);
-    doc.setLineWidth(0.6);
-    doc.line(ML, 12, PW - MR, 12);
-    doc.setLineWidth(0.2);
-    doc.line(ML, 13.5, PW - MR, 13.5);
-  }
-
-  // ── Helper: footer ──
-  function drawFooter() {
-    doc.setFontSize(7.5);
-    doc.setTextColor(...TEXT_DIM);
-    doc.setFont('helvetica', 'italic');
-    doc.text('WhosoeverBelieves.com', ML, PH - 8);
-    doc.text(`Page ${pageNum}`, PW - MR, PH - 8, { align: 'right' });
-    doc.setDrawColor(...RULE);
-    doc.setLineWidth(0.3);
-    doc.line(ML, PH - 11, PW - MR, PH - 11);
-  }
-
-  // ── Helper: check page overflow ──
-  function checkOverflow(needed) {
-    if (y + needed > PH - MB - 11) newPage();
-  }
-
-  // ── Helper: draw a horizontal rule ──
-  function rule(yPos, color = RULE, weight = 0.3) {
-    doc.setDrawColor(...color);
-    doc.setLineWidth(weight);
-    doc.line(ML, yPos, PW - MR, yPos);
-  }
-
-  // ════════════════════════════════
-  // COVER / TITLE AREA
-  // ════════════════════════════════
-  drawPageBg();
-
-  // Ornamental top line pair
-  rule(MT, GOLD, 0.7);
-  rule(MT + 1.8, GOLD_LT, 0.25);
-
-  y = MT + 10;
-
-  // Eyebrow
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.setTextColor(...GOLD);
-  doc.setCharSpace(2.5);
-  doc.text('FREE GRACE RESOURCES  ·  WHOSOEVERBELIEVES.COM', PW / 2, y, { align: 'center' });
-  doc.setCharSpace(0);
-  y += 9;
-
-  // Plan name — large serif-style via helvetica bold (jsPDF has no embedded serif)
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(22);
-  doc.setTextColor(...NAVY);
-  const titleLines = doc.splitTextToSize(name, CW - 10);
-  titleLines.forEach(line => {
-    doc.text(line, PW / 2, y, { align: 'center' });
-    y += 9;
-  });
-
-  y += 2;
-
-  // Gold divider ornament
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.setTextColor(...GOLD);
-  doc.text('✦', PW / 2, y, { align: 'center' });
-  y += 3;
-  rule(y, GOLD, 0.4);
-  rule(y + 1.5, GOLD_LT, 0.2);
-  y += 8;
-
-  // Scripture tagline
-  doc.setFont('helvetica', 'italic');
-  doc.setFontSize(9.5);
-  doc.setTextColor(...TEXT_MID);
-  doc.text('"Thy word is a lamp unto my feet, and a light unto my path." — Psalm 119:105', PW / 2, y, { align: 'center' });
-  y += 6;
-
-  // Meta line
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(...TEXT_DIM);
-  const readingDayCount = currentPlan.filter(d => !d.isGrace).length;
-  const graceCount      = currentPlan.filter(d => d.isGrace).length;
-  const translation     = document.getElementById('translation').value;
-  const startDate       = currentPlan[0]?.date
-    ? new Date(currentPlan[0].date + 'T00:00:00').toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })
-    : null;
-
-  let meta = `${currentPlan.length} days  ·  ${readingDayCount} reading days`;
-  if (graceCount)  meta += `  ·  ${graceCount} rest days`;
-  if (startDate)   meta += `  ·  begins ${startDate}`;
-  meta += `  ·  ${translation}`;
-  doc.text(meta, PW / 2, y, { align: 'center' });
-  y += 5;
-
-  // Books list
-  if (selectedBooks.length) {
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8);
-    doc.setTextColor(...TEXT_MID);
-    const bookStr = selectedBooks.join('  ·  ');
-    const bookLines = doc.splitTextToSize(bookStr, CW);
-    bookLines.forEach(line => {
-      doc.text(line, PW / 2, y, { align: 'center' });
-      y += 4.5;
-    });
-  }
-
-  y += 6;
-  rule(y, RULE, 0.3);
-  y += 8;
-
-  // ════════════════════════════════
-  // SECTION HEADER helper
-  // ════════════════════════════════
-  function sectionHeader(label) {
-    checkOverflow(14);
-    doc.setFillColor(...GOLD);
-    doc.rect(ML, y, CW, 6.5, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8);
-    doc.setTextColor(250, 246, 235);
-    doc.setCharSpace(1.8);
-    doc.text(label.toUpperCase(), ML + 4, y + 4.3);
-    doc.setCharSpace(0);
-    y += 10;
-  }
-
-  // ════════════════════════════════
-  // DAY CARDS
-  // ════════════════════════════════
-  // Group into weeks for section headers
   let lastWeek = -1;
-
   currentPlan.forEach((day, idx) => {
     const week = Math.floor((day.dayNum - 1) / 7) + 1;
-
-    // Week header
     if (week !== lastWeek) {
       lastWeek = week;
-      checkOverflow(20);
-      if (y > MT + 20) { y += 2; rule(y, RULE, 0.2); y += 6; }
-      sectionHeader(`Week ${week}`);
+      html += `<div class="pw-week">Week ${week}</div>`;
     }
 
-    const { label } = day.isGrace ? { label: 'Rest Day — Catch Up & Sabbath' } : formatPassage(day.chapters);
-    const isGrace   = day.isGrace;
-    const isDone    = !!checkStates[idx];
-    const hasRefl   = !!(reflections[idx]?.trim());
+    const rest    = day.isGrace;
+    const passage = rest ? 'Rest day — catch up, or simply rest'
+                         : formatPassage(day.chapters).label;
+    const note    = (reflections[idx] || '').trim();
+    const time    = rest ? '' : readingTimeLabel(day);
 
-    // Card height estimate
-    const passageLines = doc.splitTextToSize(label, CW - 40).length;
-    const reflLines    = hasRefl ? doc.splitTextToSize(reflections[idx], CW - 10).length : 0;
-    const cardH = 12 + (passageLines * 5) + (hasRefl ? reflLines * 4 + 8 : 0) + 4;
-
-    checkOverflow(cardH + 3);
-
-    // Card background
-    doc.setFillColor(...(isGrace ? GRACE_BG : CREAM));
-    doc.setDrawColor(...(isGrace ? GRACE_BD : RULE));
-    doc.setLineWidth(0.3);
-    doc.roundedRect(ML, y, CW, cardH, 1.5, 1.5, 'FD');
-
-    // Left gold accent bar
-    doc.setFillColor(...(isGrace ? [200, 140, 130] : GOLD));
-    doc.rect(ML, y, 2.5, cardH, 'F');
-
-    const cx = ML + 6;
-    let cy = y + 5.5;
-
-    // Day number pill
-    doc.setFillColor(...(isGrace ? [200,140,130] : GOLD));
-    doc.roundedRect(cx, cy - 3.8, 16, 5.2, 1, 1, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7);
-    doc.setTextColor(250, 246, 235);
-    doc.text(`DAY ${day.dayNum}`, cx + 8, cy - 0.2, { align: 'center' });
-
-    // Date badge
-    if (day.date) {
-      const d   = new Date(day.date + 'T00:00:00');
-      const mon = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-      const dn  = d.getDate();
-      const dow = d.toLocaleDateString('en-US', { weekday: 'short' });
-      const bx  = ML + CW - 22;
-      doc.setFillColor(...GOLD);
-      doc.roundedRect(bx, y + 1.5, 18, 13, 1, 1, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(6);
-      doc.setTextColor(250,246,235);
-      doc.text(mon, bx + 9, y + 5.5, { align: 'center' });
-      doc.setFontSize(9);
-      doc.text(String(dn), bx + 9, y + 10.5, { align: 'center' });
-      doc.setFontSize(6);
-      doc.setFont('helvetica', 'italic');
-      doc.text(dow, bx + 9, y + 14, { align: 'center' });
-    }
-
-    cy += 6;
-
-    // Passage text
-    doc.setFont('helvetica', isGrace ? 'italic' : 'normal');
-    doc.setFontSize(isGrace ? 8.5 : 10);
-    doc.setTextColor(...(isGrace ? [160, 100, 90] : NAVY));
-    const pLines = doc.splitTextToSize(label, CW - 40);
-    pLines.forEach(line => {
-      doc.text(line, cx, cy);
-      cy += 5;
-    });
-
-    // Verse count / completion
-    if (!isGrace) {
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(7.5);
-      doc.setTextColor(...TEXT_DIM);
-      const statusText = isDone
-        ? `✓ Completed  ·  ${readingTimeLabel(day)}`
-        : `${readingTimeLabel(day)}`;
-      doc.text(statusText, cx, cy);
-      if (isDone) {
-        doc.setTextColor(...[80, 140, 90]);
-        doc.text('✓ Completed', cx, cy);
-      }
-      cy += 5;
-    }
-
-    // Reflection
-    if (hasRefl) {
-      cy += 1;
-      doc.setDrawColor(...RULE);
-      doc.setLineWidth(0.2);
-      doc.line(cx, cy, ML + CW - 6, cy);
-      cy += 3.5;
-      doc.setFont('helvetica', 'bolditalic');
-      doc.setFontSize(7);
-      doc.setTextColor(...GOLD);
-      doc.text('Reflection', cx, cy);
-      cy += 4;
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(7.5);
-      doc.setTextColor(...TEXT_MID);
-      const rLines = doc.splitTextToSize(reflections[idx], CW - 10);
-      rLines.forEach(line => {
-        doc.text(line, cx, cy);
-        cy += 4;
-      });
-    }
-
-    y += cardH + 3;
+    html += `<div class="pw-day${rest ? ' pw-rest' : ''}">`;
+    html +=   `<div class="pw-head">`;
+    if (!rest) html += `<span class="pw-box"></span>`;
+    html +=     `<span class="pw-date">${esc(day.date ? fmt(day.date) : 'Day ' + day.dayNum)}</span>`;
+    html +=     `<span class="pw-passage">${esc(passage)}</span>`;
+    if (time) html += `<span class="pw-time">${esc(time)}</span>`;
+    html +=   `</div>`;
+    if (note) html += `<div class="pw-notes">${note}</div>`;
+    // Lines to write on — the reason to print the plan at all.
+    if (!rest) html += `<div class="pw-lines">${'<span></span>'.repeat(note ? 2 : 4)}</div>`;
+    html += `</div>`;
   });
 
-  // ── Final footer ──
-  drawFooter();
 
-  // ── Save ──
-  const filename = `${name.replace(/[^a-z0-9]/gi, '_')}_reading_plan.pdf`;
-  doc.save(filename);
-  showToast('PDF downloaded ✓', 'success');
-}
+  // Chrome supports @page margin boxes, so the footer repeats on every sheet
+  // with a live page number. Written here because it carries the plan name.
+  const cssName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  let pageStyle = document.getElementById('pw-page-style');
+  if (!pageStyle) {
+    pageStyle = document.createElement('style');
+    pageStyle.id = 'pw-page-style';
+    document.head.appendChild(pageStyle);
+  }
+  pageStyle.textContent =
+    '@media print { @page { size: auto; margin: 13mm 12mm 16mm; ' +
+      '@bottom-left { content: "' + cssName + '"; ' +
+        'font-family: Georgia, serif; font-size: 8.5pt; font-style: italic; color: #555; } ' +
+      '@bottom-right { content: "Page " counter(page) " of " counter(pages); ' +
+        'font-family: Georgia, serif; font-size: 8.5pt; color: #555; } } }';
 
-function exportWithNotes() {
-  const name = document.getElementById('plan-name').value || 'Reading Plan';
-  let txt = `BIBLE READING PLAN: ${name}\n`;
-  txt += `Exported: ${new Date().toLocaleString()}\n`;
-  txt += `Generated by WhosoeverBelieves.com\n`;
-  txt += '═'.repeat(60) + '\n\n';
+  const view = document.getElementById('plan-print-view');
+  view.innerHTML = html;
 
-  currentPlan.forEach((day, idx) => {
-    const { label } = day.isGrace ? { label:'Rest Day' } : formatPassage(day.chapters);
-    txt += `DAY ${day.dayNum}${day.date ? ` (${day.date})` : ''}\n`;
-    txt += `Passage: ${label}\n`;
-    if (!day.isGrace) txt += `Est. reading time: ${readingTimeLabel(day)} | Completed: ${checkStates[idx] ? 'Yes' : 'No'}\n`;
-    if (reflections[idx]?.trim()) txt += `\nReflection:\n${reflections[idx]}\n`;
-    txt += '\n' + '─'.repeat(40) + '\n\n';
+  const title = document.title;
+  document.title = name;              // becomes the suggested PDF filename
+  window.addEventListener('afterprint', function restore() {
+    document.title = title;
+    window.removeEventListener('afterprint', restore);
   });
-
-  const blob = new Blob([txt], { type: 'text/plain' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `${name.replace(/[^a-z0-9]/gi,'_')}_with_notes.txt`;
-  a.click();
-  URL.revokeObjectURL(a.href);
+  window.print();
 }
+
 
 // ══════════════════════════════════════════════════════════════
 // REMINDER SETTINGS (plan-level)
@@ -2941,6 +2651,12 @@ async function confirmCopyPlan() {
   renderPlan();
   updateProgress();
   if (currentPlanId) showToast(`Created "${newTitle}" ✓`, 'success');
+}
+
+// Close the completion modal, then hand off to the existing restart flow.
+function restartFromCompletion() {
+  closeCompletion();
+  restartCurrentPlan();
 }
 
 // Restart the currently loaded plan (keeps notes, resets checkmarks)
