@@ -3548,6 +3548,7 @@ function audioFileNumber(book, chapter) {
 // A KJV plan plays these where they exist and falls back to the WEB narration
 // for books not yet prepared.
 const KJV_AUDIO = {
+  'Genesis':   [[1, 50, 'Darren L. Slider']],
   'Isaiah': [[1, 6, 'Michael Packard'], [7, 12, 'Sundiata'], [13, 15, 'Abigail Rasmussen'],
              [16, 18, 'Sundiata'], [19, 24, 'Abigail Rasmussen'], [25, 33, 'Beth Thomas'],
              [34, 36, 'debolee'], [37, 45, 'Sundiata'], [46, 48, 'debolee'], [49, 51, 'Sundiata'],
