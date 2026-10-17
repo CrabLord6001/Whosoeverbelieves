@@ -3486,28 +3486,55 @@ function _wireVerseTaps() {
       const track = _syncCurrentTrack();
       if (!track || !_syncStarts) return;                      // not playing — plain text
       const book = el.dataset.book, ch = Number(el.dataset.ch);
-      if (book !== track.book || ch !== track.chapter) return;  // another chapter of the day
-
       const i = Number(el.dataset.v) - 1;
-      const starts = _syncExact
-        ? _syncStarts
-        : _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
-      const target = starts[i];
-      if (!isFinite(target)) return;
 
-      _audio.currentTime = target + (_syncExact ? 0 : _syncOffset);
-      // On a measured chapter the tap is just a jump; on an estimate it also
-      // re-anchors the guess so the rest of the chapter follows from here.
-      if (!_syncExact) _syncAnchor = { i, t: target };
-      _spScrolledAt = 0;
-      _syncActive = -1;
-      _syncUpdate(true);
-      if (_audio.paused) _audio.play().catch(() => {});
-      _syncNote(_syncExact
-        ? 'Timed to this recording \u00b7 jumped to verse ' + (i + 1)
-        : 'Synced from verse ' + (i + 1));
+      if (book !== track.book || ch !== track.chapter) {
+        // Another chapter of the day (forwards or back): switch to its track,
+        // then jump once the new recording's length is known. Readers don't
+        // always notice the next/previous buttons, so a silent tap looked broken.
+        const idx = _audioQueue.findIndex(t => t.book === book && t.chapter === ch);
+        if (idx < 0) return;
+        _syncPendingJump = { book, ch, i };
+        _syncNote('Loading ' + book + ' ' + ch + '\u2026');
+        _audioLoadTrack(idx);
+        return;
+      }
+      _syncJumpToVerse(i);
     };
   });
+}
+
+// A verse tap on another chapter waits here until that chapter's audio loads.
+let _syncPendingJump = null;   // {book, ch, i}
+
+function _syncJumpToVerse(i) {
+  const starts = _syncExact
+    ? _syncStarts
+    : _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
+  const target = starts[i];
+  if (!isFinite(target)) return;
+
+  _audio.currentTime = target + (_syncExact ? 0 : _syncOffset);
+  // On a measured chapter the tap is just a jump; on an estimate it also
+  // re-anchors the guess so the rest of the chapter follows from here.
+  if (!_syncExact) _syncAnchor = { i, t: target };
+  _spScrolledAt = 0;
+  _syncActive = -1;
+  _syncUpdate(true);
+  if (_audio.paused) _audio.play().catch(() => {});
+  _syncNote(_syncExact
+    ? 'Timed to this recording \u00b7 jumped to verse ' + (i + 1)
+    : 'Synced from verse ' + (i + 1));
+}
+
+// Called once the new track's timings are ready (see loadedmetadata below).
+function _syncApplyPendingJump() {
+  const p = _syncPendingJump;
+  if (!p) return;
+  _syncPendingJump = null;
+  const track = _syncCurrentTrack();
+  if (!track || track.book !== p.book || track.chapter !== p.ch || !_syncStarts) return;
+  _syncJumpToVerse(p.i);
 }
 
 document.addEventListener('keydown', e => {
@@ -3798,6 +3825,7 @@ function audioClose() {
   const _ro = document.getElementById('reader-overlay');
   if (_ro) _ro.classList.remove('synced');
   _syncStarts = null; _syncAnchor = null; _syncKey = ''; _syncActive = -1;
+  _syncPendingJump = null;
   if (_activeDayIdx >= 0) {
     _audioSetListenBtn(_activeDayIdx, false);
     _activeDayIdx = -1;
@@ -4001,6 +4029,7 @@ _audio.addEventListener('timeupdate', () => {
     _audioRefreshScrubber();
     _syncPrepare();
     _syncUpdate(true);
+    _syncApplyPendingJump();   // a verse tapped in this chapter while another was playing
   });
   _audio.addEventListener('pause', () => {
     document.getElementById('audio-play-btn').textContent = '▶';
