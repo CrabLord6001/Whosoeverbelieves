@@ -223,6 +223,40 @@ class Aligner:
         return out
 
 
+def _spoken_headings(heard, flat, owner, min_len=2, max_len=10):
+    """Words the narrator says that are not in the text, sitting at a verse start.
+
+    The WEB narration reads editorial section headings the WEB text does not
+    carry — "The tribe of Judah" before Numbers 26:19, and so on. Forced
+    alignment has no tokens to spend on them, so it drags the verse that
+    follows about a heading's length early.
+
+    Diffing a plain transcript against the reference words finds them: a run of
+    spoken words with no counterpart in the text, landing exactly where a verse
+    begins. Returns {index into flat: [words]} to insert before that index.
+    Only 'delete' runs count — a 'replace' is usually the model mishearing a
+    proper noun, and treating that as a heading would steal real verse audio.
+    """
+    starts, seen = set(), set()
+    for i, o in enumerate(owner):
+        if o >= 0 and o not in seen:
+            seen.add(o)
+            starts.add(i)
+    found = {}
+    sm = difflib.SequenceMatcher(a=heard, b=flat, autojunk=False)
+    for tag, i1, i2, j1, j2 in sm.get_opcodes():
+        if tag != 'delete':
+            continue
+        run = heard[i1:i2]
+        if not (min_len <= len(run) <= max_len):
+            continue
+        for cand in (j1, j1 + 1, j1 - 1):     # a heading sits just before its verse
+            if cand in starts and cand > 0:
+                found.setdefault(cand, []).extend(run)
+                break
+    return found
+
+
 def align_chapter(al, book, chapter, verses, tmp, title=None):
     folder = FOLDERS[book]
     fileno = audio_file_number(book, chapter)
@@ -249,6 +283,20 @@ def align_chapter(al, book, chapter, verses, tmp, title=None):
         for vi, ws in enumerate(vwords):
             flat += ws; owner += [vi] * len(ws)
 
+        # Absorb any spoken section headings before aligning, so they are
+        # consumed by throwaway tokens instead of stealing time from verses.
+        gw = al.greedy_words(em, ftimes)
+        heads = _spoken_headings([w for w, _ in gw], flat, owner)
+        if heads:
+            flat2, owner2 = [], []
+            for i, (w, o) in enumerate(zip(flat, owner)):
+                for hw in heads.get(i, []):
+                    flat2.append(hw)
+                    owner2.append(-1)
+                flat2.append(w)
+                owner2.append(o)
+            flat, owner = flat2, owner2
+
         aligned = al.align(em, ftimes, flat)
         starts, confs = [None] * len(verses), [[] for _ in verses]
         for (t, c), vi in zip(aligned, owner):
@@ -261,18 +309,23 @@ def align_chapter(al, book, chapter, verses, tmp, title=None):
         # Independent cross-check: a plain transcript of the audio, matched back
         # to the reference words. It shares the emissions but not the alignment,
         # so a real mistiming shows up as disagreement.
-        gw = al.greedy_words(em, ftimes)
         sm = difflib.SequenceMatcher(a=[w for w, _ in gw], b=flat, autojunk=False)
         ref_time = {}
         for blk in sm.get_matching_blocks():
             for k in range(blk.size):
                 ref_time.setdefault(blk.b + k, gw[blk.a + k][1])
-        check_starts, pos = [None] * len(verses), len(lead)
+        first_idx = {}
+        for i, o in enumerate(owner):
+            if o >= 0 and o not in first_idx:
+                first_idx[o] = i
+        check_starts = [None] * len(verses)
         for vi, ws in enumerate(vwords):
+            i0 = first_idx.get(vi)
+            if i0 is None:
+                continue
             for k in range(len(ws)):
-                if pos + k in ref_time:
-                    check_starts[vi] = ref_time[pos + k]; break
-            pos += len(ws)
+                if i0 + k in ref_time:
+                    check_starts[vi] = ref_time[i0 + k]; break
         diffs = [abs(a - b) for a, b in zip(starts, check_starts)
                  if a is not None and b is not None]
 
@@ -286,6 +339,7 @@ def align_chapter(al, book, chapter, verses, tmp, title=None):
 
         med = round(float(np.median(diffs)), 2) if diffs else None
         return {'dur': round(dur, 2),
+                'heads': sum(len(v) for v in heads.values()) if heads else 0,
                 'v': [round(s, 2) for s in starts],
                 'conf': round(float(np.mean([c for cs in confs for c in cs])), 3)
                         if any(confs) else None,
