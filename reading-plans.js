@@ -3327,7 +3327,19 @@ function _timingFor(book, chapter, duration, trans) {
   const rec = doc.c[String(chapter)];
   if (!rec || !rec.v || !rec.v.length) return null;
   if (!(Math.abs(rec.dur - duration) <= _timingTolerance(rec.dur))) return null;
-  return rec.v;
+
+  // Put the measured times on the browser's clock. Without a VBR header the
+  // browser works out its own length for the file, slightly different from the
+  // decoded length these times were measured against, and it scales both
+  // currentTime and seeking to that. The gap is a fixed fraction of the
+  // chapter, so it is nothing at the start and grows to about two seconds by
+  // the end of a long one: clicking Numbers 26:63 landed on "by Moses and
+  // Eleazar" rather than "These are those". Scaling by the ratio of the two
+  // lengths maps our timeline onto theirs and holds for any browser.
+  const scale = duration / rec.dur;
+  return (scale > 0 && isFinite(scale) && Math.abs(scale - 1) > 1e-6)
+    ? rec.v.map(t => t * scale)
+    : rec.v;
 }
 
 function _syncBuildStarts(verses, duration, trans) {
