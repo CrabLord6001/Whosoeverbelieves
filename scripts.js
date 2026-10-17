@@ -273,3 +273,25 @@ document.addEventListener('focusin', e => {
     document.querySelectorAll('.nav-drop.open').forEach(function (d) { d.classList.remove('open'); });
   });
 })();
+
+/* ── NAV: with a mouse, only one menu at a time, and it lets go on the way out ── */
+(function () {
+  if (!window.matchMedia || !window.matchMedia('(hover: hover)').matches) return;
+
+  function closeDrop(d) {
+    d.classList.remove('open');
+    var btn = d.querySelector('.nav-drop-btn');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+    // :focus-within also holds a menu open, so a clicked button has to let go of focus
+    if (d.contains(document.activeElement) && document.activeElement.blur) document.activeElement.blur();
+  }
+
+  document.querySelectorAll('.nav-drop').forEach(function (drop) {
+    drop.addEventListener('mouseenter', function () {
+      document.querySelectorAll('.nav-drop').forEach(function (d) {
+        if (d !== drop) closeDrop(d);
+      });
+    });
+    drop.addEventListener('mouseleave', function () { closeDrop(drop); });
+  });
+})();

@@ -2158,7 +2158,11 @@ nav a:hover { color: var(--gold-light); }
   .nav-drop-menu a:hover, .nav-drop-menu a:focus-visible { color: var(--text); -webkit-text-stroke: 0.4px currentColor; text-shadow: 0 0 0.4px currentColor; }
   .nav-drop-menu a::after { display: none; }
 }
-.nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu, .nav-drop.open .nav-drop-menu { display: flex; }
+.nav-drop.open .nav-drop-menu { display: flex; }
+/* hover and focus open the menu only where a pointer can really hover; on touch they stick after a tap and can leave two menus open */
+@media (hover: hover) {
+  .nav-drop:hover .nav-drop-menu, .nav-drop:focus-within .nav-drop-menu { display: flex; }
+}
 :root.light-mode .nav-drop-menu { background: rgba(245, 239, 224, 0.98); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); }
 
 /* phones: the dropdowns stay as tap-to-open menus, so the link row fits (almost always) without sideways swiping */
