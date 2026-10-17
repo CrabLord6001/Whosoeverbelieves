@@ -3290,7 +3290,19 @@ let   _syncExact   = false;
 
 // Aligned times belong to the exact file they were measured from, so the
 // duration the browser loaded has to match before they can be trusted.
-const TIMING_DUR_TOLERANCE = 1.5;
+//
+// The match has to be proportional, not a fixed number of seconds. These MP3s
+// carry no VBR header, so a browser cannot read the true length and estimates
+// it from the bitrate; the aligner measures the decoded length instead. On
+// Numbers 26 that is 842.43s against 844.36s — under two seconds apart on a
+// fourteen-minute chapter, but enough to fail a 1.5s test, and it differs by
+// browser, which is why a desktop could reject what a phone accepted.
+// One percent, with a floor for short chapters, absorbs that disagreement
+// while still rejecting a genuinely different recording: a re-cut file differs
+// by far more than one percent, since trimming an intro alone costs seconds.
+function _timingTolerance(dur) {
+  return Math.max(2.5, dur * 0.01);
+}
 
 // Keyed by narration as well as book: the WEB and KJV recordings are different
 // readers with different pacing, so each has its own timing files.
@@ -3314,7 +3326,7 @@ function _timingFor(book, chapter, duration, trans) {
   if (!doc || !doc.c) return null;
   const rec = doc.c[String(chapter)];
   if (!rec || !rec.v || !rec.v.length) return null;
-  if (!(Math.abs(rec.dur - duration) <= TIMING_DUR_TOLERANCE)) return null;
+  if (!(Math.abs(rec.dur - duration) <= _timingTolerance(rec.dur))) return null;
   return rec.v;
 }
 
