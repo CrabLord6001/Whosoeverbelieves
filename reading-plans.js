@@ -3610,6 +3610,7 @@ const KJV_AUDIO = {
   'Haggai':    [[1, 2, 'TriciaG']],
   'Zechariah': [[1, 14, 'TriciaG']],
   'Malachi':   [[1, 4, 'TriciaG']],
+  'Revelation': [[1, 22, 'Phil Chenevert']],
 };
 
 function kjvReader(book, chapter) {
