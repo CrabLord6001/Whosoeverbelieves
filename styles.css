@@ -1279,12 +1279,12 @@ body.page-article .header-ornament {
 /* Links that LEAVE the page take the blue; scripture refs stay gold and
    reveal a verse in place. Both selectors out-specify `.article-body a`
    above, which otherwise wins on source order at equal specificity. */
-.article-body a:not(.scripture-ref):not([href^="#"]) {
+.article-body a:not(.scripture-ref):not(.at-btn):not([href^="#"]) {
   color: var(--link-nav);
   text-decoration-color: var(--link-nav-rule);
 }
 
-.article-body a:not(.scripture-ref):not([href^="#"]):hover {
+.article-body a:not(.scripture-ref):not(.at-btn):not([href^="#"]):hover {
   color: var(--link-nav-hover);
 }
 
@@ -2253,4 +2253,12 @@ nav a:hover { color: var(--gold-light); }
   nav a:hover::after { left: 0.42rem; right: 0.42rem; }
   nav .nav-search { width: 6.5rem; }
   nav .nav-tools { padding-left: 0.3rem; }
+}
+
+
+/* ── PRINT ─────────────────────────────────────────────────────────────── */
+/* The audio player is interactive chrome; a printed article or PDF is text. */
+@media print {
+  #player,
+  #player + div { display: none !important; }
 }

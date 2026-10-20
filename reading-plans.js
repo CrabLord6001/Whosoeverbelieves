@@ -3591,6 +3591,7 @@ const KJV_AUDIO = {
              [34, 36, 'debolee'], [37, 45, 'Sundiata'], [46, 48, 'debolee'], [49, 51, 'Sundiata'],
              [52, 54, 'TriciaG'], [55, 57, 'Sundiata'], [58, 60, 'Brian Dole'],
              [61, 66, 'Michael Packard']],
+  'Matthew':  [[1, 28, 'Michael Packard']],
   'John':   [[1, 4, 'Michael Packard'], [5, 8, 'Sundiata'], [9, 12, 'Beth Thomas'],
              [13, 17, 'GabrielleC'], [18, 21, 'Sundiata']],
   'Galatians': [[1, 6, 'Kimberly Krause']],
