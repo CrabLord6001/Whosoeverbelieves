@@ -1231,6 +1231,18 @@ a.scripture-ref:hover {
   text-wrap: balance; /* evens the lines so no title ends on a single word */
 }
 
+/* Titles past ~44 characters miss a single line at the default size; this steps
+   them down just enough to fit, rather than letting text-wrap: balance split
+   them into two half-width lines. */
+.article-title.is-long {
+  font-size: clamp(1.7rem, 4.1vw, 2.4rem);
+}
+
+/* One step further, for titles around 50 characters. */
+.article-title.is-longest {
+  font-size: clamp(1.55rem, 3.8vw, 2.2rem);
+}
+
 .article-subtitle {
   font-family: 'EB Garamond', serif;
   font-style: italic;
