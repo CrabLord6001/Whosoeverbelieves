@@ -1749,22 +1749,31 @@ nav a:hover::after { left: 0.9rem; right: 0.9rem; }
 
 /* progress strip (signed-in readers) */
 .hp-progress {
-  display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap;
+  display: flex; align-items: stretch; gap: 1rem 1.3rem; flex-wrap: wrap;
   padding: 1.1rem 1.4rem;
   border: 1px solid rgba(201,168,76,0.3);
   border-radius: 6px;
   background: var(--gold-faint);
 }
 .hp-progress[hidden] { display: none; }
-.hp-progress-block { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.hp-progress-block { display: flex; flex-direction: column; justify-content: flex-start; gap: 0.3rem; min-width: 0; }
+/* a rule between every pair of columns, equal height because the blocks stretch */
+.hp-progress-block:not(:first-child) { border-left: 1px solid var(--rule); padding-left: 1.3rem; }
+/* the plan title is user-typed and unbounded: clip it rather than let it set the width */
+#hp-reading-value > span {
+  display: inline-block; max-width: 12rem; vertical-align: bottom;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .hp-progress-block.grow { flex: 1 1 14rem; }
 .hp-progress-label { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-faint); }
 .hp-progress-name { font-family: 'Cormorant Garamond', serif; font-size: 1.45rem; font-weight: 600; color: var(--text); }
 .hp-progress-value { font-size: 1.1rem; color: var(--text); }
 .hp-progress-value span { color: var(--text-mid); }
-.hp-bar { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; width: 12rem; max-width: 100%; }
+.hp-bar { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; width: 9rem; max-width: 100%; }
+#hp-challenge .hp-bar { order: 1; margin-top: 0.1rem; }
 .hp-bar > div { height: 100%; background: var(--gold); border-radius: 3px; }
-.hp-divider { width: 1px; align-self: stretch; background: var(--rule); }
+.hp-divider { display: none; }
+.hp-btn#hp-continue { margin-left: auto; align-self: center; }
 
 .hp-btn {
   display: inline-flex; align-items: center; justify-content: center;
@@ -1905,7 +1914,7 @@ a.hp-panel:hover { border-color: rgba(201,168,76,0.45); }
   .hp-votd, .hp-feature, .hp-side { grid-column: auto; }
   .hp-tool img { height: 170px; }
   .hp-tools > .hp-tool, .hp-tools > .hp-tool:nth-child(3n+1):nth-last-child(2) { grid-column: auto; }
-  .hp-divider { display: none; }
+  .hp-progress-block:not(:first-child) { border-left: 0; padding-left: 0; }
 }
 
 @media (max-width: 480px) {

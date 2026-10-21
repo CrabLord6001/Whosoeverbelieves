@@ -21,11 +21,14 @@ RUN (PowerShell — keys live only in this window, never in a file):
     $env:R2_SECRET_ACCESS_KEY = "paste Secret Access Key here"
     python upload_kjv_audio.py
 
-Re-running is safe: a file already in R2 with the same size is skipped, and a
-file that was re-cut (different size) is replaced.
+Re-running is safe: a file already in R2 with identical content is skipped, and
+a file that was re-cut is replaced. Content is compared by MD5 (R2's ETag), not
+just size: the MP3s are constant-bitrate, so a re-cut chapter of the same length
+has exactly the same size (ticket 77 found all 45 cleaned Sundiata files would
+otherwise have been skipped).
 """
 
-import os, sys, pathlib
+import os, sys, pathlib, hashlib
 import boto3
 from botocore.config import Config
 
@@ -33,6 +36,18 @@ ACCOUNT_ID  = "da3af124ac6391bc777c7880438e7dfb"
 BUCKET_NAME = "bible-audio"
 PUBLIC_BASE = "https://pub-c4105367c474429f812253bea5afdc20.r2.dev"
 SRC_ROOT    = pathlib.Path(__file__).parent / "Claude outputs" / "kjv_audio"
+CHUNK       = 8 * 1024 * 1024   # boto3's default multipart threshold and part size
+
+
+def local_etag(path):
+    """The ETag R2 would report for this file if boto3 uploaded it: a plain MD5
+    for single-part uploads, md5-of-part-md5s plus '-N' for multipart ones."""
+    size = path.stat().st_size
+    with open(path, "rb") as fh:
+        if size < CHUNK:
+            return hashlib.md5(fh.read()).hexdigest()
+        parts = [hashlib.md5(chunk).digest() for chunk in iter(lambda: fh.read(CHUNK), b"")]
+    return f"{hashlib.md5(b''.join(parts)).hexdigest()}-{len(parts)}"
 
 
 def main():
@@ -58,14 +73,15 @@ def main():
     existing = {}
     for page in s3.get_paginator("list_objects_v2").paginate(Bucket=BUCKET_NAME, Prefix="kjv/"):
         for obj in page.get("Contents", []):
-            existing[obj["Key"]] = obj["Size"]
+            existing[obj["Key"]] = (obj["Size"], obj["ETag"].strip('"'))
     print(f"  {len(existing)} KJV files already in R2, {len(files)} prepared locally\n")
 
     uploaded = skipped = 0
     failed = []
     for i, f in enumerate(files, 1):
         key = f.relative_to(SRC_ROOT).as_posix()
-        if existing.get(key) == f.stat().st_size:
+        have = existing.get(key)
+        if have and have[0] == f.stat().st_size and have[1] == local_etag(f):
             skipped += 1
             continue
         try:

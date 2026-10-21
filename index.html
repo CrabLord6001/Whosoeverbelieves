@@ -678,14 +678,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var name = (window.WBAuth.displayName(user) || '').split(/\s+/)[0];
     $('hp-name').textContent = name || 'Friend';
 
+    // limit(2), not (1): the second row is only needed to tell whether more than
+    // one plan is active, which decides if the plan title is worth the space.
     var plan = db.from('plans').select('id, title, completed_at').is('completed_at', null)
-      .order('created_at', { ascending: false }).limit(1)
+      .order('created_at', { ascending: false }).limit(2)
       .then(function (r) {
-        var p = r.data && r.data[0];
+        var rows = (r.data || []), p = rows[0];
         if (!p) return null;
         return db.from('plan_days').select('day_number, passages, is_grace_day, date_assigned')
           .eq('plan_id', p.id).eq('checked_off', false).order('day_number', { ascending: true }).limit(1)
-          .then(function (d) { return { plan: p, day: d.data && d.data[0] }; });
+          .then(function (d) { return { plan: p, day: d.data && d.data[0], several: rows.length > 1 }; });
       });
 
     var run = db.from('challenge_runs').select('start_date, completed_at').eq('challenge_slug', 'discipleship-30')
@@ -699,11 +701,17 @@ document.addEventListener('DOMContentLoaded', function () {
         any = true;
         var d = pd.day, today = d.date_assigned === todayISO();
         $('hp-reading-label').textContent = today ? 'Today’s reading' : 'Next reading';
-        var what = d.is_grace_day ? 'Grace day' : (d.passages || []).join(', ');
+        var abbr = window.wbAbbrevPassage || function (x) { return x; };
+        var what = d.is_grace_day ? 'Grace day' : (d.passages || []).map(abbr).join(', ');
         $('hp-reading-value').innerHTML = '';
         $('hp-reading-value').appendChild(document.createTextNode('Day ' + d.day_number + ' · ' + what + ' '));
-        var s = document.createElement('span'); s.textContent = '· ' + pd.plan.title;
-        $('hp-reading-value').appendChild(s);
+        // With one plan the title names what the reader already knows, so it only
+        // earns its line when there is another active plan to tell it apart from.
+        if (pd.several) {
+          var s = document.createElement('span'); s.textContent = '· ' + pd.plan.title;
+          s.title = pd.plan.title;   // clipped to 12rem in CSS; hover gives the full name
+          $('hp-reading-value').appendChild(s);
+        }
         $('hp-reading').hidden = false;
       }
 

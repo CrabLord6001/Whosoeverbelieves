@@ -1856,7 +1856,7 @@ async function handleSavePlan() {
 
   // Check for duplicate plan names
   const nameInput = document.getElementById('plan-name');
-  let name = nameInput.value.trim() || 'Untitled Plan';
+  let name = nameInput.value.trim().slice(0, 60) || 'Untitled Plan';
 
   const { data: existing } = await _supabase
     .from('plans')
@@ -1892,7 +1892,7 @@ function flashAutosave(text = 'Auto-saved') {
 
 async function savePlanToDb() {
   const btn  = document.getElementById('save-plan-btn');
-  const name = document.getElementById('plan-name').value || 'Untitled Plan';
+  const name = document.getElementById('plan-name').value.slice(0, 60) || 'Untitled Plan';
   if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
 
   try {
