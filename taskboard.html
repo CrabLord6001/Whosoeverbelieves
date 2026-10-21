@@ -53,6 +53,11 @@
 .tb-search { background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; color: var(--text);
   font-family: 'EB Garamond', serif; font-size: 0.95rem; padding: 0.45rem 0.7rem; outline: none; min-width: 200px; }
 .tb-search:focus { border-color: var(--gold); }
+/* Nothing may disappear silently: a hidden column with tasks in it says so. */
+.tb-hidden-note { background: none; border: 1px solid rgba(224,162,101,.4); border-radius: 3px;
+  color: #e0a265; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.92rem;
+  padding: 0.35rem 0.6rem; cursor: pointer; }
+.tb-hidden-note:hover { border-color: rgba(224,162,101,.8); }
 .tb-count { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-faint); font-size: 0.95rem; margin-left: auto; }
 
 /* Columns */
@@ -129,6 +134,12 @@ body.tb-touch .tb-move { display: inline-block; }
 .tb-add { width: 100%; background: none; border: 1px dashed var(--rule); border-radius: 4px; color: var(--text-faint);
   font-family: 'EB Garamond', serif; font-size: 0.85rem; padding: 0.4rem; cursor: pointer; }
 .tb-add:hover { color: var(--gold); border-color: rgba(201,168,76,.45); }
+.tb-add[hidden] { display: none; }
+.tb-quick { width: 100%; box-sizing: border-box; background: var(--bg);
+  border: 1px solid rgba(201,168,76,.5); border-radius: 4px; color: var(--text);
+  font-family: 'EB Garamond', serif; font-size: 0.9rem; padding: 0.45rem 0.55rem; outline: none; }
+.tb-quick::placeholder { color: var(--text-faint); font-style: italic; }
+.tb-quick[hidden] { display: none; }
 
 .tb-msg { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-mid);
   text-align: center; padding: 3rem 1rem; font-size: 1.1rem; }
@@ -212,9 +223,20 @@ body.tb-touch .tb-move { display: inline-block; }
       <input type="search" class="tb-search" id="tb-q" placeholder="Filter…" autocomplete="off" spellcheck="false" />
       <select class="tb-search" id="tb-type" title="Filter by type"><option value="">All types</option></select>
       <button type="button" class="tb-btn secondary" id="tb-arch">Show Archived</button>
+      <button type="button" class="tb-btn secondary" id="tb-cols">Columns</button>
+      <button type="button" class="tb-hidden-note" id="tb-hidden" hidden></button>
       <span class="tb-count" id="tb-count"></span>
     </div>
     <div class="tb-board" id="tb-board"></div>
+  </div>
+</div>
+
+<!-- Column visibility -->
+<div class="tb-ov" id="tb-cv">
+  <div class="tb-modal" style="max-width:340px">
+    <button type="button" class="tb-x" data-cv="close" aria-label="Close">&#10005;</button>
+    <h2>Columns</h2>
+    <div id="tb-cv-list"></div>
   </div>
 </div>
 

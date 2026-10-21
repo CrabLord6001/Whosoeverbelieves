@@ -33,6 +33,8 @@
   var typeFilter = '';
   var editing = null;        // task object, or {} for a new one
   var dragId = null;
+  var quickOpen = null;      // status key whose inline add box is open
+  var hidden = {};           // status key -> true, stored on the profile
   var pendingLive = false;   // a live change that arrived at an awkward moment
 
   function $(id) { return document.getElementById(id); }
@@ -71,12 +73,15 @@
       }
       return WBAuth.client().then(function (c) {
         client = c;
-        return c.from('profiles').select('is_admin').eq('id', user.id).maybeSingle();
+        return c.from('profiles').select('is_admin, board_prefs').eq('id', user.id).maybeSingle();
       }).then(function (res) {
         if (!res || !res.data || !res.data.is_admin) {
           gate('This page is not available on your account.');
           return;
         }
+        var prefs = res.data.board_prefs || {};
+        (prefs.hidden || []).forEach(function (k) { hidden[k] = true; });
+
         $('tb-gate').hidden = true;
         $('tb-app').hidden = false;
         if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
@@ -142,6 +147,66 @@
     } catch (e) {
       console.warn('[taskboard] live updates unavailable', e);  // the board still works
     }
+  }
+
+  // ── COLUMN VISIBILITY ───────────────────────────────────────────────────
+  // Kept on the profile rather than in this browser, so the board looks the
+  // same on the desktop and the iPad.
+
+  function savePrefs() {
+    var keys = Object.keys(hidden).filter(function (k) { return hidden[k]; });
+    return client.from('profiles')
+      .update({ board_prefs: { hidden: keys } })
+      .eq('id', WBAuth.user.id)
+      .then(function (res) { if (res.error) throw res.error; })
+      .catch(function (err) { console.warn('[taskboard] could not save columns', err); });
+  }
+
+  function openColumns() {
+    var list = $('tb-cv-list');
+    list.textContent = '';
+    STATUSES.forEach(function (s) {
+      var b = el('button', 'tb-move-opt' + (hidden[s.key] ? '' : ' cur'));
+      b.type = 'button';
+      var dot = el('span', 'tb-dot');
+      dot.style.background = s.color;
+      dot.style.opacity = hidden[s.key] ? '.25' : '1';
+      b.appendChild(dot);
+      b.appendChild(document.createTextNode(s.name));
+      var mark = el('span', '', hidden[s.key] ? 'hidden' : 'shown');
+      mark.style.marginLeft = 'auto';
+      mark.style.fontSize = '.8rem';
+      mark.style.opacity = '.7';
+      b.appendChild(mark);
+      b.addEventListener('click', function () {
+        hidden[s.key] = !hidden[s.key];
+        savePrefs();
+        render();
+        openColumns();              // redraw the sheet so the labels keep up
+      });
+      list.appendChild(b);
+    });
+    $('tb-cv').classList.add('open');
+  }
+
+  // ── QUICK ADD ───────────────────────────────────────────────────────────
+  // Capture first, sort later. Title and column only; everything else is
+  // filled in by tapping the card afterwards, if ever.
+
+  function quickAdd(title, status, input) {
+    if (input) input.disabled = true;
+    return client.from('tasks')
+      .insert({ title: title, status: status, position: tasks.length })
+      .select()
+      .then(function (res) {
+        if (res.error) throw res.error;
+        if (res.data && res.data[0]) tasks.push(res.data[0]);
+        render();                      // quickOpen survives, so the box comes back focused
+      })
+      .catch(function (err) {
+        alert('Could not add that task: ' + (err.message || 'unknown error'));
+      })
+      .then(function () { if (input) input.disabled = false; });
   }
 
   function save(id, patch) {
@@ -342,7 +407,13 @@
     });
 
     var shown = 0;
+    var stashed = [];
     STATUSES.forEach(function (s) {
+      if (hidden[s.key]) {
+        var n = tasks.filter(function (t) { return t.status === s.key && !t.parent_id; }).length;
+        if (n) stashed.push(s.name + ' (' + n + ')');
+        return;
+      }
       var col = el('div', 'tb-col');
       col.dataset.status = s.key;
 
@@ -363,9 +434,50 @@
 
       var add = el('button', 'tb-add', '+');
       add.type = 'button';
-      add.title = 'New task in ' + s.name;
-      add.addEventListener('click', function () { openEditor({ status: s.key }); });
+      add.title = 'Add to ' + s.name;
+
+      var quick = el('input', 'tb-quick');
+      quick.type = 'text';
+      quick.placeholder = 'Title, then Enter';
+      quick.maxLength = 300;
+      quick.hidden = true;
+
+      function stopQuick() {
+        quick.value = '';
+        quick.hidden = true;
+        add.hidden = false;
+        if (quickOpen === s.key) quickOpen = null;
+      }
+
+      add.addEventListener('click', function () {
+        quickOpen = s.key;
+        add.hidden = true;
+        quick.hidden = false;
+        quick.focus();
+      });
+
+      quick.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { stopQuick(); return; }
+        if (e.key !== 'Enter') return;
+        var title = quick.value.trim();
+        if (!title) { stopQuick(); return; }
+        quick.value = '';
+        quickAdd(title, s.key, quick);
+      });
+
+      quick.addEventListener('blur', function () {
+        // A re-render removes this node and focuses its replacement; that is not
+        // the user clicking away, so only an empty, still-attached box closes.
+        setTimeout(function () {
+          if (!quick.isConnected || document.activeElement === quick) return;
+          if (!quick.value.trim()) stopQuick();
+        }, 0);
+      });
+
+      if (quickOpen === s.key) { add.hidden = true; quick.hidden = false; }
+
       col.appendChild(add);
+      col.appendChild(quick);
 
       col.addEventListener('dragover', function (e) { e.preventDefault(); col.classList.add('over'); });
       col.addEventListener('dragleave', function () { col.classList.remove('over'); });
@@ -388,6 +500,15 @@
 
       board.appendChild(col);
     });
+
+    if (quickOpen) {
+      var open = board.querySelector('.tb-quick:not([hidden])');
+      if (open) open.focus();
+    }
+
+    var note = $('tb-hidden');
+    note.hidden = !stashed.length;
+    note.textContent = stashed.length ? stashed.join(', ') + ' hidden' : '';
 
     var sub = tasks.filter(function (t) { return t.parent_id; }).length;
     $('tb-count').textContent = shown + (shown === 1 ? ' task' : ' tasks') +
@@ -546,6 +667,15 @@
       load();
     });
 
+    $('tb-cols').addEventListener('click', openColumns);
+    $('tb-hidden').addEventListener('click', openColumns);
+
+    $('tb-cv').addEventListener('click', function (e) {
+      if (e.target === $('tb-cv') || (e.target.closest && e.target.closest('[data-cv="close"]'))) {
+        $('tb-cv').classList.remove('open');
+      }
+    });
+
     $('tb-mv').addEventListener('click', function (e) {
       if (e.target === $('tb-mv') || (e.target.closest && e.target.closest('[data-mv="close"]'))) {
         $('tb-mv').classList.remove('open');
@@ -568,6 +698,7 @@
       if (e.key !== 'Escape') return;
       hideNotes();
       $('tb-mv').classList.remove('open');
+      $('tb-cv').classList.remove('open');
       if ($('tb-ov').classList.contains('open')) closeEditor();
     });
 

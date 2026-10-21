@@ -277,7 +277,7 @@
   .mr-room.finding .mr-stn { opacity: 0.9; width: 17px; height: 17px; background: rgba(13,17,23,0.5); }
   .mr-room.finding .mr-path { display: none; }
   .mr-peek { white-space: nowrap; }
-  @media (max-width: 760px) { .mr-tools { gap: 4px; top: 6px; right: 6px; } .mr-peek { font-size: 0.5rem; letter-spacing: 0.08em; padding: 0.25rem 0.35rem; } }
+  @media (max-width: 760px) { .mr-tools { gap: 4px; top: 6px; right: 6px; } .mr-peek { font-size: 0.5rem; letter-spacing: 0.08em; padding: 0.25rem 0.35rem; } .mr-rlbl { display: none; } }
 
   /* Saving + My Verses */
   .mr-save:empty { display: none; }
@@ -329,11 +329,42 @@
   .mr-stage { position: relative; width: min(100%, calc((100vh - 7rem) * var(--ar, 0.7885))); margin: 0 auto; }
   .mr-stage img { cursor: zoom-in; }
   .mr-path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .mr-path .mr-path-under { fill: none; stroke: rgba(10,12,16,0.75); stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-  .mr-path .mr-path-line { fill: none; stroke: #f2c14e; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-  .mr-path .mr-path-arrow { fill: #f2c14e; stroke: rgba(10,12,16,0.8); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  /* Route overlay. Four layers, faint to bright: the whole route sits barely
+     visible (ghost), legs already walked sit dim (done), and one leg at a time
+     is traced by a comet head over a dark casing so gold reads over pale paint.
+     Only the un-dashed layers may use non-scaling-stroke: it rescales dash
+     patterns too, which would break the comet's dash maths. The animated
+     layers get their widths in user units at build time instead. */
+  .mr-path .mr-leg-ghost, .mr-path .mr-leg-done, .mr-path .mr-leg-case { vector-effect: non-scaling-stroke; }
+  .mr-path .mr-ghost-case { fill: none; stroke: rgba(10,12,16,0.85); stroke-width: calc(4px * var(--mr-lw, 1)); stroke-linecap: round; transition: opacity 0.4s ease; }
+  .mr-path .mr-leg-ghost { fill: none; stroke: #ffe9b0; stroke-width: calc(1.6px * var(--mr-lw, 1)); stroke-linecap: round; transition: opacity 0.4s ease; }
+  .mr-path .mr-leg-case { fill: none; stroke: rgba(10,12,16,0.8); stroke-width: calc(6.5px * var(--mr-lw, 1)); stroke-linecap: round; transition: opacity 0.4s ease; }
+  .mr-path .mr-leg-done { fill: none; stroke: #f2c14e; stroke-width: calc(3px * var(--mr-lw, 1)); stroke-linecap: round; transition: opacity 0.4s ease; }
+  /* Reader controls under the painting. Plain words and the site palette: the
+     layer names used in the code (ghost, casing) are implementation detail and
+     have no business in front of someone trying to memorise a verse. */
+  .mr-view { display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+             gap: 0.35rem 1.15rem; margin-top: 0.6rem; font-size: 0.82rem; color: var(--text-faint); }
+  .mr-view[hidden] { display: none; }
+  .mr-view .c { display: flex; align-items: center; gap: 0.45rem; }
+  .mr-view label { white-space: nowrap; cursor: pointer; }
+  .mr-view input[type=range] { width: 94px; accent-color: var(--gold); }
+  .mr-view input[type=checkbox] { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; }
+  @media (max-width: 760px) { .mr-view { gap: 0.3rem 0.85rem; font-size: 0.76rem; } .mr-view input[type=range] { width: 76px; } }
+  /* Tuning strip: only ever shown with ?tune=1 in the URL, never to readers. */
+  .mr-tune { display: none; margin-top: 0.5rem; padding: 0.6rem 0.7rem; border: 1px dashed var(--rule); border-radius: 3px; }
+  .mr-tune.on { display: block; }
+  .mr-tune h4 { margin: 0 0 0.5rem; font: 600 0.6rem 'Cinzel', serif; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold, #c9a84c); }
+  .mr-tune .r { display: grid; grid-template-columns: 8.5rem 1fr 2.6rem; gap: 0.5rem; align-items: center; margin: 0.25rem 0; font-size: 0.8rem; }
+  .mr-tune .r input { width: 100%; accent-color: var(--gold); }
+  .mr-tune .v { font-variant-numeric: tabular-nums; text-align: right; color: var(--gold, #c9a84c); font-size: 0.75rem; }
+  .mr-tune textarea { width: 100%; margin-top: 0.5rem; font: 0.7rem/1.4 ui-monospace, Consolas, monospace; min-height: 4.5rem; }
+  .mr-path .mr-head-case { fill: none; stroke: rgba(10,12,16,0.85); stroke-linecap: round; }
+  .mr-path .mr-head { fill: none; stroke: #fff4d6; }
+  .mr-path .mr-orbit { fill: #fff4d6; }
+  .mr-path .mr-path-arrow { fill: #ffe9b0; stroke: rgba(10,12,16,0.8); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
   .mr-room.peek .mr-path { display: none; }
-  .mr-tools { position: absolute; top: 8px; right: 8px; z-index: 2; display: flex; gap: 6px; }
+  .mr-tools { position: absolute; top: 8px; right: 8px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; max-width: calc(100% - 16px); }
   .mr-stn.empty { width: 11px; height: 11px; border-width: 1.5px; background: rgba(13,17,23,0.35); }
   .mr-stn.empty.hot { width: 19px; height: 19px; }
   .mr-room.walking .mr-stn.empty { opacity: 0; pointer-events: none; }
@@ -475,11 +506,25 @@
             <div class="mr-tools">
               <button type="button" class="mr-peek" id="mr-names" aria-pressed="false">Show Names</button>
               <button type="button" class="mr-peek" id="mr-peek" aria-pressed="false">Hide Stations</button>
+              <button type="button" class="mr-peek" id="mr-replay" hidden title="Replay the route" aria-label="Replay the route">&#8635;<span class="mr-rlbl"> Replay Route</span></button>
               <button type="button" class="mr-peek" id="mr-full" aria-pressed="false">&#x26F6; Full Screen</button>
             </div>
           </div>
         </div>
         <p class="mr-credit" id="mr-credit"></p>
+        <div class="mr-view" id="mr-view" hidden>
+          <span class="c"><label for="vw-bright">Line brightness</label><input type="range" id="vw-bright" min="0.2" max="1" step="0.02"></span>
+          <span class="c"><label for="vw-thick">Line thickness</label><input type="range" id="vw-thick" min="0.6" max="1.8" step="0.05"></span>
+          <span class="c"><input type="checkbox" id="vw-cycle"><label for="vw-cycle">Cycle the route</label></span>
+        </div>
+        <div class="mr-tune" id="mr-tune">
+          <h4>Route tuning (ticket 72 &middot; ?tune=1 only)</h4>
+          <div class="r"><label for="tn-case">Dark outline</label><input type="range" id="tn-case" min="0" max="1.4" step="0.05"><span class="v" id="tn-casev"></span></div>
+          <div class="r"><label for="tn-keep">Bright legs kept</label><input type="range" id="tn-keep" min="1" max="14" step="1"><span class="v" id="tn-keepv"></span></div>
+          <div class="r"><label for="tn-trace">Trace speed</label><input type="range" id="tn-trace" min="150" max="1600" step="25"><span class="v" id="tn-tracev"></span></div>
+          <div class="r"><label for="tn-step">Step speed</label><input type="range" id="tn-step" min="300" max="2600" step="25"><span class="v" id="tn-stepv"></span></div>
+          <textarea id="tn-out" readonly></textarea>
+        </div>
       </div>
 
       <div>
@@ -797,9 +842,12 @@
     if (i === 2) renderRoomInfo();
     if (i === 3) { if (st.active == null || st.place[st.active] != null) st.active = nextEmpty(0); renderPlace(); }
     if (i === 4) renderConn();
-    if (i === 5) { setMode(st.mode); }
+    if (i === 5) { setMode(st.mode, true); }
     renderStations();
     renderSteps();
+    $('mr-replay').hidden = !(i === 5 && (st.mode === M_WALK || st.mode === M_HIDE));
+    $('mr-view').hidden = i < 3;
+    if (i === 5) maybePlayRoute();
     if (i > 0) document.getElementById('mr-lead').scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (i >= 4) save();
     showSaveState();
@@ -984,6 +1032,325 @@ function autoSplit(text) {
   }
   // Markers show the PHRASE number once something is placed there, so the
   // user's own path (any direction) is what gets numbered. Empty stations are plain dots.
+  // ---- Route overlay --------------------------------------------------
+  // Before this, every leg was drawn at once at full strength with an
+  // arrowhead on each one. Over a busy painting with freely placed stations
+  // that reads as a tangle: ten lines competing for attention at the same
+  // moment. Now the whole route sits faint underneath and one leg at a time
+  // is traced by a comet head that fades backwards, so the route is read in
+  // sequence rather than all at once. Crossings are unavoidable (the reader
+  // chooses the order), so legs bow slightly and alternate the bow direction,
+  // which makes a crossing read as two lines passing rather than an X.
+  var NSVG = 'http://www.w3.org/2000/svg';
+  var TAIL_SEG = 18;
+  // Chosen by Jonathan from the prototype, 21 Oct 2026. Speeds and tail are
+  // expressed against a 1000-unit-wide box and scaled to each painting.
+  var PSET = {
+    traceSpeed: 500,     // opening trace of the whole route
+    stepSpeed: 1000,     // one leg, per Next click - faster, it runs on repeat
+    tail: 170, fade: 1.6, bow: 0.10,
+    orbitMs: 700, orbitR: 2.0,
+    holdPlay: 450, holdStep: 150,
+    ghostOp: 0.28, doneOp: 0.42, weight: 1, caseOp: 1, keep: 99, loop: false
+  };
+  var PATH = { legs: [], pts: [], k: 1, s: 1, anim: -1, raf: 0, timer: 0, playing: false, playUpto: 0, pending: null };
+
+  function svgEl(tag, attrs) {
+    var e = document.createElementNS(NSVG, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function reducedMotion() {
+    return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  }
+  function easeIO(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+  function stopPath() {
+    if (PATH.raf) cancelAnimationFrame(PATH.raf);
+    if (PATH.timer) clearTimeout(PATH.timer);
+    PATH.raf = 0; PATH.timer = 0; PATH.playing = false; PATH.anim = -1;
+  }
+
+  // The dark outline under the gold line exists so gold does not vanish into
+  // pale paint. Over dark paint it is invisible anyway and only thickens the
+  // line, so each leg asks the painting how much outline it actually needs.
+  // Measured per leg, not per painting: Hunters in the Snow is a quarter snow
+  // and a quarter dark trees, and one leg can cross both.
+  var LUM = { src: null, px: null, w: 0, h: 0 };
+  function measureRoom() {
+    var im = $('mr-img');
+    if (!im || !im.complete || !im.naturalWidth) return false;
+    if (LUM.src === im.currentSrc) return !!LUM.px;
+    LUM.src = im.currentSrc; LUM.px = null;
+    try {
+      var W2 = 180, H2 = Math.max(1, Math.round(180 * im.naturalHeight / im.naturalWidth));
+      var c = document.createElement('canvas');
+      c.width = W2; c.height = H2;
+      var cx = c.getContext('2d', { willReadFrequently: true });
+      cx.drawImage(im, 0, 0, W2, H2);
+      var d = cx.getImageData(0, 0, W2, H2).data, g = new Uint8Array(W2 * H2);
+      for (var i = 0, j = 0; i < d.length; i += 4, j++) {
+        g[j] = (d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114) | 0;
+      }
+      LUM.px = g; LUM.w = W2; LUM.h = H2;
+    } catch (e) {
+      LUM.px = null;        // a file:// page taints the canvas; fall back to the flat default
+    }
+    return !!LUM.px;
+  }
+  function legOutline(el2, len) {
+    if (!LUM.px) return 1;
+    var n = 15, sum = 0;
+    for (var i = 0; i <= n; i++) {
+      var q = el2.getPointAtLength(len * i / n);
+      var cx2 = Math.max(0, Math.min(LUM.w - 1, Math.round(q.x / ROOM.w * LUM.w)));
+      var cy2 = Math.max(0, Math.min(LUM.h - 1, Math.round(q.y / ROOM.h * LUM.h)));
+      sum += LUM.px[cy2 * LUM.w + cx2];
+    }
+    var L = sum / (n + 1);                       // 0 black .. 255 white
+    return 0.25 + 0.95 * Math.max(0, Math.min(1, (L - 70) / 100));
+  }
+
+  function legPath(a, b, i) {
+    var bow = PSET.bow;
+    if (!bow) return 'M' + a[0] + ',' + a[1] + ' L' + b[0] + ',' + b[1];
+    var mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    var dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy) || 1;
+    var off = d * bow * (i % 2 ? -1 : 1);                 // alternate so neighbours don't nest
+    return 'M' + a[0] + ',' + a[1] + ' Q' + (mx - dy / d * off) + ',' + (my + dx / d * off) + ' ' + b[0] + ',' + b[1];
+  }
+
+  function buildPath() {
+    var svg = $('mr-path'), W = ROOM.w, H = ROOM.h;
+    stopPath();
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.textContent = '';
+    PATH.legs = []; PATH.pts = []; PATH.fx = null; PATH.arrow = null;
+    if (!(st.step >= 3 && !(st.step === 5 && st.mode === M_FIND))) return;
+    st.items.forEach(function (_, i) {
+      if (st.place[i] != null) PATH.pts.push([W * STATIONS[st.place[i]].x / 100, H * STATIONS[st.place[i]].y / 100]);
+    });
+    if (PATH.pts.length < 2) return;
+    PATH.k = W / (svg.getBoundingClientRect().width || 600);   // image px per screen px
+    PATH.s = W / 1000;                                         // prototype units -> this painting
+    var gGhost = svgEl('g'), gDone = svgEl('g'), gHead = svgEl('g'), gFx = svgEl('g'), gArrow = svgEl('g');
+    [gGhost, gDone, gHead, gFx, gArrow].forEach(function (n) { svg.appendChild(n); });
+    PATH.fx = gFx; PATH.arrow = gArrow;
+    measureRoom();
+    var hw = 3.4 * PATH.k * PSET.weight, cw = 7.5 * PATH.k * PSET.weight;   // animated widths, in user units
+    for (var i = 0; i < PATH.pts.length - 1; i++) {
+      var d = legPath(PATH.pts[i], PATH.pts[i + 1], i);
+      var gCase = svgEl('path', { d: d, 'class': 'mr-ghost-case', opacity: PSET.ghostOp * 0.9 });
+      var ghost = svgEl('path', { d: d, 'class': 'mr-leg-ghost', opacity: PSET.ghostOp });
+      gGhost.appendChild(gCase); gGhost.appendChild(ghost);
+      var dCase = svgEl('path', { d: d, 'class': 'mr-leg-case', opacity: 0 });
+      var done = svgEl('path', { d: d, 'class': 'mr-leg-done', opacity: 0 });
+      gDone.appendChild(dCase); gDone.appendChild(done);
+      var hCase = svgEl('path', { d: d, 'class': 'mr-head-case', 'stroke-width': cw, opacity: 0 });
+      gHead.appendChild(hCase);
+      var parts = [];
+      for (var j = 0; j < TAIL_SEG; j++) {
+        var pp = svgEl('path', { d: d, 'class': 'mr-head', 'stroke-width': hw, 'stroke-linecap': j ? 'butt' : 'round', opacity: 0 });
+        gHead.appendChild(pp); parts.push(pp);
+      }
+      var len0 = parts[0].getTotalLength();
+      PATH.legs.push({ ghost: ghost, ghostCase: gCase, done: done, doneCase: dCase, hCase: hCase,
+                       parts: parts, len: len0, outline: legOutline(parts[0], len0) });
+    }
+    // A leg queued by stepWalk is claimed before the first paint, so it never
+    // flashes solid for a frame before the trace starts.
+    if (PATH.pending != null) PATH.anim = PATH.pending;
+    paintPath();
+    if (tuneSync) tuneSync();
+    if (PATH.pending != null) { var pend = PATH.pending; PATH.pending = null; animateLeg(pend, PSET.stepSpeed); }
+  }
+
+  // How much of the route is "already walked": during playback whatever the
+  // trace has reached, in the Walk step however far the reader has stepped,
+  // and everywhere else (placing, connecting) the whole route.
+  function pathUpto() {
+    if (PATH.playing) return PATH.playUpto;
+    return st.step === 5 ? st.walk : PATH.legs.length;
+  }
+  function paintPath() {
+    var upto = pathUpto();
+    for (var i = 0; i < PATH.legs.length; i++) {
+      var lg = PATH.legs[i], lit = i < upto && i !== PATH.anim;
+      // The trail fades with age, so the route stops piling up: the legs just
+      // walked stay bright, older ones sink back toward the ghost rather than
+      // leaving every leg lit by the last station.
+      var age = upto - 1 - i, op = PSET.doneOp;
+      if (lit && age >= PSET.keep) op = PSET.ghostOp;
+      else if (lit && age > 0) op = PSET.doneOp - (PSET.doneOp - PSET.ghostOp) * (age / PSET.keep);
+      lg.done.setAttribute('opacity', lit ? op : 0);
+      lg.doneCase.setAttribute('opacity', lit ? op * 0.75 * PSET.caseOp * lg.outline : 0);
+      lg.ghost.setAttribute('opacity', lit ? 0 : PSET.ghostOp);
+      lg.ghostCase.setAttribute('opacity', lit ? 0 : PSET.ghostOp * 0.9 * PSET.caseOp * lg.outline);
+    }
+    if (PATH.anim < 0) headArrow(upto - 1, null, 0.85);        // one arrowhead, at the far end
+  }
+
+  function headArrow(i, at, alpha) {
+    var g = PATH.arrow;
+    if (!g) return;
+    g.textContent = '';
+    var lg = PATH.legs[i];
+    if (!lg) return;
+    var pos = at == null ? lg.len : at;
+    if (pos < 2) return;
+    var h = lg.parts[0].getPointAtLength(pos), b = lg.parts[0].getPointAtLength(Math.max(0, pos - 2));
+    var ang = Math.atan2(h.y - b.y, h.x - b.x) * 180 / Math.PI, k = PATH.k, L = 9 * k, Wd = 6 * k;
+    g.appendChild(svgEl('polygon', {
+      'class': 'mr-path-arrow', opacity: alpha,
+      points: L + ',0 ' + (-L * 0.45) + ',' + Wd + ' ' + (-L * 0.45) + ',' + (-Wd),
+      transform: 'translate(' + h.x + ',' + h.y + ') rotate(' + ang + ')'
+    }));
+  }
+
+  // The comet: each of TAIL_SEG clones of the leg shows a short slice of the
+  // line stepped back from the head, with opacity ramped down the stack. A
+  // linear gradient cannot do this along an arbitrary curved path.
+  function comet(lg, head, tail, alpha, legIndex) {
+    var L = lg.len, seg = tail / TAIL_SEG;
+    for (var j = 0; j < TAIL_SEG; j++) {
+      var b = head - j * seg, a = b - seg * 1.45, el2 = lg.parts[j];
+      if (b <= 0) { el2.setAttribute('opacity', 0); continue; }
+      if (a < 0) a = 0;
+      el2.setAttribute('stroke-dasharray', '0 ' + a + ' ' + (b - a) + ' ' + (L + tail + 10));
+      el2.setAttribute('opacity', Math.pow(1 - j / TAIL_SEG, PSET.fade) * alpha);
+    }
+    var ca = Math.max(0, head - tail);
+    lg.hCase.setAttribute('stroke-dasharray', '0 ' + ca + ' ' + (head - ca) + ' ' + (L + tail + 10));
+    lg.hCase.setAttribute('opacity', 0.5 * alpha * PSET.caseOp * lg.outline);
+    headArrow(legIndex, Math.min(head, L), alpha);
+  }
+  function clearComet(lg) {
+    for (var j = 0; j < TAIL_SEG; j++) lg.parts[j].setAttribute('opacity', 0);
+    lg.hCase.setAttribute('opacity', 0);
+  }
+
+  // A dot circles the station once on arrival. Kept outside the marker's own
+  // radius and thin, so it never covers the station it is pointing out.
+  function orbitStation(idx, after) {
+    var hold = PATH.playing ? PSET.holdPlay : PSET.holdStep, pt = PATH.pts[idx];
+    if (!pt || !PATH.fx || reducedMotion()) { PATH.timer = setTimeout(after, reducedMotion() ? 0 : hold); return; }
+    var R = 9.5 * PATH.k * PSET.orbitR;
+    var dot = svgEl('circle', { 'class': 'mr-orbit', r: Math.max(1, 2.2 * PATH.k), cx: pt[0], cy: pt[1], opacity: 0 });
+    PATH.fx.appendChild(dot);
+    var t0 = performance.now();
+    (function frame(now) {
+      var k = Math.min(1, (now - t0) / PSET.orbitMs), a = -Math.PI / 2 + 2 * Math.PI * easeIO(k);
+      dot.setAttribute('cx', pt[0] + Math.cos(a) * R);
+      dot.setAttribute('cy', pt[1] + Math.sin(a) * R);
+      dot.setAttribute('opacity', k < 0.85 ? 0.95 : 0.95 * (1 - k) / 0.15);
+      if (k < 1) { PATH.raf = requestAnimationFrame(frame); return; }
+      if (dot.parentNode) dot.parentNode.removeChild(dot);
+      PATH.timer = setTimeout(after, hold);
+    })(t0);
+  }
+
+  function animateLeg(i, speed, after) {
+    var lg = PATH.legs[i];
+    if (!lg) { if (after) after(); return; }
+    if (reducedMotion()) { PATH.anim = -1; paintPath(); if (after) after(); return; }
+    PATH.anim = i; paintPath();
+    var L = lg.len, tail = PSET.tail * PATH.s, dur = (L / (speed * PATH.s)) * 1000, t0 = performance.now();
+    (function frame(now) {
+      var k = Math.min(1, (now - t0) / dur);
+      comet(lg, easeIO(k) * L, tail, 1, i);
+      if (k < 1) { PATH.raf = requestAnimationFrame(frame); return; }
+      var f0 = performance.now();
+      (function fade(n2) {                                   // let the tail catch up rather than snap off
+        var f = Math.min(1, (n2 - f0) / 240);
+        comet(lg, L, tail * (1 - f * 0.55), 1 - f, i);
+        if (f < 1) { PATH.raf = requestAnimationFrame(fade); return; }
+        clearComet(lg); PATH.anim = -1; paintPath();
+        orbitStation(i + 1, function () { if (after) after(); });
+      })(f0);
+    })(t0);
+  }
+
+  // Trace the whole route once, as an overview. Purely visual: it does not
+  // advance the reader's position, so the phrase card stays put.
+  function playRoute() {
+    if (PATH.legs.length < 1) return;
+    stopPath();
+    PATH.playing = true; PATH.playUpto = 0;
+    paintPath();
+    if (reducedMotion()) { PATH.playing = false; paintPath(); return; }
+    (function go2(i) {
+      if (!PATH.playing) return;
+      if (i >= PATH.legs.length) {
+        PATH.playing = false; paintPath();
+        if (PSET.loop) PATH.timer = setTimeout(maybePlayRoute, 900);
+        return;
+      }
+      PATH.playUpto = i;
+      animateLeg(i, PSET.traceSpeed, function () { PATH.playUpto = i + 1; go2(i + 1); });
+    })(0);
+  }
+  // Tuning strip. Hidden unless the URL carries ?tune=1, so readers never see
+  // it; it exists so the numbers can be found on a real screen across all ten
+  // paintings rather than guessed from a screenshot. Once they are settled the
+  // chosen values become the defaults in PSET and this can come out.
+  // Reader controls. Brightness drives both the bright trail and the faint
+  // route under it, so one slider keeps the two layers in proportion instead
+  // of asking anyone to reason about them separately. Remembered per browser.
+  var VKEY = 'mr-route-view', tuneSync = null;
+  function saveView() {
+    try { localStorage.setItem(VKEY, JSON.stringify({ b: PSET.doneOp, t: PSET.weight, c: PSET.loop })); } catch (e) {}
+  }
+  function applyView(rebuild) {
+    PSET.ghostOp = Math.max(0.06, Math.min(PSET.doneOp * 0.66, PSET.doneOp - 0.04));
+    document.documentElement.style.setProperty('--mr-lw', PSET.weight);
+    if (rebuild) buildPath(); else paintPath();
+    if (tuneSync) tuneSync();
+  }
+  function initView() {
+    try {
+      var v = JSON.parse(localStorage.getItem(VKEY) || '{}');
+      if (typeof v.b === 'number') PSET.doneOp = v.b;
+      if (typeof v.t === 'number') PSET.weight = v.t;
+      if (typeof v.c === 'boolean') PSET.loop = v.c;
+    } catch (e) {}
+    var br = $('vw-bright'), th = $('vw-thick'), cy = $('vw-cycle');
+    br.value = PSET.doneOp; th.value = PSET.weight; cy.checked = PSET.loop;
+    br.addEventListener('input', function () { PSET.doneOp = parseFloat(br.value); applyView(false); saveView(); });
+    th.addEventListener('input', function () { PSET.weight = parseFloat(th.value); applyView(true); saveView(); });
+    cy.addEventListener('change', function () {
+      PSET.loop = cy.checked; saveView();
+      if (PSET.loop) maybePlayRoute();
+    });
+    applyView(false);
+  }
+
+  // Everything below is for choosing the shipped defaults, not for readers.
+  function initTune() {
+    if (!/[?&]tune=1\b/.test(location.search)) return;
+    $('mr-tune').classList.add('on');
+    var rows = [['tn-case', 'caseOp'], ['tn-keep', 'keep'], ['tn-trace', 'traceSpeed'], ['tn-step', 'stepSpeed']];
+    tuneSync = function () {
+      rows.forEach(function (r) { $(r[0] + 'v').textContent = PSET[r[1]]; });
+      $('tn-out').value = JSON.stringify({
+        brightness: PSET.doneOp, thickness: PSET.weight, cycle: PSET.loop,
+        darkOutline: PSET.caseOp, keep: PSET.keep,
+        measuredOutline: PATH.legs.map(function (l) { return Math.round(l.outline * 100) / 100; }),
+        traceSpeed: PSET.traceSpeed, stepSpeed: PSET.stepSpeed, room: ROOM.name
+      });
+    };
+    rows.forEach(function (r) {
+      var el2 = $(r[0]);
+      if (PSET[r[1]] === 99) PSET.keep = +el2.max;
+      el2.value = PSET[r[1]];
+      el2.addEventListener('input', function () { PSET[r[1]] = parseFloat(el2.value); paintPath(); tuneSync(); });
+    });
+    tuneSync();
+  }
+
+  function maybePlayRoute() {
+    if (st.step === 5 && (st.mode === M_WALK || st.mode === M_HIDE)) playRoute();
+  }
+
   function renderStations() {
     var stage = $('mr-stage');
     stage.querySelectorAll('.mr-stn').forEach(function (n) { n.remove(); });
@@ -1002,35 +1369,7 @@ function autoSplit(text) {
       b.addEventListener('click', function (e) { e.stopPropagation(); if (st.step === 3) pickStation(si); else if (finding) findPick(si, b); else if (st.step === 2) flashObj(si); });
       stage.appendChild(b);
     });
-    // Bold line tracing the reader's path in verse order, with an arrow on each leg.
-    // The SVG uses the painting's own pixel size, so arrows keep their shape.
-    var svg = $('mr-path'), NS = 'http://www.w3.org/2000/svg', W = ROOM.w, H = ROOM.h;
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-    svg.textContent = '';
-    var pts = [];
-    if (st.step >= 3 && !(st.step === 5 && st.mode === M_FIND)) st.items.forEach(function (_, i) {
-      if (st.place[i] != null) pts.push([W * STATIONS[st.place[i]].x / 100, H * STATIONS[st.place[i]].y / 100]);
-    });
-    if (pts.length > 1) {
-      var shown = svg.getBoundingClientRect().width || 600, k = W / shown;   // image px per screen px
-      var under = document.createElementNS(NS, 'polyline'), line = document.createElementNS(NS, 'polyline');
-      var ps = pts.map(function (q) { return q[0] + ',' + q[1]; }).join(' ');
-      under.setAttribute('points', ps); under.setAttribute('class', 'mr-path-under');
-      line.setAttribute('points', ps); line.setAttribute('class', 'mr-path-line');
-      svg.appendChild(under); svg.appendChild(line);
-      for (var j = 1; j < pts.length; j++) {
-        var a = pts[j - 1], b = pts[j], dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy);
-        if (len < 28 * k) continue;                                       // too short to fit an arrow
-        var ux = dx / len, uy = dy / len, mx = a[0] + dx * 0.55, my = a[1] + dy * 0.55, L = 11 * k, Wd = 7 * k;
-        var tri = document.createElementNS(NS, 'polygon');
-        tri.setAttribute('points', [
-          (mx + ux * L) + ',' + (my + uy * L),
-          (mx - ux * L * 0.4 - uy * Wd) + ',' + (my - uy * L * 0.4 + ux * Wd),
-          (mx - ux * L * 0.4 + uy * Wd) + ',' + (my - uy * L * 0.4 - ux * Wd)].join(' '));
-        tri.setAttribute('class', 'mr-path-arrow');
-        svg.appendChild(tri);
-      }
-    }
+    buildPath();
     layoutLabels();
   }
 
@@ -1247,16 +1586,19 @@ function autoSplit(text) {
       grp.appendChild(b);
     });
   }
-  function setMode(i) {
+  function setMode(i, quiet) {
     st.mode = i; st.walk = 0; st.shown = false; st.peek = {};
     if (i === M_REBUILD) startRebuild();
     if (i === M_FIND) startFind();
     renderPractice(); renderStations();
+    // go() rebuilds the overlay again right after, so it starts the trace itself.
+    if (!quiet) maybePlayRoute();
   }
   function renderPractice() {
     renderLevels();
     var m = st.mode;
     $('mr-walk').hidden = !(m === M_WALK || m === M_HIDE);
+    $('mr-replay').hidden = !(m === M_WALK || m === M_HIDE);
     $('mr-fade').hidden = m !== M_HIDE;
     $('mr-rebuild').hidden = m !== M_REBUILD;
     $('mr-find').hidden = m !== M_FIND;
@@ -1295,8 +1637,11 @@ function autoSplit(text) {
     $('mr-w-prog').textContent = 'Station ' + (i + 1) + ' of ' + st.items.length;
   }
   function stepWalk(d) {
-    st.walk = d > 0 ? (st.walk === st.items.length - 1 ? 0 : st.walk + 1) : Math.max(0, st.walk - 1);
+    var from = st.walk, wrapped = d > 0 && st.walk === st.items.length - 1;
+    st.walk = d > 0 ? (wrapped ? 0 : st.walk + 1) : Math.max(0, st.walk - 1);
     st.shown = false; st.peek = {};
+    // Going forward traces the leg just taken; Back and Start Over just repaint.
+    PATH.pending = (d > 0 && !wrapped) ? from : null;
     renderPractice(); renderStations();
   }
   function shuffled(n) {
@@ -1347,6 +1692,9 @@ function autoSplit(text) {
   }
   $('mr-fd-again').addEventListener('click', function () { startFind(); renderFind(); renderStations(); });
 
+  initView();
+  initTune();
+  $('mr-replay').addEventListener('click', function (e) { e.stopPropagation(); playRoute(); });
   $('mr-prev').addEventListener('click', function () { stepWalk(-1); });
   $('mr-next').addEventListener('click', function () { stepWalk(1); });
   $('mr-reveal').addEventListener('click', function () { st.shown = !st.shown; st.peek = {}; renderPractice(); });
