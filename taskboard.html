@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/png" href="/images/Bible-Book-32.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Taskboard — Whosoever Believes</title>
+<!-- Private admin page. Deliberately not indexed, not in sitemap.xml, not in search-index.js. -->
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" /></noscript>
+<link rel="stylesheet" href="styles.css">
+
+<style>
+/* ── Taskboard ──────────────────────────────────────────────────────────
+   All rules are .tb- prefixed so nothing here can reach the rest of the
+   site. Colours come from the site variables in styles.css, so light mode
+   and the font-size controls work without extra work here. */
+
+.tb-wrap { max-width: 1600px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+
+.tb-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
+.tb-head h1 { font-family: 'Cinzel', serif; font-weight: 400; font-size: 1.6rem; color: var(--text); margin: 0; }
+.tb-sub { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-mid); font-size: 1.05rem; margin: 0 0 1.25rem; }
+
+.tb-bar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.tb-btn { font-family: 'Cinzel', serif; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--gold); border: 2px solid rgba(201,168,76,.7); padding: 0.55rem 1.1rem;
+  background: none; cursor: pointer; border-radius: 2px; }
+.tb-btn:hover { color: var(--gold-light); border-color: var(--gold); }
+.tb-btn.secondary { color: var(--text-faint); border-color: var(--rule); border-width: 1px; }
+.tb-btn.secondary.on { color: var(--gold); border-color: rgba(201,168,76,.6); }
+.tb-btn.danger { color: #e57373; border-color: rgba(229,115,115,.5); border-width: 1px; }
+.tb-btn:disabled { opacity: .45; cursor: default; }
+.tb-search { background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; color: var(--text);
+  font-family: 'EB Garamond', serif; font-size: 0.95rem; padding: 0.45rem 0.7rem; outline: none; min-width: 200px; }
+.tb-search:focus { border-color: var(--gold); }
+.tb-count { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-faint); font-size: 0.95rem; margin-left: auto; }
+
+/* Columns */
+.tb-board { display: grid; grid-template-columns: repeat(6, minmax(215px, 1fr)); gap: 0.85rem; align-items: start; }
+@media (max-width: 1250px) { .tb-board { grid-template-columns: repeat(3, minmax(215px, 1fr)); } }
+@media (max-width: 760px)  { .tb-board { grid-template-columns: 1fr; } }
+
+.tb-col { background: var(--glass, rgba(255,255,255,.02)); border: 1px solid var(--rule); border-radius: 6px;
+  padding: 0.6rem 0.55rem 0.9rem; min-height: 120px; transition: border-color .15s, background .15s; }
+.tb-col.over { border-color: rgba(201,168,76,.75); background: rgba(201,168,76,.06); }
+.tb-col-head { display: flex; align-items: center; gap: 0.4rem; padding: 0 0.25rem 0.55rem; }
+.tb-col-name { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mid); }
+.tb-col-n { font-family: 'EB Garamond', serif; font-size: 0.8rem; color: var(--text-faint); margin-left: auto; }
+.tb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Cards */
+.tb-card { background: var(--surface, #131922); border: 1px solid var(--rule); border-left-width: 3px;
+  border-radius: 4px; padding: 0.6rem 0.65rem; margin-bottom: 0.5rem; cursor: grab;
+  font-family: 'EB Garamond', serif; color: var(--text); line-height: 1.35; }
+.tb-card:hover { border-color: rgba(201,168,76,.4); }
+.tb-card.dragging { opacity: .4; }
+.tb-card-title { font-size: 0.95rem; word-break: break-word; }
+.tb-card-meta { display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap; margin-top: 0.45rem; }
+.tb-tag { font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.16rem 0.4rem; border-radius: 2px; border: 1px solid var(--rule); color: var(--text-faint); }
+.tb-tag.urgent { color: #e57373; border-color: rgba(229,115,115,.5); }
+.tb-tag.high   { color: #e0a265; border-color: rgba(224,162,101,.5); }
+.tb-tag.normal { color: var(--text-faint); }
+.tb-tag.low    { color: var(--text-faint); opacity: .75; }
+.tb-tag.due    { color: var(--text-mid); }
+.tb-tag.due.soon { color: #e0a265; border-color: rgba(224,162,101,.5); }
+.tb-tag.due.past { color: #e57373; border-color: rgba(229,115,115,.5); }
+.tb-chat { text-decoration: none; color: var(--text-faint); font-size: 0.75rem; }
+.tb-chat:hover { color: var(--gold); }
+.tb-kids { margin: 0.5rem 0 0; padding: 0.4rem 0 0; border-top: 1px solid var(--rule); list-style: none; }
+.tb-kid { display: flex; gap: 0.4rem; align-items: center; font-size: 0.82rem; color: var(--text-mid);
+  padding: 0.15rem 0; cursor: pointer; }
+.tb-kid:hover { color: var(--text); }
+.tb-kid.done .tb-kid-t { text-decoration: line-through; opacity: .6; }
+.tb-kid-t { word-break: break-word; }
+
+.tb-add { width: 100%; background: none; border: 1px dashed var(--rule); border-radius: 4px; color: var(--text-faint);
+  font-family: 'EB Garamond', serif; font-size: 0.85rem; padding: 0.4rem; cursor: pointer; }
+.tb-add:hover { color: var(--gold); border-color: rgba(201,168,76,.45); }
+
+.tb-msg { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-mid);
+  text-align: center; padding: 3rem 1rem; font-size: 1.1rem; }
+.tb-msg .tb-btn { margin-top: 1rem; font-style: normal; }
+.tb-err { color: #e57373; }
+
+/* Editor */
+.tb-ov { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(10,18,30,.75);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 1rem; }
+.tb-ov.open { display: flex; }
+.tb-modal { background: var(--surface, #131922); border: 1px solid var(--rule); border-radius: 8px;
+  padding: 1.6rem 1.5rem; max-width: 560px; width: 100%; max-height: 92vh; overflow-y: auto;
+  color: var(--text); font-family: 'EB Garamond', serif; position: relative; }
+.tb-modal h2 { font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 400; margin: 0 0 1.1rem; }
+.tb-x { position: absolute; top: .5rem; right: .8rem; background: none; border: none; color: var(--text-mid);
+  font-size: 1.2rem; cursor: pointer; }
+.tb-x:hover { color: var(--gold); }
+.tb-f { margin-bottom: 0.9rem; }
+.tb-f label { display: block; font-size: 0.8rem; color: var(--text-mid); margin-bottom: 0.25rem; }
+.tb-f input, .tb-f select, .tb-f textarea { width: 100%; box-sizing: border-box; background: var(--bg);
+  border: 1px solid var(--rule); border-radius: 4px; color: var(--text); font-family: 'EB Garamond', serif;
+  font-size: 0.95rem; padding: 0.45rem 0.65rem; outline: none; }
+.tb-f input:focus, .tb-f select:focus, .tb-f textarea:focus { border-color: var(--gold); }
+.tb-f textarea { min-height: 110px; resize: vertical; line-height: 1.45; }
+.tb-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+@media (max-width: 520px) { .tb-row { grid-template-columns: 1fr; } }
+.tb-acts { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.2rem; }
+.tb-acts .tb-spacer { margin-left: auto; }
+.tb-note { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-faint);
+  font-size: 0.88rem; margin: -0.5rem 0 0.9rem; }
+.tb-modal-err { color: #e57373; font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 0.92rem; min-height: 1.2em; margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+</nav>
+
+<div class="tb-wrap">
+  <div class="tb-head"><h1>Taskboard</h1></div>
+  <p class="tb-sub">Article pipeline and site work.</p>
+
+  <div id="tb-gate" class="tb-msg">Checking your account…</div>
+
+  <div id="tb-app" hidden>
+    <div class="tb-bar">
+      <button type="button" class="tb-btn" id="tb-new">+ New Task</button>
+      <input type="search" class="tb-search" id="tb-q" placeholder="Filter…" autocomplete="off" spellcheck="false" />
+      <button type="button" class="tb-btn secondary" id="tb-arch">Show Archived</button>
+      <button type="button" class="tb-btn secondary" id="tb-reload" title="Reload from the database">Refresh</button>
+      <span class="tb-count" id="tb-count"></span>
+    </div>
+    <div class="tb-board" id="tb-board"></div>
+  </div>
+</div>
+
+<!-- Editor -->
+<div class="tb-ov" id="tb-ov">
+  <div class="tb-modal" role="dialog" aria-modal="true" aria-labelledby="tb-mt">
+    <button type="button" class="tb-x" data-tb="close" aria-label="Close">&#10005;</button>
+    <h2 id="tb-mt">Task</h2>
+    <div class="tb-modal-err" id="tb-me"></div>
+
+    <div class="tb-f"><label for="tb-title">Title</label>
+      <input type="text" id="tb-title" maxlength="300" autocomplete="off" /></div>
+
+    <div class="tb-f"><label for="tb-desc">Notes</label>
+      <textarea id="tb-desc" maxlength="20000"></textarea></div>
+
+    <div class="tb-row">
+      <div class="tb-f"><label for="tb-status">Status</label><select id="tb-status"></select></div>
+      <div class="tb-f"><label for="tb-prio">Priority</label><select id="tb-prio">
+        <option value="">None</option><option value="urgent">Urgent</option>
+        <option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option>
+      </select></div>
+    </div>
+
+    <div class="tb-row">
+      <div class="tb-f"><label for="tb-due">Due date</label><input type="date" id="tb-due" /></div>
+      <div class="tb-f"><label for="tb-parent">Subtask of</label><select id="tb-parent"></select></div>
+    </div>
+
+    <div class="tb-f"><label for="tb-chat">Claude session link</label>
+      <input type="url" id="tb-chat" placeholder="https://claude.ai/…" /></div>
+    <p class="tb-note">Where this started, so a topic can be traced back.</p>
+
+    <div class="tb-acts">
+      <button type="button" class="tb-btn" data-tb="save">Save</button>
+      <button type="button" class="tb-btn secondary" data-tb="close">Cancel</button>
+      <span class="tb-spacer"></span>
+      <button type="button" class="tb-btn secondary" data-tb="archive" id="tb-archbtn">Archive</button>
+      <button type="button" class="tb-btn danger" data-tb="delete" id="tb-delbtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2" defer></script>
+<script src="/auth.js" defer></script>
+<script src="taskboard.js" defer></script>
+<script src="scripts.js" defer></script>
+</body>
+</html>
