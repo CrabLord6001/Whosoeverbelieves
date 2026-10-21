@@ -110,7 +110,7 @@
     border-radius: 2px; padding: 0.3rem 0.5rem; cursor: pointer;
   }
   @keyframes mrPulse { 0%,100% { box-shadow: 0 0 0 0 rgba(229,201,122,0.7); } 50% { box-shadow: 0 0 0 10px rgba(229,201,122,0); } }
-  .mr-credit { font-size: 0.78rem; color: var(--text-faint); margin-top: 0.35rem; font-style: italic; }
+  .mr-credit { font-size: 0.78rem; color: var(--text-faint); margin-top: 0.35rem; font-style: italic; text-align: center; }
 
   /* Step 3: chips + station list */
   .mr-tray { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0 0 1rem; min-height: 2rem; }
@@ -350,7 +350,7 @@
   .mr-view label { white-space: nowrap; cursor: pointer; }
   .mr-view input[type=range] { width: 94px; accent-color: var(--gold); }
   .mr-view input[type=checkbox] { accent-color: var(--gold); width: 15px; height: 15px; cursor: pointer; }
-  @media (max-width: 760px) { .mr-view { gap: 0.3rem 0.85rem; font-size: 0.76rem; } .mr-view input[type=range] { width: 76px; } }
+  @media (max-width: 760px) { .mr-view { gap: 0.35rem 0.75rem; font-size: 0.74rem; } .mr-view input[type=range] { width: 58px; } .mr-view .c { gap: 0.35rem; } }
   /* Tuning strip: only ever shown with ?tune=1 in the URL, never to readers. */
   .mr-tune { display: none; margin-top: 0.5rem; padding: 0.6rem 0.7rem; border: 1px dashed var(--rule); border-radius: 3px; }
   .mr-tune.on { display: block; }
@@ -515,6 +515,7 @@
         <div class="mr-view" id="mr-view" hidden>
           <span class="c"><label for="vw-bright">Line brightness</label><input type="range" id="vw-bright" min="0.2" max="1" step="0.02"></span>
           <span class="c"><label for="vw-thick">Line thickness</label><input type="range" id="vw-thick" min="0.6" max="1.8" step="0.05"></span>
+          <span class="c"><label for="vw-speed">Line speed</label><input type="range" id="vw-speed" min="0.35" max="1.5" step="0.05"></span>
           <span class="c"><input type="checkbox" id="vw-cycle"><label for="vw-cycle">Cycle the route</label></span>
         </div>
         <div class="mr-tune" id="mr-tune">
@@ -1051,7 +1052,7 @@ function autoSplit(text) {
     tail: 170, fade: 1.6, bow: 0.10,
     orbitMs: 700, orbitR: 2.0,
     holdPlay: 450, holdStep: 150,
-    ghostOp: 0.28, doneOp: 0.42, weight: 1, caseOp: 1, keep: 99, loop: false
+    ghostOp: 0.28, doneOp: 0.42, weight: 1, caseOp: 1, keep: 99, loop: false, speedMul: 1
   };
   var PATH = { legs: [], pts: [], k: 1, s: 1, anim: -1, raf: 0, timer: 0, playing: false, playUpto: 0, pending: null };
 
@@ -1254,7 +1255,8 @@ function autoSplit(text) {
     if (!lg) { if (after) after(); return; }
     if (reducedMotion()) { PATH.anim = -1; paintPath(); if (after) after(); return; }
     PATH.anim = i; paintPath();
-    var L = lg.len, tail = PSET.tail * PATH.s, dur = (L / (speed * PATH.s)) * 1000, t0 = performance.now();
+    var L = lg.len, tail = PSET.tail * PATH.s,
+        dur = (L / (speed * PSET.speedMul * PATH.s)) * 1000, t0 = performance.now();
     (function frame(now) {
       var k = Math.min(1, (now - t0) / dur);
       comet(lg, easeIO(k) * L, tail, 1, i);
@@ -1298,7 +1300,7 @@ function autoSplit(text) {
   // of asking anyone to reason about them separately. Remembered per browser.
   var VKEY = 'mr-route-view', tuneSync = null;
   function saveView() {
-    try { localStorage.setItem(VKEY, JSON.stringify({ b: PSET.doneOp, t: PSET.weight, c: PSET.loop })); } catch (e) {}
+    try { localStorage.setItem(VKEY, JSON.stringify({ b: PSET.doneOp, t: PSET.weight, s: PSET.speedMul, c: PSET.loop })); } catch (e) {}
   }
   function applyView(rebuild) {
     PSET.ghostOp = Math.max(0.06, Math.min(PSET.doneOp * 0.66, PSET.doneOp - 0.04));
@@ -1311,10 +1313,12 @@ function autoSplit(text) {
       var v = JSON.parse(localStorage.getItem(VKEY) || '{}');
       if (typeof v.b === 'number') PSET.doneOp = v.b;
       if (typeof v.t === 'number') PSET.weight = v.t;
+      if (typeof v.s === 'number') PSET.speedMul = v.s;
       if (typeof v.c === 'boolean') PSET.loop = v.c;
     } catch (e) {}
-    var br = $('vw-bright'), th = $('vw-thick'), cy = $('vw-cycle');
-    br.value = PSET.doneOp; th.value = PSET.weight; cy.checked = PSET.loop;
+    var br = $('vw-bright'), th = $('vw-thick'), sp = $('vw-speed'), cy = $('vw-cycle');
+    br.value = PSET.doneOp; th.value = PSET.weight; sp.value = PSET.speedMul; cy.checked = PSET.loop;
+    sp.addEventListener('input', function () { PSET.speedMul = parseFloat(sp.value); saveView(); if (tuneSync) tuneSync(); });
     br.addEventListener('input', function () { PSET.doneOp = parseFloat(br.value); applyView(false); saveView(); });
     th.addEventListener('input', function () { PSET.weight = parseFloat(th.value); applyView(true); saveView(); });
     cy.addEventListener('change', function () {
@@ -1332,7 +1336,7 @@ function autoSplit(text) {
     tuneSync = function () {
       rows.forEach(function (r) { $(r[0] + 'v').textContent = PSET[r[1]]; });
       $('tn-out').value = JSON.stringify({
-        brightness: PSET.doneOp, thickness: PSET.weight, cycle: PSET.loop,
+        brightness: PSET.doneOp, thickness: PSET.weight, speed: PSET.speedMul, cycle: PSET.loop,
         darkOutline: PSET.caseOp, keep: PSET.keep,
         measuredOutline: PATH.legs.map(function (l) { return Math.round(l.outline * 100) / 100; }),
         traceSpeed: PSET.traceSpeed, stepSpeed: PSET.stepSpeed, room: ROOM.name
