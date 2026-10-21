@@ -198,11 +198,6 @@
       <span class="hp-progress-name" id="hp-name"></span>
     </div>
     <div class="hp-divider"></div>
-    <div class="hp-progress-block" id="hp-challenge" hidden>
-      <span class="hp-progress-label">Discipleship Challenge</span>
-      <div class="hp-bar"><div id="hp-challenge-bar" style="width:0%"></div></div>
-      <span class="hp-progress-value"><span id="hp-challenge-value"></span></span>
-    </div>
     <div class="hp-progress-block grow" id="hp-reading" hidden>
       <span class="hp-progress-label" id="hp-reading-label">Next reading</span>
       <span class="hp-progress-value" id="hp-reading-value"></span>
@@ -666,11 +661,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
-  function daysSince(startISO) {
-    var p = startISO.split('-').map(Number);
-    var now = new Date(); now.setHours(0, 0, 0, 0);
-    return Math.floor((now - new Date(p[0], p[1] - 1, p[2])) / 86400000) + 1;
-  }
 
   // ── Plan switcher ──────────────────────────────────────────────
   // The plan title doubles as the control for which plan the homepage shows.
@@ -786,12 +776,8 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(function (d) { return { plan: p, day: d.data && d.data[0], all: rows }; });
       });
 
-    var run = db.from('challenge_runs').select('start_date, completed_at').eq('challenge_slug', 'discipleship-30')
-      .order('created_at', { ascending: false }).limit(1)
-      .then(function (r) { return r.data && r.data[0]; });
-
-    Promise.all([plan, run]).then(function (res) {
-      var pd = res[0], ch = res[1], any = false;
+    plan.then(function (pd) {
+      var any = false;
 
       if (pd && pd.day) {
         any = true;
@@ -807,19 +793,11 @@ document.addEventListener('DOMContentLoaded', function () {
         $('hp-reading').hidden = false;
       }
 
-      if (ch && !ch.completed_at) {
-        var day = Math.min(Math.max(daysSince(ch.start_date), 0), 30);
-        if (day >= 1) {
-          any = true;
-          $('hp-challenge-bar').style.width = Math.round(day / 30 * 100) + '%';
-          $('hp-challenge-value').textContent = 'Day ' + day + ' of 30';
-          $('hp-challenge').hidden = false;
-          if (!(pd && pd.day)) {
-            $('hp-continue').href = '/discipleship-challenge';
-            $('hp-continue').textContent = 'Open';
-          }
-        }
-      }
+      // The discipleship challenge used to appear here as "Day N of 30", but that
+      // counted calendar days since the start date and never read challenge_checks,
+      // so it measured elapsed time rather than anything the reader had done. The
+      // challenge is organised in weekly themes, not days. Removed; it is still
+      // reached from the nav and its tool card. The strip is now the reading plan.
       strip.hidden = !any;
     }).catch(function () { strip.hidden = true; });
   }
