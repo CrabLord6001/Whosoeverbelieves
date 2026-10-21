@@ -190,14 +190,24 @@
     var vw = document.documentElement.clientWidth;
     var vh = document.documentElement.clientHeight;
     var w = p.offsetWidth, h = p.offsetHeight;
+    var GAP = 14;
 
-    var left = r.left;
-    if (left + w > vw - 12) left = vw - w - 12;
-    if (left < 8) left = 8;
+    // Beside the icon, not under it: the pointer is resting on the icon, and
+    // anything directly below it ends up half-hidden by the cursor.
+    var left, top = r.top - 6;
+    if (r.right + GAP + w <= vw - 8) {
+      left = r.right + GAP;                      // right of the icon
+    } else if (r.left - GAP - w >= 8) {
+      left = r.left - GAP - w;                   // no room right, go left
+    } else {
+      // Narrow screen: fall back to below, far enough down to clear the pointer.
+      left = Math.min(Math.max(8, r.left - 24), vw - w - 8);
+      top = r.bottom + 26;
+      if (top + h > vh - 8 && r.top - h - 26 > 8) top = r.top - h - 26;
+    }
 
-    // Below the icon normally; above it when there is no room below.
-    var top = r.bottom + 6;
-    if (top + h > vh - 12 && r.top - h - 6 > 8) top = r.top - h - 6;
+    if (top + h > vh - 8) top = vh - h - 8;
+    if (top < 8) top = 8;
 
     p.style.left = (left + window.scrollX) + 'px';
     p.style.top  = (top + window.scrollY) + 'px';

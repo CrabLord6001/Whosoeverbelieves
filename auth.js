@@ -510,7 +510,7 @@
     }
 
     item('Taskboard', '/taskboard');
-    item('Comment Moderation', '/moderate-comments');
+    item('Moderation', '/moderate-comments');
 
     var sep = document.createElement('span');
     sep.className = 'wba-nav-sep';
