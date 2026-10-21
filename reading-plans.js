@@ -3586,6 +3586,8 @@ function audioFileNumber(book, chapter) {
 // for books not yet prepared.
 const KJV_AUDIO = {
   'Genesis':   [[1, 50, 'Darren L. Slider']],
+  'Exodus':    [[1, 40, 'Darren L. Slider']],
+  'Leviticus': [[1, 27, 'Darren L. Slider']],
   'Proverbs':  [[1, 31, 'Michael Packard']],
   'Ecclesiastes': [[1, 3, 'Michael Packard'], [4, 6, 'Brian Dole'], [7, 9, 'Beth Thomas'], [10, 12, 'TriciaG']],
   'Song of Songs': [[1, 8, 'Ezwa, TriciaG, Algy Pug']],
@@ -3594,6 +3596,7 @@ const KJV_AUDIO = {
              [34, 36, 'debolee'], [37, 45, 'Sundiata'], [46, 48, 'debolee'], [49, 51, 'Sundiata'],
              [52, 54, 'TriciaG'], [55, 57, 'Sundiata'], [58, 60, 'Brian Dole'],
              [61, 66, 'Michael Packard']],
+  'Lamentations': [[1, 5, 'Michael Armenta']],
   'Daniel':  [[1, 2, 'Patti Cunningham'], [3, 4, 'Sharon V.'], [5, 6, 'ThomasO'],
              [7, 8, 'theunknownchristian'], [9, 10, 'TriciaG'], [11, 12, 'Sundiata']],
   'Matthew':  [[1, 28, 'Michael Packard']],
