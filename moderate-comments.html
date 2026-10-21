@@ -224,18 +224,8 @@
       <h2>Comment Moderation</h2>
       <p class="hint">Sign in with the account that owns this site.</p>
 
-      <div class="mod-field">
-        <label class="mod-label" for="mod-email">Email</label>
-        <input class="mod-input" type="email" id="mod-email" autocomplete="email">
-      </div>
-      <div class="mod-field">
-        <label class="mod-label" for="mod-password">Password</label>
-        <input class="mod-input" type="password" id="mod-password" autocomplete="current-password">
-      </div>
-
       <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:1.25rem;">
         <button class="mod-btn primary" id="btn-signin">Sign In</button>
-        <button class="mod-btn" id="btn-magic">Email Me a Link</button>
       </div>
       <div class="mod-msg" id="signin-msg"></div>
     </div>
@@ -245,10 +235,6 @@
       <div class="mod-head">
         <div>
           <div class="mod-title">Comment Moderation</div>
-        </div>
-        <div style="display:flex; gap:0.6rem; align-items:center;">
-          <button class="mod-btn" id="btn-refresh">Refresh</button>
-          <button class="mod-btn" id="btn-signout">Sign Out</button>
         </div>
       </div>
       <div class="mod-rule"></div>
@@ -278,14 +264,12 @@
 
 <div class="mod-toast" id="mod-toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="/auth.js" defer></script>
 <script>
 (function () {
   'use strict';
 
-  var SUPABASE_URL = 'https://tgzsyfmnzagqijjlzxsa.supabase.co';
-  var SUPABASE_KEY = 'sb_publishable_gck7v-L2PDbW2JKUoxTHDA_FidLWw8H';
-  var db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  var db = null;            // the shared client from auth.js, set at boot
 
   var currentStatus = 'pending';
 
@@ -324,34 +308,6 @@
     m.textContent = text;
     m.className = 'mod-msg ' + (ok ? 'ok' : 'error');
   }
-
-  $('btn-signin').addEventListener('click', function () {
-    signinMsg('', true);
-    db.auth.signInWithPassword({
-      email: $('mod-email').value.trim(),
-      password: $('mod-password').value
-    }).then(function (res) {
-      if (res.error) signinMsg(res.error.message, false);
-    });
-  });
-
-  $('btn-magic').addEventListener('click', function () {
-    var email = $('mod-email').value.trim();
-    if (!email) { signinMsg('Enter your email address first.', false); return; }
-    db.auth.signInWithOtp({
-      email: email,
-      options: { emailRedirectTo: window.location.href }
-    }).then(function (res) {
-      if (res.error) signinMsg(res.error.message, false);
-      else signinMsg('Sign-in link sent — check your inbox.', true);
-    });
-  });
-
-  $('btn-signout').addEventListener('click', function () {
-    db.auth.signOut().then(function () { show('signin'); });
-  });
-
-  $('btn-refresh').addEventListener('click', function () { loadAll(); });
 
   // ── TABS ────────────────────────────────────────────────────────────
   document.querySelectorAll('.mod-tab').forEach(function (tab) {
@@ -499,26 +455,74 @@
     return wrap;
   }
 
+  // ── LIVE UPDATES ────────────────────────────────────────────────────
+  // A new comment appears on its own; no Refresh button needed. Signing out
+  // lives in the Account menu in the nav, like everywhere else on the site.
+
+  var liveTimer = null;
+  var subscribed = false;
+
+  function typing() {
+    var a = document.activeElement;
+    return !!(a && (a.tagName === 'TEXTAREA' || a.tagName === 'INPUT'));
+  }
+
+  function liveReload() {
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(function () {
+      // Reloading rebuilds the list, which would wipe a half-written reply.
+      if (typing()) { liveReload(); return; }
+      loadAll();
+    }, 400);
+  }
+
+  function subscribeLive() {
+    if (subscribed) return;
+    subscribed = true;
+    try {
+      db.channel('moderation')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'comments' }, liveReload)
+        .subscribe();
+    } catch (e) {
+      console.warn('[moderation] live updates unavailable', e);   // the page still works
+    }
+  }
+
   // ── BOOT ────────────────────────────────────────────────────────────
-  function afterAuth(session) {
-    if (!session) { show('signin'); return; }
+  function afterAuth(user) {
+    if (!user) { show('signin'); return; }
+    // The RPC is the real permission check - it fails for anyone is_admin() rejects.
     db.rpc('admin_comment_counts').then(function (res) {
       if (res.error) {
         show('signin');
         signinMsg('That account does not have moderation access.', false);
-        db.auth.signOut();
         return;
       }
       show('mod');
       loadAll();
+      subscribeLive();
     });
   }
 
-  db.auth.getSession().then(function (res) { afterAuth(res.data.session); });
-  db.auth.onAuthStateChange(function (event, session) {
-    if (event === 'SIGNED_OUT') show('signin');
-    else afterAuth(session);
-  });
+  function boot() {
+    if (!window.WBAuth) {
+      show('signin');
+      signinMsg('Sign-in did not load. Reload the page.', false);
+      return;
+    }
+    $('btn-signin').addEventListener('click', function () { WBAuth.open('signin'); });
+    WBAuth.client().then(function (c) {
+      db = c;
+      WBAuth.onChange(afterAuth);      // fires now and on every change
+    }).catch(function () {
+      show('signin');
+      signinMsg('Sign-in is unavailable right now.', false);
+    });
+  }
+
+  // auth.js is deferred, so it has run by the time this fires.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
 
   /* Theme preference, matching the rest of the site */
   if (localStorage.getItem('themePref') === 'light') {
