@@ -3596,6 +3596,7 @@ const KJV_AUDIO = {
   'Luke':     [[1, 10, 'Susan Denney'], [11, 24, 'Fr. Richard Zeile of Detroit']],
   'John':   [[1, 4, 'Michael Packard'], [5, 8, 'Sundiata'], [9, 12, 'Beth Thomas'],
              [13, 17, 'GabrielleC'], [18, 21, 'Sundiata']],
+  'Acts':     [[1, 10, 'Jason Justice'], [11, 28, 'Kimberly Krause']],
   'Romans':   [[1, 16, 'Kimberly Krause']],
   'Galatians': [[1, 6, 'Kimberly Krause']],
   'James':     [[1, 5, 'Susan Denney']],
