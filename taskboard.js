@@ -34,6 +34,7 @@
   var editing = null;        // task object, or {} for a new one
   var dragId = null;
   var quickOpen = null;      // status key whose inline add box is open
+  var subOpen = null;        // parent task id whose subtask box is open
   var hidden = {};           // status key -> true, stored on the profile
   var pendingLive = false;   // a live change that arrived at an awkward moment
 
@@ -165,6 +166,22 @@
   // ── QUICK ADD ───────────────────────────────────────────────────────────
   // Capture first, sort later. Title and column only; everything else is
   // filled in by tapping the card afterwards, if ever.
+
+  function subAdd(title, parent, input) {
+    if (input) input.disabled = true;
+    return client.from('tasks')
+      .insert({ title: title, status: 'draft', parent_id: parent, position: tasks.length })
+      .select()
+      .then(function (res) {
+        if (res.error) throw res.error;
+        if (res.data && res.data[0]) tasks.push(res.data[0]);
+        render();
+      })
+      .catch(function (err) {
+        alert('Could not add that subtask: ' + (err.message || 'unknown error'));
+      })
+      .then(function () { if (input) input.disabled = false; });
+  }
 
   function quickAdd(title, status, input) {
     if (input) input.disabled = true;
@@ -331,6 +348,17 @@
       d.addEventListener('click', function (e) { e.stopPropagation(); });
       meta.appendChild(d);
     }
+    var sb = el('button', 'tb-sub', '+ Sub');
+    sb.type = 'button';
+    sb.title = 'Add a subtask';
+    sb.addEventListener('click', function (e) {
+      e.stopPropagation();
+      quickOpen = null;            // only one inline box open at a time
+      subOpen = (subOpen === t.id) ? null : t.id;
+      render();
+    });
+    meta.appendChild(sb);
+
     var mv = el('button', 'tb-move', 'Move');
     mv.type = 'button';
     mv.addEventListener('click', function (e) { e.stopPropagation(); openMove(t); });
@@ -350,6 +378,30 @@
         ul.appendChild(li);
       });
       c.appendChild(ul);
+    }
+
+    if (subOpen === t.id) {
+      var qs = el('input', 'tb-quick tb-quick-sub');
+      qs.type = 'text';
+      qs.placeholder = 'Subtask, then Enter';
+      qs.maxLength = 300;
+      qs.addEventListener('click', function (e) { e.stopPropagation(); });
+      qs.addEventListener('keydown', function (e) {
+        e.stopPropagation();
+        if (e.key === 'Escape') { subOpen = null; render(); return; }
+        if (e.key !== 'Enter') return;
+        var title = qs.value.trim();
+        if (!title) { subOpen = null; render(); return; }
+        qs.value = '';
+        subAdd(title, t.id, qs);
+      });
+      qs.addEventListener('blur', function () {
+        setTimeout(function () {
+          if (!qs.isConnected || document.activeElement === qs) return;
+          if (!qs.value.trim() && subOpen === t.id) { subOpen = null; render(); }
+        }, 0);
+      });
+      c.appendChild(qs);
     }
 
     c.addEventListener('click', function () { openEditor(t); });
@@ -501,7 +553,7 @@
       board.appendChild(col);
     });
 
-    if (quickOpen) {
+    if (quickOpen || subOpen) {
       var open = board.querySelector('.tb-quick:not([hidden])');
       if (open) open.focus();
     }
