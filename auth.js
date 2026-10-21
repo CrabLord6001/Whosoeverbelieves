@@ -6,7 +6,8 @@
        <script src="/auth.js"></script>
 
    It loads Supabase on its own, adds its own sign-in window, and (if the
-   page has a <nav>) adds a Sign In / Sign Out link to the end of the nav.
+   page has a <nav>) adds to the end of the nav: a Sign In link for readers,
+   or, for an admin, an Account dropdown holding the staff pages and Sign Out.
 
    Because every page on whosoeverbelieves.com talks to the same Supabase
    project, a reader who signs in here is also signed in on the Bible
@@ -18,6 +19,7 @@
        WBAuth.onChange(fn)     → fn(user | null) now and on every change
        WBAuth.open(tab)        → show the sign-in window ('signin', 'signup', 'account', …)
        WBAuth.signOut()
+       WBAuth.isAdmin            → true when the signed-in user is staff
        WBAuth.client()         → Promise<SupabaseClient>
    ========================================================================== */
 

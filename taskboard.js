@@ -33,6 +33,7 @@
   var typeFilter = '';
   var editing = null;        // task object, or {} for a new one
   var dragId = null;
+  var pendingLive = false;   // a live change that arrived at an awkward moment
 
   function $(id) { return document.getElementById(id); }
   function el(tag, cls, text) {
@@ -82,7 +83,7 @@
           document.body.classList.add('tb-touch');
         }
         wire();
-        return load();
+        return load().then(subscribe);
       });
     }).catch(function (err) {
       console.error('[taskboard]', err);
@@ -107,6 +108,40 @@
         tasks = res.data || [];
         render();
       });
+  }
+
+  // ── LIVE UPDATES ────────────────────────────────────────────────────────
+  // Supabase pushes row changes over a websocket, so a task added from a Claude
+  // chat - or from another device - appears without reloading. RLS applies to
+  // the stream too, so only your own rows ever arrive.
+
+  function busy() {
+    return !!dragId ||
+      $('tb-ov').classList.contains('open') ||
+      $('tb-mv').classList.contains('open');
+  }
+
+  // Redrawing mid-drag would yank the card out from under the pointer, and
+  // mid-edit would be worse, so a change that lands then is held until after.
+  function liveChange() {
+    if (busy()) { pendingLive = true; return; }
+    load();
+  }
+
+  function flushLive() {
+    if (!pendingLive || busy()) return;
+    pendingLive = false;
+    load();
+  }
+
+  function subscribe() {
+    try {
+      client.channel('taskboard')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, liveChange)
+        .subscribe();
+    } catch (e) {
+      console.warn('[taskboard] live updates unavailable', e);  // the board still works
+    }
   }
 
   function save(id, patch) {
@@ -287,7 +322,11 @@
       e.dataTransfer.effectAllowed = 'move';
       try { e.dataTransfer.setData('text/plain', t.id); } catch (_) {}
     });
-    c.addEventListener('dragend', function () { dragId = null; c.classList.remove('dragging'); });
+    c.addEventListener('dragend', function () {
+      dragId = null;
+      c.classList.remove('dragging');
+      flushLive();
+    });
     return c;
   }
 
@@ -431,7 +470,11 @@
     setTimeout(function () { $('tb-title').focus(); }, 30);
   }
 
-  function closeEditor() { $('tb-ov').classList.remove('open'); editing = null; }
+  function closeEditor() {
+    $('tb-ov').classList.remove('open');
+    editing = null;
+    flushLive();
+  }
 
   function commit() {
     var title = $('tb-title').value.trim();
@@ -503,14 +546,10 @@
       load();
     });
 
-    $('tb-reload').addEventListener('click', function () {
-      var b = this; b.disabled = true;
-      load().then(function () { b.disabled = false; }, function () { b.disabled = false; });
-    });
-
     $('tb-mv').addEventListener('click', function (e) {
       if (e.target === $('tb-mv') || (e.target.closest && e.target.closest('[data-mv="close"]'))) {
         $('tb-mv').classList.remove('open');
+        flushLive();
       }
     });
 
