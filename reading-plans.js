@@ -3593,6 +3593,7 @@ const KJV_AUDIO = {
              [61, 66, 'Michael Packard']],
   'Matthew':  [[1, 28, 'Michael Packard']],
   'Mark':     [[1, 16, 'Sundiata']],
+  'Luke':     [[1, 10, 'Susan Denney'], [11, 24, 'Fr. Richard Zeile of Detroit']],
   'John':   [[1, 4, 'Michael Packard'], [5, 8, 'Sundiata'], [9, 12, 'Beth Thomas'],
              [13, 17, 'GabrielleC'], [18, 21, 'Sundiata']],
   'Romans':   [[1, 16, 'Kimberly Krause']],
