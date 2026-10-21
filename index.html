@@ -672,22 +672,118 @@ document.addEventListener('DOMContentLoaded', function () {
     return Math.floor((now - new Date(p[0], p[1] - 1, p[2])) / 86400000) + 1;
   }
 
+  // ── Plan switcher ──────────────────────────────────────────────
+  // The plan title doubles as the control for which plan the homepage shows.
+  // It only exists when a second active plan makes the choice meaningful, so
+  // no chrome is added for the ordinary single-plan reader.
+  function planSwitcher(pd, db, user) {
+    var host = $('hp-reading-value');
+    var stale = $('hp-progress').querySelector('.hp-plan-menu');
+    if (stale) stale.parentNode.removeChild(stale);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'hp-plan-switch';
+    btn.setAttribute('aria-haspopup', 'listbox');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.title = pd.plan.title;
+    var nm = document.createElement('span');
+    nm.className = 'nm';
+    nm.textContent = '\u00b7 ' + pd.plan.title;
+    var cv = document.createElement('span');
+    cv.className = 'cv'; cv.setAttribute('aria-hidden', 'true'); cv.textContent = '\u25be';
+    btn.appendChild(nm); btn.appendChild(cv);
+    host.appendChild(btn);
+
+    // Pinned first (its tick explains the exception), then A-Z: a sort the
+    // reader can see, since creation dates are nowhere on screen.
+    var items = pd.all.slice().sort(function (a, b) {
+      if (a.id === pd.plan.id) return -1;
+      if (b.id === pd.plan.id) return 1;
+      return a.title.localeCompare(b.title);
+    });
+
+    var menu = document.createElement('div');
+    menu.className = 'hp-plan-menu';
+    menu.hidden = true;
+    menu.setAttribute('role', 'listbox');
+    var hint = document.createElement('div');
+    hint.className = 'hint'; hint.textContent = 'Show on my homepage';
+    menu.appendChild(hint);
+    items.forEach(function (it) {
+      var o = document.createElement('button');
+      o.type = 'button'; o.setAttribute('role', 'option');
+      o.setAttribute('aria-selected', it.id === pd.plan.id ? 'true' : 'false');
+      var tk = document.createElement('span');
+      tk.className = 'tick'; tk.setAttribute('aria-hidden', 'true');
+      tk.textContent = it.id === pd.plan.id ? '\u2713' : '';
+      o.appendChild(tk);
+      o.appendChild(document.createTextNode(it.title));
+      o.addEventListener('click', function () {
+        close();
+        if (it.id === pd.plan.id) return;
+        // The database clears any previous pin, so only this row is written.
+        db.from('plans').update({ show_on_home: true }).eq('id', it.id)
+          .then(function () { loadProgress(user, db); })
+          .catch(function () { /* leave the box as it is */ });
+      });
+      menu.appendChild(o);
+    });
+    var more = document.createElement('a');
+    more.className = 'more'; more.href = '/bible-reading-plans';
+    more.textContent = 'Manage plans \u2192';
+    menu.appendChild(more);
+    $('hp-progress').appendChild(menu);
+
+    function place() {
+      var r = btn.getBoundingClientRect(), h = $('hp-progress').getBoundingClientRect();
+      menu.style.left = (r.left - h.left) + 'px';
+      menu.style.top = (r.bottom - h.top) + 'px';
+    }
+    function open() { place(); menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); }
+    function close() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.hidden ? open() : close();
+    });
+    // One set of document handlers for the life of the page: planSwitcher runs
+    // again after every switch, and per-call listeners would pile up.
+    planSwitcher.live = { close: close, place: place, menu: menu, btn: btn };
+    if (!planSwitcher.bound) {
+      planSwitcher.bound = true;
+      document.addEventListener('click', function (e) {
+        var L = planSwitcher.live;
+        if (L && !L.menu.hidden && !L.menu.contains(e.target)) L.close();
+      });
+      document.addEventListener('keydown', function (e) {
+        var L = planSwitcher.live;
+        if (e.key === 'Escape' && L && !L.menu.hidden) { L.close(); L.btn.focus(); }
+      });
+      window.addEventListener('resize', function () {
+        var L = planSwitcher.live;
+        if (L && !L.menu.hidden) L.place();
+      });
+    }
+  }
+
   function loadProgress(user, db) {
     var strip = $('hp-progress');
     if (!user) { strip.hidden = true; return; }
     var name = (window.WBAuth.displayName(user) || '').split(/\s+/)[0];
     $('hp-name').textContent = name || 'Friend';
 
-    // limit(2), not (1): the second row is only needed to tell whether more than
-    // one plan is active, which decides if the plan title is worth the space.
-    var plan = db.from('plans').select('id, title, completed_at').is('completed_at', null)
-      .order('created_at', { ascending: false }).limit(2)
+    // Every active plan, because the switcher lists them all. show_on_home is the
+    // reader's pin (at most one per user, enforced in the database); without one
+    // the most recently created plan stands in.
+    var plan = db.from('plans').select('id, title, show_on_home, completed_at').is('completed_at', null)
+      .order('created_at', { ascending: false }).limit(40)
       .then(function (r) {
-        var rows = (r.data || []), p = rows[0];
-        if (!p) return null;
+        var rows = (r.data || []);
+        if (!rows.length) return null;
+        var p = rows.filter(function (x) { return x.show_on_home; })[0] || rows[0];
         return db.from('plan_days').select('day_number, passages, is_grace_day, date_assigned')
           .eq('plan_id', p.id).eq('checked_off', false).order('day_number', { ascending: true }).limit(1)
-          .then(function (d) { return { plan: p, day: d.data && d.data[0], several: rows.length > 1 }; });
+          .then(function (d) { return { plan: p, day: d.data && d.data[0], all: rows }; });
       });
 
     var run = db.from('challenge_runs').select('start_date, completed_at').eq('challenge_slug', 'discipleship-30')
@@ -707,11 +803,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('hp-reading-value').appendChild(document.createTextNode('Day ' + d.day_number + ' · ' + what + ' '));
         // With one plan the title names what the reader already knows, so it only
         // earns its line when there is another active plan to tell it apart from.
-        if (pd.several) {
-          var s = document.createElement('span'); s.textContent = '· ' + pd.plan.title;
-          s.title = pd.plan.title;   // clipped to 12rem in CSS; hover gives the full name
-          $('hp-reading-value').appendChild(s);
-        }
+        if (pd.all.length > 1) planSwitcher(pd, db, user);
         $('hp-reading').hidden = false;
       }
 
