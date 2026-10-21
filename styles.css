@@ -1961,6 +1961,18 @@ a.hp-panel:hover { border-color: rgba(201,168,76,0.45); }
   .hp-progress-block:not(:first-child) { border-left: 0; padding-left: 0; }
 }
 
+/* On phones the reading block wraps to its own row, which is fine, but a 14rem
+   basis also reserved the whole row and pushed Read down to a third. Flexbox
+   breaks lines on the basis before anything shrinks, so a smaller basis here
+   lets Read share the row and the text still grows to fill what is left. */
+@media (max-width: 480px) {
+  .hp-progress-block.grow { flex: 1 1 8rem; }
+  /* "Discipleship Challenge" is a 9.6px label 166.6px wide, nearly twice its own
+     value, because 22 letters at 1.92px tracking is 42px of pure letter-spacing.
+     There is only one challenge, so the first word earns nothing on a phone. */
+  .hp-long { display: none; }
+}
+
 @media (max-width: 480px) {
   .hp-main { padding: 1.75rem 1rem 0.5rem; gap: 3rem; }
   .hp-intro { padding: 0 1rem; }

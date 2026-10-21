@@ -34,32 +34,83 @@
 <link rel="stylesheet" href="styles.css" />
 <link rel="icon" type="image/png" href="/images/Bible-Book-32.png">
 <style>
+  :root { --on-gold: #1a1406; }
+  :root.light-mode { --on-gold: #f7f1e3; }
   .mr-wrap { max-width: 1100px; margin: 0 auto; }
   .mr-note { font-size: 0.9rem; color: var(--text-faint); font-style: italic; margin: 0 0 1rem; }
 
   /* Stepper */
-  .mr-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; margin: 0 0 1.25rem; padding: 0; list-style: none; }
+  /* The step row: numbered stations on a thread that turns gold as far as you
+     have come. Three states — finished carries a check, the step you are on is
+     gold, and anything you cannot reach yet stays dim. */
+  .mr-steps { display: flex; margin: 0 0 1.5rem; padding: 0; list-style: none; overflow-x: auto; scrollbar-width: none; }
+  .mr-steps::-webkit-scrollbar { display: none; }
+  .mr-steps li { flex: 1 0 auto; min-width: 76px; }
   .mr-steps button {
-    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase;
-    background: none; border: 1px solid var(--rule); color: var(--text-faint);
-    padding: 0.45rem 0.8rem; border-radius: 2px; cursor: pointer;
+    width: 100%; background: none; border: none; padding: 0.5rem 0.2rem 0.2rem; cursor: pointer;
+    color: var(--text-faint); display: grid; justify-items: center; gap: 0.4rem; position: relative;
   }
-  .mr-steps button.is-on { color: var(--gold); border-color: var(--gold); }
-  .mr-steps button:disabled { opacity: 0.4; cursor: default; }
+  .mr-steps button::before {
+    content: ''; position: absolute; top: calc(0.5rem + 11px); left: -50%; right: 50%;
+    height: 1px; background: var(--rule);
+  }
+  .mr-steps li:first-child button::before { display: none; }
+  .mr-steps button.is-done::before, .mr-steps button.is-on::before { background: rgba(201,168,76,0.55); }
+  .mr-steps .bead {
+    width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+    border: 1px solid var(--rule); background: var(--bg);
+    font-family: 'Cinzel', serif; font-size: 0.6rem; line-height: 1; color: var(--text-faint);
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .mr-steps .t {
+    font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.16em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .mr-steps button:hover:not(:disabled) { color: var(--text-mid); }
+  .mr-steps button:hover:not(:disabled) .bead { border-color: var(--text-mid); }
+  .mr-steps button.is-done .bead { border-color: rgba(201,168,76,0.55); color: var(--gold); }
+  .mr-steps button.is-done .bead::after { content: '\2713'; }
+  .mr-steps button.is-done .bead span { display: none; }
+  .mr-steps button.is-on { color: var(--gold); }
+  .mr-steps button.is-on .bead {
+    border-color: var(--gold); color: var(--gold); background: var(--gold-faint);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+  }
+  .mr-steps button:disabled { opacity: 0.38; cursor: default; }
+  .mr-steps button:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+  @media (max-width: 600px) {
+    .mr-steps li { flex: 0 0 auto; min-width: 0; }
+    .mr-steps button { padding-left: 0.55rem; padding-right: 0.55rem; }
+  }
 
   .mr-label {
     font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
     color: var(--gold); margin: 0 0 0.5rem;
   }
+  /* Two tiers only: .mr-btn is the one action that moves you on, .quiet is
+     everything else. The primary is filled rather than outlined because an
+     outlined gold button sits among the dashed object chips on steps 3 and 4
+     and reads as one of them. */
   .mr-btn {
-    font-family: 'Cinzel', serif; font-size: 0.64rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--gold); border: 2px solid rgba(201,168,76,0.7); padding: 0.55rem 1.1rem;
-    background: none; cursor: pointer; border-radius: 2px;
+    font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--on-gold); background: linear-gradient(180deg, var(--gold-light), var(--gold));
+    border: 1px solid var(--gold); padding: 0.75rem 1.3rem; cursor: pointer; border-radius: 3px;
+    box-shadow: 0 2px 14px rgba(201,168,76,0.16); transition: filter 0.15s, box-shadow 0.15s;
   }
-  .mr-btn:hover { color: var(--gold-light); border-color: var(--gold); }
-  .mr-btn.quiet { border-width: 1px; border-color: var(--rule); color: var(--text-faint); font-size: 0.58rem; padding: 0.42rem 0.85rem; }
-  .mr-btn.quiet:hover { color: var(--gold); }
-  .mr-btn:disabled { opacity: 0.45; cursor: default; }
+  .mr-btn:hover { filter: brightness(1.07); box-shadow: 0 2px 18px rgba(201,168,76,0.3); }
+  .mr-btn:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+  /* Disabled drops back to an outline. Filled-at-low-opacity reads as broken,
+     and Use This Verse starts out disabled. */
+  .mr-btn:disabled {
+    background: none; color: var(--text-faint); border-color: var(--rule);
+    box-shadow: none; filter: none; cursor: default; opacity: 1;
+  }
+  /* .quiet must clear the fill as well as the border, or it inherits it. */
+  .mr-btn.quiet {
+    background: none; border-width: 1px; border-color: var(--rule); color: var(--text-faint);
+    font-size: 0.58rem; letter-spacing: 0.16em; padding: 0.42rem 0.85rem; box-shadow: none;
+  }
+  .mr-btn.quiet:hover { color: var(--gold); border-color: var(--gold); filter: none; box-shadow: none; }
   .mr-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-top: 1rem; }
   .mr-warn { color: #e57373; font-style: italic; font-size: 0.95rem; }
 
@@ -144,6 +195,71 @@
     font: 1rem/1.35 'EB Garamond', serif; padding: 0.35rem 0.5rem;
   }
   .mr-table tr.cur td { background: var(--gold-faint); }
+
+  /* ── Step 5: one row per station, each opening a dialog ─────────────────
+     The old three-column table gave the verse segment about a third of the
+     panel, so it stacked four lines tall beside a text box it could not
+     compete with. The row carries the segment, the object and what has been
+     written so far; the writing happens with room to do it in. */
+  .mr-clist { display: grid; gap: 0.55rem; }
+  .mr-crow {
+    display: grid; grid-template-columns: 1.9rem minmax(0, 1fr) auto; gap: 0.9rem; align-items: start;
+    width: 100%; text-align: left; background: var(--glass); border: 1px solid var(--glass-border);
+    border-left: 3px solid var(--rule); border-radius: 4px; padding: 0.8rem 1rem; cursor: pointer;
+    font-family: 'EB Garamond', serif; color: var(--text); transition: border-color 0.15s;
+  }
+  .mr-crow:hover { border-color: rgba(201,168,76,0.45); border-left-color: var(--gold); }
+  .mr-crow:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+  .mr-crow.is-done { border-left-color: var(--gold); }
+  .mr-crow .cnum {
+    width: 1.55rem; height: 1.55rem; border-radius: 50%; display: grid; place-items: center;
+    border: 1px solid var(--rule); font-family: 'Cinzel', serif; font-size: 0.6rem; color: var(--text-faint);
+  }
+  .mr-crow.is-done .cnum { background: var(--gold-faint); border-color: var(--gold); color: var(--gold); }
+  .mr-crow .cseg { font-family: 'Cormorant Garamond', serif; font-size: 1.22rem; line-height: 1.35; color: var(--text); display: block; }
+  .mr-crow .cat { display: block; font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); margin-top: 0.3rem; }
+  .mr-crow .cat b { color: var(--gold); font-weight: 600; }
+  .mr-crow .cnote { display: block; font-size: 0.98rem; line-height: 1.55; color: var(--text-mid); margin-top: 0.45rem; }
+  .mr-crow .cnone { display: block; font-size: 0.98rem; font-style: italic; color: var(--text-faint); margin-top: 0.45rem; }
+  .mr-crow .cdo { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); white-space: nowrap; padding-top: 0.35rem; }
+  .mr-crow:hover .cdo { color: var(--gold); }
+
+  .mr-cx {
+    width: min(620px, calc(100vw - 2rem)); border: 1px solid var(--glass-border); border-radius: 6px;
+    background: var(--bg); color: var(--text); padding: 0; box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  }
+  .mr-cx::backdrop { background: rgba(6,9,14,0.72); }
+  .mr-cx-body { padding: 1.4rem 1.5rem 1.2rem; }
+  .article-body .mr-cx-step { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 0.9rem; }
+  .article-body .mr-cx-verse {
+    font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; line-height: 1.3; color: var(--text);
+    margin: 0; padding-left: 0.9rem; border-left: 2px solid var(--gold); max-width: none; text-wrap: pretty;
+  }
+  .mr-cx-where { display: flex; align-items: center; gap: 0.85rem; margin: 1.1rem 0 1.2rem; }
+  .mr-cx-mini { position: relative; width: 104px; flex: none; border-radius: 3px; overflow: hidden; border: 1px solid var(--rule); }
+  .mr-cx-mini img { display: block; width: 100%; height: auto; opacity: 0.75; border-radius: 0; }
+  .mr-cx-dot {
+    position: absolute; width: 13px; height: 13px; border-radius: 50%; transform: translate(-50%, -50%);
+    background: rgba(229,201,122,0.9); border: 1px solid #fff4d6; box-shadow: 0 0 0 4px rgba(229,201,122,0.22);
+  }
+  .article-body .mr-cx-olabel { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 0.2rem; }
+  .article-body .mr-cx-oname { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--gold); margin: 0; }
+  .mr-cx-lab { display: block; font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin: 0 0 0.45rem; }
+  .mr-cx-text {
+    width: 100%; box-sizing: border-box; min-height: 9.5rem; resize: vertical;
+    background: var(--glass); color: var(--text); border: 1px solid var(--rule); border-radius: 4px;
+    font: 1.1rem/1.6 'EB Garamond', serif; padding: 0.7rem 0.85rem;
+  }
+  .mr-cx-text:focus { outline: none; border-color: var(--gold); }
+  .article-body .mr-cx-count { font-size: 0.8rem; color: var(--text-faint); margin: 0.4rem 0 0; text-align: right; font-variant-numeric: tabular-nums; }
+  .article-body .mr-cx-count.is-near { color: var(--gold); }
+  .mr-cx-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; padding: 1rem 1.5rem 1.3rem; border-top: 1px solid var(--rule); }
+  .mr-cx-spacer { flex: 1; }
+  @media (max-width: 560px) {
+    .mr-cx-where { flex-wrap: wrap; }
+    .mr-cx-foot { flex-direction: column-reverse; align-items: stretch; }
+    .mr-cx-foot .mr-btn { width: 100%; }
+  }
 
   /* Step 5: practice */
   .mr-levels { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 1rem; }
@@ -243,6 +359,74 @@
   }
   .mr-intro a { font-style: italic; }
   .mr-intro-tip { display: block; margin-top: 0.8rem; font-size: 0.86em; color: var(--text-mid); font-style: italic; }
+
+  /* ── Step 1 intro band ───────────────────────────────────────────────────
+     Bleeds to the article edges the way the Discipleship week hero does:
+     .mr-wrap fills the 1100px content box and .article-body pads 2.5rem, so
+     -2.5rem lands exactly on the edge. Steps 2-6 keep the plain .mr-intro line.
+     Every text rule is prefixed .article-body because .article-body p sets its
+     own line-height and margin and would otherwise win. */
+  .mri-band {
+    position: relative; overflow: hidden;
+    margin: 0 -2.5rem 1.6rem; padding: 2rem 2.5rem 1.75rem;
+    background: radial-gradient(ellipse 55% 85% at 88% 8%, rgba(201,168,76,0.16), transparent 70%),
+                linear-gradient(180deg, #11151d 0%, #0f141b 55%, var(--bg) 100%);
+    border-bottom: 1px solid var(--rule);
+  }
+  :root.light-mode .mri-band {
+    background: radial-gradient(ellipse 55% 85% at 88% 8%, rgba(201,168,76,0.3), transparent 70%),
+                linear-gradient(180deg, #efe6d2 0%, #f2ebdb 55%, var(--bg) 100%);
+  }
+  .article-body .mri-hook {
+    font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic;
+    font-size: clamp(1.35rem, 3vw, 1.85rem); line-height: 1.3; color: var(--text);
+    margin: 0 0 1.5rem; max-width: none; text-align: center; text-wrap: balance;
+  }
+  .mri-top { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 2rem; align-items: start; }
+  .mri-top > * { min-width: 0; }
+  .article-body .mri-body {
+    font-size: 1.22rem; line-height: 1.65; color: var(--text-mid);
+    margin: 0; max-width: 58ch; text-wrap: pretty;
+  }
+  .mri-outs { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: stretch; margin-top: 1.4rem; }
+  .mri-outs > * { min-width: 0; }
+  .mri-box {
+    padding: 0.8rem 1.05rem; background: var(--glass); border: 1px dashed var(--rule);
+    border-radius: 4px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .mri-box-label {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.3rem;
+  }
+  .article-body .mri-box p { font-size: 0.95rem; line-height: 1.65; color: var(--text-mid); margin: 0; text-wrap: pretty; }
+  .article-body .mri-box.is-lead p { font-size: 1.18rem; line-height: 1.5; color: var(--text); }
+  .mri-gal { margin: 0; }
+  .article-body .mri-gal-label {
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin: 0 0 0.5rem; text-align: center; max-width: none;
+  }
+  .mri-art {
+    position: relative; aspect-ratio: 4 / 3; max-width: 100%; overflow: hidden; background: #080b11;
+    border: 1px solid rgba(201,168,76,0.35); border-radius: 2px;
+    box-shadow: 0 1px 14px rgba(0,0,0,0.45), inset 0 0 22px rgba(0,0,0,0.55);
+  }
+  :root.light-mode .mri-art { background: #d8ccb2; box-shadow: 0 1px 10px rgba(0,0,0,0.18), inset 0 0 18px rgba(0,0,0,0.12); }
+  .mri-art img {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+    object-fit: contain; opacity: 0; transition: opacity 900ms ease;
+  }
+  .mri-art img.is-on { opacity: 1; }
+  .article-body .mri-cap {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-mid); margin: 0.55rem 0 0; text-align: center; min-height: 1em;
+  }
+  @media (prefers-reduced-motion: reduce) { .mri-art img { transition: none; } }
+  @media (max-width: 760px) {
+    .mri-band { padding: 1.6rem 2.5rem 1.4rem; }
+    .mri-top { grid-template-columns: 1fr; gap: 1.3rem; }
+    .mri-gal { max-width: 340px; margin: 0 auto; }
+    .mri-outs { grid-template-columns: 1fr; }
+  }
   @media (max-width: 760px) { .mr-intro { font-size: 1.15rem; padding: 0.9rem 0.4rem; } }
   .mr-or { margin: 1.4rem 0 0.6rem; }
   .mr-custom[open] > summary::before { transform: rotate(90deg); }
@@ -293,16 +477,43 @@
   .mr-next-review { margin-top: 0.4rem; font-size: 0.95rem; color: var(--text-mid); font-style: italic; }
 
   /* Room step */
-  .mr-gallery { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.5rem; margin: 0 0 1.1rem; }
-  .mr-gallery .mr-room-pick { width: auto; height: auto; aspect-ratio: 4 / 3; opacity: 0.75; }
-  .mr-gallery .mr-room-pick span { position: static; left: auto; display: block; font-size: 0.72rem; line-height: 1.2; color: var(--text-mid); padding: 0.25rem 0.1rem 0; text-align: center; font-family: 'EB Garamond', serif; }
-  .mr-gallery .mr-room-pick { overflow: visible; background: none; border: 0; padding: 0; }
-  .mr-gallery .mr-room-pick img { aspect-ratio: 4 / 3; height: auto; border: 2px solid transparent; border-radius: 4px; }
-  .mr-gallery .mr-room-pick.is-on img { border-color: var(--gold); }
+  /* Three across rather than five: at 95px wide a Bruegel is a brown smudge, and
+     telling the rooms apart is the only job this grid has. Draws the 620px
+     renditions. */
+  .mr-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.7rem; margin: 0 0 1.2rem; }
+  .mr-gallery .mr-room-pick { position: relative; width: auto; height: auto; overflow: visible; background: none; border: 0; padding: 0; display: block; opacity: 1; }
+  .mr-gallery .mr-room-pick img {
+    aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; display: block;
+    border: 1px solid var(--rule); border-radius: 3px; opacity: 0.68;
+    transition: opacity 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .mr-gallery .mr-room-pick span {
+    position: static; left: auto; display: block; font-size: 0.82rem; line-height: 1.25;
+    color: var(--text-faint); padding: 0.35rem 0.1rem 0; text-align: center; font-family: 'EB Garamond', serif;
+  }
+  .mr-gallery .mr-room-pick:hover img { opacity: 0.95; border-color: rgba(201,168,76,0.5); }
+  .mr-gallery .mr-room-pick:hover span { color: var(--text-mid); }
+  .mr-gallery .mr-room-pick.is-on img { opacity: 1; border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-faint); }
   .mr-gallery .mr-room-pick.is-on span { color: var(--gold); }
-  .mr-gallery .mr-room-pick:hover { opacity: 1; }
-  .mr-room-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; margin: 0.4rem 0 0.3rem; color: var(--text); }
-  .mr-room-about { color: var(--text-mid); line-height: 1.6; margin: 0 0 0.6rem; }
+  /* A 2px border on a small tile is easy to miss, so the chosen room is checked. */
+  .mr-gallery .mr-room-pick.is-on::after {
+    content: '\2713'; position: absolute; top: 0.3rem; right: 0.3rem;
+    width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--gold); color: var(--on-gold);
+    font: 600 0.62rem/1.1rem 'Cinzel', serif; text-align: center;
+  }
+  @media (max-width: 760px) { .mr-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  /* Name and description sit under the painting they describe, not under the grid. */
+  .article-body .mr-room-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; font-weight: 600; line-height: 1.15;
+    margin: 1.1rem 0 0; color: var(--text); text-align: center; text-wrap: balance;
+  }
+  .article-body .mr-room-about {
+    font-size: 1.22rem; line-height: 1.8; color: var(--text-mid);
+    margin: 0.85rem auto 0; max-width: 52ch; text-wrap: pretty;
+  }
+  /* Step 3 does no placing yet, so its chips can be read rather than squinted at. */
+  .mr-panel[data-step="2"] .mr-obj { font-size: 1.06rem; padding: 0.32rem 0.72rem; }
+  .article-body .mr-objs-hint { font-size: 0.98rem; font-style: italic; color: var(--text-faint); margin: 0 0 0.7rem; max-width: none; }
   .mr-obj.hot { border-color: var(--gold); color: var(--gold); background: var(--gold-faint); }
   @media (max-width: 760px) { .mr-gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
@@ -448,7 +659,28 @@
     <!-- Lead text: the page intro on step 1, then one line per step in the same spot.
          Intro + step 1 line: Jonathan's wording. Steps 2–5: DRAFT, pending Jonathan's approval. -->
     <div id="mr-lead">
-      <p class="mr-intro" data-for="0">Struggling to memorize Scripture or don't know how to start? This tool walks you through an exercise in associating each segment of a verse with an object in a classical painting and crafting a memory or elaborate story for each in a sequence. Then you practice by repeating the story as you journey mentally through the room of objects. New to memory rooms? Start with <a href="/articles/bible-memory-rooms">The Power to Memorize Scripture</a>.<span class="mr-intro-tip">For long passages (more than about three verses), consider dividing the exercise between two or more rooms, and find a meaningful connection that carries you from one room to the next.</span></p>
+      <div class="mri-band" data-for="0">
+        <p class="mri-hook">Struggling to memorize Scripture or don&#8217;t know how to start?</p>
+        <div class="mri-top">
+          <div>
+            <p class="mri-body">This tool walks you through an exercise in associating each segment of a verse with an object in a classical painting and crafting a memory or elaborate story for each in a sequence. Then you practice by repeating the story as you journey mentally through the room of objects.</p>
+          </div>
+          <figure class="mri-gal" id="mr-gal">
+            <p class="mri-gal-label">Preview of Rooms</p>
+            <div class="mri-art" id="mr-gal-art"></div>
+            <figcaption class="mri-cap" id="mr-gal-cap"></figcaption>
+          </figure>
+        </div>
+        <div class="mri-outs">
+          <div class="mri-box is-lead">
+            <p>New to memory rooms? Start with <a href="/articles/bible-memory-rooms">The Power to Memorize&nbsp;Scripture</a>.</p>
+          </div>
+          <div class="mri-box">
+            <div class="mri-box-label">Tip</div>
+            <p>For passages longer than about three verses, use two or more rooms, and find a meaningful connection that carries you from one to the&nbsp;next.</p>
+          </div>
+        </div>
+      </div>
       <p class="mr-intro" data-for="1" hidden>Next, break the verse into short phrases. We've suggested the breaks — tap any word to add or remove one.</p>
       <p class="mr-intro" data-for="2" hidden>Next, choose a room. Browse the paintings, get to know their objects, and pick one that suits your verse — or simply one you enjoy.</p>
       <p class="mr-intro" data-for="3" hidden>Now give each phrase a home. Click an object on the painting for the highlighted phrase, in any order you like.</p>
@@ -512,6 +744,10 @@
           </div>
         </div>
         <p class="mr-credit" id="mr-credit"></p>
+        <div id="mr-room-caption" hidden>
+          <h3 class="mr-room-title" id="mr-room-title"></h3>
+          <p class="mr-room-about" id="mr-room-about"></p>
+        </div>
         <div class="mr-view" id="mr-view" hidden>
           <span class="c"><label for="vw-bright">Line brightness</label><input type="range" id="vw-bright" min="0.2" max="1" step="0.02"></span>
           <span class="c"><label for="vw-thick">Line thickness</label><input type="range" id="vw-thick" min="0.6" max="1.8" step="0.05"></span>
@@ -531,10 +767,10 @@
       <div>
         <!-- 3 · ROOM -->
         <section class="mr-panel" data-step="2" hidden>
+          <p class="mr-label">Choose a room</p>
           <div class="mr-gallery" id="mr-rooms"></div>
-          <h3 class="mr-room-title" id="mr-room-title"></h3>
-          <p class="mr-room-about" id="mr-room-about"></p>
           <p class="mr-label mr-objs-h">Objects in this room</p>
+          <p class="mr-objs-hint">Point at any name to find it in the painting.</p>
           <div class="mr-objs" id="mr-room-objs"></div>
           <div class="mr-row"><button class="mr-btn" type="button" data-go="3">Next: Place</button></div>
         </section>
@@ -554,10 +790,8 @@
 
         <!-- 5 · CONNECT -->
         <section class="mr-panel" data-step="4" hidden>
-          <table class="mr-table">
-            <thead><tr><th>Verse Segment</th><th>Object</th><th>Connection</th></tr></thead>
-            <tbody id="mr-conn"></tbody>
-          </table>
+          <p class="mr-label">Your connections</p>
+          <div class="mr-clist" id="mr-conn"></div>
           <div class="mr-row">
             <button class="mr-btn" type="button" data-go="5">Next: Walk the Room</button>
           </div>
@@ -626,7 +860,31 @@
       </div>
     </div>
   </div>
-  </article>
+  
+  <dialog class="mr-cx" id="mr-cx" aria-labelledby="mr-cx-verse">
+    <div class="mr-cx-body">
+      <p class="mr-cx-step" id="mr-cx-step"></p>
+      <p class="mr-cx-verse" id="mr-cx-verse"></p>
+      <div class="mr-cx-where">
+        <div class="mr-cx-mini"><img id="mr-cx-img" alt="" /><span class="mr-cx-dot" id="mr-cx-dot"></span></div>
+        <div>
+          <p class="mr-cx-olabel">Object</p>
+          <p class="mr-cx-oname" id="mr-cx-obj"></p>
+        </div>
+      </div>
+      <label class="mr-cx-lab" for="mr-cx-text">Your connection</label>
+      <textarea class="mr-cx-text" id="mr-cx-text" maxlength="2000"></textarea>
+      <p class="mr-cx-count" id="mr-cx-count"></p>
+    </div>
+    <div class="mr-cx-foot">
+      <button class="mr-btn quiet" type="button" id="mr-cx-prev">&#8592; Previous</button>
+      <button class="mr-btn quiet" type="button" id="mr-cx-next">Next &#8594;</button>
+      <span class="mr-cx-spacer"></span>
+      <button class="mr-btn quiet" type="button" id="mr-cx-close">Close</button>
+      <button class="mr-btn" type="button" id="mr-cx-save">Save</button>
+    </div>
+  </dialog>
+</article>
 
 <footer>
   <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
@@ -824,7 +1082,13 @@
   function renderSteps() {
     var ol = $('mr-steps'); ol.textContent = '';
     STEPS.forEach(function (name, i) {
-      var li = el('li'), b = el('button', i === st.step ? 'is-on' : '', (i + 1) + ' · ' + name);
+      var li = el('li'), b = el('button');
+      var done = i < st.step && canReach(i);
+      b.className = i === st.step ? 'is-on' : (done ? 'is-done' : '');
+      var bead = el('span', 'bead'); bead.appendChild(el('span', null, String(i + 1)));
+      b.appendChild(bead); b.appendChild(el('span', 't', name));
+      b.setAttribute('aria-label', 'Step ' + (i + 1) + ': ' + name);
+      if (i === st.step) b.setAttribute('aria-current', 'step');
       b.type = 'button'; b.disabled = !canReach(i);
       b.addEventListener('click', function () { go(i); });
       li.appendChild(b); ol.appendChild(li);
@@ -836,6 +1100,7 @@
     document.querySelectorAll('.mr-panel').forEach(function (p) { p.hidden = +p.dataset.step !== i; });
     document.querySelectorAll('#mr-lead [data-for]').forEach(function (p) { p.hidden = +p.dataset.for !== i; });
     $('mr-room-layout').hidden = i < 2;
+    $('mr-room-caption').hidden = i !== 2;
     $('mr-room').classList.toggle('walking', i === 5 && st.mode < M_FIND); $('mr-room').classList.toggle('finding', i === 5 && st.mode === M_FIND);
     $('mr-room').classList.toggle('choosing', i === 2);
     if (i >= 2) setNames(namesPref === null ? i === 2 : namesPref);
@@ -1536,24 +1801,63 @@ function autoSplit(text) {
   }
 
   // ── 4 · CONNECT ───────────────────────────────────────────────────
+  var CONN_MAX = 2000;
+  var connAt = 0;
+
   function renderConn() {
-    var tb = $('mr-conn'); tb.textContent = '';
+    var box = $('mr-conn'); box.textContent = '';
     st.items.forEach(function (it, i) {
-      var tr = el('tr');
-      tr.appendChild(el('td', null, it.text));
-      tr.appendChild(el('td', null, STATIONS[st.place[i]].name));
-      var td = el('td'), ta = el('textarea'); ta.rows = 2; ta.maxLength = 240;
-      ta.value = st.notes[i] || '';
-      if (i === 0) ta.placeholder = 'e.g. ' + STATIONS[st.place[0]].name + ' … (start the story here)';
-      else ta.placeholder = '…and then';
-      ta.addEventListener('input', function () { st.notes[i] = ta.value; saveSoon(); });
-      ta.addEventListener('focus', function () {
-        tb.querySelectorAll('tr').forEach(function (r) { r.classList.remove('cur'); });
-        tr.classList.add('cur'); st.walk = i;
-        $('mr-stage').querySelectorAll('.mr-stn').forEach(function (n) { n.classList.toggle('hot', +n.dataset.stn === st.place[i]); });
-      });
-      td.appendChild(ta); tr.appendChild(td); tb.appendChild(tr);
+      var note = st.notes[i] || '';
+      var b = el('button', 'mr-crow' + (note ? ' is-done' : '')); b.type = 'button';
+      var num = el('span', 'cnum'); num.appendChild(el('span', null, String(i + 1)));
+      var mid = el('span');
+      mid.appendChild(el('span', 'cseg', it.text));
+      var at = el('span', 'cat', 'at ');
+      at.appendChild(el('b', null, STATIONS[st.place[i]].name));
+      mid.appendChild(at);
+      mid.appendChild(el('span', note ? 'cnote' : 'cnone', note || 'Write the connection'));
+      b.appendChild(num);
+      b.appendChild(mid);
+      b.appendChild(el('span', 'cdo', note ? 'Edit' : 'Write'));
+      b.addEventListener('click', function () { openConn(i); });
+      box.appendChild(b);
     });
+  }
+
+  function connCount() {
+    var n = $('mr-cx-text').value.length;
+    $('mr-cx-count').textContent = n.toLocaleString() + ' / ' + CONN_MAX.toLocaleString();
+    $('mr-cx-count').classList.toggle('is-near', n > CONN_MAX - 200);
+  }
+  function connKeep() {
+    st.notes[connAt] = $('mr-cx-text').value.trim();
+    saveSoon();
+    renderConn();
+  }
+  function openConn(i) {
+    if (i < 0 || i >= st.items.length) return;
+    connAt = i;
+    st.walk = i;
+    var stn = STATIONS[st.place[i]];
+    $('mr-cx-step').textContent = 'Station ' + (i + 1) + ' of ' + st.items.length;
+    $('mr-cx-verse').textContent = st.items[i].text;
+    $('mr-cx-obj').textContent = stn.name;
+    $('mr-cx-img').src = ROOM.img.replace('.webp', '-slide.webp');
+    $('mr-cx-dot').style.left = stn.x + '%';
+    $('mr-cx-dot').style.top = stn.y + '%';
+    $('mr-cx-text').value = st.notes[i] || '';
+    $('mr-cx-text').placeholder = i === 0
+      ? 'e.g. ' + STATIONS[st.place[0]].name + ' \u2026 (start the story here)'
+      : '\u2026and then';
+    $('mr-cx-prev').disabled = i === 0;
+    $('mr-cx-next').disabled = i === st.items.length - 1;
+    connCount();
+    $('mr-stage').querySelectorAll('.mr-stn').forEach(function (n) {
+      n.classList.toggle('hot', +n.dataset.stn === st.place[i]);
+    });
+    var dlg = $('mr-cx');
+    if (!dlg.open) dlg.showModal();
+    $('mr-cx-text').focus();
   }
 
   // ── 5 · PRACTICE ──────────────────────────────────────────────────
@@ -1771,7 +2075,7 @@ function autoSplit(text) {
     ROOMS.forEach(function (r) {
       var b = el('button', 'mr-room-pick' + (r === ROOM ? ' is-on' : '')); b.type = 'button';
       b.title = r.name; b.setAttribute('aria-label', 'Room: ' + r.name); b.setAttribute('aria-pressed', r === ROOM);
-      var im = el('img'); im.src = r.img.replace('.webp', '-thumb.webp'); im.alt = ''; im.loading = 'lazy';
+      var im = el('img'); im.src = r.img.replace('.webp', '-slide.webp'); im.alt = ''; im.loading = 'lazy';
       b.appendChild(im); b.appendChild(el('span', null, r.name));
       b.addEventListener('click', function () { setRoom(r); });
       box.appendChild(b);
@@ -1852,7 +2156,7 @@ function autoSplit(text) {
       ref_a: st.verse.a || null, ref_b: st.verse.b || null,
       breaks: breaks, room_id: ROOM.id,
       placements: st.items.map(function (_, i) { return st.place[i] == null ? -1 : st.place[i]; }),
-      notes: st.items.map(function (_, i) { return (st.notes[i] || '').slice(0, 240); }),
+      notes: st.items.map(function (_, i) { return (st.notes[i] || '').slice(0, CONN_MAX); }),
       updated_at: new Date().toISOString()
     };
   }
@@ -2083,6 +2387,61 @@ function autoSplit(text) {
       }).then(function () { btn.disabled = false; btn.textContent = label; });
     });
   });
+
+  // Preview of Rooms: the paintings cycle slowly on step 1, so a newcomer sees
+  // what the tool offers instead of only reading about it. Driven off ROOMS, so
+  // a room added there joins the rotation on its own. Only the first painting
+  // loads with the page; the next is fetched while the current one is showing.
+  (function () {
+    var fig = $('mr-gal'), art = $('mr-gal-art'), cap = $('mr-gal-cap');
+    if (!fig || !art || !cap) return;
+    var band = fig.closest('[data-for]');
+    var imgs = [], at = 0, over = false;
+    var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function wrapIdx(n) { return ((n % ROOMS.length) + ROOMS.length) % ROOMS.length; }
+    function slide(n) {
+      var k = wrapIdx(n);
+      if (!imgs[k]) {
+        var im = new Image();
+        im.src = ROOMS[k].img.replace(/\.webp$/, '-slide.webp');
+        im.alt = ROOMS[k].name;
+        im.decoding = 'async';
+        art.appendChild(im);
+        imgs[k] = im;
+      }
+      return imgs[k];
+    }
+    function show(n) {
+      var k = wrapIdx(n), im = slide(k);
+      imgs.forEach(function (o) { if (o) o.classList.remove('is-on'); });
+      im.classList.add('is-on');
+      cap.textContent = ROOMS[k].name;
+      at = k;
+      slide(k + 1);
+    }
+    show(0);
+    fig.addEventListener('mouseenter', function () { over = true; });
+    fig.addEventListener('mouseleave', function () { over = false; });
+    if (!still) {
+      setInterval(function () {
+        if (!over && !document.hidden && !(band && band.hidden)) show(at + 1);
+      }, 7000);
+    }
+  })();
+
+  (function () {
+    var dlg = $('mr-cx');
+    $('mr-cx-text').addEventListener('input', connCount);
+    $('mr-cx-save').addEventListener('click', function () { connKeep(); dlg.close(); });
+    $('mr-cx-close').addEventListener('click', function () { dlg.close(); });
+    $('mr-cx-prev').addEventListener('click', function () { connKeep(); openConn(connAt - 1); });
+    $('mr-cx-next').addEventListener('click', function () { connKeep(); openConn(connAt + 1); });
+    // Escape closes a native dialog on its own; keep what was typed either way.
+    dlg.addEventListener('cancel', function () { connKeep(); });
+    dlg.addEventListener('close', function () {
+      $('mr-stage').querySelectorAll('.mr-stn').forEach(function (n) { n.classList.remove('hot'); });
+    });
+  })();
 
   $('mr-img').addEventListener('load', layoutLabels);
   setRoom(ROOMS[0], true);
