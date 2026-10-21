@@ -167,6 +167,42 @@
     return el('span', cls, label);
   }
 
+  // ── NOTES PREVIEW ───────────────────────────────────────────────────────
+  // Hovering the ≡ shows the note itself rather than a badge announcing one.
+
+  var pop = null;
+
+  function popEl() {
+    if (!pop) { pop = el('div', 'tb-pop'); document.body.appendChild(pop); }
+    return pop;
+  }
+
+  function hideNotes() { if (pop) pop.classList.remove('open'); }
+
+  function showNotes(anchor, text) {
+    var p = popEl();
+    p.textContent = text;
+    p.style.left = '0px';
+    p.style.top = '0px';
+    p.classList.add('open');            // must be visible before it can be measured
+
+    var r = anchor.getBoundingClientRect();
+    var vw = document.documentElement.clientWidth;
+    var vh = document.documentElement.clientHeight;
+    var w = p.offsetWidth, h = p.offsetHeight;
+
+    var left = r.left;
+    if (left + w > vw - 12) left = vw - w - 12;
+    if (left < 8) left = 8;
+
+    // Below the icon normally; above it when there is no room below.
+    var top = r.bottom + 6;
+    if (top + h > vh - 12 && r.top - h - 6 > 8) top = r.top - h - 6;
+
+    p.style.left = (left + window.scrollX) + 'px';
+    p.style.top  = (top + window.scrollY) + 'px';
+  }
+
   function card(t, kids) {
     var c = el('div', 'tb-card');
     c.draggable = true;
@@ -179,7 +215,18 @@
     if (t.type) meta.appendChild(el('span', 'tb-tag type', t.type));
     if (t.priority) meta.appendChild(el('span', 'tb-tag ' + t.priority, t.priority));
     var dt = dueTag(t); if (dt) meta.appendChild(dt);
-    if (t.description) meta.appendChild(el('span', 'tb-tag', 'notes'));
+    if (t.description) {
+      var nb = el('span', 'tb-notes', '\u2261');
+      nb.setAttribute('aria-label', 'Notes');
+      nb.addEventListener('mouseenter', function () { showNotes(nb, t.description); });
+      nb.addEventListener('mouseleave', hideNotes);
+      nb.addEventListener('click', function (e) {       // tap, for touch screens
+        e.stopPropagation();
+        if (pop && pop.classList.contains('open')) hideNotes();
+        else showNotes(nb, t.description);
+      });
+      meta.appendChild(nb);
+    }
     if (t.claude_session_url) {
       var a = el('a', 'tb-chat', '💬');
       a.href = t.claude_session_url;
@@ -216,6 +263,7 @@
 
     c.addEventListener('click', function () { openEditor(t); });
     c.addEventListener('dragstart', function (e) {
+      hideNotes();
       dragId = t.id;
       c.classList.add('dragging');
       e.dataTransfer.effectAllowed = 'move';
@@ -226,6 +274,7 @@
   }
 
   function render() {
+    hideNotes();
     refreshTypes();
     var board = $('tb-board');
     board.textContent = '';
@@ -424,8 +473,14 @@
     });
 
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && $('tb-ov').classList.contains('open')) closeEditor();
+      if (e.key !== 'Escape') return;
+      hideNotes();
+      if ($('tb-ov').classList.contains('open')) closeEditor();
     });
+
+    // A preview pinned to a screen position has to go when the page moves.
+    window.addEventListener('scroll', hideNotes, true);
+    window.addEventListener('resize', hideNotes);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);

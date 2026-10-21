@@ -39,6 +39,8 @@
   var readyPromise = new Promise(function (r) { resolveReady = r; });
   var modal = null;
   var navLink = null;
+  var navDrop = null;
+  var isAdmin = false;
 
   // After Google / Discord / email links, come back to the page the reader
   // was on (without any #hash).
@@ -76,6 +78,7 @@
   function setUser(user) {
     var changed = (currentUser && currentUser.id) !== (user && user.id);
     currentUser = user || null;
+    if (!currentUser) isAdmin = false;
     updateNav();
     if (changed || !readyPromise._done) {
       listeners.forEach(function (fn) { try { fn(currentUser); } catch (e) { console.error(e); } });
@@ -84,9 +87,10 @@
 
   // plans and reflections reference profiles, so make sure one exists.
   function ensureProfile(user) {
-    return client.from('profiles').select('id').eq('id', user.id).maybeSingle()
+    return client.from('profiles').select('id, is_admin').eq('id', user.id).maybeSingle()
       .then(function (res) {
-        if (res.data) return;
+        if (res.data) { isAdmin = !!res.data.is_admin; updateNav(); return; }
+        isAdmin = false;
         return client.from('profiles').insert({
           id: user.id,
           email: user.email,
@@ -167,7 +171,9 @@
     '.wba-check input{margin-top:.3rem;accent-color:var(--gold,#c9a84c);width:1rem;height:1rem;flex-shrink:0}',
     '.wba-modal.acct .wba-tabs,.wba-modal.acct .wba-lede{display:none}',
     '.wba-acct-email{font-family:"Cormorant Garamond",serif;font-size:1.1rem;color:var(--text);margin:0 0 1.2rem;word-break:break-all}',
-    'nav a.wba-nav-link{cursor:pointer}'
+    'nav a.wba-nav-link{cursor:pointer}',
+    'nav a.wba-nav-link[hidden],nav .wba-nav-drop[hidden]{display:none!important}',
+    'nav .wba-nav-drop .wba-nav-sep{flex:0 0 auto;height:1px;margin:.35rem 0;background:var(--rule,rgba(255,255,255,.08))}'
   ].join('\n');
 
   function injectStyles() {
@@ -449,20 +455,96 @@
     navLink.textContent = 'Sign In';
     navLink.addEventListener('click', function (e) {
       e.preventDefault();
-      if (currentUser) {
-        open('account');
-      } else {
-        open('signin');
-      }
+      open(currentUser ? 'account' : 'signin');
     });
     (nav.querySelector('.nav-links') || nav).appendChild(navLink);
     updateNav();
   }
 
+  function closeDrop(d) {
+    if (!d) return;
+    d.classList.remove('open');
+    var b = d.querySelector('.nav-drop-btn');
+    if (b) b.setAttribute('aria-expanded', 'false');
+    // :focus-within holds a menu open too, so a clicked button has to let go
+    if (d.contains(document.activeElement) && document.activeElement.blur) document.activeElement.blur();
+  }
+
+  // The click and Escape handling in scripts.js is delegated on document, so it
+  // picks this menu up on its own. Its hover coordination is not — those
+  // listeners are bound at page load, before this element exists — so the
+  // one-menu-at-a-time behaviour is wired up here instead.
+  function addHover(drop) {
+    if (!window.matchMedia || !window.matchMedia('(hover: hover)').matches) return;
+    drop.addEventListener('mouseenter', function () {
+      document.querySelectorAll('.nav-drop').forEach(function (d) { if (d !== drop) closeDrop(d); });
+    });
+    drop.addEventListener('mouseleave', function () { closeDrop(drop); });
+  }
+
+  // Admin-only menu. This decides what is DRAWN, nothing more: /taskboard and
+  // the comment-moderation functions are each gated server side by is_admin(),
+  // so hiding these links is convenience, never the protection.
+  function buildNavDrop(nav) {
+    if (navDrop) return navDrop;
+
+    navDrop = document.createElement('div');
+    navDrop.className = 'nav-drop wba-nav-drop';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nav-drop-btn';
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-haspopup', 'true');
+    btn.textContent = 'Account';
+
+    var menu = document.createElement('div');
+    menu.className = 'nav-drop-menu';
+
+    function item(label, href, onClick) {
+      var a = document.createElement('a');
+      a.textContent = label;
+      a.href = href;
+      if (onClick) a.addEventListener('click', function (e) { e.preventDefault(); onClick(); });
+      menu.appendChild(a);
+    }
+
+    item('Taskboard', '/taskboard');
+    item('Comment Moderation', '/moderate-comments');
+
+    var sep = document.createElement('span');
+    sep.className = 'wba-nav-sep';
+    menu.appendChild(sep);
+
+    item('Sign Out', '#', function () { closeDrop(navDrop); signOut(); });
+
+    navDrop.appendChild(btn);
+    navDrop.appendChild(menu);
+    (nav.querySelector('.nav-links') || nav).appendChild(navDrop);
+    addHover(navDrop);
+    return navDrop;
+  }
+
   function updateNav() {
-    if (!navLink) return;
-    navLink.textContent = currentUser ? 'Account' : 'Sign In';
-    navLink.title = currentUser ? 'Signed in as ' + (currentUser.email || '') : 'Sign in or create an account';
+    var admin = !!(currentUser && isAdmin);
+
+    if (navLink) {
+      navLink.textContent = currentUser ? 'Account' : 'Sign In';
+      navLink.title = currentUser ? 'Signed in as ' + (currentUser.email || '')
+                                  : 'Sign in or create an account';
+      navLink.hidden = admin;          // readers keep the link and its window
+    }
+
+    if (admin) {
+      var nav = document.querySelector('nav');
+      if (!nav) return;
+      buildNavDrop(nav).hidden = false;
+      var b = navDrop.querySelector('.nav-drop-btn');
+      if (b) b.title = 'Signed in as ' + (currentUser.email || '');
+    } else if (navDrop) {
+      closeDrop(navDrop);
+      navDrop.hidden = true;
+    }
   }
 
   // ── PUBLIC API ─────────────────────────────────────────────────────────
@@ -474,6 +556,7 @@
       if (readyPromise._done) { try { fn(currentUser); } catch (e) { console.error(e); } }
     },
     get user() { return currentUser; },
+    get isAdmin() { return isAdmin; },
     open: open,
     close: close,
     signOut: signOut,

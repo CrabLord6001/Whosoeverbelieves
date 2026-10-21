@@ -71,6 +71,18 @@
 .tb-tag.due    { color: var(--text-mid); }
 .tb-tag.due.soon { color: #e0a265; border-color: rgba(224,162,101,.5); }
 .tb-tag.due.past { color: #e57373; border-color: rgba(229,115,115,.5); }
+.tb-notes { cursor: help; color: var(--text-faint); font-size: 0.85rem; line-height: 1; padding: 0 .2rem; user-select: none; }
+.tb-notes:hover { color: var(--gold); }
+/* One shared preview, parented to <body> so a column's bounds can never clip it.
+   pointer-events:none keeps it from stealing the hover that opened it. */
+.tb-pop { position: absolute; z-index: 3000; display: none; pointer-events: none;
+  max-width: 340px; max-height: 280px; overflow: hidden;
+  background: var(--surface, #131922); border: 1px solid var(--rule); border-radius: 5px;
+  padding: 0.7rem 0.8rem; color: var(--text); font-family: 'EB Garamond', serif;
+  font-size: 0.9rem; line-height: 1.45; white-space: pre-wrap; word-break: break-word;
+  box-shadow: 0 14px 34px rgba(0,0,0,.45); }
+.tb-pop.open { display: block; }
+:root.light-mode .tb-pop { background: #f5efe0; box-shadow: 0 14px 30px rgba(0,0,0,.14); }
 .tb-chat { text-decoration: none; color: var(--text-faint); font-size: 0.75rem; }
 .tb-chat:hover { color: var(--gold); }
 .tb-kids { margin: 0.5rem 0 0; padding: 0.4rem 0 0; border-top: 1px solid var(--rule); list-style: none; }
