@@ -198,14 +198,14 @@
       <span class="hp-progress-name" id="hp-name"></span>
     </div>
     <div class="hp-divider"></div>
-    <div class="hp-progress-block grow" id="hp-reading" hidden>
-      <span class="hp-progress-label" id="hp-reading-label">Next reading</span>
-      <span class="hp-progress-value" id="hp-reading-value"></span>
-    </div>
     <div class="hp-progress-block" id="hp-challenge" hidden>
       <span class="hp-progress-label">Discipleship Challenge</span>
       <div class="hp-bar"><div id="hp-challenge-bar" style="width:0%"></div></div>
       <span class="hp-progress-value"><span id="hp-challenge-value"></span></span>
+    </div>
+    <div class="hp-progress-block grow" id="hp-reading" hidden>
+      <span class="hp-progress-label" id="hp-reading-label">Next reading</span>
+      <span class="hp-progress-value" id="hp-reading-value"></span>
     </div>
     <a class="hp-btn" id="hp-continue" href="/bible-reading-plans">Continue</a>
   </section>
@@ -814,7 +814,7 @@ document.addEventListener('DOMContentLoaded', function () {
           $('hp-challenge-bar').style.width = Math.round(day / 30 * 100) + '%';
           $('hp-challenge-value').textContent = 'Day ' + day + ' of 30';
           $('hp-challenge').hidden = false;
-          if (!(pd && pd.day)) $('hp-continue').href = '/discipleship-challenge.html';
+          if (!(pd && pd.day)) $('hp-continue').href = '/discipleship-challenge';
         }
       }
       strip.hidden = !any;
