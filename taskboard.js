@@ -312,7 +312,21 @@
     c.dataset.id = t.id;
     c.style.borderLeftColor = byKey[t.status] ? byKey[t.status].color : 'transparent';
 
-    c.appendChild(el('div', 'tb-card-title', t.title));
+    var titleRow = el('div', 'tb-card-title');
+    titleRow.appendChild(el('span', 'tb-card-text', t.title));
+
+    var sb = el('button', 'tb-sub', '+');
+    sb.type = 'button';
+    sb.title = 'Add a subtask';
+    sb.addEventListener('click', function (e) {
+      e.stopPropagation();
+      quickOpen = null;            // only one inline box open at a time
+      subOpen = (subOpen === t.id) ? null : t.id;
+      render();
+    });
+    titleRow.appendChild(sb);
+
+    c.appendChild(titleRow);
 
     var meta = el('div', 'tb-card-meta');
     if (t.type) meta.appendChild(el('span', 'tb-tag type', t.type));
@@ -348,17 +362,6 @@
       d.addEventListener('click', function (e) { e.stopPropagation(); });
       meta.appendChild(d);
     }
-    var sb = el('button', 'tb-sub', '+ Sub');
-    sb.type = 'button';
-    sb.title = 'Add a subtask';
-    sb.addEventListener('click', function (e) {
-      e.stopPropagation();
-      quickOpen = null;            // only one inline box open at a time
-      subOpen = (subOpen === t.id) ? null : t.id;
-      render();
-    });
-    meta.appendChild(sb);
-
     var mv = el('button', 'tb-move', 'Move');
     mv.type = 'button';
     mv.addEventListener('click', function (e) { e.stopPropagation(); openMove(t); });

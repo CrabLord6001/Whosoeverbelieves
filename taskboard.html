@@ -93,7 +93,8 @@
   font-family: 'EB Garamond', serif; color: var(--text); line-height: 1.35; }
 .tb-card:hover { border-color: rgba(201,168,76,.4); }
 .tb-card.dragging { opacity: .4; }
-.tb-card-title { font-size: 0.95rem; word-break: break-word; }
+.tb-card-title { display: flex; align-items: flex-start; gap: 0.4rem; font-size: 0.95rem; }
+.tb-card-text { flex: 1; word-break: break-word; }
 .tb-card-meta { display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap; margin-top: 0.45rem; }
 .tb-tag { font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.08em; text-transform: uppercase;
   padding: 0.16rem 0.4rem; border-radius: 2px; border: 1px solid var(--rule); color: var(--text-faint); }
@@ -132,10 +133,9 @@
   color: var(--text-faint); font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.08em;
   text-transform: uppercase; padding: 0.18rem 0.4rem; cursor: pointer; }
 .tb-move:hover { color: var(--gold); border-color: rgba(201,168,76,.45); }
-.tb-sub { background: none; border: 1px solid var(--rule); border-radius: 3px; color: var(--text-faint);
-  font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 0.18rem 0.4rem; cursor: pointer; }
-.tb-sub:hover { color: var(--gold); border-color: rgba(201,168,76,.45); }
+.tb-sub { background: none; border: none; color: var(--text-faint); font-size: 1rem;
+  line-height: 1.1; padding: 0 0.1rem; cursor: pointer; opacity: 0.45; }
+.tb-sub:hover { color: var(--gold); opacity: 1; }
 .tb-quick-sub { margin-top: 0.45rem; }
 body.tb-touch .tb-move { display: inline-block; }
 .tb-move-opt { display: flex; align-items: center; gap: 0.6rem; width: 100%; box-sizing: border-box;
