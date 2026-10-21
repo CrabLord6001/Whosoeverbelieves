@@ -162,33 +162,6 @@
       .catch(function (err) { console.warn('[taskboard] could not save columns', err); });
   }
 
-  function openColumns() {
-    var list = $('tb-cv-list');
-    list.textContent = '';
-    STATUSES.forEach(function (s) {
-      var b = el('button', 'tb-move-opt' + (hidden[s.key] ? '' : ' cur'));
-      b.type = 'button';
-      var dot = el('span', 'tb-dot');
-      dot.style.background = s.color;
-      dot.style.opacity = hidden[s.key] ? '.25' : '1';
-      b.appendChild(dot);
-      b.appendChild(document.createTextNode(s.name));
-      var mark = el('span', '', hidden[s.key] ? 'hidden' : 'shown');
-      mark.style.marginLeft = 'auto';
-      mark.style.fontSize = '.8rem';
-      mark.style.opacity = '.7';
-      b.appendChild(mark);
-      b.addEventListener('click', function () {
-        hidden[s.key] = !hidden[s.key];
-        savePrefs();
-        render();
-        openColumns();              // redraw the sheet so the labels keep up
-      });
-      list.appendChild(b);
-    });
-    $('tb-cv').classList.add('open');
-  }
-
   // ── QUICK ADD ───────────────────────────────────────────────────────────
   // Capture first, sort later. Title and column only; everything else is
   // filled in by tapping the card afterwards, if ever.
@@ -395,6 +368,36 @@
     return c;
   }
 
+  function moveTask(id, toStatus) {
+    var t = tasks.find(function (x) { return x.id === id; });
+    if (!t || t.status === toStatus) return;
+    var before = t.status;
+    t.status = toStatus;                   // optimistic
+    render();
+    save(id, { status: toStatus }).catch(function (err) {
+      t.status = before;                   // put it back if the write failed
+      render();
+      alert('Could not move that task: ' + (err.message || 'unknown error'));
+    });
+  }
+
+  function wireDrop(node, statusKey) {
+    node.addEventListener('dragover', function (e) { e.preventDefault(); node.classList.add('over'); });
+    node.addEventListener('dragleave', function () { node.classList.remove('over'); });
+    node.addEventListener('drop', function (e) {
+      e.preventDefault();
+      node.classList.remove('over');
+      var id = dragId || (e.dataTransfer && e.dataTransfer.getData('text/plain'));
+      if (id) moveTask(id, statusKey);
+    });
+  }
+
+  function setCollapsed(key, on) {
+    hidden[key] = on;
+    savePrefs();
+    render();
+  }
+
   function render() {
     hideNotes();
     refreshTypes();
@@ -407,11 +410,20 @@
     });
 
     var shown = 0;
-    var stashed = [];
     STATUSES.forEach(function (s) {
       if (hidden[s.key]) {
-        var n = tasks.filter(function (t) { return t.status === s.key && !t.parent_id; }).length;
-        if (n) stashed.push(s.name + ' (' + n + ')');
+        var cn = tasks.filter(function (t) { return t.status === s.key && !t.parent_id; }).length;
+        var spine = el('div', 'tb-col collapsed');
+        spine.title = 'Expand ' + s.name;
+        var strip = el('div', 'tb-strip');
+        var cdot = el('span', 'tb-dot'); cdot.style.background = s.color;
+        strip.appendChild(cdot);
+        strip.appendChild(el('span', 'tb-strip-name', s.name));
+        strip.appendChild(el('span', 'tb-strip-n', String(cn)));
+        spine.appendChild(strip);
+        spine.addEventListener('click', function () { setCollapsed(s.key, false); });
+        wireDrop(spine, s.key);        // still a drop target, so a card can be dragged into it
+        board.appendChild(spine);
         return;
       }
       var col = el('div', 'tb-col');
@@ -423,6 +435,11 @@
       head.appendChild(el('span', 'tb-col-name', s.name));
       var n = el('span', 'tb-col-n');
       head.appendChild(n);
+      var cb = el('button', 'tb-collapse', '\u2212');
+      cb.type = 'button';
+      cb.title = 'Narrow this column';
+      cb.addEventListener('click', function (e) { e.stopPropagation(); setCollapsed(s.key, true); });
+      head.appendChild(cb);
       col.appendChild(head);
 
       var rows = tasks.filter(function (t) {
@@ -479,24 +496,7 @@
       col.appendChild(add);
       col.appendChild(quick);
 
-      col.addEventListener('dragover', function (e) { e.preventDefault(); col.classList.add('over'); });
-      col.addEventListener('dragleave', function () { col.classList.remove('over'); });
-      col.addEventListener('drop', function (e) {
-        e.preventDefault();
-        col.classList.remove('over');
-        var id = dragId || (e.dataTransfer && e.dataTransfer.getData('text/plain'));
-        if (!id) return;
-        var t = tasks.find(function (x) { return x.id === id; });
-        if (!t || t.status === s.key) return;
-        var before = t.status;
-        t.status = s.key;                    // optimistic
-        render();
-        save(id, { status: s.key }).catch(function (err) {
-          t.status = before;                 // put it back if the write failed
-          render();
-          alert('Could not move that task: ' + (err.message || 'unknown error'));
-        });
-      });
+      wireDrop(col, s.key);
 
       board.appendChild(col);
     });
@@ -505,10 +505,6 @@
       var open = board.querySelector('.tb-quick:not([hidden])');
       if (open) open.focus();
     }
-
-    var note = $('tb-hidden');
-    note.hidden = !stashed.length;
-    note.textContent = stashed.length ? stashed.join(', ') + ' hidden' : '';
 
     var sub = tasks.filter(function (t) { return t.parent_id; }).length;
     $('tb-count').textContent = shown + (shown === 1 ? ' task' : ' tasks') +
@@ -667,15 +663,6 @@
       load();
     });
 
-    $('tb-cols').addEventListener('click', openColumns);
-    $('tb-hidden').addEventListener('click', openColumns);
-
-    $('tb-cv').addEventListener('click', function (e) {
-      if (e.target === $('tb-cv') || (e.target.closest && e.target.closest('[data-cv="close"]'))) {
-        $('tb-cv').classList.remove('open');
-      }
-    });
-
     $('tb-mv').addEventListener('click', function (e) {
       if (e.target === $('tb-mv') || (e.target.closest && e.target.closest('[data-mv="close"]'))) {
         $('tb-mv').classList.remove('open');
@@ -698,7 +685,6 @@
       if (e.key !== 'Escape') return;
       hideNotes();
       $('tb-mv').classList.remove('open');
-      $('tb-cv').classList.remove('open');
       if ($('tb-ov').classList.contains('open')) closeEditor();
     });
 

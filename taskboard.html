@@ -53,22 +53,31 @@
 .tb-search { background: var(--bg); border: 1px solid var(--rule); border-radius: 4px; color: var(--text);
   font-family: 'EB Garamond', serif; font-size: 0.95rem; padding: 0.45rem 0.7rem; outline: none; min-width: 200px; }
 .tb-search:focus { border-color: var(--gold); }
-/* Nothing may disappear silently: a hidden column with tasks in it says so. */
-.tb-hidden-note { background: none; border: 1px solid rgba(224,162,101,.4); border-radius: 3px;
-  color: #e0a265; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.92rem;
-  padding: 0.35rem 0.6rem; cursor: pointer; }
-.tb-hidden-note:hover { border-color: rgba(224,162,101,.8); }
 .tb-count { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-faint); font-size: 0.95rem; margin-left: auto; }
 
 /* Columns */
-.tb-board { display: grid; grid-template-columns: repeat(6, minmax(215px, 1fr)); gap: 0.85rem; align-items: start; }
-/* Below the full six-across width, scroll sideways rather than wrapping onto a
-   second row - a kanban is read left to right, and wrapping breaks that. */
+/* Flex rather than grid: a narrowed column has to actually take less room,
+   which a fixed grid track will not do. Scrolls sideways instead of wrapping -
+   a kanban is read left to right. */
+.tb-board { display: flex; gap: 0.85rem; align-items: flex-start;
+  overflow-x: auto; padding-bottom: 0.75rem; -webkit-overflow-scrolling: touch; }
+.tb-col { flex: 1 0 215px; }
 @media (max-width: 1250px) {
-  .tb-board { display: flex; overflow-x: auto; scroll-snap-type: x proximity;
-    padding-bottom: 0.75rem; -webkit-overflow-scrolling: touch; }
+  .tb-board { scroll-snap-type: x proximity; }
   .tb-col { flex: 0 0 min(80vw, 300px); scroll-snap-align: start; }
 }
+/* Narrowed: a clickable spine showing name and count. */
+.tb-col.collapsed { flex: 0 0 46px !important; min-width: 46px; cursor: pointer;
+  padding: 0.6rem 0.25rem; align-self: stretch; min-height: 180px; }
+.tb-col.collapsed:hover { border-color: rgba(201,168,76,.5); }
+.tb-strip { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+.tb-strip-name { writing-mode: vertical-rl; text-orientation: mixed; white-space: nowrap;
+  font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--text-mid); }
+.tb-strip-n { font-family: 'EB Garamond', serif; font-size: 0.8rem; color: var(--text-faint); }
+.tb-collapse { background: none; border: none; color: var(--text-faint); cursor: pointer;
+  font-size: 1rem; line-height: 1; padding: 0 0.15rem; }
+.tb-collapse:hover { color: var(--gold); }
 
 .tb-col { background: var(--glass, rgba(255,255,255,.02)); border: 1px solid var(--rule); border-radius: 6px;
   padding: 0.6rem 0.55rem 0.9rem; min-height: 120px; transition: border-color .15s, background .15s; }
@@ -223,20 +232,9 @@ body.tb-touch .tb-move { display: inline-block; }
       <input type="search" class="tb-search" id="tb-q" placeholder="Filter…" autocomplete="off" spellcheck="false" />
       <select class="tb-search" id="tb-type" title="Filter by type"><option value="">All types</option></select>
       <button type="button" class="tb-btn secondary" id="tb-arch">Show Archived</button>
-      <button type="button" class="tb-btn secondary" id="tb-cols">Columns</button>
-      <button type="button" class="tb-hidden-note" id="tb-hidden" hidden></button>
       <span class="tb-count" id="tb-count"></span>
     </div>
     <div class="tb-board" id="tb-board"></div>
-  </div>
-</div>
-
-<!-- Column visibility -->
-<div class="tb-ov" id="tb-cv">
-  <div class="tb-modal" style="max-width:340px">
-    <button type="button" class="tb-x" data-cv="close" aria-label="Close">&#10005;</button>
-    <h2>Columns</h2>
-    <div id="tb-cv-list"></div>
   </div>
 </div>
 
