@@ -30,6 +30,7 @@
   var tasks = [];
   var showArchived = false;
   var filter = '';
+  var typeFilter = '';
   var editing = null;        // task object, or {} for a new one
   var dragId = null;
 
@@ -114,9 +115,44 @@
   // ── RENDER ──────────────────────────────────────────────────────────────
 
   function matches(t) {
+    if (typeFilter && (t.type || '') !== typeFilter) return false;
     if (!filter) return true;
-    var hay = (t.title + ' ' + (t.description || '')).toLowerCase();
+    var hay = (t.title + ' ' + (t.type || '') + ' ' + (t.description || '')).toLowerCase();
     return hay.indexOf(filter) !== -1;
+  }
+
+  // The type vocabulary is whatever is already in use. There is no list of
+  // valid types here or in the database, so adding one costs nothing.
+  function usedTypes() {
+    var seen = {};
+    tasks.forEach(function (t) { if (t.type) seen[t.type] = 1; });
+    return Object.keys(seen).sort();
+  }
+
+  function refreshTypes() {
+    var list = usedTypes();
+    var dl = $('tb-types');
+    if (dl) {
+      dl.textContent = '';
+      list.forEach(function (v) {
+        var o = document.createElement('option'); o.value = v; dl.appendChild(o);
+      });
+    }
+    var sel = $('tb-type');
+    if (sel) {
+      var cur = sel.value;
+      sel.textContent = '';
+      var all = document.createElement('option');
+      all.value = ''; all.textContent = 'All types';
+      sel.appendChild(all);
+      list.forEach(function (v) {
+        var o = document.createElement('option'); o.value = v; o.textContent = v;
+        sel.appendChild(o);
+      });
+      // If the filtered-on type no longer exists, fall back to showing everything.
+      sel.value = list.indexOf(cur) !== -1 ? cur : '';
+      if (sel.value !== cur) typeFilter = sel.value;
+    }
   }
 
   function dueTag(t) {
@@ -140,6 +176,7 @@
     c.appendChild(el('div', 'tb-card-title', t.title));
 
     var meta = el('div', 'tb-card-meta');
+    if (t.type) meta.appendChild(el('span', 'tb-tag type', t.type));
     if (t.priority) meta.appendChild(el('span', 'tb-tag ' + t.priority, t.priority));
     var dt = dueTag(t); if (dt) meta.appendChild(dt);
     if (t.description) meta.appendChild(el('span', 'tb-tag', 'notes'));
@@ -151,6 +188,15 @@
       a.title = t.claude_session_title || 'Open the Claude chat this started in';
       a.addEventListener('click', function (e) { e.stopPropagation(); });
       meta.appendChild(a);
+    }
+    if (t.doc_url) {
+      var d = el('a', 'tb-chat', '\ud83d\udcc4');
+      d.href = t.doc_url;
+      d.target = '_blank';
+      d.rel = 'noopener';
+      d.title = 'Open the document for this task';
+      d.addEventListener('click', function (e) { e.stopPropagation(); });
+      meta.appendChild(d);
     }
     if (meta.childNodes.length) c.appendChild(meta);
 
@@ -180,6 +226,7 @@
   }
 
   function render() {
+    refreshTypes();
     var board = $('tb-board');
     board.textContent = '';
 
@@ -279,6 +326,8 @@
     $('tb-due').value    = editing.due_date || '';
     $('tb-parent').value = editing.parent_id || '';
     $('tb-chat').value   = editing.claude_session_url || '';
+    $('tb-type-in').value = editing.type || '';
+    $('tb-doc').value     = editing.doc_url || '';
     $('tb-delbtn').hidden  = !editing.id;
     $('tb-archbtn').hidden = !editing.id;
     $('tb-archbtn').textContent = showArchived ? 'Unarchive' : 'Archive';
@@ -299,7 +348,9 @@
       priority: $('tb-prio').value || null,
       due_date: $('tb-due').value || null,
       parent_id: $('tb-parent').value || null,
-      claude_session_url: $('tb-chat').value.trim() || null
+      claude_session_url: $('tb-chat').value.trim() || null,
+      type: $('tb-type-in').value.trim() || null,
+      doc_url: $('tb-doc').value.trim() || null
     };
 
     var p;
@@ -339,10 +390,13 @@
   // ── WIRING ──────────────────────────────────────────────────────────────
 
   function wire() {
-    $('tb-new').addEventListener('click', function () { openEditor({ status: 'draft' }); });
-
     $('tb-q').addEventListener('input', function (e) {
       filter = e.target.value.trim().toLowerCase();
+      render();
+    });
+
+    $('tb-type').addEventListener('change', function (e) {
+      typeFilter = e.target.value;
       render();
     });
 
