@@ -1758,6 +1758,9 @@ nav a:hover::after { left: 0.9rem; right: 0.9rem; }
 }
 .hp-progress[hidden] { display: none; }
 .hp-progress-block { display: flex; flex-direction: column; justify-content: flex-start; gap: 0.3rem; min-width: 0; }
+/* [hidden] is a low-specificity UA default, so the display above beat it and an
+   unused block still rendered its label. Both blocks rely on the attribute. */
+.hp-progress-block[hidden] { display: none; }
 /* a rule between every pair of columns, equal height because the blocks stretch */
 .hp-progress-block:not(:first-child) { border-left: 1px solid var(--rule); padding-left: 1.3rem; }
 /* The plan title doubles as the control for which plan the homepage shows.

@@ -207,7 +207,7 @@
       <span class="hp-progress-label" id="hp-reading-label">Next reading</span>
       <span class="hp-progress-value" id="hp-reading-value"></span>
     </div>
-    <a class="hp-btn" id="hp-continue" href="/bible-reading-plans">Continue</a>
+    <a class="hp-btn" id="hp-continue" href="/bible-reading-plans">Read</a>
   </section>
 
   <!-- VERSE OF THE DAY + START HERE -->
@@ -814,7 +814,10 @@ document.addEventListener('DOMContentLoaded', function () {
           $('hp-challenge-bar').style.width = Math.round(day / 30 * 100) + '%';
           $('hp-challenge-value').textContent = 'Day ' + day + ' of 30';
           $('hp-challenge').hidden = false;
-          if (!(pd && pd.day)) $('hp-continue').href = '/discipleship-challenge';
+          if (!(pd && pd.day)) {
+            $('hp-continue').href = '/discipleship-challenge';
+            $('hp-continue').textContent = 'Open';
+          }
         }
       }
       strip.hidden = !any;
