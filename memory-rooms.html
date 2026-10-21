@@ -57,6 +57,10 @@
   .mr-steps li:first-child button::before { display: none; }
   .mr-steps button.is-done::before, .mr-steps button.is-on::before { background: rgba(201,168,76,0.55); }
   .mr-steps .bead {
+    /* position + z-index so the bead paints over the thread: the thread is an
+       absolutely positioned ::before, which would otherwise draw on top of a
+       static child and run straight through the check. */
+    position: relative; z-index: 1;
     width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
     border: 1px solid var(--rule); background: var(--bg);
     font-family: 'Cinzel', serif; font-size: 0.6rem; line-height: 1; color: var(--text-faint);
@@ -227,7 +231,14 @@
   .mr-cx {
     width: min(620px, calc(100vw - 2rem)); border: 1px solid var(--glass-border); border-radius: 6px;
     background: var(--bg); color: var(--text); padding: 0; box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+    /* A modal dialog is centred by the browser's own margin:auto, which this
+       page's reset had zeroed - hence the top left corner. Set it back, and
+       hold it to the right so it sits over the connections rather than the
+       painting. Narrow screens get it centred, where there is nothing beside it. */
+    margin: auto 2rem auto auto;
+    max-height: calc(100vh - 3rem); overflow: auto;
   }
+  @media (max-width: 1100px) { .mr-cx { margin: auto; } }
   .mr-cx::backdrop { background: rgba(6,9,14,0.72); }
   .mr-cx-body { padding: 1.4rem 1.5rem 1.2rem; }
   .article-body .mr-cx-step { font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 0.9rem; }
@@ -557,6 +568,7 @@
   .mr-view { display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
              gap: 0.35rem 1.15rem; margin-top: 0.6rem; font-size: 0.82rem; color: var(--text-faint); }
   .mr-view[hidden] { display: none; }
+  .mr-view .c[hidden] { display: none; }
   .mr-view .c { display: flex; align-items: center; gap: 0.45rem; }
   .mr-view label { white-space: nowrap; cursor: pointer; }
   .mr-view input[type=range] { width: 94px; accent-color: var(--gold); }
@@ -751,8 +763,8 @@
         <div class="mr-view" id="mr-view" hidden>
           <span class="c"><label for="vw-bright">Line brightness</label><input type="range" id="vw-bright" min="0.2" max="1" step="0.02"></span>
           <span class="c"><label for="vw-thick">Line thickness</label><input type="range" id="vw-thick" min="0.6" max="1.8" step="0.05"></span>
-          <span class="c"><label for="vw-speed">Line speed</label><input type="range" id="vw-speed" min="0.35" max="1.5" step="0.05"></span>
-          <span class="c"><input type="checkbox" id="vw-cycle"><label for="vw-cycle">Cycle the route</label></span>
+          <span class="c" id="vw-speed-c"><label for="vw-speed">Line speed</label><input type="range" id="vw-speed" min="0.35" max="1.5" step="0.05"></span>
+          <span class="c" id="vw-cycle-c"><input type="checkbox" id="vw-cycle"><label for="vw-cycle">Cycle the route</label></span>
         </div>
         <div class="mr-tune" id="mr-tune">
           <h4>Route tuning (ticket 72 &middot; ?tune=1 only)</h4>
@@ -1050,7 +1062,52 @@
         { name: 'Gate curtain', x: 40, y: 64 }, { name: 'Bronze altar', x: 50, y: 66 }, { name: 'Laver', x: 50, y: 58 },
         { name: 'Rising smoke', x: 45, y: 51 }, { name: 'Priests', x: 61, y: 55 }, { name: 'Tent of meeting', x: 57, y: 45 },
         { name: 'Pillar of cloud', x: 52, y: 22 }, { name: 'Mountains', x: 83, y: 16 }, { name: 'Camp tents', x: 13, y: 40 },
-        { name: 'Court wall', x: 83, y: 45 }, { name: 'White hangings', x: 90, y: 63 } ] }
+        { name: 'Court wall', x: 83, y: 45 }, { name: 'White hangings', x: 90, y: 63 } ] },
+    { id: 'courtyard', name: 'The Courtyard in Delft', img: 'images/memory-room-courtyard.webp', w: 1400, h: 1671,
+      credit: 'Pieter de Hooch, <i>The Courtyard of a House in Delft</i> (1658), National Gallery, London. Public domain.',
+      about: 'A brick courtyard behind a house in Delft, swept and tidy, with a broom and bucket still standing where the work stopped. The tablet over the arch was salvaged from a monastery; through the passage beside it, a woman looks out to the street.',
+      stations: [
+        { name: 'Potted plant over the arch', x: 20, y: 4 }, { name: 'Carved stone tablet', x: 24, y: 11 }, { name: 'Archway', x: 25, y: 25 },
+        { name: 'Red shutter', x: 10, y: 36 }, { name: 'Woman in the passage', x: 22, y: 45 }, { name: 'Vine trellis', x: 60, y: 15 },
+        { name: 'Leaning pole', x: 74, y: 48 }, { name: 'Woman in white collar', x: 62, y: 43 }, { name: 'Child in yellow', x: 49, y: 53 },
+        { name: 'Open wooden door', x: 84, y: 41 }, { name: 'Stack of firewood', x: 90, y: 57 }, { name: 'Wooden bucket', x: 78, y: 86 },
+        { name: 'Broom', x: 66, y: 94 }, { name: 'Brick paving', x: 35, y: 86 } ] },
+    { id: 'goldsmith', name: 'The Goldsmith’s Shop', img: 'images/memory-room-goldsmith.webp', w: 1400, h: 1609,
+      credit: 'Petrus Christus, <i>A Goldsmith in His Shop</i> (1449), The Metropolitan Museum of Art, New York. Public domain.',
+      about: 'A couple come to buy a wedding ring, and the goldsmith weighs it out while they wait. His counter is strewn with stock — rings, pearls, coral and crystal — and the round mirror at the edge reflects two figures passing in the street outside.',
+      stations: [
+        { name: 'Leaded window', x: 22, y: 7 }, { name: 'Silver flasks on the shelf', x: 80, y: 12 }, { name: 'Tall black hat', x: 37, y: 12 },
+        { name: 'String of beads', x: 80, y: 29 }, { name: 'Green drape', x: 52, y: 14 }, { name: 'Box of rings', x: 78, y: 36 },
+        { name: 'Coral branch', x: 85, y: 45 }, { name: 'Brocade gown', x: 18, y: 45 }, { name: 'Goldsmith in red', x: 55, y: 55 },
+        { name: 'Convex mirror', x: 86, y: 69 }, { name: 'Scales', x: 55, y: 78 }, { name: 'Coiled red belt', x: 18, y: 83 },
+        { name: 'Coins and weights', x: 68, y: 84 }, { name: 'Gold chain', x: 93, y: 80 } ] },
+    { id: 'milkmaid', name: 'The Milkmaid’s Kitchen', img: 'images/memory-room-milkmaid.webp', w: 1400, h: 1570,
+      credit: 'Johannes Vermeer, <i>The Milkmaid</i> (c. 1658–60), Rijksmuseum, Amsterdam. Public domain.',
+      about: 'A servant pours milk in a plain back kitchen, giving her whole attention to a thin steady stream. Vermeer put everything into the small things around her: the bread, the brass pail, the broken pane of the window, and a nail in the wall with its own shadow.',
+      stations: [
+        { name: 'Leaded window', x: 7, y: 12 }, { name: 'Wicker wall basket', x: 22, y: 21 }, { name: 'Brass pail', x: 29, y: 32 },
+        { name: 'White linen cap', x: 60, y: 15 }, { name: 'Yellow bodice', x: 55, y: 36 }, { name: 'Earthenware jug', x: 34, y: 54 },
+        { name: 'Earthenware bowl', x: 36, y: 63 }, { name: 'Blue apron', x: 56, y: 70 }, { name: 'Red skirt', x: 63, y: 87 },
+        { name: 'Stoneware crock', x: 20, y: 61 }, { name: 'Round loaf', x: 21, y: 63 }, { name: 'Broken loaves', x: 43, y: 70 },
+        { name: 'Delft tiles', x: 77, y: 86 }, { name: 'Foot warmer', x: 85, y: 89 } ] },
+    { id: 'nicholas', name: 'The Feast of St. Nicholas', img: 'images/memory-room-nicholas.webp', w: 1400, h: 1641,
+      credit: 'Jan Steen, <i>The Feast of Saint Nicholas</i> (c. 1665–68), Rijksmuseum, Amsterdam. Public domain.',
+      about: 'St. Nicholas has come in the night, and a Dutch family is sorting out who got what. The little girl clutches her doll and her bucket of sweets, her brother is in tears over the switch left in his shoe, and their grandmother beckons him toward the bed curtain where a better present is hidden.',
+      stations: [
+        { name: 'Leaded window', x: 10, y: 22 }, { name: 'Orange bed curtain', x: 45, y: 25 }, { name: 'Framed picture', x: 32, y: 27 },
+        { name: 'Boy pointing up the chimney', x: 78, y: 30 }, { name: 'Crying boy', x: 14, y: 55 }, { name: 'Girl laughing at him', x: 26, y: 44 },
+        { name: 'Man in the black hat', x: 46, y: 50 }, { name: 'Girl with the doll', x: 34, y: 60 }, { name: 'Her gift bucket', x: 39, y: 74 },
+        { name: 'Grandmother reaching', x: 70, y: 60 }, { name: 'Red chair', x: 93, y: 60 }, { name: 'Sweets on the table', x: 90, y: 77 },
+        { name: 'Basket of gingerbread', x: 12, y: 90 }, { name: 'Shoe on the floor', x: 53, y: 93 } ] },
+    { id: 'meatstall', name: 'The Meat Stall', img: 'images/memory-room-meatstall.webp', w: 1400, h: 975,
+      credit: 'Pieter Aertsen, <i>A Meat Stall with the Holy Family Giving Alms</i> (1551), Uppsala University Art Collection. Public domain.',
+      about: 'A butcher’s stall heaped with everything a winter larder could hold: ribs, sausages, a pig’s head, butter, pretzels and pies. Behind it, almost lost in the clutter, Mary and Joseph pause on the flight into Egypt and hand bread to a child.',
+      stations: [
+        { name: 'Brass jug', x: 13, y: 7 }, { name: 'Pretzels', x: 7, y: 13 }, { name: 'Side of ribs', x: 11, y: 32 },
+        { name: 'Hanging rings', x: 72, y: 12 }, { name: 'Notice on the post', x: 89, y: 8 }, { name: 'Pig’s head', x: 47, y: 24 },
+        { name: 'Flight into Egypt', x: 37, y: 24 }, { name: 'Sausages', x: 56, y: 45 }, { name: 'Hanging cloth', x: 61, y: 52 },
+        { name: 'Pot of fish', x: 31, y: 55 }, { name: 'Ox head', x: 37, y: 62 }, { name: 'Poultry in a basket', x: 82, y: 74 },
+        { name: 'Butter dish', x: 52, y: 85 }, { name: 'Tarts on the table', x: 33, y: 88 } ] }
   ];
   var ROOM = ROOMS[0], STATIONS = ROOM.stations;
 
@@ -1113,6 +1170,11 @@
     renderSteps();
     $('mr-replay').hidden = !(i === 5 && (st.mode === M_WALK || st.mode === M_HIDE));
     $('mr-view').hidden = i < 3;
+    // Brightness and thickness change the drawn path on any step. Speed and
+    // cycling only mean something once the route is animating, which is step 6,
+    // so they stay out of the way until then.
+    $('vw-speed-c').hidden = i !== 5;
+    $('vw-cycle-c').hidden = i !== 5;
     if (i === 5) maybePlayRoute();
     if (i > 0) document.getElementById('mr-lead').scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (i >= 4) save();
