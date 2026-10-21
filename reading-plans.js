@@ -3586,11 +3586,16 @@ function audioFileNumber(book, chapter) {
 // for books not yet prepared.
 const KJV_AUDIO = {
   'Genesis':   [[1, 50, 'Darren L. Slider']],
+  'Proverbs':  [[1, 31, 'Michael Packard']],
+  'Ecclesiastes': [[1, 3, 'Michael Packard'], [4, 6, 'Brian Dole'], [7, 9, 'Beth Thomas'], [10, 12, 'TriciaG']],
+  'Song of Songs': [[1, 8, 'Ezwa, TriciaG, Algy Pug']],
   'Isaiah': [[1, 6, 'Michael Packard'], [7, 12, 'Sundiata'], [13, 15, 'Abigail Rasmussen'],
              [16, 18, 'Sundiata'], [19, 24, 'Abigail Rasmussen'], [25, 33, 'Beth Thomas'],
              [34, 36, 'debolee'], [37, 45, 'Sundiata'], [46, 48, 'debolee'], [49, 51, 'Sundiata'],
              [52, 54, 'TriciaG'], [55, 57, 'Sundiata'], [58, 60, 'Brian Dole'],
              [61, 66, 'Michael Packard']],
+  'Daniel':  [[1, 2, 'Patti Cunningham'], [3, 4, 'Sharon V.'], [5, 6, 'ThomasO'],
+             [7, 8, 'theunknownchristian'], [9, 10, 'TriciaG'], [11, 12, 'Sundiata']],
   'Matthew':  [[1, 28, 'Michael Packard']],
   'Mark':     [[1, 16, 'Sundiata']],
   'Luke':     [[1, 10, 'Susan Denney'], [11, 24, 'Fr. Richard Zeile of Detroit']],
