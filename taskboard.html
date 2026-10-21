@@ -57,8 +57,13 @@
 
 /* Columns */
 .tb-board { display: grid; grid-template-columns: repeat(6, minmax(215px, 1fr)); gap: 0.85rem; align-items: start; }
-@media (max-width: 1250px) { .tb-board { grid-template-columns: repeat(3, minmax(215px, 1fr)); } }
-@media (max-width: 760px)  { .tb-board { grid-template-columns: 1fr; } }
+/* Below the full six-across width, scroll sideways rather than wrapping onto a
+   second row - a kanban is read left to right, and wrapping breaks that. */
+@media (max-width: 1250px) {
+  .tb-board { display: flex; overflow-x: auto; scroll-snap-type: x proximity;
+    padding-bottom: 0.75rem; -webkit-overflow-scrolling: touch; }
+  .tb-col { flex: 0 0 min(80vw, 300px); scroll-snap-align: start; }
+}
 
 .tb-col { background: var(--glass, rgba(255,255,255,.02)); border: 1px solid var(--rule); border-radius: 6px;
   padding: 0.6rem 0.55rem 0.9rem; min-height: 120px; transition: border-color .15s, background .15s; }
@@ -106,6 +111,20 @@
 .tb-kid:hover { color: var(--text); }
 .tb-kid.done .tb-kid-t { text-decoration: line-through; opacity: .6; }
 .tb-kid-t { word-break: break-word; }
+
+/* Touch devices get an explicit move control: iOS Safari never fires the
+   HTML5 drag events, so dragging silently does nothing there. */
+.tb-move { display: none; background: none; border: 1px solid var(--rule); border-radius: 3px;
+  color: var(--text-faint); font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 0.18rem 0.4rem; cursor: pointer; }
+.tb-move:hover { color: var(--gold); border-color: rgba(201,168,76,.45); }
+body.tb-touch .tb-move { display: inline-block; }
+.tb-move-opt { display: flex; align-items: center; gap: 0.6rem; width: 100%; box-sizing: border-box;
+  background: none; border: 1px solid var(--rule); border-radius: 4px; color: var(--text);
+  font-family: 'EB Garamond', serif; font-size: 0.95rem; padding: 0.6rem 0.7rem; margin-bottom: 0.4rem;
+  cursor: pointer; text-align: left; }
+.tb-move-opt:hover { border-color: rgba(201,168,76,.5); }
+.tb-move-opt.cur { border-color: rgba(201,168,76,.7); color: var(--gold); }
 
 .tb-add { width: 100%; background: none; border: 1px dashed var(--rule); border-radius: 4px; color: var(--text-faint);
   font-family: 'EB Garamond', serif; font-size: 0.85rem; padding: 0.4rem; cursor: pointer; }
@@ -197,6 +216,15 @@
       <span class="tb-count" id="tb-count"></span>
     </div>
     <div class="tb-board" id="tb-board"></div>
+  </div>
+</div>
+
+<!-- Move sheet (touch) -->
+<div class="tb-ov" id="tb-mv">
+  <div class="tb-modal" style="max-width:340px">
+    <button type="button" class="tb-x" data-mv="close" aria-label="Close">&#10005;</button>
+    <h2>Move to&hellip;</h2>
+    <div id="tb-mv-list"></div>
   </div>
 </div>
 

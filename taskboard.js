@@ -78,6 +78,9 @@
         }
         $('tb-gate').hidden = true;
         $('tb-app').hidden = false;
+        if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+          document.body.classList.add('tb-touch');
+        }
         wire();
         return load();
       });
@@ -255,6 +258,11 @@
       d.addEventListener('click', function (e) { e.stopPropagation(); });
       meta.appendChild(d);
     }
+    var mv = el('button', 'tb-move', 'Move');
+    mv.type = 'button';
+    mv.addEventListener('click', function (e) { e.stopPropagation(); openMove(t); });
+    meta.appendChild(mv);
+
     if (meta.childNodes.length) c.appendChild(meta);
 
     if (kids && kids.length) {
@@ -346,6 +354,35 @@
     $('tb-count').textContent = shown + (shown === 1 ? ' task' : ' tasks') +
       (sub ? ', ' + sub + ' subtask' + (sub === 1 ? '' : 's') : '') +
       (showArchived ? ' · archived' : '');
+  }
+
+  // ── MOVE (touch) ────────────────────────────────────────────────────────
+
+  function openMove(t) {
+    var list = $('tb-mv-list');
+    list.textContent = '';
+    STATUSES.forEach(function (s) {
+      var b = el('button', 'tb-move-opt' + (s.key === t.status ? ' cur' : ''));
+      b.type = 'button';
+      var dot = el('span', 'tb-dot');
+      dot.style.background = s.color;
+      b.appendChild(dot);
+      b.appendChild(document.createTextNode(s.name));
+      b.addEventListener('click', function () {
+        $('tb-mv').classList.remove('open');
+        if (s.key === t.status) return;
+        var before = t.status;
+        t.status = s.key;
+        render();
+        save(t.id, { status: s.key }).catch(function (err) {
+          t.status = before;
+          render();
+          alert('Could not move that task: ' + (err.message || 'unknown error'));
+        });
+      });
+      list.appendChild(b);
+    });
+    $('tb-mv').classList.add('open');
   }
 
   // ── EDITOR ──────────────────────────────────────────────────────────────
@@ -471,6 +508,12 @@
       load().then(function () { b.disabled = false; }, function () { b.disabled = false; });
     });
 
+    $('tb-mv').addEventListener('click', function (e) {
+      if (e.target === $('tb-mv') || (e.target.closest && e.target.closest('[data-mv="close"]'))) {
+        $('tb-mv').classList.remove('open');
+      }
+    });
+
     $('tb-ov').addEventListener('click', function (e) {
       if (e.target === $('tb-ov')) { closeEditor(); return; }
       var btn = e.target.closest('[data-tb]');
@@ -485,6 +528,7 @@
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
       hideNotes();
+      $('tb-mv').classList.remove('open');
       if ($('tb-ov').classList.contains('open')) closeEditor();
     });
 
