@@ -384,10 +384,19 @@
     return getClient().then(function (c) {
       return c.functions.invoke('email-prefs', { method: method, body: body });
     }).then(function (r) {
-      if (r.error) throw r.error;
+      if (r.error) {
+        // A 401 means the session is not valid, which is a different problem
+        // from the server being unreachable. Carry the status up so the
+        // reader is told which one it is.
+        var e = new Error(r.error.message || 'Request failed');
+        e.status = (r.error.context && r.error.context.status) || 0;
+        throw e;
+      }
       return r.data || {};
     });
   }
+
+  var SIGNIN_EXPIRED = 'Your sign-in has expired. Please sign out and sign in again.';
 
   function loadAccount() {
     var box = document.getElementById('wba-account-updates');
@@ -398,8 +407,8 @@
     emailPrefs('GET').then(function (d) {
       box.checked = !!d.email_updates;
       box.disabled = false;
-    }).catch(function () {
-      msg('account', 'Email settings are unavailable right now.');
+    }).catch(function (e) {
+      msg('account', e && e.status === 401 ? SIGNIN_EXPIRED : 'Email settings are unavailable right now.');
     });
   }
 
@@ -410,9 +419,9 @@
     emailPrefs('POST', { subscribe: want }).then(function (d) {
       box.checked = !!d.email_updates;
       msg('account', d.email_updates ? 'You’ll get an email when a new article is published.' : 'Email updates turned off.', true);
-    }).catch(function () {
+    }).catch(function (e) {
       box.checked = !want;
-      msg('account', 'Could not save that change. Please try again.');
+      msg('account', e && e.status === 401 ? SIGNIN_EXPIRED : 'Could not save that change. Please try again.');
     }).then(function () { box.disabled = false; });
   }
 
