@@ -1,7 +1,7 @@
 name: New article notification
 
 # When an article appears in search-index.js on main, email Jonathan a
-# ready-to-send link for /announce.
+# ready-to-send link for the /mailing page.
 #
 # This never emails a subscriber. The broadcast still goes out only when he
 # opens that page and clicks Send to All Subscribers, so a corrective push

@@ -26,7 +26,7 @@ const esc = (s) => String(s ?? '')
 let failed = 0;
 
 for (const a of added) {
-  const announce = `${SITE}/announce?article=${encodeURIComponent(a.url)}`;
+  const announce = `${SITE}/mailing?article=${encodeURIComponent(a.url)}`;
   const live = `${SITE}${a.url}`;
   const subject = `Ready to announce: ${a.title}`;
 

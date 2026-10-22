@@ -513,6 +513,7 @@
 
     item('Taskboard', '/taskboard');
     item('Moderation', '/moderate-comments');
+    item('Mailing', '/mailing');
 
     var sep = document.createElement('span');
     sep.className = 'wba-nav-sep';

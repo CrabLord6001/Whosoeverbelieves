@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Mailing Management — Whosoever Believes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=EB+Garamond:ital@0;1&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=EB+Garamond:ital@0;1&display=swap" /></noscript>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .an-wrap { padding: 2.5rem 2.5rem 4rem; background: var(--surface); }
+  .an-title { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: var(--text); margin: 0; }
+  .an-rule { width: 60px; height: 1px; background: linear-gradient(to right, var(--gold), transparent); margin: 0.5rem 0 2.25rem; }
+  .an-sec { font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin: 0 0 1rem; }
+  .an-count { font-family: 'EB Garamond', serif; font-size: 0.95rem; color: var(--text-faint); font-style: italic; margin: -0.5rem 0 1.25rem; }
+  .an-field { margin-bottom: 1.2rem; }
+  .an-label { display: block; font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.4rem; }
+  .an-input, .an-select, .an-textarea {
+    width: 100%; box-sizing: border-box; font-family: 'EB Garamond', serif; font-size: 1rem;
+    padding: 0.65rem 1rem; border: 1px solid var(--rule); background: var(--glass); color: var(--text);
+    border-radius: 2px; outline: none;
+  }
+  .an-select option { background: var(--surface); color: var(--text); }
+  .an-textarea { min-height: 4.5rem; resize: vertical; }
+  .an-input:focus, .an-select:focus, .an-textarea:focus { border-color: var(--gold); }
+  .an-preview { display: flex; gap: 1.25rem; align-items: center; border: 1px solid var(--glass-border); background: var(--glass); border-radius: 6px; padding: 1rem; margin: 0.5rem 0 1.75rem; }
+  .an-preview img { width: 160px; height: 100px; object-fit: cover; border-radius: 4px; flex-shrink: 0; background: var(--bg); }
+  .an-preview p { margin: 0; color: var(--text-mid); font-size: 0.95rem; }
+  .an-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .an-btn { font-family: 'Cinzel', serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.75rem 1.3rem; border-radius: 2px; cursor: pointer; border: 1px solid var(--rule); background: none; color: var(--text-mid); }
+  .an-btn:hover:not(:disabled) { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+  .an-btn.primary { background: var(--gold); color: #0d1117; border-color: var(--gold); font-weight: 700; }
+  .an-btn:disabled { opacity: 0.45; cursor: default; }
+  .an-msg { margin-top: 1rem; font-style: italic; min-height: 1.4em; }
+  .an-msg.ok { color: #4f9a5a; } .an-msg.error { color: #e57373; }
+  .an-note { font-size: 0.9rem; color: var(--text-faint); font-style: italic; margin-top: 2rem; }
+  .an-divider { height: 1px; background: var(--rule); margin: 3rem 0 2.25rem; }
+
+  /* Members roster */
+  .ml-scroll { overflow-x: auto; }
+  .ml-table { width: 100%; border-collapse: collapse; font-family: 'EB Garamond', serif; font-size: 0.97rem; min-width: 760px; }
+  .ml-table th {
+    font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 600; text-align: left; padding: 0 0.9rem 0.6rem; border-bottom: 1px solid var(--rule); white-space: nowrap;
+  }
+  .ml-table td { padding: 0.85rem 0.9rem; border-bottom: 1px solid var(--rule); color: var(--text-mid); vertical-align: top; }
+  .ml-table tr:last-child td { border-bottom: none; }
+  .ml-name { color: var(--text); }
+  .ml-name.ml-unnamed { color: var(--text-faint); font-style: italic; }
+  .ml-email { font-size: 0.9rem; word-break: break-all; }
+  .ml-when { white-space: nowrap; font-size: 0.92rem; }
+  .ml-yes { color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
+  .ml-no { color: var(--text-faint); }
+  .ml-admin { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); border: 1px solid var(--rule); border-radius: 2px; padding: 0.1rem 0.35rem; margin-left: 0.4rem; }
+  .ml-notes { width: 100%; box-sizing: border-box; min-width: 200px; min-height: 2.6rem; resize: vertical;
+    font-family: 'EB Garamond', serif; font-size: 0.92rem; padding: 0.45rem 0.6rem;
+    border: 1px solid transparent; background: var(--glass); color: var(--text); border-radius: 2px; outline: none; }
+  .ml-notes:hover { border-color: var(--rule); }
+  .ml-notes:focus { border-color: var(--gold); }
+  .ml-state { display: block; min-height: 1.1em; margin-top: 0.25rem; font-size: 0.78rem; font-style: italic; color: var(--text-faint); }
+  .ml-state.ok { color: #4f9a5a; } .ml-state.error { color: #e57373; }
+  @media (max-width: 760px) {
+    .an-wrap { padding: 2rem 1rem 3rem; }
+    .an-preview { flex-direction: column; align-items: flex-start; }
+    .an-preview img { width: 100%; height: 160px; }
+  }
+</style>
+</head>
+<body>
+<div class="site-wrapper">
+
+  <nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Small Groups</button>
+      <div class="nav-drop-menu">
+        <a href="/studies/titus">Titus Study</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+  <div class="an-wrap">
+    <h1 class="an-title">Mailing Management</h1>
+    <div class="an-rule"></div>
+
+    <p id="an-boot" class="an-msg">Checking sign-in…</p>
+
+    <div id="an-signin" style="display:none;">
+      <p>Sign in with the account that owns this site.</p>
+      <button class="an-btn primary" id="an-signin-btn" type="button">Sign In</button>
+    </div>
+
+    <div id="an-denied" style="display:none;"><p>This page is only for the site's admin.</p></div>
+
+    <div id="an-main" style="display:none;">
+
+      <h2 class="an-sec">Members</h2>
+      <p class="an-count" id="an-count">…</p>
+      <div class="ml-scroll">
+        <table class="ml-table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Subscribed</th>
+              <th scope="col">Since</th>
+              <th scope="col">Joined</th>
+              <th scope="col">Notes</th>
+            </tr>
+          </thead>
+          <tbody id="ml-body"></tbody>
+        </table>
+      </div>
+
+      <div class="an-divider"></div>
+
+      <h2 class="an-sec" id="an-announce">Announce an Article</h2>
+
+      <div class="an-field">
+        <label class="an-label" for="an-article">Article</label>
+        <select class="an-select" id="an-article"><option value="">Choose an article…</option></select>
+      </div>
+
+      <div class="an-field">
+        <label class="an-label" for="an-subject">Subject line</label>
+        <input class="an-input" id="an-subject" type="text" maxlength="200">
+      </div>
+      <div class="an-field">
+        <label class="an-label" for="an-atitle">Title shown in the email</label>
+        <input class="an-input" id="an-atitle" type="text" maxlength="200">
+      </div>
+      <div class="an-field">
+        <label class="an-label" for="an-excerpt">Excerpt shown in the email</label>
+        <textarea class="an-textarea" id="an-excerpt" maxlength="400"></textarea>
+      </div>
+
+      <div class="an-preview" id="an-preview" style="display:none;">
+        <img id="an-img" alt="">
+        <p id="an-img-note">Image comes from the article's share image (og:image).</p>
+      </div>
+
+      <div class="an-actions">
+        <button class="an-btn" id="an-test" type="button" disabled>Send Test to Me</button>
+        <button class="an-btn primary" id="an-send" type="button" disabled>Send to All Subscribers</button>
+      </div>
+      <p class="an-msg" id="an-msg"></p>
+
+      <p class="an-note">Always send yourself a test first. Feature announcements are written and sent from Resend's Broadcasts page, using the “Article Updates” segment.</p>
+    </div>
+  </div>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    <div class="footer-nav">
+      <a href="/about">About</a>
+      <span>·</span>
+      <span>© 2026 Whosoever Believes</span>
+    </div>
+  </footer>
+</div>
+
+<script src="search-index.js"></script>
+<script src="auth.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var article = null;
+
+  function view(v) {
+    ['boot', 'signin', 'denied', 'main'].forEach(function (k) { $('an-' + k).style.display = k === v ? '' : 'none'; });
+  }
+  function say(text, ok) { var m = $('an-msg'); m.textContent = text; m.className = 'an-msg ' + (ok ? 'ok' : 'error'); }
+
+  function call(method, body) {
+    return WBAuth.client().then(function (c) {
+      return c.functions.invoke('send-announcement', { method: method, body: body });
+    }).then(function (r) {
+      if (r.error) {
+        return (r.error.context && r.error.context.json ? r.error.context.json() : Promise.resolve({}))
+          .then(function (j) { throw new Error((j && j.error) || r.error.message); });
+      }
+      return r.data || {};
+    });
+  }
+
+  // Dates read M/D/YY, matching the article cards.
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    return (d.getMonth() + 1) + '/' + d.getDate() + '/' + String(d.getFullYear()).slice(-2);
+  }
+
+  // ── Members roster ──
+  function renderMembers(members) {
+    var body = $('ml-body');
+    body.textContent = '';
+    members.forEach(function (m) {
+      var tr = document.createElement('tr');
+
+      var name = document.createElement('td');
+      name.className = 'ml-name' + (m.display_name ? '' : ' ml-unnamed');
+      name.textContent = m.display_name || 'No name set';
+      if (m.is_admin) {
+        var tag = document.createElement('span');
+        tag.className = 'ml-admin';
+        tag.textContent = 'Admin';
+        name.appendChild(tag);
+      }
+      tr.appendChild(name);
+
+      var email = document.createElement('td');
+      email.className = 'ml-email';
+      email.textContent = m.email || '—';
+      tr.appendChild(email);
+
+      var sub = document.createElement('td');
+      if (m.email_updates) { sub.className = 'ml-yes'; sub.textContent = 'Subscribed'; }
+      else { sub.className = 'ml-no'; sub.textContent = '—'; }
+      tr.appendChild(sub);
+
+      var since = document.createElement('td');
+      since.className = 'ml-when';
+      since.textContent = m.email_updates ? fmtDate(m.email_updates_changed_at) : '—';
+      tr.appendChild(since);
+
+      var joined = document.createElement('td');
+      joined.className = 'ml-when';
+      joined.textContent = fmtDate(m.created_at);
+      tr.appendChild(joined);
+
+      var notesCell = document.createElement('td');
+      var ta = document.createElement('textarea');
+      ta.className = 'ml-notes';
+      ta.rows = 2;
+      ta.maxLength = 2000;
+      ta.value = m.admin_notes || '';
+      ta.setAttribute('aria-label', 'Notes about ' + (m.display_name || m.email || 'this reader'));
+      var state = document.createElement('span');
+      state.className = 'ml-state';
+
+      var saved = ta.value;
+      ta.addEventListener('input', function () {
+        state.className = 'ml-state';
+        state.textContent = ta.value === saved ? '' : 'Unsaved';
+      });
+      ta.addEventListener('blur', function () {
+        if (ta.value === saved) return;
+        var attempt = ta.value;
+        state.className = 'ml-state';
+        state.textContent = 'Saving…';
+        ta.disabled = true;
+        call('POST', { mode: 'note', userId: m.id, note: attempt })
+          .then(function () { saved = attempt; state.className = 'ml-state ok'; state.textContent = 'Saved'; })
+          .catch(function (e) { state.className = 'ml-state error'; state.textContent = e.message || 'Not saved'; })
+          .then(function () { ta.disabled = false; });
+      });
+
+      notesCell.appendChild(ta);
+      notesCell.appendChild(state);
+      tr.appendChild(notesCell);
+
+      body.appendChild(tr);
+    });
+  }
+
+  // ── Articles from the site search index ──
+  var list = (typeof searchIndex !== 'undefined' ? searchIndex : []).filter(function (a) {
+    return a && a.url && /^\/?articles\//.test(a.url);
+  });
+  list.forEach(function (a, i) {
+    var o = document.createElement('option');
+    o.value = String(i);
+    o.textContent = a.title;
+    $('an-article').appendChild(o);
+  });
+
+  $('an-article').addEventListener('change', function () {
+    var a = list[Number(this.value)];
+    article = null;
+    $('an-test').disabled = $('an-send').disabled = true;
+    $('an-preview').style.display = 'none';
+    say('', true);
+    if (!a) return;
+    var url = new URL(a.url, 'https://whosoeverbelieves.com/').toString();
+    $('an-subject').value = 'New article: ' + a.title;
+    $('an-atitle').value = a.title;
+    $('an-excerpt').value = a.excerpt || '';
+    article = { url: url, image: '' };
+    fetch(a.url.charAt(0) === '/' ? a.url : '/' + a.url).then(function (r) { return r.text(); }).then(function (html) {
+      var doc = new DOMParser().parseFromString(html, 'text/html');
+      var og = doc.querySelector('meta[property="og:image"]');
+      article.image = og ? og.getAttribute('content') : '';
+    }).catch(function () {}).then(function () {
+      if (article.image) { $('an-img').src = article.image; $('an-img-note').textContent = "Image comes from the article's share image (og:image)."; }
+      else { $('an-img').removeAttribute('src'); $('an-img-note').textContent = 'No share image found — the email will go out without one.'; }
+      $('an-preview').style.display = '';
+      $('an-test').disabled = $('an-send').disabled = false;
+    });
+  });
+
+  // A link from the new-article notification arrives with the article chosen.
+  var preselected = false;
+  (function preselect() {
+    var want = new URLSearchParams(location.search).get('article');
+    if (!want) return;
+    var norm = function (u) {
+      return String(u || '').replace(/^https?:\/\/[^/]+/i, '').replace(/\.html$/i, '')
+        .replace(/\/+$/, '').replace(/^\/*/, '/').toLowerCase();
+    };
+    for (var i = 0; i < list.length; i++) {
+      if (norm(list[i].url) === norm(want)) {
+        $('an-article').value = String(i);
+        $('an-article').dispatchEvent(new Event('change'));
+        preselected = true;
+        return;
+      }
+    }
+  })();
+
+  function payload(mode) {
+    return {
+      mode: mode,
+      subject: $('an-subject').value.trim(),
+      article: { url: article.url, image: article.image, title: $('an-atitle').value.trim(), excerpt: $('an-excerpt').value.trim() }
+    };
+  }
+
+  $('an-test').addEventListener('click', function () {
+    if (!article) return;
+    var b = this; b.disabled = true; say('Sending test…', true);
+    call('POST', payload('test')).then(function (d) { say('Test sent to ' + d.to + '. Check your inbox.', true); })
+      .catch(function (e) { say(e.message, false); }).then(function () { b.disabled = false; });
+  });
+
+  $('an-send').addEventListener('click', function () {
+    if (!article) return;
+    var n = $('an-count').getAttribute('data-n') || '?';
+    if (!window.confirm('Send “' + $('an-subject').value.trim() + '” to ' + n + ' subscriber(s)? This cannot be undone.')) return;
+    var b = this; b.disabled = true; say('Sending…', true);
+    call('POST', payload('send')).then(function () { say('Sent. Delivery status is on Resend’s Broadcasts page.', true); })
+      .catch(function (e) { say(e.message, false); b.disabled = false; });
+  });
+
+  $('an-signin-btn').addEventListener('click', function () { WBAuth.open('signin'); });
+
+  WBAuth.onChange(function (user) {
+    if (!user) { view('signin'); return; }
+    view('boot');
+    call('GET').then(function (d) {
+      var members = d.members || [];
+      var subs = d.subscribers || 0;
+      $('an-count').textContent = subs + (subs === 1 ? ' subscriber' : ' subscribers')
+        + ' of ' + members.length + (members.length === 1 ? ' account' : ' accounts');
+      $('an-count').setAttribute('data-n', String(subs));
+      renderMembers(members);
+      view('main');
+      if (preselected) {
+        var h = $('an-announce');
+        if (h && h.scrollIntoView) h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }).catch(function () { view('denied'); });
+  });
+})();
+</script>
+<script src="scripts.js" defer></script>
+</body>
+</html>
