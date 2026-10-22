@@ -1814,6 +1814,12 @@ nav a:hover::after { left: 0.9rem; right: 0.9rem; }
 .hp-progress-value { font-size: 1.1rem; color: var(--text); }
 .hp-progress-value span { color: var(--text-mid); }
 .hp-divider { display: none; }
+/* Plan progress: completed days over total, read from plan_days.checked_off. */
+.hp-done { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.15rem; }
+.hp-done[hidden] { display: none; }
+.hp-done span { font-size: 0.8rem; color: var(--text-faint); white-space: nowrap; }
+.hp-bar { height: 6px; border-radius: 3px; background: var(--rule); overflow: hidden; width: 7rem; flex: none; }
+.hp-bar > div { height: 100%; background: var(--gold); border-radius: 3px; }
 .hp-btn#hp-continue { margin-left: auto; align-self: center; }
 
 .hp-btn {

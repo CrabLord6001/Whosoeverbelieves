@@ -2042,7 +2042,7 @@ async function loadSavedPlans(autoLoad) {
   // Load plans from Supabase
   const { data: plans, error } = await _supabase
     .from('plans')
-    .select('id, title, books, total_days, reading_days, created_at, completed_at')
+    .select('id, title, books, total_days, reading_days, created_at, completed_at, show_on_home')
     .eq('user_id', currentUser.id)
     .order('created_at', { ascending: false });
 
@@ -2057,11 +2057,24 @@ async function loadSavedPlans(autoLoad) {
   cachedPlans = plans;
   renderPlanTabs();
 
-  // Auto-load the most recent active plan on sign-in (if no plan already loaded)
+  // Which plan to open, in order: the one named in the link (the homepage sends
+  // ?plan=<id> so both pages agree), then the one pinned to the homepage, then
+  // the most recent. Before this, the homepage could show one plan and this page
+  // open another, because each picked on its own.
   if (autoLoad && !currentPlan.length) {
-    const firstActive = plans.find(p => !p.completed_at);
-    if (firstActive) {
-      await loadPlanFromDb(firstActive.id);
+    let wanted = null;
+    try { wanted = new URLSearchParams(window.location.search).get('plan'); } catch (e) {}
+    const target = (wanted && plans.find(p => p.id === wanted && !p.completed_at))
+                || plans.find(p => p.show_on_home && !p.completed_at)
+                || plans.find(p => !p.completed_at);
+    if (target) {
+      await loadPlanFromDb(target.id);
+      // Arriving from the homepage's Read button means today's reading, not the
+      // top of the plan. goToToday needs the meta pass that renderPlan triggers.
+      if (wanted) setTimeout(function () {
+        var btn = document.getElementById('rp-today-btn');
+        if (btn && !btn.hidden) goToToday();
+      }, 600);
       return;
     }
   }
@@ -3588,6 +3601,11 @@ const KJV_AUDIO = {
   'Genesis':   [[1, 50, 'Darren L. Slider']],
   'Exodus':    [[1, 40, 'Darren L. Slider']],
   'Leviticus': [[1, 27, 'Darren L. Slider']],
+  'Numbers':   [[1, 2, 'Michael Packard'], [3, 4, 'Ron Nieuwsma'], [5, 8, 'Sundiata'], [9, 11, 'Juan Federico'],
+                [12, 32, 'theunknownchristian'], [33, 36, 'Michael Packard']],
+  'Deuteronomy': [[1, 2, 'Mark Penfold'], [3, 4, 'Michael Packard'], [5, 7, 'Bob Gonzalez'], [8, 13, 'Michael Packard'],
+                  [14, 16, 'Rob Paire'], [17, 25, 'TriciaG'], [26, 27, 'GabrielleC'], [28, 28, 'Janet Williams'],
+                  [29, 31, 'GabrielleC'], [32, 34, 'Michael Packard']],
   'Proverbs':  [[1, 31, 'Michael Packard']],
   'Ecclesiastes': [[1, 3, 'Michael Packard'], [4, 6, 'Brian Dole'], [7, 9, 'Beth Thomas'], [10, 12, 'TriciaG']],
   'Song of Songs': [[1, 8, 'Ezwa, TriciaG, Algy Pug']],
