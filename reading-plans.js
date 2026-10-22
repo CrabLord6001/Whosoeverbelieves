@@ -1341,7 +1341,8 @@ async function confirmRedo() {
 
   // Save over the same plan (update, not a new plan) and un-mark it completed
   await savePlanToDb();
-  await _supabase.from('plans').update({ completed_at: null }).eq('id', planId);
+  const { error: restartErr } = await _supabase.from('plans').update({ completed_at: null }).eq('id', planId);
+  if (restartErr) showToast('Could not restart the plan. Please try again.', 'error');
   const cached = cachedPlans.find(p => p.id === planId);
   if (cached) cached.completed_at = null;
 
@@ -1753,11 +1754,12 @@ function onSignedOut() {
 async function ensureProfile(user) {
   const { data } = await _supabase.from('profiles').select('id').eq('id', user.id).single();
   if (!data) {
-    await _supabase.from('profiles').insert({
+    const { error: profErr } = await _supabase.from('profiles').insert({
       id: user.id,
       email: user.email,
       display_name: user.user_metadata?.display_name || null
     });
+    if (profErr) console.warn('[plans] could not create the profile row:', profErr.message);
   }
 }
 
@@ -1912,7 +1914,8 @@ async function savePlanToDb() {
     let planId = currentPlanId;
 
     if (planId) {
-      await _supabase.from('plans').update(planPayload).eq('id', planId);
+      const { error: planErr } = await _supabase.from('plans').update(planPayload).eq('id', planId);
+      if (planErr) throw planErr;
     } else {
       const { data, error } = await _supabase.from('plans').insert(planPayload).select('id').single();
       if (error) throw error;
@@ -1937,7 +1940,8 @@ async function savePlanToDb() {
     });
 
     // Delete old days and re-insert (simplest safe upsert for ordered arrays)
-    await _supabase.from('plan_days').delete().eq('plan_id', planId);
+    const { error: delErr } = await _supabase.from('plan_days').delete().eq('plan_id', planId);
+    if (delErr) throw delErr;
     const { error: dayErr } = await _supabase.from('plan_days').insert(dayRows);
     if (dayErr) throw dayErr;
 
@@ -1961,9 +1965,10 @@ async function savePlanToDb() {
         }).filter(Boolean);
 
         if (reflInserts.length) {
-          await _supabase.from('reflections').upsert(reflInserts, {
+          const { error: reflErr } = await _supabase.from('reflections').upsert(reflInserts, {
             onConflict: 'user_id,plan_day_id'
           });
+          if (reflErr) throw reflErr;
         }
       }
     }
@@ -2003,10 +2008,19 @@ async function persistCheckState(idx) {
     .single();
 
   if (pd) {
-    await _supabase.from('plan_days').update({
+    const { error: checkErr } = await _supabase.from('plan_days').update({
       checked_off: !!checkStates[idx],
       checked_at:  checkStates[idx] ? new Date().toISOString() : null
     }).eq('id', pd.id);
+    if (checkErr) {
+      // Put the tick back where it was. Saying "Auto-saved" over a failed
+      // write loses the reader's day without either of us finding out.
+      checkStates[idx] = !checkStates[idx];
+      renderPlan();
+      updateProgress();
+      flashAutosave('Not saved — check your connection');
+      return;
+    }
     flashAutosave();
   }
 }
@@ -2025,10 +2039,11 @@ async function persistReflection(idx, body) {
     .single();
 
   if (pd) {
-    await _supabase.from('reflections').upsert(
+    const { error: noteErr } = await _supabase.from('reflections').upsert(
       { user_id: currentUser.id, plan_day_id: pd.id, body },
       { onConflict: 'user_id,plan_day_id' }
     );
+    if (noteErr) { flashAutosave('Note not saved — check your connection'); return; }
     flashAutosave('Note auto-saved');
   }
 }
@@ -2583,7 +2598,8 @@ function updatePlanActionButtons() {
 async function deleteCurrentPlan() {
   if (!currentPlanId) return;
   if (!confirm('Delete this plan and all its reflections? This cannot be undone.')) return;
-  await _supabase.from('plans').delete().eq('id', currentPlanId);
+  const { error: delPlanErr } = await _supabase.from('plans').delete().eq('id', currentPlanId);
+  if (delPlanErr) { showToast('Could not delete the plan. Please try again.', 'error'); return; }
   currentPlanId = null;
   showToast('Plan deleted.', 'success');
   await loadSavedPlans();
@@ -3613,6 +3629,8 @@ const KJV_AUDIO = {
   '2 Samuel':  [[1, 24, 'Joy Chan']],
   '1 Kings':   [[1, 22, 'Joy Chan']],
   '2 Kings':   [[1, 25, 'Joy Chan']],
+  'Esther':    [[1, 10, 'Rachel, Esther ben Simonides and others']],
+  'Job':       [[1, 42, 'TriciaG, Algy Pug and others']],
   'Proverbs':  [[1, 31, 'Michael Packard']],
   'Ecclesiastes': [[1, 3, 'Michael Packard'], [4, 6, 'Brian Dole'], [7, 9, 'Beth Thomas'], [10, 12, 'TriciaG']],
   'Song of Songs': [[1, 8, 'Ezwa, TriciaG, Algy Pug']],

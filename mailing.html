@@ -268,8 +268,13 @@
     // WBAuth.invoke refreshes the session and retries once on a 401.
     return WBAuth.invoke('send-announcement', { method: method, body: body }).then(function (r) {
       if (r.error) {
+        var status = (r.error.context && r.error.context.status) || 0;
         return (r.error.context && r.error.context.json ? r.error.context.json() : Promise.resolve({}))
-          .then(function (j) { throw new Error((j && j.error) || r.error.message); });
+          .then(function (j) {
+            var e = new Error((j && j.error) || r.error.message);
+            e.status = status;
+            throw e;
+          });
       }
       return r.data || {};
     });
@@ -501,7 +506,16 @@
         var h = $('an-announce');
         if (h && h.scrollIntoView) h.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }).catch(function () { view('denied'); });
+    }).catch(function (e) {
+      // A 403 is a genuine refusal. Anything else is a failure, and saying
+      // "only for the site's admin" to the admin sends him looking in the
+      // wrong place entirely.
+      var p = $('an-denied').querySelector('p');
+      if (!e || e.status === 403) p.textContent = "This page is only for the site's admin.";
+      else if (e.status === 401) p.textContent = 'Your sign-in has expired. Please sign out and sign in again.';
+      else p.textContent = 'The mailing list could not be loaded right now. Please reload the page.';
+      view('denied');
+    });
   });
 })();
 </script>

@@ -77,12 +77,14 @@
     return clientPromise;
   }
 
+  var deliveredInitial = false;
   function setUser(user) {
     var changed = (currentUser && currentUser.id) !== (user && user.id);
     currentUser = user || null;
     if (!currentUser) isAdmin = false;
     updateNav();
-    if (changed || !readyPromise._done) {
+    if (changed || !deliveredInitial) {
+      deliveredInitial = true;
       listeners.forEach(function (fn) { try { fn(currentUser); } catch (e) { console.error(e); } });
     }
   }
@@ -385,12 +387,23 @@
   // dead end, refresh the session once and try the call again. Only a second
   // failure is reported. If there is nothing to refresh from (storage wiped,
   // no refresh token) the original error stands.
+  var refreshing = null;
+  function refreshOnce(c) {
+    if (!refreshing) {
+      refreshing = c.auth.refreshSession().then(
+        function (r) { refreshing = null; return r; },
+        function (e) { refreshing = null; throw e; }
+      );
+    }
+    return refreshing;
+  }
+
   function invoke(name, opts) {
     return getClient().then(function (c) {
       return c.functions.invoke(name, opts).then(function (r) {
         var status = r.error && r.error.context && r.error.context.status;
         if (status !== 401) return r;
-        return c.auth.refreshSession().then(function (rs) {
+        return refreshOnce(c).then(function (rs) {
           if (rs.error || !(rs.data && rs.data.session)) return r;
           console.info('[auth] session refreshed after a 401; retrying ' + name);
           return c.functions.invoke(name, opts);
