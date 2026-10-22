@@ -79,6 +79,15 @@
   #ml-panel[hidden] { display: none; }
   #an-at-field[hidden] { display: none; }
 
+  /* Finding one person among twenty beats scrolling for them. */
+  .ml-controls { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .ml-controls .ml-filter { flex: 1 1 220px; width: auto; }
+  .ml-controls .ml-sort { flex: 0 0 auto; width: auto; }
+  .ml-empty { padding: 1.25rem 0.9rem; color: var(--text-faint); font-style: italic; }
+  @media (max-width: 900px) {
+    .ml-controls .ml-filter, .ml-controls .ml-sort { flex: 1 1 100%; width: 100%; }
+  }
+
   /* Notes is the field he types in; email is a fixed string that rarely needs
      the room auto-layout gives it. Only above the card breakpoint. */
   @media (min-width: 901px) {
@@ -175,6 +184,15 @@
       </h2>
       <p class="an-count" id="an-count">…</p>
       <div id="ml-panel">
+      <div class="ml-controls">
+        <input class="an-input ml-filter" id="ml-filter" type="search" placeholder="Find by name or email" aria-label="Find a member by name or email">
+        <select class="an-select ml-sort" id="ml-sort" aria-label="Sort members">
+          <option value="status">Subscribers first</option>
+          <option value="name">Name A–Z</option>
+          <option value="newest">Newest account</option>
+          <option value="oldest">Oldest account</option>
+        </select>
+      </div>
       <div class="ml-scroll">
         <table class="ml-table">
           <thead>
@@ -289,6 +307,39 @@
   }
 
   // ── Members roster ──
+  var allMembers = [];
+
+  function sortMembers(list, how) {
+    var byName = function (m) { return (m.display_name || '\uffff').toLowerCase(); };
+    var byDate = function (m) { return m.created_at || ''; };
+    return list.slice().sort(function (a, b) {
+      if (how === 'name') return byName(a) < byName(b) ? -1 : byName(a) > byName(b) ? 1 : 0;
+      if (how === 'newest') return byDate(a) < byDate(b) ? 1 : byDate(a) > byDate(b) ? -1 : 0;
+      if (how === 'oldest') return byDate(a) < byDate(b) ? -1 : byDate(a) > byDate(b) ? 1 : 0;
+      // Subscribers first, then oldest account, matching the server's order.
+      if (!!a.email_updates !== !!b.email_updates) return a.email_updates ? -1 : 1;
+      return byDate(a) < byDate(b) ? -1 : byDate(a) > byDate(b) ? 1 : 0;
+    });
+  }
+
+  function applyMemberView() {
+    var q = ($('ml-filter').value || '').trim().toLowerCase();
+    var shown = allMembers.filter(function (m) {
+      if (!q) return true;
+      return ((m.display_name || '') + ' ' + (m.email || '')).toLowerCase().indexOf(q) > -1;
+    });
+    renderMembers(sortMembers(shown, $('ml-sort').value));
+    if (!shown.length) {
+      var tr = document.createElement('tr');
+      var td = document.createElement('td');
+      td.className = 'ml-empty';
+      td.colSpan = 6;
+      td.textContent = allMembers.length ? 'No members match that search.' : 'No members yet.';
+      tr.appendChild(td);
+      $('ml-body').appendChild(tr);
+    }
+  }
+
   function renderMembers(members) {
     var body = $('ml-body');
     body.textContent = '';
@@ -371,6 +422,9 @@
     $('ml-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
     $('ml-panel').hidden = !open;
   }
+  $('ml-filter').addEventListener('input', applyMemberView);
+  $('ml-sort').addEventListener('change', applyMemberView);
+
   $('ml-toggle').addEventListener('click', function () {
     setMembersOpen(this.getAttribute('aria-expanded') !== 'true');
   });
@@ -514,7 +568,8 @@
       $('an-count').textContent = subs + (subs === 1 ? ' subscriber' : ' subscribers')
         + ' of ' + members.length + (members.length === 1 ? ' account' : ' accounts');
       $('an-count').setAttribute('data-n', String(subs));
-      renderMembers(members);
+      allMembers = members;
+      applyMemberView();
       rosterLoaded = true;
       if (preselected) {
         var h = $('an-announce');
