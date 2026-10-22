@@ -201,6 +201,10 @@
     <div class="hp-progress-block grow" id="hp-reading" hidden>
       <span class="hp-progress-label" id="hp-reading-label">Next reading</span>
       <span class="hp-progress-value" id="hp-reading-value"></span>
+      <div class="hp-done" id="hp-done" hidden>
+        <div class="hp-bar"><div id="hp-done-bar" style="width:0%"></div></div>
+        <span id="hp-done-text"></span>
+      </div>
     </div>
     <a class="hp-btn" id="hp-continue" href="/bible-reading-plans">Read</a>
   </section>
@@ -771,9 +775,16 @@ document.addEventListener('DOMContentLoaded', function () {
         var rows = (r.data || []);
         if (!rows.length) return null;
         var p = rows.filter(function (x) { return x.show_on_home; })[0] || rows[0];
-        return db.from('plan_days').select('day_number, passages, is_grace_day, date_assigned')
-          .eq('plan_id', p.id).eq('checked_off', false).order('day_number', { ascending: true }).limit(1)
-          .then(function (d) { return { plan: p, day: d.data && d.data[0], all: rows }; });
+        var next = db.from('plan_days').select('day_number, passages, is_grace_day, date_assigned')
+          .eq('plan_id', p.id).eq('checked_off', false).order('day_number', { ascending: true }).limit(1);
+        // Counts come back in the header, so neither query ships any rows.
+        var total = db.from('plan_days').select('plan_id', { count: 'exact', head: true }).eq('plan_id', p.id);
+        var done  = db.from('plan_days').select('plan_id', { count: 'exact', head: true })
+          .eq('plan_id', p.id).eq('checked_off', true);
+        return Promise.all([next, total, done]).then(function (res) {
+          return { plan: p, day: res[0].data && res[0].data[0], all: rows,
+                   total: res[1].count || 0, done: res[2].count || 0 };
+        });
       });
 
     plan.then(function (pd) {
@@ -790,6 +801,17 @@ document.addEventListener('DOMContentLoaded', function () {
         // With one plan the title names what the reader already knows, so it only
         // earns its line when there is another active plan to tell it apart from.
         if (pd.all.length > 1) planSwitcher(pd, db, user);
+
+        // Days actually ticked off, not days elapsed.
+        if (pd.total) {
+          $('hp-done-bar').style.width = Math.round(pd.done / pd.total * 100) + '%';
+          $('hp-done-text').textContent = pd.done + ' of ' + pd.total + ' days read';
+          $('hp-done').hidden = false;
+        }
+
+        // Name the plan in the link: the plans page would otherwise auto-load
+        // its own choice, which is how the homepage and that page disagreed.
+        $('hp-continue').href = '/bible-reading-plans?plan=' + encodeURIComponent(pd.plan.id);
         $('hp-reading').hidden = false;
       }
 
