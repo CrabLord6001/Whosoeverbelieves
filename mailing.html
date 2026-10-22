@@ -454,6 +454,8 @@
     sync();
   })();
 
+  var rosterLoaded = false;
+
   function payload(mode) {
     return {
       mode: mode,
@@ -476,6 +478,10 @@
       say('Pick a date and time, or choose Send now.', false);
       return;
     }
+    if (!rosterLoaded) {
+      say('The member list has not loaded, so the subscriber count is unknown. Reload before sending to everyone.', false);
+      return;
+    }
     var n = $('an-count').getAttribute('data-n') || '?';
     var iso = scheduledIso();
     var when = iso ? 'on ' + new Date(iso).toLocaleString() : 'right now';
@@ -492,7 +498,16 @@
 
   WBAuth.onChange(function (user) {
     if (!user) { view('signin'); return; }
-    view('boot');
+
+    // The announce form is built from search-index.js, which is already on the
+    // page, so there is no reason to hide it behind a call only the member
+    // table needs. Show it at once and let the table fill in underneath.
+    // This decides what is drawn, nothing more: the edge function enforces
+    // admin on every request it serves.
+    $('an-count').textContent = 'Loading members…';
+    view('main');
+    if (preselected) setMembersOpen(false);
+
     call('GET').then(function (d) {
       var members = d.members || [];
       var subs = d.subscribers || 0;
@@ -500,9 +515,8 @@
         + ' of ' + members.length + (members.length === 1 ? ' account' : ' accounts');
       $('an-count').setAttribute('data-n', String(subs));
       renderMembers(members);
-      view('main');
+      rosterLoaded = true;
       if (preselected) {
-        setMembersOpen(false);
         var h = $('an-announce');
         if (h && h.scrollIntoView) h.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -510,11 +524,17 @@
       // A 403 is a genuine refusal. Anything else is a failure, and saying
       // "only for the site's admin" to the admin sends him looking in the
       // wrong place entirely.
-      var p = $('an-denied').querySelector('p');
-      if (!e || e.status === 403) p.textContent = "This page is only for the site's admin.";
-      else if (e.status === 401) p.textContent = 'Your sign-in has expired. Please sign out and sign in again.';
-      else p.textContent = 'The mailing list could not be loaded right now. Please reload the page.';
-      view('denied');
+      if (!e || e.status === 403) {
+        $('an-denied').querySelector('p').textContent = "This page is only for the site's admin.";
+        view('denied');
+        return;
+      }
+      // Only the member list failed. Keep the form, and say so where the
+      // count would have been.
+      $('an-count').textContent = (e.status === 401)
+        ? 'Members did not load — your sign-in has expired. Sign out and back in.'
+        : 'Members did not load. Reload the page to try again.';
+      $('an-count').removeAttribute('data-n');
     });
   });
 })();
