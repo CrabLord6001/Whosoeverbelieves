@@ -792,8 +792,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (pd && pd.day) {
         any = true;
+        // The day shown is the oldest unread one, which can be in the past. Calling
+        // that "Next reading" makes something late look upcoming (ticket 78).
         var d = pd.day, today = d.date_assigned === todayISO();
-        $('hp-reading-label').textContent = today ? 'Today’s reading' : 'Next reading';
+        var overdue = !!d.date_assigned && d.date_assigned < todayISO();
+        $('hp-reading-label').textContent =
+          today ? 'Today’s reading' : overdue ? 'Overdue' : 'Next reading';
         var abbr = window.wbAbbrevPassage || function (x) { return x; };
         var what = d.is_grace_day ? 'Grace day' : (d.passages || []).map(abbr).join(', ');
         $('hp-reading-value').innerHTML = '';
