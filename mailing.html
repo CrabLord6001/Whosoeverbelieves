@@ -49,9 +49,9 @@
   }
   .ml-table td { padding: 0.85rem 0.9rem; border-bottom: 1px solid var(--rule); color: var(--text-mid); vertical-align: top; }
   .ml-table tr:last-child td { border-bottom: none; }
-  .ml-name { color: var(--text); }
+  .ml-name { color: var(--text); white-space: nowrap; }
   .ml-name.ml-unnamed { color: var(--text-faint); font-style: italic; }
-  .ml-email { font-size: 0.9rem; word-break: break-all; }
+  .ml-email { font-size: 0.9rem; overflow-wrap: anywhere; word-break: normal; }
   .ml-when { white-space: nowrap; font-size: 0.92rem; }
   .ml-yes { color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; }
   .ml-no { color: var(--text-faint); }
@@ -63,6 +63,49 @@
   .ml-notes:focus { border-color: var(--gold); }
   .ml-state { display: block; min-height: 1.1em; margin-top: 0.25rem; font-size: 0.78rem; font-style: italic; color: var(--text-faint); }
   .ml-state.ok { color: #4f9a5a; } .ml-state.error { color: #e57373; }
+  /* This page is a data table, so it runs wider than the 940px the rest of the
+     site uses. Scoped to this page; nothing else changes. */
+  body.page-mailing .site-wrapper { max-width: 1240px; }
+
+  /* Collapsible Members section — the announce form is often what he came for. */
+  .ml-toggle {
+    background: none; border: 0; padding: 0; cursor: pointer; color: inherit;
+    font: inherit; letter-spacing: inherit; text-transform: inherit;
+    display: inline-flex; align-items: center; gap: 0.45rem;
+  }
+  .ml-toggle:hover { color: var(--text); }
+  .ml-caret { display: inline-block; font-size: 0.85em; transition: transform 0.15s ease; }
+  .ml-toggle[aria-expanded="false"] .ml-caret { transform: rotate(-90deg); }
+  #ml-panel[hidden] { display: none; }
+
+  /* Notes is the field he types in; email is a fixed string that rarely needs
+     the room auto-layout gives it. Only above the card breakpoint. */
+  @media (min-width: 901px) {
+    .ml-table th:nth-child(2) { width: 22%; }
+    .ml-table th:nth-child(6) { width: 30%; }
+  }
+
+  /* Phones: a 6-column table cannot work at this width, so each member becomes
+     a labelled card. No sideways scrolling, and the notes box is reachable. */
+  @media (max-width: 900px) {
+    .ml-scroll { overflow-x: visible; }
+    .ml-table { min-width: 0; display: block; }
+    .ml-table thead { display: none; }
+    .ml-table tbody, .ml-table tr, .ml-table td { display: block; width: 100%; box-sizing: border-box; }
+    .ml-table tr {
+      border: 1px solid var(--glass-border); border-radius: 6px; background: var(--glass);
+      padding: 0.9rem 1rem; margin-bottom: 1rem;
+    }
+    .ml-table td { border: none; padding: 0.3rem 0; }
+    .ml-table td[data-label]::before {
+      content: attr(data-label); display: block;
+      font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.15rem;
+    }
+    .ml-table td.ml-name { font-size: 1.15rem; padding-bottom: 0.5rem; white-space: normal; }
+    .ml-notes { min-width: 0; }
+  }
+
   @media (max-width: 760px) {
     .an-wrap { padding: 2rem 1rem 3rem; }
     .an-preview { flex-direction: column; align-items: flex-start; }
@@ -70,7 +113,7 @@
   }
 </style>
 </head>
-<body>
+<body class="page-mailing">
 <div class="site-wrapper">
 
   <nav>
@@ -124,8 +167,13 @@
 
     <div id="an-main" style="display:none;">
 
-      <h2 class="an-sec">Members</h2>
+      <h2 class="an-sec">
+        <button type="button" class="ml-toggle" id="ml-toggle" aria-expanded="true" aria-controls="ml-panel">
+          <span class="ml-caret" aria-hidden="true">&#9662;</span> Members
+        </button>
+      </h2>
       <p class="an-count" id="an-count">…</p>
+      <div id="ml-panel">
       <div class="ml-scroll">
         <table class="ml-table">
           <thead>
@@ -140,6 +188,7 @@
           </thead>
           <tbody id="ml-body"></tbody>
         </table>
+      </div>
       </div>
 
       <div class="an-divider"></div>
@@ -242,25 +291,30 @@
 
       var email = document.createElement('td');
       email.className = 'ml-email';
+      email.setAttribute('data-label', 'Email');
       email.textContent = m.email || '—';
       tr.appendChild(email);
 
       var sub = document.createElement('td');
+      sub.setAttribute('data-label', 'Status');
       if (m.email_updates) { sub.className = 'ml-yes'; sub.textContent = 'Subscribed'; }
       else { sub.className = 'ml-no'; sub.textContent = '—'; }
       tr.appendChild(sub);
 
       var since = document.createElement('td');
       since.className = 'ml-when';
+      since.setAttribute('data-label', 'Since');
       since.textContent = m.email_updates ? fmtDate(m.email_updates_changed_at) : '—';
       tr.appendChild(since);
 
       var joined = document.createElement('td');
       joined.className = 'ml-when';
+      joined.setAttribute('data-label', 'Joined');
       joined.textContent = fmtDate(m.created_at);
       tr.appendChild(joined);
 
       var notesCell = document.createElement('td');
+      notesCell.setAttribute('data-label', 'Notes');
       var ta = document.createElement('textarea');
       ta.className = 'ml-notes';
       ta.rows = 2;
@@ -294,6 +348,15 @@
       body.appendChild(tr);
     });
   }
+
+  // Members collapses so a long roster does not bury the announce form.
+  function setMembersOpen(open) {
+    $('ml-toggle').setAttribute('aria-expanded', open ? 'true' : 'false');
+    $('ml-panel').hidden = !open;
+  }
+  $('ml-toggle').addEventListener('click', function () {
+    setMembersOpen(this.getAttribute('aria-expanded') !== 'true');
+  });
 
   // ── Articles from the site search index ──
   var list = (typeof searchIndex !== 'undefined' ? searchIndex : []).filter(function (a) {
@@ -387,6 +450,7 @@
       renderMembers(members);
       view('main');
       if (preselected) {
+        setMembersOpen(false);
         var h = $('an-announce');
         if (h && h.scrollIntoView) h.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
