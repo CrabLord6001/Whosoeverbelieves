@@ -77,6 +77,7 @@
   .ml-caret { display: inline-block; font-size: 0.85em; transition: transform 0.15s ease; }
   .ml-toggle[aria-expanded="false"] .ml-caret { transform: rotate(-90deg); }
   #ml-panel[hidden] { display: none; }
+  #an-at-field[hidden] { display: none; }
 
   /* Notes is the field he types in; email is a fixed string that rarely needs
      the room auto-layout gives it. Only above the card breakpoint. */
@@ -213,6 +214,18 @@
         <textarea class="an-textarea" id="an-excerpt" maxlength="400"></textarea>
       </div>
 
+      <div class="an-field">
+        <label class="an-label" for="an-when">When to send</label>
+        <select class="an-select" id="an-when">
+          <option value="schedule">Schedule it</option>
+          <option value="now">Send now</option>
+        </select>
+      </div>
+      <div class="an-field" id="an-at-field">
+        <label class="an-label" for="an-at">Send at (your time)</label>
+        <input class="an-input" id="an-at" type="datetime-local">
+      </div>
+
       <div class="an-preview" id="an-preview" style="display:none;">
         <img id="an-img" alt="">
         <p id="an-img-note">Image comes from the article's share image (og:image).</p>
@@ -252,9 +265,8 @@
   function say(text, ok) { var m = $('an-msg'); m.textContent = text; m.className = 'an-msg ' + (ok ? 'ok' : 'error'); }
 
   function call(method, body) {
-    return WBAuth.client().then(function (c) {
-      return c.functions.invoke('send-announcement', { method: method, body: body });
-    }).then(function (r) {
+    // WBAuth.invoke refreshes the session and retries once on a 401.
+    return WBAuth.invoke('send-announcement', { method: method, body: body }).then(function (r) {
       if (r.error) {
         return (r.error.context && r.error.context.json ? r.error.context.json() : Promise.resolve({}))
           .then(function (j) { throw new Error((j && j.error) || r.error.message); });
@@ -412,11 +424,37 @@
     }
   })();
 
+  // Readers should get articles at a predictable hour, not whenever Jonathan
+  // happens to finish writing. Resend holds the broadcast on its side, so his
+  // machine can be off when it goes.
+  function scheduledIso() {
+    if ($('an-when').value !== 'schedule') return null;
+    var v = $('an-at').value;
+    if (!v) return null;
+    var d = new Date(v);           // a datetime-local value parses as local time
+    return isNaN(d.getTime()) ? null : d.toISOString();
+  }
+
+  (function initWhen() {
+    var d = new Date();
+    d.setSeconds(0, 0);
+    d.setMinutes(0);
+    if (d.getHours() >= 9) d.setDate(d.getDate() + 1);
+    d.setHours(9);
+    var p = function (n) { return String(n).length < 2 ? '0' + n : String(n); };
+    $('an-at').value = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+                       'T' + p(d.getHours()) + ':' + p(d.getMinutes());
+    function sync() { $('an-at-field').hidden = $('an-when').value !== 'schedule'; }
+    $('an-when').addEventListener('change', sync);
+    sync();
+  })();
+
   function payload(mode) {
     return {
       mode: mode,
       subject: $('an-subject').value.trim(),
-      article: { url: article.url, image: article.image, title: $('an-atitle').value.trim(), excerpt: $('an-excerpt').value.trim() }
+      article: { url: article.url, image: article.image, title: $('an-atitle').value.trim(), excerpt: $('an-excerpt').value.trim() },
+      scheduledAt: mode === 'send' ? scheduledIso() : null
     };
   }
 
@@ -429,11 +467,20 @@
 
   $('an-send').addEventListener('click', function () {
     if (!article) return;
+    if ($('an-when').value === 'schedule' && !scheduledIso()) {
+      say('Pick a date and time, or choose Send now.', false);
+      return;
+    }
     var n = $('an-count').getAttribute('data-n') || '?';
-    if (!window.confirm('Send “' + $('an-subject').value.trim() + '” to ' + n + ' subscriber(s)? This cannot be undone.')) return;
-    var b = this; b.disabled = true; say('Sending…', true);
-    call('POST', payload('send')).then(function () { say('Sent. Delivery status is on Resend’s Broadcasts page.', true); })
-      .catch(function (e) { say(e.message, false); b.disabled = false; });
+    var iso = scheduledIso();
+    var when = iso ? 'on ' + new Date(iso).toLocaleString() : 'right now';
+    if (!window.confirm('Send “' + $('an-subject').value.trim() + '” to ' + n + ' subscriber(s) ' + when + '? This cannot be undone.')) return;
+    var b = this; b.disabled = true; say(iso ? 'Scheduling…' : 'Sending…', true);
+    call('POST', payload('send')).then(function (d) {
+      say(d && d.sent === 'scheduled'
+        ? 'Scheduled for ' + new Date(d.scheduled_at).toLocaleString() + '. You can change or cancel it on Resend’s Broadcasts page.'
+        : 'Sent. Delivery status is on Resend’s Broadcasts page.', true);
+    }).catch(function (e) { say(e.message, false); b.disabled = false; });
   });
 
   $('an-signin-btn').addEventListener('click', function () { WBAuth.open('signin'); });

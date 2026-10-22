@@ -380,10 +380,27 @@
 
   // ── EMAIL UPDATES (new-article emails) ────────────────────────────────
 
-  function emailPrefs(method, body) {
+  // A 401 means the session was not accepted — expired, cleared, or broken in
+  // some way we cannot predict from here. Rather than leaving the reader at a
+  // dead end, refresh the session once and try the call again. Only a second
+  // failure is reported. If there is nothing to refresh from (storage wiped,
+  // no refresh token) the original error stands.
+  function invoke(name, opts) {
     return getClient().then(function (c) {
-      return c.functions.invoke('email-prefs', { method: method, body: body });
-    }).then(function (r) {
+      return c.functions.invoke(name, opts).then(function (r) {
+        var status = r.error && r.error.context && r.error.context.status;
+        if (status !== 401) return r;
+        return c.auth.refreshSession().then(function (rs) {
+          if (rs.error || !(rs.data && rs.data.session)) return r;
+          console.info('[auth] session refreshed after a 401; retrying ' + name);
+          return c.functions.invoke(name, opts);
+        }).catch(function () { return r; });
+      });
+    });
+  }
+
+  function emailPrefs(method, body) {
+    return invoke('email-prefs', { method: method, body: body }).then(function (r) {
       if (r.error) {
         // A 401 means the session is not valid, which is a different problem
         // from the server being unreachable. Carry the status up so the
@@ -573,6 +590,7 @@
     close: close,
     signOut: signOut,
     client: getClient,
+    invoke: invoke,
     displayName: function (user) {
       user = user || currentUser;
       if (!user) return '';
