@@ -159,6 +159,23 @@
     });
   });
 
+  // A link from the new-article notification arrives with the article chosen.
+  (function preselect() {
+    var want = new URLSearchParams(location.search).get('article');
+    if (!want) return;
+    var norm = function (u) {
+      return String(u || '').replace(/^https?:\/\/[^/]+/i, '').replace(/\.html$/i, '')
+        .replace(/\/+$/, '').replace(/^\/*/, '/').toLowerCase();
+    };
+    for (var i = 0; i < list.length; i++) {
+      if (norm(list[i].url) === norm(want)) {
+        $('an-article').value = String(i);
+        $('an-article').dispatchEvent(new Event('change'));
+        return;
+      }
+    }
+  })();
+
   function payload(mode) {
     return {
       mode: mode,
