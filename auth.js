@@ -197,7 +197,7 @@
     '<div class="wba-modal" role="dialog" aria-modal="true" aria-labelledby="wba-title">' +
     '<button type="button" class="wba-close" data-wba="close" aria-label="Close">✕</button>' +
     '<h2 id="wba-title">Welcome</h2>' +
-    '<p class="wba-lede">One account for reading plans, the discipleship challenge, and comments.</p>' +
+    '<p class="wba-lede">Account for saving reading plans, comments, etc...</p>' +
     '<div class="wba-tabs">' +
       '<button type="button" class="wba-tab active" data-tab="signin">Sign In</button>' +
       '<button type="button" class="wba-tab" data-tab="signup">Create Account</button>' +
