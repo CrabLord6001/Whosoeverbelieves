@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://whosoeverbelieves.com/updates" />
+  <!-- Google tag (gtag.js) -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-05VNP2PXN4');
+  // Analytics loads just after the page finishes, so it doesn't slow the first paint.
+  window.addEventListener('load', function () { setTimeout(function () { var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4'; document.head.appendChild(s); }, 1500); });
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Site Updates — Whosoever Believes</title>
+  <!-- Meta description: DRAFT, pending Jonathan's approval -->
+  <meta name="description" content="Everything recently added to Whosoever Believes — new study tools, Greek exegesis pages, audio and article revisions, newest first." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- SEO metadata -->
+  <link rel="icon" type="image/png" href="/images/Bible-Book-32.png">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Whosoever Believes" />
+  <meta property="og:url" content="https://whosoeverbelieves.com/updates" />
+  <meta property="og:title" content="Site Updates — Whosoever Believes" />
+  <meta property="og:description" content="The story behind Whosoever Believes — a Free Grace theology site devoted to the biblical teaching that eternal life is received by faith alone in Christ alone." />
+  <meta property="og:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Site Updates — Whosoever Believes" />
+  <meta name="twitter:description" content="The story behind Whosoever Believes — a Free Grace theology site devoted to the biblical teaching that eternal life is received by faith alone in Christ alone." />
+  <meta name="twitter:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Whosoever Believes",
+      "item": "https://whosoeverbelieves.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About Whosoever Believes",
+      "item": "https://whosoeverbelieves.com/updates"
+    }
+  ]
+}
+</script>
+</head>
+<body class="page-article">
+<div class="site-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <p class="site-greek">πᾶς ὁ πιστεύων</p>
+    <div class="site-title"><a href="/">Whosoever</a></div>
+    <p class="site-tagline">Free Grace Theology &amp; Biblical Studies</p>
+    <div class="header-ornament">
+      <span></span>
+      <em>Faith Alone · Christ Alone</em>
+      <span></span>
+    </div>
+  </header>
+
+
+  <!-- NAV -->
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Small Groups</button>
+      <div class="nav-drop-menu">
+        <a href="/studies/titus">Titus Study</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+  <!-- PAGE HEADER -->
+  <div class="article-header">
+    <h1 class="article-title">What&rsquo;s New?</h1>
+    <!-- Subtitle: DRAFT, pending Jonathan's approval -->
+    <p class="article-subtitle">Everything added to the site, newest first</p>
+  </div>
+
+  <article class="article-body">
+    <!-- These show until site-updates.js arrives; it then rerenders the full list. -->
+    <ol class="upd-list with-year" id="upd-all">
+      <li><a class="upd-row" href="/articles/book-of-abraham-testable-claim"><span class="upd-date">Oct 22, 2026</span><span class="upd-text">Book of Abraham Article Published</span></a></li>
+      <li><a class="upd-row" href="/bible-reading-plans"><span class="upd-date">Oct 21, 2026</span><span class="upd-text">KJV Audio for Reading Plans</span></a></li>
+      <li><a class="upd-row" href="/memory-rooms"><span class="upd-date">Oct 21, 2026</span><span class="upd-text">Five More Memory Rooms Added</span></a></li>
+      <li><a class="upd-row" href="/greek/galatians/galatians-6-11-18"><span class="upd-date">Oct 20, 2026</span><span class="upd-text">Galatians 6:16 Exegesis Corrected</span></a></li>
+      <li><a class="upd-row" href="/free-grace-glossary"><span class="upd-date">Oct 16, 2026</span><span class="upd-text">Eschatology Glossary Entries Added</span></a></li>
+    </ol>
+  </article>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    "Whoever believes in him should have eternal life." — John 3:16 (WEB)
+  </footer>
+
+</div><!-- /.site-wrapper -->
+
+<script>
+/* Site search data loads when someone clicks into the search box, or right after the page finishes loading. */
+(function () {
+  var asked = false;
+  function load() {
+    if (asked) return; asked = true;
+    var s = document.createElement('script'); s.src = 'search-index.js';
+    s.onload = function () { var b = document.getElementById('site-search'); if (b && b.value.trim() && window.runSearch) window.runSearch(b.value); };
+    document.head.appendChild(s);
+  }
+  document.addEventListener('focusin', function (e) { if (e.target.id === 'site-search') load(); });
+  window.addEventListener('load', function () { setTimeout(load, 0); });
+})();
+</script>
+<script src="/site-updates.js" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (typeof wbUpdatesRender === 'function') wbUpdatesRender('upd-all', 0, true);
+  });
+</script>
+<script src="scripts.js"></script>
+<script src="/auth.js" defer></script>
+
+</body>
+</html>

@@ -339,6 +339,23 @@
     </div>
   </section>
 
+  <!-- WHAT'S NEW -->
+  <section id="updates" aria-labelledby="hp-updates-h">
+    <div class="hp-section-head center">
+      <span class="hp-eyebrow">Recently Added</span>
+      <h2 id="hp-updates-h">What&rsquo;s New?</h2>
+    </div>
+    <!-- These five show until site-updates.js arrives; it then rerenders them. -->
+    <ol class="upd-list" id="hp-updates">
+      <li><a class="upd-row" href="/articles/book-of-abraham-testable-claim"><span class="upd-date">Oct 22</span><span class="upd-text">Book of Abraham Article Published</span></a></li>
+      <li><a class="upd-row" href="/bible-reading-plans"><span class="upd-date">Oct 21</span><span class="upd-text">KJV Audio for Reading Plans</span></a></li>
+      <li><a class="upd-row" href="/memory-rooms"><span class="upd-date">Oct 21</span><span class="upd-text">Five More Memory Rooms Added</span></a></li>
+      <li><a class="upd-row" href="/greek/galatians/galatians-6-11-18"><span class="upd-date">Oct 20</span><span class="upd-text">Galatians 6:16 Exegesis Corrected</span></a></li>
+      <li><a class="upd-row" href="/free-grace-glossary"><span class="upd-date">Oct 16</span><span class="upd-text">Eschatology Glossary Entries Added</span></a></li>
+    </ol>
+    <div class="hp-all"><a class="hp-more" href="/updates">All updates &#8594;</a></div>
+  </section>
+
   <!-- MAILING LIST -->
   <section class="hp-subscribe" aria-labelledby="hp-sub-h">
     <div class="hp-subscribe-text">
@@ -421,6 +438,7 @@
   window.addEventListener('load', function () {
     loadSearch();
     add('/auth.js', function () { document.dispatchEvent(new Event('wb:auth-ready')); });
+    add('/site-updates.js', function () { document.dispatchEvent(new Event('wb:updates-ready')); });
   });
 })();
 </script>
@@ -659,6 +677,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   if (window.WB_SEARCH_READY) renderBlog();
   else document.addEventListener('wb:search-ready', renderBlog);
+
+  // ── What's New: newest five entries from site-updates.js ──
+  // (The rows written into the page show until it arrives.)
+  document.addEventListener('wb:updates-ready', function () {
+    if (typeof wbUpdatesRender === 'function') wbUpdatesRender('hp-updates', 5);
+  });
 
   // ── Signed-in readers ──
   function todayISO() {

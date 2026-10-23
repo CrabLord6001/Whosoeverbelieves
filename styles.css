@@ -2342,3 +2342,137 @@ nav a:hover { color: var(--gold-light); }
   #player,
   #player + div { display: none !important; }
 }
+
+
+/* ── SITE UPDATES TIMELINE ───────────────────────────────────────────────
+   The "What's New?" block on the homepage and the full list at /updates.
+   Entries are commit-note length (3-5 words), so each row stays one line
+   down to 390px; longer text wraps inside its own column rather than
+   under the date. Data and rendering live in site-updates.js. */
+
+.upd-list {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 1.6rem;
+}
+
+/* the spine */
+.upd-list::before {
+  content: '';
+  position: absolute;
+  left: 0.34rem;
+  top: 1.3rem;
+  bottom: 1.62rem;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold), rgba(201,168,76,0.18));
+}
+:root.light-mode .upd-list::before {
+  background: linear-gradient(to bottom, var(--gold), rgba(138,106,31,0.2));
+}
+
+.upd-list li { margin: 0; }
+
+.upd-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 0 1rem;
+  padding: 0.62rem 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* the bead */
+.upd-row::before {
+  content: '';
+  position: absolute;
+  left: -1.44rem;
+  top: 1.08rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 3px var(--bg);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.upd-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.85;
+  white-space: nowrap;
+  min-width: 3.5rem;
+}
+
+.upd-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--text);
+  text-wrap: pretty;
+  transition: color 0.2s;
+}
+
+@media (hover: hover) {
+  .upd-row:hover .upd-text { color: var(--gold-light); }
+  .upd-row:hover::before { transform: scale(1.35); background: var(--gold-light); }
+}
+
+/* /updates shows the year, so the date column needs more room */
+.upd-list.with-year .upd-date { min-width: 5.6rem; }
+
+@media (max-width: 480px) {
+  .upd-list { padding-left: 1.35rem; }
+  .upd-list::before { top: 1.24rem; bottom: 1.49rem; }
+  .upd-row { gap: 0 0.75rem; padding: 0.58rem 0; }
+  .upd-row::before { left: -1.2rem; top: 1.02rem; }
+  .upd-text { font-size: 1.12rem; }
+  .upd-list.with-year .upd-date { min-width: 5.2rem; }
+}
+
+/* On /updates the list sits on .article-body, which paints --surface */
+.article-body .upd-row::before { box-shadow: 0 0 0 3px var(--surface); }
+
+/* On the homepage the heading is centred, so the list is centred as a column
+   under it rather than stranded against the left edge of a 940px section. */
+#updates .upd-list { max-width: 26rem; margin: 0 auto; }
+
+/* .article-body underlines its links; the update rows are whole-row links and
+   must not pick that up (nor the grey article-link hover). */
+.article-body .upd-row,
+.article-body .upd-row:hover { text-decoration: none; color: inherit; }
+
+/* /updates carries the year, which leaves too little room for the text inside
+   .article-body's padding on a phone. Stack the date above the entry there
+   rather than letting every row wrap raggedly. */
+@media (max-width: 480px) {
+  .upd-list.with-year .upd-row { grid-template-columns: 1fr; gap: 0.05rem 0; }
+  .upd-list.with-year .upd-date { min-width: 0; }
+}
+
+/* Desktop and tablet: the entries are short, so at 1.2rem they read as fine
+   print against the space the block occupies. Scale the type up and widen the
+   homepage column to match, keeping every entry on one line. */
+@media (min-width: 721px) {
+  .upd-row { padding: 0.72rem 0; }
+  .upd-row::before { width: 8px; height: 8px; left: -1.48rem; top: 1.52rem; }
+  .upd-list::before { top: 1.77rem; bottom: 1.77rem; }
+  .upd-date { font-size: 0.68rem; min-width: 4rem; }
+  .upd-text { font-size: 1.5rem; }
+  .upd-list.with-year .upd-date { min-width: 6.4rem; }
+  #updates .upd-list { max-width: 32rem; }
+}
+
+/* .article-body sets padding and margins on every <ol>, which shifted the rows
+   right on /updates and left the spine stranded to the left of the beads.
+   The element+class selectors below outrank it. */
+.article-body ol.upd-list { padding: 0 0 0 1.6rem; margin: 0; }
+@media (max-width: 480px) {
+  .article-body ol.upd-list { padding-left: 1.35rem; }
+}
