@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512">
+  <defs>
+    <linearGradient id="cover" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#ec5f5c"/>
+      <stop offset="1" stop-color="#cf403c"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#f7d184"/>
+      <stop offset="1" stop-color="#d9a43c"/>
+    </linearGradient>
+    <clipPath id="body">
+      <rect x="11" y="5" width="42" height="54" rx="3.5"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#body)">
+    <rect x="11" y="5" width="42" height="54" fill="url(#cover)"/>
+    <rect x="13.5" y="47" width="39.5" height="12" fill="#f6e6d2"/>
+    <rect x="13.5" y="47" width="39.5" height="1.6" fill="#7a2420" opacity="0.45"/>
+    <rect x="17" y="51.4" width="32" height="1.5" fill="#6b5a4a" opacity="0.75"/>
+    <rect x="17" y="55.4" width="32" height="1.5" fill="#6b5a4a" opacity="0.75"/>
+    <rect x="15" y="5" width="4.5" height="42" fill="#9e2f2c"/>
+    <path d="M30,10 L40,10 L40,18 L47.5,18 L47.5,28 L40,28 L40,42 L30,42 L30,28 L22.5,28 L22.5,18 L30,18 Z" fill="none" stroke="#7a2420" stroke-width="2.2" stroke-linejoin="miter"/>
+    <path d="M30,10 L40,10 L40,18 L47.5,18 L47.5,28 L40,28 L40,42 L30,42 L30,28 L22.5,28 L22.5,18 L30,18 Z" fill="url(#gold)"/>
+  </g>
+  <rect x="11" y="5" width="42" height="54" rx="3.5" fill="none"
+        stroke="#6e1f1c" stroke-width="1.6"/>
+</svg>

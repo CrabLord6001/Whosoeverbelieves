@@ -3,12 +3,7 @@
    Free Grace Theology & Biblical Studies
    ========================================================================== */
 
-// Auto-inject favicon
-const favicon = document.createElement('link');
-favicon.rel = 'icon';
-favicon.type = 'image/png';
-favicon.href = '/images/Bible-Book-32.png';
-document.head.appendChild(favicon);
+// Favicons are declared statically in each page's <head> (/favicon.ico, /site.webmanifest).
 
 
 /* ── FONT SIZE ─────────────────────────────────────────────────────────── */
