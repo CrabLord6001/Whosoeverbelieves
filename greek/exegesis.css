@@ -3,10 +3,15 @@
    Page styles layered on top of ../../styles.css (uses the site's variables)
    ========================================================================== */
 
-/* Parts-of-speech palette: bright tones for dark mode, original tones for light */
+/* Parts-of-speech palette: bright tones for dark mode, original tones for light.
+   Adjective is olive rather than the lavender it used to be: against the
+   participle it was the same purple at a glance, and those two sit next to
+   each other constantly. The participle keeps the purple, which reads as the
+   verb red and the noun blue mixed — what a participle in fact is. Olive was
+   chosen over a rose or pink because both of those land near the verb reds. */
 :root {
   --pos-verb: #ff8a7a;  --pos-inf: #f4a097;   --pos-ptcp: #c9a2ff;
-  --pos-noun: #86b9ff;  --pos-pron: #62d6b8;  --pos-adj: #dba6ff;
+  --pos-noun: #86b9ff;  --pos-pron: #62d6b8;  --pos-adj: #b5d16a;
   --pos-art: #9aa3ab;   --pos-part: #e5c97a;  --pos-prep: #f5a960;
   --pos-conj: #b9c0c5;  --pos-adv: #93c9f2;   --pos-interj: #ff9a8f;
   --pos-rel: #56c9a6;   --pos-neg: #d9ad90;
@@ -14,7 +19,7 @@
 }
 :root.light-mode {
   --pos-verb: #c0392b;  --pos-inf: #922b21;   --pos-ptcp: #6c3483;
-  --pos-noun: #1a5276;  --pos-pron: #117a65;  --pos-adj: #884ea0;
+  --pos-noun: #1a5276;  --pos-pron: #117a65;  --pos-adj: #5c7a16;
   --pos-art: #6f7b7c;   --pos-part: #8a6a1f;  --pos-prep: #b35e14;
   --pos-conj: #515a5b;  --pos-adv: #1f618d;   --pos-interj: #c0392b;
   --pos-rel: #0e6655;   --pos-neg: #5d4037;
@@ -244,8 +249,42 @@ body.has-audio-bar { padding-bottom: 5.5rem; }
   background: transparent; color: var(--gold); border: 1px solid rgba(201,168,76,0.45);
 }
 .exegesis-page .verse-play:hover { background: var(--gold-faint); color: var(--gold-light); }
-.exegesis-page .verse-block { transition: border-color 0.3s, box-shadow 0.3s; }
-.exegesis-page .verse-block.now-playing { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(201,168,76,0.35), 0 0 24px rgba(201,168,76,0.12); }
+/* ── Clicking a word to jump there ──
+   Only words the aligner actually placed get the class, so an unaligned
+   chapter shows no affordance rather than a dead one. Kept to a hover tint and
+   a thin gold underline: the parts-of-speech colour is doing the real work in
+   this line and must not be competed with. */
+.exegesis-page .greek-line .word-seek { cursor: pointer; border-radius: 2px; }
+@media (hover: hover) {
+  .exegesis-page .greek-line .word-seek:hover {
+    background: var(--gold-faint);
+    box-shadow: inset 0 -1px 0 var(--gold);
+  }
+}
+
+/* ── The verse being read ──
+   A gold wash behind the verse with a gold rule down its left edge: the same
+   cue the reading plan's reader uses (.sv.active), so the eye finds the line
+   being spoken instead of hunting for an outlined box. The left rule is an
+   inset shadow rather than a real border, which would shift the text 2px
+   sideways each time the highlight moved.
+
+   The wash waits until the audio is actually playing. On load the bar cues
+   itself to this page's first verse, and a full highlight sitting there would
+   read as if something were already running; the outline alone says "cued". */
+.exegesis-page .verse-block { transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s; }
+.exegesis-page .verse-block.now-playing {
+  border-color: var(--gold);
+  box-shadow: inset 3px 0 0 var(--gold), 0 0 0 1px rgba(201,168,76,0.28);
+}
+body.ab-playing .exegesis-page .verse-block.now-playing {
+  background-color: #25251e;  /* fallback for browsers without color-mix() */
+  background-color: color-mix(in srgb, var(--gold) 13%, var(--bg));
+}
+:root.light-mode body.ab-playing .exegesis-page .verse-block.now-playing {
+  background-color: #e5dbc3;
+  background-color: color-mix(in srgb, var(--gold) 16%, var(--bg));
+}
 
 /* Compact series nav — for a series with enough pericopes that the chips would
    wrap inside the 940px wrapper (Galatians has 12). Type size is unchanged, so

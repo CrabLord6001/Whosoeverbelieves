@@ -13,7 +13,23 @@ for review), and verse starts are optionally snapped to the reader's own pauses.
 Output:
 
     greek/galatians/galatians-verse-times.js   window.GALATIANS_VERSE_TIMES
+    greek/galatians/galatians-word-times.js    window.GALATIANS_WORD_TIMES
     greek/galatians/verse-times-report.json    per-verse scores and flags
+
+WORD TIMES
+    The alignment is already per character, and a verse start is just the span
+    of its first character. Word starts are the same span list read at the
+    index of each word's first character, so they cost nothing extra: any
+    chapter you align emits both tables. A chapter that has not been re-run
+    since this was added simply has no word entry, and the pages fall back to
+    their per-verse behaviour for it.
+
+    Word level is held to a tighter standard than verse level, because the
+    error is visible: a verse start a second early is barely noticed, a word
+    highlight a second early is plainly on the wrong word. So the two models
+    are compared again at word level, at WORD_DISAGREE rather than 2.5s, and
+    the per-word CTC scores are kept in the report. Judge a chapter on those
+    two numbers before trusting it.
 
 SETUP (one time):
     python -m pip install torch torchaudio transformers
@@ -63,9 +79,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TEXT = os.path.join(HERE, "Claude outputs", "_tc", "gal_aligned.json")
 AUDIO_DIR = os.path.join(HERE, "greek", "galatians", "audio")
 OUT_JS = os.path.join(HERE, "greek", "galatians", "galatians-verse-times.js")
+OUT_WORDS_JS = os.path.join(HERE, "greek", "galatians", "galatians-word-times.js")
 OUT_REPORT = os.path.join(HERE, "greek", "galatians", "verse-times-report.json")
 
-DISAGREE_FLAG = 2.5                     # seconds between models before flagging
+DISAGREE_FLAG = 2.5                     # seconds between models before flagging a verse
+WORD_DISAGREE = 0.4                     # ... and before flagging a word
 SNAP_TOLERANCE = 1.2                    # only snap to a pause this close
 
 
@@ -162,13 +180,23 @@ def align_one(model_name, ch, gal, device, chunk_s, overlap_s):
     dur = wave_t.shape[1] / SR
 
     verses = verses_of(gal, ch)
-    tokens, verse_tok_start = [], []
+    tokens, verse_tok_start, word_tok_start = [], [], []
     for _, text in verses:
         verse_tok_start.append(len(tokens))
+        starts_here = []
+        at_word_start = True          # first character of the verse opens a word
         for c in normalise(text, vocab):
             tid = vocab.get("|" if c == " " else c)
-            if tid is not None:
-                tokens.append(tid)
+            if tid is None:
+                continue
+            if c == " ":
+                at_word_start = True  # the next real character opens the next word
+            else:
+                if at_word_start:
+                    starts_here.append(len(tokens))
+                at_word_start = False
+            tokens.append(tid)
+        word_tok_start.append(starts_here)
         if delim is not None:
             tokens.append(delim)
 
@@ -181,10 +209,22 @@ def align_one(model_name, ch, gal, device, chunk_s, overlap_s):
     starts = [round(spans[i].start * sec_per_frame, 2) if i < len(spans) else None
               for i in verse_tok_start]
 
+    # merge_tokens returns one span per target token, in target order, which is
+    # why a verse start can be read at its own token index. Word starts are the
+    # same list at the index of each word's first character. The score is that
+    # character's CTC confidence, kept as a per-word quality signal.
+    word_starts, word_scores = [], []
+    for idxs in word_tok_start:
+        word_starts.append([round(spans[i].start * sec_per_frame, 2)
+                            if i < len(spans) else None for i in idxs])
+        word_scores.append([round(float(spans[i].score), 3)
+                            if i < len(spans) else None for i in idxs])
+
     del model, log_probs
     if device == "cuda":
         torch.cuda.empty_cache()
-    return starts, dur, [n for n, _ in verses], [len(normalise(t, vocab)) for _, t in verses]
+    return (starts, dur, [n for n, _ in verses],
+            [len(normalise(t, vocab)) for _, t in verses], word_starts, word_scores)
 
 
 # ----------------------------------------------------------------- refinement
@@ -253,13 +293,15 @@ def main():
         runs = []
         for mi, mname in enumerate(models):
             print(f"  [{mi+1}/{len(models)}] {mname}", flush=True)
-            starts, dur, nums, lens = align_one(mname, ch, gal, device, chunk_s, args.overlap)
+            starts, dur, nums, lens, wstarts, wscores = align_one(
+                mname, ch, gal, device, chunk_s, args.overlap)
             if any(s is None for s in starts):
                 print("    incomplete alignment - skipping this model"); continue
             r, cv, mono = quality(starts, dur, lens)
             print(f"      r={r:.3f} cv={cv:.3f} mono={mono}")
             runs.append({"model": mname, "starts": starts, "r": r, "cv": cv,
-                         "mono": mono, "dur": dur, "nums": nums, "lens": lens})
+                         "mono": mono, "dur": dur, "nums": nums, "lens": lens,
+                         "wstarts": wstarts, "wscores": wscores})
 
         if not runs:
             print("  no usable alignment"); continue
@@ -269,9 +311,11 @@ def main():
         best = max(runs, key=lambda x: x["r"] - x["cv"])
         starts = best["starts"]
         wave_len, nums, lens = best["dur"], best["nums"], best["lens"]
+        wstarts, wscores = best["wstarts"], best["wscores"]
 
         # cross-check
         flags = []
+        word_agree = None
         if len(runs) > 1:
             other = [x for x in runs if x is not best][0]
             diffs = [abs(a - b) for a, b in zip(best["starts"], other["starts"])]
@@ -279,6 +323,21 @@ def main():
             print(f"  models agree within {DISAGREE_FLAG}s on "
                   f"{len(diffs)-len(flags)}/{len(diffs)} verses"
                   + (f"; flagged {flags}" if flags else ""))
+
+            # The same comparison at word level, which is the number that
+            # decides whether clicking a word can be trusted. Only words both
+            # models actually placed are counted.
+            wtot = wagree = 0
+            for va, vb in zip(best["wstarts"], other["wstarts"]):
+                for a, b in zip(va, vb):
+                    if a is None or b is None:
+                        continue
+                    wtot += 1
+                    wagree += abs(a - b) <= WORD_DISAGREE
+            if wtot:
+                word_agree = round(wagree / wtot, 3)
+                print(f"  models agree within {WORD_DISAGREE}s on "
+                      f"{wagree}/{wtot} words ({word_agree:.1%})")
 
         if not args.no_snap:
             pe = pause_ends(path)
@@ -296,11 +355,33 @@ def main():
         verdict = "OK" if (r > 0.9 and mono and not flags) else "REVIEW"
         print(f"  final: r={r:.3f} cv={cv:.3f} mono={mono}  {verdict}")
 
+        # Snapping moved the verse starts to the reader's pauses; the words
+        # were not snapped, so pin each verse's first word to its verse start
+        # and keep the rest non-decreasing behind it.
+        words = {}
+        for n, vstart, ws in zip(nums, starts, wstarts):
+            row, prev = [], None
+            for j, t in enumerate(ws):
+                t = vstart if j == 0 else t
+                if t is None:
+                    t = prev if prev is not None else vstart
+                if prev is not None and t <= prev:
+                    t = round(prev + 0.01, 2)
+                row.append(round(t, 2))
+                prev = row[-1]
+            words[str(n)] = row
+
+        wflat = [x for row in wscores for x in row if x is not None]
         report[str(ch)] = {
             "model": best["model"], "r": round(r, 3), "cv": round(cv, 3),
             "monotonic": mono, "duration": round(wave_len, 2),
             "flagged_verses": flags, "verdict": verdict,
             "times": {str(n): s for n, s in zip(nums, starts)},
+            "words": words,
+            "word_count": sum(len(v) for v in words.values()),
+            "word_agreement": word_agree,
+            "word_score_mean": round(sum(wflat) / len(wflat), 3) if wflat else None,
+            "word_scores": {str(n): r_ for n, r_ in zip(nums, wscores)},
         }
         json.dump(report, open(OUT_REPORT, "w"), indent=1)   # save after each chapter
 
@@ -318,12 +399,46 @@ def main():
             lines.append(f'  "{ch}": {{{inner}}}' + ("," if i < len(chs) - 1 else ""))
         lines.append("};")
         open(OUT_JS, "w", encoding="utf-8").write("\n".join(lines) + "\n")
+
+        # Word times: chapter -> verse -> [start of each word, in order]. The
+        # pages map the Nth Greek word span of a verse to the Nth entry, so the
+        # order here must stay the order of the printed text. Chapters aligned
+        # before word times existed have no "words" key and are simply absent,
+        # which the pages treat as "no word jumping for this chapter".
+        wlines = ["/* Word start times (seconds) per verse in each Galatians chapter",
+                  "   recording (Marilyn Phemister). Generated by the same CTC forced",
+                  "   alignment as the verse times: chapter -> verse -> one time per",
+                  "   word, in the order the words are printed on the page.",
+                  "",
+                  "   The reading follows Westcott-Hort and the printed text is",
+                  "   Byzantine, so where the two differ these times drift until the",
+                  "   next verse. See verse-times-report.json for per-chapter word",
+                  "   agreement and CTC scores. */",
+                  "window.GALATIANS_WORD_TIMES = {"]
+        wchs = [c for c in chs if report[c].get("words")]
+        for i, ch in enumerate(wchs):
+            w = report[ch]["words"]
+            wlines.append(f'  "{ch}": {{')
+            vs = sorted(w, key=int)
+            for j, v in enumerate(vs):
+                row = ", ".join(str(t) for t in w[v])
+                wlines.append(f'    "{v}": [{row}]' + ("," if j < len(vs) - 1 else ""))
+            wlines.append("  }" + ("," if i < len(wchs) - 1 else ""))
+        wlines.append("};")
+        open(OUT_WORDS_JS, "w", encoding="utf-8").write("\n".join(wlines) + "\n")
+
         print(f"\nwrote {OUT_JS}")
+        print(f"wrote {OUT_WORDS_JS}"
+              + (f" ({len(wchs)} chapter(s) with word times)" if wchs
+                 else " (no chapter has word times yet - re-run a chapter with -c N)"))
         print(f"wrote {OUT_REPORT}")
         print("\n=== summary ===")
         for ch in chs:
             d = report[ch]
+            wa = d.get("word_agreement")
             print(f"  ch{ch}: r={d['r']:.3f} cv={d['cv']:.3f} {d['verdict']}"
+                  + (f"  words agree {wa:.1%}" if wa is not None else "")
+                  + (f"  score {d['word_score_mean']}" if d.get("word_score_mean") else "")
                   + (f"  flagged: {d['flagged_verses']}" if d["flagged_verses"] else ""))
 
 

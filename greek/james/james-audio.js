@@ -34,6 +34,7 @@
   const $ = s => host.querySelector(s);
   const playBtn = $('.ab-play'), seek = $('.ab-seek'), time = $('.ab-time'), speedBtn = $('.ab-speed');
   let dragging = false;
+  let heldAt = 0;        // last time the reader scrolled, so following defers to them
 
   const fmt = t => {
     if (!isFinite(t)) return '0:00';
@@ -46,6 +47,7 @@
     if (!dragging && audio.duration) seek.value = Math.round(audio.currentTime / audio.duration * 1000);
     time.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
     host.querySelectorAll('.ab-ch').forEach(b => b.classList.toggle('active', b.dataset.ch === current));
+    document.body.classList.toggle('ab-playing', !audio.paused);
   };
 
   function load(ch, autoplay) {
@@ -98,6 +100,7 @@
     else if (audio.readyState >= 1) audio.currentTime = t;
     else pendingSeek = t;
     if (play) audio.play().catch(() => {});
+    heldAt = 0;   // an explicit jump resumes following at once
     render();
   }
   // ▶ button beside each verse label
@@ -112,19 +115,59 @@
     el.appendChild(b);
   });
 
-  // Highlight the verse being read
+  // ── Following the voice ──────────────────────────────────────────
+  // The highlight marks the verse being read and the page scrolls to keep it
+  // in view, the way the reading plan's reader does. Two restraints keep that
+  // from becoming a nuisance on a study page: a verse already comfortably on
+  // screen is left where it is, so the page doesn't nudge at every verse, and
+  // any scrolling of the reader's own holds following off for a few seconds —
+  // long enough to read a parsing table without being dragged back to the text.
+  const FOLLOW_HOLD = 6000;
   const blocks = {};
   document.querySelectorAll('.verse-num').forEach(el => {
     const m = el.textContent.match(/James\s+(\d+):(\d+)/);
     if (m) blocks[m[1] + ':' + m[2]] = el.closest('.verse-block');
   });
+
   let lit = null;
+  const hold = () => { heldAt = Date.now(); };
+  // Reader intent is read from wheel, touch and the scrolling keys rather than
+  // from the scroll event, which our own smooth scrolling also fires.
+  ['wheel', 'touchmove'].forEach(e => addEventListener(e, hold, { passive: true }));
+  addEventListener('keydown', e => {
+    if (/^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End)$/.test(e.key)) hold();
+  });
+  const smoothly = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function follow(el) {
+    if (audio.paused || Date.now() - heldAt < FOLLOW_HOLD) return;
+    // Clear space is what the sticky nav leaves at the top and the audio bar
+    // at the bottom; both are measured rather than assumed.
+    const nav = document.querySelector('nav');
+    const top = (nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0) + 12;
+    const bottom = window.innerHeight - (host.offsetHeight || 0) - 12;
+    const r = el.getBoundingClientRect();
+    if (r.top >= top && r.bottom <= bottom) return;   // already where it can be read
+    // A third of the way down the clear space, so the verses after it show too.
+    const want = top + Math.max(0, (bottom - top - r.height) / 3);
+    window.scrollTo({ top: window.scrollY + r.top - want, behavior: smoothly ? 'smooth' : 'auto' });
+  }
+
+  // Pressing play brings the verse the bar is cued to into view. The highlight
+  // is already on it, so it never changes and timeupdate would not fire this.
+  // A reader who has just scrolled is still left alone, as while playing.
+  audio.addEventListener('play', () => { if (lit) follow(lit); });
+
   audio.addEventListener('timeupdate', () => {
     const vt = TIMES[current] || {};
     let best = null;
     for (const v in vt) if (vt[v] <= audio.currentTime + 0.05 && (best === null || vt[v] > vt[best])) best = v;
     const el = best !== null ? blocks[current + ':' + best] : null;
-    if (el !== lit) { if (lit) lit.classList.remove('now-playing'); if (el) el.classList.add('now-playing'); lit = el; }
+    if (el === lit) return;
+    if (lit) lit.classList.remove('now-playing');
+    if (el) el.classList.add('now-playing');
+    lit = el;
+    if (el) follow(el);
   });
 
   document.body.classList.add('has-audio-bar');
