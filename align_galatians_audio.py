@@ -51,6 +51,17 @@ WHY A SECOND PASS
     they disagree, the verse is flagged so you can check those few by ear instead
     of auditing all 149.
 
+    This only works if both models can actually read the text. normalise() keeps
+    only characters in the model's own vocabulary, so a model whose vocabulary
+    is not plain lowercase Greek keeps nothing: every verse becomes a run of word
+    delimiters, the alignment is meaningless, and the verse starts it returns
+    still look plausible enough to be compared -- flagging most of the chapter as
+    "disagreement" when the truth is that one model never read anything. That is
+    what happened on the Nov 3 run, where the second model produced 0 word times
+    for every chapter. A model that keeps almost nothing is now skipped, loudly,
+    before it costs a forward pass, and the chapter is reported as having had no
+    cross-check rather than as having disagreements.
+
 VALIDATION
     Per chapter the script reports the Pearson correlation between verse DURATION
     and verse TEXT LENGTH. A good alignment sits above ~0.9. It also checks that
@@ -175,11 +186,23 @@ def align_one(model_name, ch, gal, device, chunk_s, overlap_s):
     blank = proc.tokenizer.pad_token_id
     delim = vocab.get("|")
 
+    verses = verses_of(gal, ch)
+
+    # Does this model's vocabulary actually contain the letters of the text?
+    # Checked before the audio is loaded or a forward pass is spent: a model
+    # that keeps nothing produces confident-looking garbage (see WHY A SECOND
+    # PASS above), which is worse than no second model at all.
+    kept = "".join(normalise(t, vocab) for _, t in verses).replace(" ", "")
+    want = sum(len(re.findall(r"[\u0370-\u03ff\u1f00-\u1fff]", t)) for _, t in verses)
+    if want and len(kept) < 0.5 * want:
+        print(f"    vocabulary keeps {len(kept)}/{want} of the Greek characters"
+              f" - skipping this model", flush=True)
+        return None
+
     path = os.path.join(AUDIO_DIR, f"galatians-{ch}.mp3")
     wave_t = load_audio(path)
     dur = wave_t.shape[1] / SR
 
-    verses = verses_of(gal, ch)
     tokens, verse_tok_start, word_tok_span = [], [], []
     for _, text in verses:
         verse_tok_start.append(len(tokens))
@@ -304,8 +327,10 @@ def main():
         runs = []
         for mi, mname in enumerate(models):
             print(f"  [{mi+1}/{len(models)}] {mname}", flush=True)
-            starts, dur, nums, lens, wstarts, wends, wscores = align_one(
-                mname, ch, gal, device, chunk_s, args.overlap)
+            res = align_one(mname, ch, gal, device, chunk_s, args.overlap)
+            if res is None:
+                continue
+            starts, dur, nums, lens, wstarts, wends, wscores = res
             if any(s is None for s in starts):
                 print("    incomplete alignment - skipping this model"); continue
             r, cv, mono = quality(starts, dur, lens)
@@ -327,6 +352,8 @@ def main():
         # cross-check
         flags = []
         word_agree = None
+        if len(runs) == 1:
+            print("  only one model read the text - no cross-check for this chapter")
         if len(runs) > 1:
             other = [x for x in runs if x is not best][0]
             diffs = [abs(a - b) for a, b in zip(best["starts"], other["starts"])]

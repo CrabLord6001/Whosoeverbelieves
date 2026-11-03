@@ -215,11 +215,19 @@
   // words sound cut short, raise GAP if you still hear the next word.
   const WORD_TAIL = 0.06;
   const WORD_GAP = 0.03;
+  // CTC alignment is peaky: it marks a character at the frame or two where the
+  // model is most certain, not across the whole sound. So a word's measured end
+  // runs early, and badly so for one-letter words -- across Galatians 288 of
+  // 2247 words measure under a tenth of a second, which is not long enough to
+  // hear. The floor is what stops those being clipped to nothing; the next
+  // word's onset still wins over it.
+  const WORD_MIN = 0.18;
   function clipEnd(ch, from, end) {
     const next = nextBoundary(ch, from);
     let to = isFinite(end) ? end + WORD_TAIL : next;
-    if (next !== null) to = Math.min(to === null ? next : to, next - WORD_GAP);
-    if (to !== null && to <= from + 0.08) to = from + 0.08;   // never a non-clip
+    if (to === null) return null;                        // nothing known: run on
+    to = Math.max(to, from + WORD_MIN);
+    if (next !== null) to = Math.max(Math.min(to, next - WORD_GAP), from + 0.08);
     return to;
   }
   function playWord(ch, from, end) {
