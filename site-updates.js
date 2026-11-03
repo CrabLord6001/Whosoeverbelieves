@@ -25,6 +25,7 @@
 */
 
 const siteUpdates = [
+  { date: "2026-11-02", text: "Oneness Pentecostalism Article Published", url: "/articles/oneness-pentecostalism-and-john-17" },
   { date: "2026-10-22", text: "Book of Abraham Article Published",     url: "/articles/book-of-abraham-testable-claim" },
   { date: "2026-10-21", text: "KJV Audio for Reading Plans",           url: "/bible-reading-plans" },
   { date: "2026-10-21", text: "Five More Memory Rooms Added",          url: "/memory-rooms" },
