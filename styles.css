@@ -1927,13 +1927,7 @@ nav a:hover::after { left: 0.9rem; right: 0.9rem; }
 .hp-chip:hover { border-color: var(--gold); color: var(--gold-light); }
 
 /* mailing list */
-.hp-subscribe {
-  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
-  padding: 2.2rem 2.4rem; border-radius: 10px;
-  border: 1px solid rgba(201,168,76,0.3);
-  background: linear-gradient(170deg, var(--gold-faint) 0%, var(--glass) 100%);
-}
-.hp-subscribe-text { flex: 1 1 18rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.hp-subscribe-text { display: flex; flex-direction: column; gap: 0.3rem; }
 .hp-subscribe-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--text); margin: 0; }
 .hp-subscribe-line { color: var(--text-mid); font-size: 1.1rem; margin: 0; }
 .hp-subscribe-actions { display: flex; flex-direction: column; align-items: flex-start; gap: 0.4rem; }
@@ -2194,9 +2188,10 @@ nav a:hover { color: var(--gold-light); }
 
 /* ── MAILING LIST with painting ─────────────────────────────────────────── */
 
-.hp-subscribe {
+section.hp-subscribe {
   position: relative;
   overflow: hidden;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: stretch;
