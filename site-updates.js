@@ -25,12 +25,13 @@
 */
 
 const siteUpdates = [
+  { date: "2026-11-03", text: "Word-by-Word Greek Audio",                 url: "/greek/james/" },
   { date: "2026-11-02", text: "Oneness Pentecostalism Article Published", url: "/articles/oneness-pentecostalism-and-john-17" },
-  { date: "2026-10-22", text: "Book of Abraham Article Published",     url: "/articles/book-of-abraham-testable-claim" },
-  { date: "2026-10-21", text: "KJV Audio for Reading Plans",           url: "/bible-reading-plans" },
-  { date: "2026-10-21", text: "Five More Memory Rooms Added",          url: "/memory-rooms" },
-  { date: "2026-10-20", text: "Galatians 6:16 Exegesis Corrected",     url: "/greek/galatians/galatians-6-11-18" },
-  { date: "2026-10-16", text: "Eschatology Glossary Entries Added",    url: "/free-grace-glossary" }
+  { date: "2026-10-22", text: "Book of Abraham Article Published",        url: "/articles/book-of-abraham-testable-claim" },
+  { date: "2026-10-21", text: "KJV Audio for Reading Plans",              url: "/bible-reading-plans" },
+  { date: "2026-10-21", text: "Five More Memory Rooms Added",             url: "/memory-rooms" },
+  { date: "2026-10-20", text: "Galatians 6:16 Exegesis Corrected",        url: "/greek/galatians/galatians-6-11-18" },
+  { date: "2026-10-16", text: "Eschatology Glossary Entries Added",       url: "/free-grace-glossary" }
 ];
 
 /* Fills an <ol class="upd-list"> with the newest entries.

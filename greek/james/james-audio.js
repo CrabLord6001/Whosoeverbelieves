@@ -138,6 +138,7 @@
   function seekSettled() {
     if (pendingSeek === null) return;
     if (Math.abs(audio.currentTime - pendingSeek) > 0.35) { applySeek(); return; }
+    dbg('  seek landed at ' + audio.currentTime.toFixed(2));
     pendingSeek = null;
     stopSeekTimer();
     if (pendingPlay) {
@@ -209,18 +210,51 @@
   // times a second and a word here averages half of one, so a quarter-second
   // overshoot would spill into the next word -- the very thing being isolated.
   // timeupdate still checks as a backstop, for a timer a background tab throttles.
+  function clearStopTimer() {
+    if (stopTimer) { clearInterval(stopTimer); stopTimer = null; }
+  }
   function cancelBounds() {
     stopAt = null; segments = [];
-    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
+    clearStopTimer();
   }
+  // Watch the playhead rather than predicting when it will arrive. The first
+  // version set one timeout from (stop - currentTime), computed before the seek
+  // had landed, so the playhead was usually still somewhere else and the timer
+  // was set for the wrong moment; timeupdate was the safety net, and it fires
+  // about four times a second on a desktop and less on a phone. Between them a
+  // clip could run on for the rest of the verse. A short poll costs nothing and
+  // depends on neither.
   function scheduleStop() {
-    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
-    if (stopAt === null || audio.paused) return;
-    const left = (stopAt - audio.currentTime) / (audio.playbackRate || 1);
-    stopTimer = setTimeout(reachStop, Math.max(0, left * 1000));
+    clearStopTimer();
+    if (stopAt === null) return;
+    stopTimer = setInterval(() => {
+      if (stopAt === null) { clearStopTimer(); return; }
+      if (audio.paused) return;              // keep watching across a pause
+      if (audio.currentTime >= stopAt - 0.015) reachStop();
+    }, 25);
   }
+  // ── Debug readout ────────────────────────────────────────────────
+  // Off unless the page is opened with ?audiodebug=1. Shows what each tap
+  // actually armed and where playback really stopped, because a clip running
+  // on has been reported on a phone that cannot be reproduced on a desktop or
+  // in a mobile emulator, and reading the numbers beats guessing again.
+  const DEBUG = /[?&]audiodebug=1/.test(location.search);
+  let dbgBox = null;
+  function dbg(msg) {
+    if (!DEBUG) return;
+    if (!dbgBox) {
+      dbgBox = document.createElement('div');
+      dbgBox.setAttribute('style', 'position:fixed;left:0;right:0;top:0;z-index:2000;'
+        + 'background:#111;color:#8f8;font:11px/1.45 monospace;padding:6px 8px;'
+        + 'max-height:38vh;overflow:auto;white-space:pre-wrap');
+      document.body.appendChild(dbgBox);
+    }
+    dbgBox.textContent = (msg + '\n' + dbgBox.textContent).slice(0, 1400);
+  }
+
   function reachStop() {
-    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
+    dbg('STOP fired at ' + audio.currentTime.toFixed(2) + ' (target ' + stopAt + ')');
+    clearStopTimer();
     stopAt = null;
     if (segments.length) { playRange(segments.shift()); return; }
     audio.pause();
@@ -231,6 +265,8 @@
     if (!seg || !isFinite(seg.from)) return;
     stopAt = null;
     stopAt = isFinite(seg.to) ? seg.to : null;
+    dbg('PLAY ch' + seg.ch + '  from ' + seg.from + '  to ' + stopAt
+        + '  (ready ' + (seg.ch === current && seekReady()) + ', rate ' + audio.playbackRate + ')');
     startAt(seg.ch, seg.from, true);
     scheduleStop();
   }
