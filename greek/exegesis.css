@@ -276,7 +276,20 @@ body.has-audio-bar { padding-bottom: 5.5rem; }
    The parts-of-speech colour survives underneath — the word is still parsed
    while it is being read. The mix is against transparent rather than --bg so
    it sits correctly on whatever is behind it. */
-.exegesis-page .greek-line .word-seek { cursor: pointer; border-radius: 2px; }
+.exegesis-page .greek-line .word-seek {
+  cursor: pointer; border-radius: 2px;
+  /* cursor:pointer is also what makes iOS Safari fire click on a plain span.
+     touch-action rules out the double-tap-to-zoom wait, and the tap highlight
+     is the only feedback a touch reader gets that the tap landed at all. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(201,168,76,0.35);
+}
+@media (hover: none) {
+  /* On a touch screen a tap that drifts slightly becomes a text selection and
+     the word never gets its click. Selection stays on where there is a mouse,
+     so the Greek can still be copied from a desktop. */
+  .exegesis-page .greek-line .word-seek { -webkit-user-select: none; user-select: none; }
+}
 @media (hover: hover) {
   /* Not on the word being spoken: the hover rule outranks .word-now on
      specificity, so without this the live highlight weakens to the hover tint

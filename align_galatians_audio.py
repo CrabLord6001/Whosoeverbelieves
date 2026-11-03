@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """
-Galatians verse timings — Byzantine Greek text -> per-verse start times
-=======================================================================
+Greek exegesis timings — Byzantine text -> per-verse and per-word start times
+============================================================================
 Forced-aligns each chapter of the Marilyn Phemister Greek recording against the
-Robinson-Pierpont Byzantine text, and writes the verse start times the Galatians
-exegesis pages use for their per-verse Listen buttons.
+Robinson-Pierpont Byzantine text, and writes the times the Greek exegesis pages
+use to play a verse, a word, or the whole passage.
+
+Covers both series; pick one with --book (default galatians):
+
+    galatians   6 chapters, text from 'Claude outputs/_tc/gal_aligned.json'
+    james       5 chapters, text from 'Claude outputs/james_spans.json'
+
+The file name still says galatians for the sake of the history behind it.
 
 Same idea as align_bible_audio.py, with three differences: the text is Greek, two
 independent models are run and compared (a verse where they disagree is flagged
 for review), and verse starts are optionally snapped to the reader's own pauses.
 
-Output:
+Output, for the book chosen (galatians shown):
 
     greek/galatians/galatians-verse-times.js   window.GALATIANS_VERSE_TIMES
     greek/galatians/galatians-word-times.js    window.GALATIANS_WORD_TIMES
@@ -38,10 +45,11 @@ SETUP (one time):
     # default CPU wheel, or --device cuda will fall back to CPU.
 
 RUN (from the repo root):
-    python align_galatians_audio.py --device cuda          # all six chapters
-    python align_galatians_audio.py --device cuda -c 1     # just chapter 1
-    python align_galatians_audio.py --device cuda --no-snap
-    python align_galatians_audio.py --device cuda --single # skip the 2nd model
+    py align_galatians_audio.py --device cuda                    # Galatians, all
+    py align_galatians_audio.py --book james --device cuda       # James, all
+    py align_galatians_audio.py --device cuda -c 1               # just chapter 1
+    py align_galatians_audio.py --device cuda --no-snap
+    py align_galatians_audio.py --device cuda --single           # one model only
 
 Resumable: a chapter already in the report is skipped unless you name it with -c.
 
@@ -87,11 +95,39 @@ MODELS = [
 ]
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-TEXT = os.path.join(HERE, "Claude outputs", "_tc", "gal_aligned.json")
-AUDIO_DIR = os.path.join(HERE, "greek", "galatians", "audio")
-OUT_JS = os.path.join(HERE, "greek", "galatians", "galatians-verse-times.js")
-OUT_WORDS_JS = os.path.join(HERE, "greek", "galatians", "galatians-word-times.js")
-OUT_REPORT = os.path.join(HERE, "greek", "galatians", "verse-times-report.json")
+
+# Each series keeps its own text, audio and outputs; everything else is shared.
+# "shape" is how that text file stores a verse, since the two were built by
+# different tools: gal_aligned.json carries a parsed record per verse, while
+# james_spans.json carries [part of speech, word] pairs.
+BOOKS = {
+    "galatians": {
+        "name": "Galatians", "chapters": 6, "shape": "aligned",
+        "text": os.path.join("Claude outputs", "_tc", "gal_aligned.json"),
+        "hint": "Extract galatians-build-toolchain.tar.gz into 'Claude outputs/_tc' first.",
+    },
+    "james": {
+        "name": "James", "chapters": 5, "shape": "spans",
+        "text": os.path.join("Claude outputs", "james_spans.json"),
+        "hint": "james_spans.json holds the Byzantine text as [part of speech, word] per verse.",
+    },
+}
+
+# Set by main() once --book is known.
+BOOK = None
+TEXT = AUDIO_DIR = OUT_JS = OUT_WORDS_JS = OUT_REPORT = None
+
+
+def use_book(slug):
+    """Point the module's paths at one series."""
+    global BOOK, TEXT, AUDIO_DIR, OUT_JS, OUT_WORDS_JS, OUT_REPORT
+    BOOK = dict(BOOKS[slug], slug=slug)
+    d = os.path.join(HERE, "greek", slug)
+    TEXT = os.path.join(HERE, BOOK["text"])
+    AUDIO_DIR = os.path.join(d, "audio")
+    OUT_JS = os.path.join(d, f"{slug}-verse-times.js")
+    OUT_WORDS_JS = os.path.join(d, f"{slug}-word-times.js")
+    OUT_REPORT = os.path.join(d, "verse-times-report.json")
 
 DISAGREE_FLAG = 2.5                     # seconds between models before flagging a verse
 WORD_DISAGREE = 0.4                     # ... and before flagging a word
@@ -100,10 +136,19 @@ SNAP_TOLERANCE = 1.2                    # only snap to a pause this close
 
 # ---------------------------------------------------------------- text helpers
 def load_text():
+    """-> {"ch:v": {"ch": int, "v": int, "accented": str}} whatever the source."""
     if not os.path.exists(TEXT):
-        sys.exit(f"Byzantine text not found at:\n  {TEXT}\n"
-                 "Extract galatians-build-toolchain.tar.gz into 'Claude outputs/_tc' first.")
-    return json.load(open(TEXT, encoding="utf-8"))
+        sys.exit(f"Byzantine text not found at:\n  {TEXT}\n" + BOOK["hint"])
+    raw = json.load(open(TEXT, encoding="utf-8"))
+    if BOOK["shape"] == "aligned":
+        return raw
+    out = {}
+    for key, words in raw.items():
+        ch, v = key.split(":")
+        # [part of speech, word] pairs, in the order the page prints them
+        out[key] = {"ch": int(ch), "v": int(v),
+                    "accented": " ".join(w for _, w in words)}
+    return out
 
 
 def verses_of(gal, ch):
@@ -199,7 +244,7 @@ def align_one(model_name, ch, gal, device, chunk_s, overlap_s):
               f" - skipping this model", flush=True)
         return None
 
-    path = os.path.join(AUDIO_DIR, f"galatians-{ch}.mp3")
+    path = os.path.join(AUDIO_DIR, f"{BOOK['slug']}-{ch}.mp3")
     wave_t = load_audio(path)
     dur = wave_t.shape[1] / SR
 
@@ -296,6 +341,8 @@ def quality(starts, dur, lens):
 # ----------------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--book", default="galatians", choices=sorted(BOOKS),
+                    help="which exegesis series to align")
     ap.add_argument("--device", default="cpu", help="cpu or cuda")
     ap.add_argument("-c", "--chapters", type=int, nargs="*", help="chapters to (re)do")
     ap.add_argument("--chunk", type=float, default=None, help="window seconds")
@@ -303,6 +350,9 @@ def main():
     ap.add_argument("--single", action="store_true", help="primary model only")
     ap.add_argument("--no-snap", action="store_true", help="skip pause snapping")
     args = ap.parse_args()
+
+    use_book(args.book)
+    print(f"book={BOOK['name']} ({BOOK['chapters']} chapters)")
 
     device = args.device
     if device == "cuda" and not torch.cuda.is_available():
@@ -316,14 +366,15 @@ def main():
 
     gal = load_text()
     report = json.load(open(OUT_REPORT)) if os.path.exists(OUT_REPORT) else {}
-    todo = args.chapters if args.chapters else [c for c in range(1, 7) if str(c) not in report]
+    todo = args.chapters if args.chapters else [
+        c for c in range(1, BOOK["chapters"] + 1) if str(c) not in report]
     if not todo:
         print("nothing to do (use -c N to redo a chapter)")
     models = MODELS[:1] if args.single else MODELS
 
     for ch in todo:
         print(f"\n=== chapter {ch} ===", flush=True)
-        path = os.path.join(AUDIO_DIR, f"galatians-{ch}.mp3")
+        path = os.path.join(AUDIO_DIR, f"{BOOK['slug']}-{ch}.mp3")
         runs = []
         for mi, mname in enumerate(models):
             print(f"  [{mi+1}/{len(models)}] {mname}", flush=True)
@@ -442,11 +493,12 @@ def main():
 
     # ---- emit the JS the pages load
     if report:
-        lines = ["/* Verse start times (seconds) in each Galatians chapter recording "
+        NAME, GLOBAL = BOOK["name"], BOOK["slug"].upper()
+        lines = [f"/* Verse start times (seconds) in each {NAME} chapter recording "
                  "(Marilyn Phemister).",
                  "   Generated by CTC forced alignment against the Byzantine text;",
                  "   adjust a single number if a verse starts early or late. */",
-                 "window.GALATIANS_VERSE_TIMES = {"]
+                 f"window.{GLOBAL}_VERSE_TIMES = {{"]
         chs = sorted(report, key=int)
         for i, ch in enumerate(chs):
             t = report[ch]["times"]
@@ -460,7 +512,7 @@ def main():
         # order here must stay the order of the printed text. Chapters aligned
         # before word times existed have no "words" key and are simply absent,
         # which the pages treat as "no word jumping for this chapter".
-        wlines = ["/* Word times (seconds) per verse in each Galatians chapter recording",
+        wlines = [f"/* Word times (seconds) per verse in each {NAME} chapter recording",
                   "   (Marilyn Phemister). Generated by the same CTC forced alignment as",
                   "   the verse times: chapter -> verse -> [start, end] per word, in the",
                   "   order the words are printed on the page.",
@@ -474,7 +526,7 @@ def main():
                   "   so where the two differ these times drift until the next verse. See",
                   "   verse-times-report.json for per-chapter scores and the median gap",
                   "   between words. */",
-                  "window.GALATIANS_WORD_TIMES = {"]
+                  f"window.{GLOBAL}_WORD_TIMES = {{"]
         wchs = [c for c in chs if report[c].get("words")]
         for i, ch in enumerate(wchs):
             w = report[ch]["words"]

@@ -102,8 +102,10 @@
   // Start times (seconds) per chapter → verse, in james-verse-times.js
   const TIMES = window.JAMES_VERSE_TIMES || {};
   let pendingSeek = null;
+  let pendingPlay = false;   // play once the seek has landed (see playRange)
   audio.addEventListener('loadedmetadata', () => {
     if (pendingSeek !== null) { audio.currentTime = pendingSeek; pendingSeek = null; render(); }
+    if (pendingPlay) { pendingPlay = false; audio.play().catch(() => {}); }
   });
   function seekTo(ch, t, play) {
     if (t === undefined || !isFinite(t)) return;
@@ -158,12 +160,30 @@
     // seg: {ch, from, to}. A null `to` means run to the end of the recording.
     if (!seg || !isFinite(seg.from)) return;
     stopAt = null;
-    if (seg.ch !== current) { load(seg.ch, false); pendingSeek = seg.from; }
-    else if (audio.readyState >= 1) audio.currentTime = seg.from;
-    else pendingSeek = seg.from;
+    const ready = (seg.ch === current && audio.readyState >= 1);
+    if (ready) {
+      audio.currentTime = seg.from;
+    } else {
+      if (seg.ch !== current) load(seg.ch, false);
+      pendingSeek = seg.from;
+    }
     stopAt = isFinite(seg.to) ? seg.to : null;
     fromSeek = true;
-    audio.play().catch(() => { fromSeek = false; });
+    if (ready) {
+      audio.play().catch(() => { fromSeek = false; });
+    } else {
+      // iOS ignores preload, so the first tap on a freshly loaded page has no
+      // metadata yet: a plain play() here would start at the top of the chapter
+      // and only jump to the word once the file loaded, which is audible and is
+      // what made this look broken on an iPhone. Playing and pausing inside the
+      // tap unlocks the element without sounding -- iOS only requires that the
+      // first play come from a gesture -- and the real play happens on
+      // loadedmetadata, once currentTime is where it belongs.
+      pendingPlay = true;
+      const pr = audio.play();
+      audio.pause();
+      if (pr && pr.catch) pr.catch(() => {});
+    }
     heldAt = 0;
     render();
     scheduleStop();
