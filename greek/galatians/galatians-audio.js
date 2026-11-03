@@ -68,7 +68,7 @@
     render();
   }
 
-  playBtn.addEventListener('click', () => { audio.paused ? audio.play().catch(() => {}) : audio.pause(); });
+  playBtn.addEventListener('click', () => { audio.paused ? freePlay() : audio.pause(); });
   $('.ab-back').addEventListener('click', () => {
     cancelBounds();   // five seconds back lands outside the clip you were in
     audio.currentTime = Math.max(0, audio.currentTime - 5);
@@ -96,35 +96,105 @@
   document.addEventListener('keydown', e => {
     if (e.code !== 'Space' || /INPUT|TEXTAREA|SELECT|BUTTON/.test(document.activeElement.tagName)) return;
     e.preventDefault();
-    audio.paused ? audio.play().catch(() => {}) : audio.pause();
+    audio.paused ? freePlay() : audio.pause();
   });
 
   // ── Verse jumping ────────────────────────────────────────────────
   // Start times (seconds) per chapter → verse, in galatians-verse-times.js
   const TIMES = window.GALATIANS_VERSE_TIMES || {};
-  let pendingSeek = null;
-  let pendingPlay = false;   // play once the seek has landed (see playRange)
-  audio.addEventListener('loadedmetadata', () => {
-    if (pendingSeek !== null) { audio.currentTime = pendingSeek; pendingSeek = null; render(); }
-    if (pendingPlay) { pendingPlay = false; audio.play().catch(() => {}); }
+  // ── Starting in the right place ──────────────────────────────────
+  // A seek asked for before the browser can seek is silently ignored -- iOS
+  // does this whenever the media is not seekable yet -- and the old code then
+  // played anyway, from wherever the playhead happened to be. The clip had the
+  // right end and the wrong start, so tapping the third word of a verse played
+  // the first three. Nothing is taken on trust now: the target is held until a
+  // 'seeked' event confirms it landed, playback waits for that confirmation,
+  // and any playback that starts before it is stopped rather than left running
+  // in the wrong place.
+  let pendingSeek = null;    // where playback must begin before it may be heard
+  let pendingPlay = false;
+
+  function seekReady() {
+    try { return !!(audio.seekable && audio.seekable.length); } catch (e) { return false; }
+  }
+  // Events alone are not enough to lean on: if every readiness event has
+  // already fired by the time the media becomes seekable, nothing would ask
+  // again and the clip would never start. So a short poll runs alongside them
+  // while a start is outstanding, and gives up rather than spinning.
+  let seekTimer = null, seekUntil = 0;
+  function stopSeekTimer() {
+    if (seekTimer) { clearInterval(seekTimer); seekTimer = null; }
+  }
+  function applySeek() {
+    if (pendingSeek === null) { stopSeekTimer(); return; }
+    if (seekReady()) { try { audio.currentTime = pendingSeek; } catch (e) {} }
+    if (!seekTimer) {
+      seekUntil = Date.now() + 8000;
+      seekTimer = setInterval(() => {
+        if (pendingSeek === null || Date.now() > seekUntil) { stopSeekTimer(); return; }
+        if (seekReady()) { try { audio.currentTime = pendingSeek; } catch (e) {} }
+      }, 120);
+    }
+  }
+  function seekSettled() {
+    if (pendingSeek === null) return;
+    if (Math.abs(audio.currentTime - pendingSeek) > 0.35) { applySeek(); return; }
+    pendingSeek = null;
+    stopSeekTimer();
+    if (pendingPlay) {
+      pendingPlay = false;
+      // This play is the jump's real one, so it must not scroll either: the
+      // highlight is still on the old verse until the next timeupdate.
+      fromSeek = true;
+      audio.play().catch(() => {});
+    }
+    render();
+    scheduleStop();
+  }
+  ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough', 'progress']
+    .forEach(e => audio.addEventListener(e, applySeek));
+  audio.addEventListener('seeked', seekSettled);
+  audio.addEventListener('timeupdate', () => {
+    if (pendingSeek !== null && !audio.paused) { audio.pause(); applySeek(); }
   });
+
+  // Free play: wherever the playhead is, is fine. Used by the bar and the space
+  // bar, which must not be held back by a start that has not landed.
+  function freePlay() {
+    pendingSeek = null; pendingPlay = false;
+    stopSeekTimer();
+    audio.play().catch(() => {});
+  }
+
+  // One way in for every jump, so the confirmation above cannot be bypassed.
+  function startAt(ch, from, play) {
+    // No trusted path. An earlier version seeked directly whenever the media
+    // looked seekable and played straight away, which is the same act of faith
+    // that produced the bug: if that seek is ignored, playback is already
+    // running from the wrong place by the time anything could notice. Every
+    // jump now waits for its 'seeked'.
+    if (ch !== current) load(ch, false);
+    pendingSeek = from;
+    pendingPlay = !!play;
+    if (play) {
+      // iOS only lets a gesture start playback, so the element is unlocked here
+      // and paused in the same breath; the audible play happens on confirmation.
+      fromSeek = true;
+      const pr = audio.play();
+      audio.pause();
+      if (pr && pr.catch) pr.catch(() => {});
+    }
+    applySeek();
+    heldAt = 0;
+    render();
+  }
+  // fromSeek, set inside startAt, tells the 'play' handler below not to scroll:
+  // on an explicit jump the highlight is still the old verse -- on a page opened
+  // and not yet played, the first verse at the top -- so following it would
+  // throw the reader there before timeupdate moved it to the verse they clicked.
   function seekTo(ch, t, play) {
     if (t === undefined || !isFinite(t)) return;
-    if (ch !== current) { load(ch, false); pendingSeek = t; }
-    else if (audio.readyState >= 1) audio.currentTime = t;
-    else pendingSeek = t;
-    if (play) {
-      // The 'play' handler below scrolls to the verse the highlight is on. On
-      // an explicit jump that highlight is still the old verse -- on a page
-      // opened and not yet played, the first verse at the top -- so letting it
-      // run would throw the reader to the top of the page before the timeupdate
-      // moved the highlight to the verse they actually clicked. The jump does
-      // its own following a moment later, and correctly.
-      fromSeek = true;
-      audio.play().catch(() => { fromSeek = false; });
-    }
-    heldAt = 0;   // an explicit jump resumes following at once
-    render();
+    startAt(ch, t, play);
   }
   function jumpTo(ch, v, play) {
     seekTo(ch, TIMES[ch] && TIMES[ch][v], play);
@@ -161,32 +231,8 @@
     // seg: {ch, from, to}. A null `to` means run to the end of the recording.
     if (!seg || !isFinite(seg.from)) return;
     stopAt = null;
-    const ready = (seg.ch === current && audio.readyState >= 1);
-    if (ready) {
-      audio.currentTime = seg.from;
-    } else {
-      if (seg.ch !== current) load(seg.ch, false);
-      pendingSeek = seg.from;
-    }
     stopAt = isFinite(seg.to) ? seg.to : null;
-    fromSeek = true;
-    if (ready) {
-      audio.play().catch(() => { fromSeek = false; });
-    } else {
-      // iOS ignores preload, so the first tap on a freshly loaded page has no
-      // metadata yet: a plain play() here would start at the top of the chapter
-      // and only jump to the word once the file loaded, which is audible and is
-      // what made this look broken on an iPhone. Playing and pausing inside the
-      // tap unlocks the element without sounding -- iOS only requires that the
-      // first play come from a gesture -- and the real play happens on
-      // loadedmetadata, once currentTime is where it belongs.
-      pendingPlay = true;
-      const pr = audio.play();
-      audio.pause();
-      if (pr && pr.catch) pr.catch(() => {});
-    }
-    heldAt = 0;
-    render();
+    startAt(seg.ch, seg.from, true);
     scheduleStop();
   }
   ['play', 'seeked', 'ratechange'].forEach(e => audio.addEventListener(e, scheduleStop));
@@ -226,7 +272,7 @@
   }
   function playVerse(ch, v) {
     cancelBounds();
-    playRange({ ch: ch, from: verseStart(ch, v), to: verseStop(ch, v) });
+    playRange({ ch: ch, from: clipStart(ch, verseStart(ch, v)), to: verseStop(ch, v) });
   }
   // How a clip ends. The aligner gives each word its own end, which sits before
   // the next word starts; the space between them is the transition, and leaving
@@ -243,17 +289,39 @@
   // hear. The floor is what stops those being clipped to nothing; the next
   // word's onset still wins over it.
   const WORD_MIN = 0.18;
+  // Start a shade early. The aligner marks a word where its sound becomes loud
+  // enough to detect, which on a Greek vowel with smooth breathing is already
+  // part-way into it -- starting exactly there skips the attack, which is how
+  // Listen on Galatians 6:1 came to swallow the beginning of a four-syllable
+  // word. The lead-in is given up where the previous word ends close by, so
+  // this does not trade a clipped start for the tail of the word before it.
+  const WORD_LEAD = 0.12;
+  function clipStart(ch, from) {
+    const seq = wordSeq[ch] || [];
+    let prevEnd = null;
+    for (let i = 0; i < seq.length; i++) {
+      if (seq[i].t >= from - 0.01) break;
+      if (isFinite(seq[i].end)) prevEnd = seq[i].end;
+    }
+    let lead = WORD_LEAD;
+    if (prevEnd !== null && prevEnd < from) lead = Math.min(lead, (from - prevEnd) / 2);
+    return Math.max(0, Number((from - lead).toFixed(2)));
+  }
   function clipEnd(ch, from, end) {
     const next = nextBoundary(ch, from);
     let to = isFinite(end) ? end + WORD_TAIL : next;
     if (to === null) return null;                        // nothing known: run on
+    if (next !== null) to = Math.min(to, next - WORD_GAP);
+    // The floor goes on last, after the next word's claim. Where the alignment
+    // packs two words a tenth of a second apart, yielding to the next one makes
+    // a clip too short to hear -- clicking a word and getting silence is worse
+    // than clicking it and hearing a trace of what follows.
     to = Math.max(to, from + WORD_MIN);
-    if (next !== null) to = Math.max(Math.min(to, next - WORD_GAP), from + 0.08);
     return to;
   }
   function playWord(ch, from, end) {
     cancelBounds();
-    playRange({ ch: ch, from: from, to: clipEnd(ch, from, end) });
+    playRange({ ch: ch, from: clipStart(ch, from), to: clipEnd(ch, from, end) });
   }
 
   // The passage printed on this page, as runs of consecutive verses within one
@@ -269,7 +337,8 @@
       if (last && last.ch === m[1]) last.lastV = m[2];
       else out.push({ ch: m[1], firstV: m[2], lastV: m[2] });
     });
-    out.forEach(s => { s.from = verseStart(s.ch, s.firstV); s.to = verseStop(s.ch, s.lastV); });
+    out.forEach(s => { s.from = clipStart(s.ch, verseStart(s.ch, s.firstV));
+                       s.to = verseStop(s.ch, s.lastV); });
     return out;
   }
   function playPassage() {

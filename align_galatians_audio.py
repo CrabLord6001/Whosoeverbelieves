@@ -102,12 +102,30 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # james_spans.json carries [part of speech, word] pairs.
 BOOKS = {
     "galatians": {
-        "name": "Galatians", "chapters": 6, "shape": "aligned",
+        # Both series are announced ("Galatians, chapter three"), and that has
+        # to be cut off before aligning or the opening words of the text land
+        # on it. I assumed Galatians was unannounced and never asked; the giveaway
+        # was in the data all along, with chapter 6's first "word" running 3.24s
+        # against a 0.36s median because it had swallowed the announcement.
+        "name": "Galatians", "chapters": 6, "shape": "aligned", "announced": True,
+        # Chapter 6 needs the cut placed exactly on the pause rather than a
+        # margin inside it. Confirmed by ear: the announcement ends at 2.4s and
+        # the first word runs 2.57-3.77, but with the usual 0.15s margin the
+        # aligner squeezed that word to 0.06s and parked it on top of the next
+        # one. (An earlier override of 3.77 here was wrong -- it would have cut
+        # the first word off altogether.)
+        "lead_override": {"6": 2.57},
+        # Galatians 6:1, first word. The aligner will not place it wherever the
+        # announcement is cut -- given audio starting exactly on the word it
+        # still puts it 1.35s late, squeezed to 0.06s on top of the second word.
+        # Confirmed by ear that it runs 2.57-3.77 and that everything from the
+        # second word on is right. Applied after alignment so a re-run keeps it.
+        "time_fix": {"6": {"1": {"verse": 2.57, "words": {0: [2.57, 3.77]}}}},
         "text": os.path.join("Claude outputs", "_tc", "gal_aligned.json"),
         "hint": "Extract galatians-build-toolchain.tar.gz into 'Claude outputs/_tc' first.",
     },
     "james": {
-        "name": "James", "chapters": 5, "shape": "spans",
+        "name": "James", "chapters": 5, "shape": "spans", "announced": True,
         "text": os.path.join("Claude outputs", "james_spans.json"),
         "hint": "james_spans.json holds the Byzantine text as [part of speech, word] per verse.",
     },
@@ -183,6 +201,38 @@ def load_audio(path):
     return torch.from_numpy(a.copy()).unsqueeze(0)
 
 
+ANNOUNCE_MIN_SIL = 0.12   # silences shorter than this are breaths, not breaks
+ANNOUNCE_AFTER = 1.0      # the announcement cannot have ended before this
+ANNOUNCE_BEFORE = 4.5     # ... nor after it
+ANNOUNCE_MARGIN = 0.15    # start a shade early, so the first word is not clipped
+
+
+def announcement_end(path):
+    """Seconds of spoken announcement to cut before aligning, 0 if none found.
+
+    The announcement is followed by the clearest pause in the opening seconds,
+    so the rule is the LONGEST silence ending inside the window -- not the first
+    one, which on James 3 is a 0.16s breath inside the announcement itself and
+    cuts 1.67s too early, and not the longest anywhere, which on Galatians 3
+    finds a 5.4s pause well into verse 1.
+
+    Checked against the five James verse-1 times that were in use before any
+    word-level work: this lands within 0.03s on all five, and gives a consistent
+    2.42-2.68s across the six Galatians chapters.
+    """
+    out = subprocess.run(
+        ["ffmpeg", "-hide_banner", "-nostats", "-i", path,
+         "-af", f"silencedetect=noise=-35dB:d={ANNOUNCE_MIN_SIL}", "-f", "null", "-"],
+        capture_output=True, text=True).stderr
+    starts = [float(x) for x in re.findall(r"silence_start: ([-\d.]+)", out)]
+    ends = [float(x) for x in re.findall(r"silence_end: ([\d.]+)", out)]
+    best = None
+    for a, b in zip(starts, ends):
+        if ANNOUNCE_AFTER < b < ANNOUNCE_BEFORE and (best is None or (b - a) > best[1]):
+            best = (b, b - a)
+    return max(0.0, round(best[0] - ANNOUNCE_MARGIN, 2)) if best else 0.0
+
+
 def pause_ends(path, noise_db=-30, min_d=0.25):
     out = subprocess.run(
         ["ffmpeg", "-hide_banner", "-nostats", "-i", path,
@@ -248,6 +298,22 @@ def align_one(model_name, ch, gal, device, chunk_s, overlap_s):
     wave_t = load_audio(path)
     dur = wave_t.shape[1] / SR
 
+    # Cut the announcement before aligning, and put the offset back on every
+    # time afterwards so everything downstream still speaks in file seconds.
+    lead = 0.0
+    if BOOK.get("announced"):
+        over = (BOOK.get("lead_override") or {}).get(str(ch))
+        lead = float(over) if over is not None else announcement_end(path)
+        if over is not None:
+            print(f"    announcement: using the recorded override for this chapter")
+    if BOOK.get("announced") and lead <= 0:
+        print("    WARNING: no announcement found - alignment will be wrong if "
+              "this chapter has one", flush=True)
+    if lead > 0:
+        print(f"    announcement: aligning from {lead}s", flush=True)
+        wave_t = wave_t[:, int(lead * SR):]
+        dur = wave_t.shape[1] / SR
+
     tokens, verse_tok_start, word_tok_span = [], [], []
     for _, text in verses:
         verse_tok_start.append(len(tokens))
@@ -297,6 +363,13 @@ def align_one(model_name, ch, gal, device, chunk_s, overlap_s):
                           if b < len(spans) else None for a, b in idxs])
         word_scores.append([round(float(spans[a].score), 3)
                             if a < len(spans) else None for a, b in idxs])
+
+    if lead:
+        shift = lambda x: None if x is None else round(x + lead, 2)
+        starts = [shift(x) for x in starts]
+        word_starts = [[shift(x) for x in row] for row in word_starts]
+        word_ends = [[shift(x) for x in row] for row in word_ends]
+        dur += lead
 
     del model, log_probs
     if device == "cuda":
@@ -378,6 +451,11 @@ def main():
         runs = []
         for mi, mname in enumerate(models):
             print(f"  [{mi+1}/{len(models)}] {mname}", flush=True)
+            lead_used = 0.0
+            if BOOK.get("announced"):
+                _o = (BOOK.get("lead_override") or {}).get(str(ch))
+                lead_used = (float(_o) if _o is not None else
+                             announcement_end(os.path.join(AUDIO_DIR, f"{BOOK['slug']}-{ch}.mp3")))
             res = align_one(mname, ch, gal, device, chunk_s, args.overlap)
             if res is None:
                 continue
@@ -388,7 +466,8 @@ def main():
             print(f"      r={r:.3f} cv={cv:.3f} mono={mono}")
             runs.append({"model": mname, "starts": starts, "r": r, "cv": cv,
                          "mono": mono, "dur": dur, "nums": nums, "lens": lens,
-                         "wstarts": wstarts, "wends": wends, "wscores": wscores})
+                         "wstarts": wstarts, "wends": wends, "wscores": wscores,
+                         "lead": lead_used})
 
         if not runs:
             print("  no usable alignment"); continue
@@ -471,12 +550,26 @@ def main():
                 prev = row[-1][0]
             words[str(n)] = row
 
+        # Hand-checked corrections for the few places the aligner cannot get
+        # right. Applied here rather than edited into the output files, so that
+        # re-running the chapter does not quietly throw them away.
+        for v, rec in (BOOK.get("time_fix") or {}).get(str(ch), {}).items():
+            if "verse" in rec:
+                for i, n in enumerate(nums):
+                    if str(n) == v:
+                        starts[i] = rec["verse"]
+            for idx, span in (rec.get("words") or {}).items():
+                if v in words and int(idx) < len(words[v]):
+                    words[v][int(idx)] = [span[0], span[1]]
+            print(f"  applied the recorded correction for {BOOK['name']} {ch}:{v}")
+
         wflat = [x for row in wscores for x in row if x is not None]
         wgaps = [round(b[0] - a[1], 3) for row in words.values()
                  for a, b in zip(row, row[1:]) if a[1] is not None]
         report[str(ch)] = {
             "model": best["model"], "r": round(r, 3), "cv": round(cv, 3),
             "monotonic": mono, "duration": round(wave_len, 2),
+            "lead": round(best.get("lead", 0.0), 2),
             "flagged_verses": flags, "verdict": verdict,
             "times": {str(n): s for n, s in zip(nums, starts)},
             "words": words,
@@ -492,6 +585,22 @@ def main():
         json.dump(report, open(OUT_REPORT, "w"), indent=1)   # save after each chapter
 
     # ---- emit the JS the pages load
+    # A report written before announcements were handled holds times that are
+    # seconds out, and re-emitting from it silently overwrites good files with
+    # bad ones -- which is exactly what happened on Nov 3, when a run that said
+    # "nothing to do" still rewrote both timing files from stale records.
+    if report and BOOK.get("announced"):
+        stale = [c for c in sorted(report, key=int) if "lead" not in report[c]]
+        if stale:
+            print("\n" + "=" * 68)
+            print(f"  NOT WRITING ANY FILES. {BOOK['name']} chapter(s) "
+                  f"{', '.join(stale)} were aligned before the announcement was")
+            print("  allowed for, so their times are seconds early. Redo them:")
+            print(f"      py {os.path.basename(__file__)} --book {BOOK['slug']} "
+                  f"--device cuda -c {' '.join(stale)}")
+            print("=" * 68)
+            return
+
     if report:
         NAME, GLOBAL = BOOK["name"], BOOK["slug"].upper()
         lines = [f"/* Verse start times (seconds) in each {NAME} chapter recording "
