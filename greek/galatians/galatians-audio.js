@@ -10,7 +10,9 @@
   const chapters = (host.dataset.chapters || '').split(',').map(s => s.trim()).filter(Boolean);
   if (!chapters.length) return;
 
-  const SPEEDS = [1, 0.75, 1.25];
+  // 0.5 is here for pronunciation: slow enough to hear where the stress and
+  // the vowel lengths actually fall. Ordered so the slow speeds come first.
+  const SPEEDS = [1, 0.75, 0.5, 1.25];
   let speedIdx = 0;
   let current = chapters[0];
 
@@ -38,6 +40,10 @@
   const playBtn = $('.ab-play'), seek = $('.ab-seek'), time = $('.ab-time'), speedBtn = $('.ab-speed');
   let dragging = false;
   let heldAt = 0;        // last time the reader scrolled, so following defers to them
+  let fromSeek = false;  // this play() came from a verse or word jump, not the play button
+  let stopAt = null;     // absolute time in `current` to stop at; null runs on
+  let stopTimer = null;  // the accurate stop. timeupdate is only a backstop
+  let segments = [];     // remaining pieces of a passage that crosses chapters
 
   const fmt = t => {
     if (!isFinite(t)) return '0:00';
@@ -63,9 +69,12 @@
   }
 
   playBtn.addEventListener('click', () => { audio.paused ? audio.play().catch(() => {}) : audio.pause(); });
-  $('.ab-back').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 5); });
+  $('.ab-back').addEventListener('click', () => {
+    cancelBounds();   // five seconds back lands outside the clip you were in
+    audio.currentTime = Math.max(0, audio.currentTime - 5);
+  });
   host.querySelectorAll('.ab-ch').forEach(b => b.addEventListener('click', () => {
-    if (b.dataset.ch !== current) load(b.dataset.ch, !audio.paused);
+    if (b.dataset.ch !== current) { cancelBounds(); load(b.dataset.ch, !audio.paused); }
   }));
   speedBtn.addEventListener('click', () => {
     speedIdx = (speedIdx + 1) % SPEEDS.length;
@@ -77,6 +86,7 @@
     if (audio.duration) time.textContent = fmt(seek.value / 1000 * audio.duration) + ' / ' + fmt(audio.duration);
   });
   seek.addEventListener('change', () => {
+    cancelBounds();   // dragging the scrubber is a deliberate exit from a clip
     if (audio.duration) audio.currentTime = seek.value / 1000 * audio.duration;
     dragging = false;
   });
@@ -101,12 +111,145 @@
     if (ch !== current) { load(ch, false); pendingSeek = t; }
     else if (audio.readyState >= 1) audio.currentTime = t;
     else pendingSeek = t;
-    if (play) audio.play().catch(() => {});
+    if (play) {
+      // The 'play' handler below scrolls to the verse the highlight is on. On
+      // an explicit jump that highlight is still the old verse -- on a page
+      // opened and not yet played, the first verse at the top -- so letting it
+      // run would throw the reader to the top of the page before the timeupdate
+      // moved the highlight to the verse they actually clicked. The jump does
+      // its own following a moment later, and correctly.
+      fromSeek = true;
+      audio.play().catch(() => { fromSeek = false; });
+    }
     heldAt = 0;   // an explicit jump resumes following at once
     render();
   }
   function jumpTo(ch, v, play) {
     seekTo(ch, TIMES[ch] && TIMES[ch][v], play);
+  }
+
+  // ── Bounded playback: word, verse, passage ───────────────────────
+  // Each control plays its own unit and stops: a word for pronunciation, a
+  // verse to hear a clause whole, the passage to hear the page read through.
+  // The bar at the bottom stays free play, so pressing it after a clip runs on
+  // from wherever the clip left you.
+  //
+  // The stop is a timer, not a timeupdate test. timeupdate fires about four
+  // times a second and a word here averages half of one, so a quarter-second
+  // overshoot would spill into the next word -- the very thing being isolated.
+  // timeupdate still checks as a backstop, for a timer a background tab throttles.
+  function cancelBounds() {
+    stopAt = null; segments = [];
+    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
+  }
+  function scheduleStop() {
+    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
+    if (stopAt === null || audio.paused) return;
+    const left = (stopAt - audio.currentTime) / (audio.playbackRate || 1);
+    stopTimer = setTimeout(reachStop, Math.max(0, left * 1000));
+  }
+  function reachStop() {
+    if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
+    stopAt = null;
+    if (segments.length) { playRange(segments.shift()); return; }
+    audio.pause();
+    render();
+  }
+  function playRange(seg) {
+    // seg: {ch, from, to}. A null `to` means run to the end of the recording.
+    if (!seg || !isFinite(seg.from)) return;
+    stopAt = null;
+    if (seg.ch !== current) { load(seg.ch, false); pendingSeek = seg.from; }
+    else if (audio.readyState >= 1) audio.currentTime = seg.from;
+    else pendingSeek = seg.from;
+    stopAt = isFinite(seg.to) ? seg.to : null;
+    fromSeek = true;
+    audio.play().catch(() => { fromSeek = false; });
+    heldAt = 0;
+    render();
+    scheduleStop();
+  }
+  ['play', 'seeked', 'ratechange'].forEach(e => audio.addEventListener(e, scheduleStop));
+  audio.addEventListener('timeupdate', () => {
+    if (stopAt !== null && audio.currentTime >= stopAt) reachStop();
+  });
+
+  // Where a unit ends. A verse ends where the next verse starts. A word ends at
+  // whichever comes first of the next word and the next verse, so the last word
+  // of a verse stops on the verse line instead of running into the next one.
+  const bounds = {};
+  function boundsFor(ch) {
+    if (bounds[ch]) return bounds[ch];
+    const all = [];
+    const vt = TIMES[ch] || {};
+    for (const v in vt) all.push(vt[v]);
+    (wordSeq[ch] || []).forEach(w => all.push(w.t));
+    all.sort((a, b) => a - b);
+    return (bounds[ch] = all);
+  }
+  function nextBoundary(ch, t) {
+    const all = boundsFor(ch);
+    for (let i = 0; i < all.length; i++) if (all[i] > t + 0.01) return all[i];
+    return null;
+  }
+  const verseStart = (ch, v) => (TIMES[ch] || {})[v];
+  const verseEnd = (ch, v) => verseStart(ch, String(Number(v) + 1));
+
+  // Where a verse's audio actually stops: the end of its last word where that
+  // is known, otherwise the next verse's start, which carries that verse's
+  // first sound with it exactly as a word clip would.
+  function verseStop(ch, v) {
+    const ws = wordsIn[ch + ':' + v];
+    const last = ws && ws.length ? ws[ws.length - 1] : null;
+    if (last && isFinite(last.end)) return clipEnd(ch, last.t, last.end);
+    return verseEnd(ch, v);
+  }
+  function playVerse(ch, v) {
+    cancelBounds();
+    playRange({ ch: ch, from: verseStart(ch, v), to: verseStop(ch, v) });
+  }
+  // How a clip ends. The aligner gives each word its own end, which sits before
+  // the next word starts; the space between them is the transition, and leaving
+  // it out is what stops a clip carrying the next word's first sound. TAIL keeps
+  // a little of it so a final consonant is not clipped off, GAP holds the clip
+  // clear of the next onset, and GAP wins where they disagree. Raise TAIL if
+  // words sound cut short, raise GAP if you still hear the next word.
+  const WORD_TAIL = 0.06;
+  const WORD_GAP = 0.03;
+  function clipEnd(ch, from, end) {
+    const next = nextBoundary(ch, from);
+    let to = isFinite(end) ? end + WORD_TAIL : next;
+    if (next !== null) to = Math.min(to === null ? next : to, next - WORD_GAP);
+    if (to !== null && to <= from + 0.08) to = from + 0.08;   // never a non-clip
+    return to;
+  }
+  function playWord(ch, from, end) {
+    cancelBounds();
+    playRange({ ch: ch, from: from, to: clipEnd(ch, from, end) });
+  }
+
+  // The passage printed on this page, as runs of consecutive verses within one
+  // chapter. Only james-3-13-4-6 currently crosses a chapter; the queue is
+  // cheap and without it that page would stop halfway through.
+  function passageSegments() {
+    const out = [];
+    document.querySelectorAll('.verse-block').forEach(bl => {
+      const el = bl.querySelector('.verse-num');
+      const m = el && el.textContent.match(/Galatians\s+(\d+):(\d+)/);
+      if (!m || verseStart(m[1], m[2]) === undefined) return;
+      const last = out[out.length - 1];
+      if (last && last.ch === m[1]) last.lastV = m[2];
+      else out.push({ ch: m[1], firstV: m[2], lastV: m[2] });
+    });
+    out.forEach(s => { s.from = verseStart(s.ch, s.firstV); s.to = verseStop(s.ch, s.lastV); });
+    return out;
+  }
+  function playPassage() {
+    const segs = passageSegments();
+    if (!segs.length) return;
+    cancelBounds();
+    segments = segs.slice(1);
+    playRange(segs[0]);
   }
   // ▶ button beside each verse label
   document.querySelectorAll('.verse-num').forEach(el => {
@@ -116,7 +259,7 @@
     b.type = 'button'; b.className = 'verse-play';
     b.setAttribute('aria-label', 'Play Galatians ' + m[1] + ':' + m[2]);
     b.innerHTML = '&#9654; Listen';
-    b.addEventListener('click', () => jumpTo(m[1], m[2], true));
+    b.addEventListener('click', () => playVerse(m[1], m[2]));
     el.appendChild(b);
   });
 
@@ -161,7 +304,10 @@
   // Pressing play brings the verse the bar is cued to into view. The highlight
   // is already on it, so it never changes and timeupdate would not fire this.
   // A reader who has just scrolled is still left alone, as while playing.
-  audio.addEventListener('play', () => { if (lit) follow(lit); });
+  audio.addEventListener('play', () => {
+    if (fromSeek) { fromSeek = false; return; }
+    if (lit) follow(lit);
+  });
 
   // ── Click a word to jump to it ───────────────────────────────────
   // Word times are chapter -> verse -> one start per word in printed order, so
@@ -171,6 +317,9 @@
   // being clickable. Chapters with no word times are simply untouched, which is
   // every chapter until the aligner has been re-run for it.
   const WORDS = window.GALATIANS_WORD_TIMES || {};
+  const wordSeq = {};        // chapter -> [{t, end, el}] in spoken order
+  const wordsIn = {};        // 'ch:v' -> its words, for where a verse ends
+  let litWord = null;
   const HAS_GREEK = /[\u0370-\u03ff\u1f00-\u1fff]/;
   Object.keys(blocks).forEach(key => {
     const [ch, v] = key.split(':');
@@ -181,10 +330,20 @@
       line.querySelectorAll('span'), el => HAS_GREEK.test(el.textContent));
     if (words.length !== times.length) return;
     words.forEach((el, i) => {
+      // An entry is [start, end]; a bare number is the older file, still read.
+      const e = times[i];
+      const from = Array.isArray(e) ? e[0] : e;
+      const end = Array.isArray(e) ? e[1] : undefined;
+      if (!isFinite(from)) return;
       el.classList.add('word-seek');
-      el.addEventListener('click', () => seekTo(ch, times[i], true));
+      el.addEventListener('click', () => playWord(ch, from, end));
+      (wordSeq[ch] = wordSeq[ch] || []).push({ t: from, end: end, el: el });
+      (wordsIn[key] = wordsIn[key] || []).push({ t: from, end: end });
     });
   });
+  // Verse blocks are walked in page order, which is spoken order, but sort
+  // anyway so the search below cannot be wrong if a page is ever reordered.
+  Object.keys(wordSeq).forEach(c => wordSeq[c].sort((a, b) => a.t - b.t));
 
   audio.addEventListener('timeupdate', () => {
     const vt = TIMES[current] || {};
@@ -197,6 +356,59 @@
     lit = el;
     if (el) follow(el);
   });
+
+  // The word being spoken. Separate from the verse handler above because it
+  // changes several times a second rather than once a verse, so it does its
+  // own early-out and never touches the scroll: following at word level would
+  // mean the page creeping constantly while you are trying to read a line.
+  audio.addEventListener('timeupdate', () => {
+    const seq = wordSeq[current];
+    let el = null;
+    if (seq && seq.length) {
+      const t = audio.currentTime + 0.05;
+      let lo = 0, hi = seq.length - 1, pick = -1;
+      while (lo <= hi) {
+        const mid = (lo + hi) >> 1;
+        if (seq[mid].t <= t) { pick = mid; lo = mid + 1; } else { hi = mid - 1; }
+      }
+      if (pick >= 0) el = seq[pick].el;
+    }
+    if (el === litWord) return;
+    if (litWord) litWord.classList.remove('word-now');
+    if (el) el.classList.add('word-now');
+    litWord = el;
+  });
+
+  // ── Play the whole passage ───────────────────────────────────────
+  // Built here rather than written into each page, so it appears wherever the
+  // bar does and its label always matches the verses actually printed.
+  (function () {
+    const bodyEl = document.querySelector('.exegesis-page');
+    const segs = passageSegments();
+    if (!bodyEl || !segs.length) return;
+    const lastSeg = segs[segs.length - 1];
+    const label = 'Galatians ' + segs[0].ch + ':' + segs[0].firstV + '\u2013'
+                + (segs.length > 1 ? lastSeg.ch + ':' : '') + lastSeg.lastV;
+    const wrap = document.createElement('div');
+    wrap.className = 'passage-play';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'pp-btn';
+    const paint = () => {
+      const playing = !audio.paused;
+      btn.innerHTML = (playing ? '&#10074;&#10074; Pause' : '&#9654; Play all')
+                    + ' &#183; ' + label;
+      btn.setAttribute('aria-label', (playing ? 'Pause' : 'Play') + ' ' + label);
+    };
+    btn.addEventListener('click', () => {
+      if (!audio.paused) { audio.pause(); return; }
+      playPassage();
+    });
+    paint();
+    ['play', 'pause'].forEach(e => audio.addEventListener(e, paint));
+    wrap.appendChild(btn);
+    bodyEl.insertBefore(wrap, bodyEl.firstChild);
+  })();
 
   document.body.classList.add('has-audio-bar');
   load(current, false);

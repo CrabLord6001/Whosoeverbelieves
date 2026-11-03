@@ -241,6 +241,24 @@ body.has-audio-bar { padding-bottom: 5.5rem; }
   #audio-bar .ab-credit { text-align: left; font-size: 0.66rem; }
 }
 
+/* ── Play the whole passage ──
+   Sits at the top of the article body, above the legend, so the three scopes
+   read top to bottom as passage, then verse, then word. Gold fill because it
+   is the only control on the page that starts the whole reading. */
+.exegesis-page .passage-play { margin: 0 0 1.4rem; }
+.exegesis-page .pp-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 0.6rem 1.15rem; border-radius: 3px;
+  cursor: pointer; background: var(--gold); color: #0d1117;
+  border: 1px solid var(--gold); transition: filter 0.2s;
+}
+.exegesis-page .pp-btn:hover { filter: brightness(1.1); }
+:root.light-mode .exegesis-page .pp-btn { color: #fff; }
+@media (max-width: 640px) {
+  .exegesis-page .pp-btn { width: 100%; justify-content: center; }
+}
+
 /* ── Per-verse listen button ── */
 .exegesis-page .verse-num { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
 .exegesis-page .verse-play {
@@ -249,17 +267,30 @@ body.has-audio-bar { padding-bottom: 5.5rem; }
   background: transparent; color: var(--gold); border: 1px solid rgba(201,168,76,0.45);
 }
 .exegesis-page .verse-play:hover { background: var(--gold-faint); color: var(--gold-light); }
-/* ── Clicking a word to jump there ──
-   Only words the aligner actually placed get the class, so an unaligned
-   chapter shows no affordance rather than a dead one. Kept to a hover tint and
-   a thin gold underline: the parts-of-speech colour is doing the real work in
-   this line and must not be competed with. */
+/* ── The word being spoken, and clicking a word to jump there ──
+   Only words the aligner actually placed get .word-seek, so an unaligned
+   chapter shows no affordance rather than a dead one.
+
+   .word-now is deliberately the strongest mark on the page: the point of this
+   is hearing one word clearly, so the eye has to find it without searching.
+   The parts-of-speech colour survives underneath — the word is still parsed
+   while it is being read. The mix is against transparent rather than --bg so
+   it sits correctly on whatever is behind it. */
 .exegesis-page .greek-line .word-seek { cursor: pointer; border-radius: 2px; }
 @media (hover: hover) {
-  .exegesis-page .greek-line .word-seek:hover {
-    background: var(--gold-faint);
+  /* Not on the word being spoken: the hover rule outranks .word-now on
+     specificity, so without this the live highlight weakens to the hover tint
+     under the pointer -- exactly where you have just clicked. */
+  .exegesis-page .greek-line .word-seek:not(.word-now):hover {
+    background: color-mix(in srgb, var(--gold) 15%, transparent);
     box-shadow: inset 0 -1px 0 var(--gold);
   }
+}
+.exegesis-page .greek-line .word-now {
+  background: rgba(201,168,76,0.26);
+  background: color-mix(in srgb, var(--gold) 26%, transparent);
+  box-shadow: inset 0 -2px 0 var(--gold);
+  border-radius: 2px;
 }
 
 /* ── The verse being read ──
@@ -269,22 +300,13 @@ body.has-audio-bar { padding-bottom: 5.5rem; }
    inset shadow rather than a real border, which would shift the text 2px
    sideways each time the highlight moved.
 
-   The wash waits until the audio is actually playing. On load the bar cues
-   itself to this page's first verse, and a full highlight sitting there would
-   read as if something were already running; the outline alone says "cued". */
-.exegesis-page .verse-block { transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s; }
-.exegesis-page .verse-block.now-playing {
-  border-color: var(--gold);
-  box-shadow: inset 3px 0 0 var(--gold), 0 0 0 1px rgba(201,168,76,0.28);
-}
-body.ab-playing .exegesis-page .verse-block.now-playing {
-  background-color: #25251e;  /* fallback for browsers without color-mix() */
-  background-color: color-mix(in srgb, var(--gold) 13%, var(--bg));
-}
-:root.light-mode body.ab-playing .exegesis-page .verse-block.now-playing {
-  background-color: #e5dbc3;
-  background-color: color-mix(in srgb, var(--gold) 16%, var(--bg));
-}
+   It used to wash the whole block, which is how the reading plan marks a
+   verse. That was dropped once words could be marked individually: a lit box
+   around a lit word made the word the harder of the two to find, and the box
+   is the less useful mark. What is left says which verse without competing --
+   it also still tells you where you are in a chapter that has no word times. */
+.exegesis-page .verse-block { transition: box-shadow 0.3s; }
+.exegesis-page .verse-block.now-playing { box-shadow: inset 3px 0 0 var(--gold); }
 
 /* Compact series nav — for a series with enough pericopes that the chips would
    wrap inside the 940px wrapper (Galatians has 12). Type size is unchanged, so
