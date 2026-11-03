@@ -10,6 +10,7 @@ Covers both series; pick one with --book (default galatians):
 
     galatians   6 chapters, text from 'Claude outputs/_tc/gal_aligned.json'
     james       5 chapters, text from 'Claude outputs/james_spans.json'
+    titus       3 chapters, text from 'Claude outputs/titus_spans.json'
 
 The file name still says galatians for the sake of the history behind it.
 
@@ -47,6 +48,7 @@ SETUP (one time):
 RUN (from the repo root):
     py align_galatians_audio.py --device cuda                    # Galatians, all
     py align_galatians_audio.py --book james --device cuda       # James, all
+    py align_galatians_audio.py --book titus --device cuda       # Titus, all
     py align_galatians_audio.py --device cuda -c 1               # just chapter 1
     py align_galatians_audio.py --device cuda --no-snap
     py align_galatians_audio.py --device cuda --single           # one model only
@@ -128,6 +130,12 @@ BOOKS = {
         "name": "James", "chapters": 5, "shape": "spans", "announced": True,
         "text": os.path.join("Claude outputs", "james_spans.json"),
         "hint": "james_spans.json holds the Byzantine text as [part of speech, word] per verse.",
+    },
+    "titus": {
+        # 3 chapters, 8m29s of audio in all -- by far the quickest book to align.
+        "name": "Titus", "chapters": 3, "shape": "spans", "announced": True,
+        "text": os.path.join("Claude outputs", "titus_spans.json"),
+        "hint": "titus_spans.json holds the Byzantine text as [part of speech, word] per verse.",
     },
 }
 

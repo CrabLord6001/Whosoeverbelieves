@@ -59,7 +59,10 @@
   .gk-essay p{margin:0 0 1rem;line-height:1.8}
   .gk-essay strong{color:var(--text);font-weight:500}
   @media (min-width:761px){
-    .gk-grid > .gk-card:only-child{grid-column:1 / -1;justify-self:center;width:calc((100% - 1.25rem)/2)}
+    /* A card with no partner on its row is centred: the only card in a grid, or
+       an odd-numbered last card (3rd of 3). Adding a 4th makes it stop matching. */
+    .gk-grid > .gk-card:only-child,
+    .gk-grid > .gk-card:last-child:nth-child(odd){grid-column:1 / -1;justify-self:center;width:calc((100% - 1.25rem)/2)}
   }
   @media (max-width:760px){
     .gk-grid{grid-template-columns:minmax(0,1fr)}
@@ -233,6 +236,16 @@
           <img src="/images/gk/greek-james.webp" alt="Papyrus 20, a third-century fragment of James 2:19&#8211;3:2" loading="lazy" decoding="async">
           <div class="gk-body">
             <h3 class="gk-title">James &#8212; Greek Exegesis</h3>
+            <div class="gk-more">
+              <span class="gk-desc">Verse-by-verse notes, parsing, and diagramming</span>
+              <span class="gk-go">Open Series &#8594;</span>
+            </div>
+          </div>
+        </a>
+        <a class="gk-card" href="/greek/titus/titus-1">
+          <img src="/images/gk/greek-titus.webp" alt="Papyrus 32, the oldest surviving manuscript of Titus &#8212; recto, Titus 1:11&#8211;15, c. AD 200" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">Titus &#8212; Greek Exegesis</h3>
             <div class="gk-more">
               <span class="gk-desc">Verse-by-verse notes, parsing, and diagramming</span>
               <span class="gk-go">Open Series &#8594;</span>

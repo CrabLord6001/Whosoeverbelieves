@@ -339,6 +339,27 @@ const searchIndex = [
     content: `James 5:12 — Above All, Do Not Swear James 5:13 — Suffering? Pray. Cheerful? Sing. James 5:14 — Call the Elders James 5:15 — The Prayer of Faith Will Save the Sick James 5:16 — Confess and Pray for One Another James 5:17 — Elijah, a Man Like Us James 5:18 — He Prayed Again James 5:19 — If Anyone Wanders from the Truth James 5:20 — Saving a Soul from Death Overall Exegesis: James 5:12–20 Introduction to James 5:12–20 The letter ends without a formal farewell — no benediction, no greetings, no travel plans. It simply stops, with its last word about restoring a brother who has wandered. That abruptness is itself instructive: James is a sermon in letter form, and its conclusion is a pastoral charge rather than an epistolary courtesy. Three movements close the letter. Verse 12 returns a final time to the tongue (1:19, 26; 3:1–12; 4:11): let your yes be yes. Verses 13–18 gather the letter's teaching on prayer, begun at 1:5–8 and resumed at 4:2–3, and apply it to every condition — suffering, cheerfulness, sickness, sin — with Elijah as the example of what an ordinary praying person can accomplish. Verses 19–20 close with the recovery of a wandering brother. For this series, v. 20 is the destination. The verb σῴζω has run through the letter — the implanted word "able to save your souls" (1:21), "can that faith save him?" (2:14), "the one able to save and to destroy" (4:12), "the prayer of faith will save the sick" (5:15) — and here it arrives at its clearest statement: turning back a sinning brother "will save a soul from death." Verse 15 and verse 20 together give the letter's own definition of what James means by salvation, and that definition has governed the Free Grace readings offered throughout this series.`
   },
   {
+    title: "Titus 1 — Greek Exegesis",
+    excerpt: "Appointing Elders, and Answering the Teachers Who Overturn Households",
+    url: "/greek/titus/titus-1",
+    tags: ["Greek Exegesis"],
+    content: `Titus 1:1 — Servant of God, Apostle of Jesus Christ Titus 1:2 — The Hope of Eternal Life Titus 1:3 — The Word Made Manifest in Preaching Titus 1:4 — A True Child in a Common Faith Titus 1:5 — Left in Crete to Set Things in Order Titus 1:6 — The Elder Above Reproach Titus 1:7 — God's Steward: Five Things He Must Not Be Titus 1:8 — Six Things He Must Be Titus 1:9 — Holding Fast the Faithful Word Titus 1:10 — Many Insubordinate, Empty Talkers Titus 1:11 — Whole Households Overturned Titus 1:12 — A Prophet of Their Own Titus 1:13 — Rebuke Them Sharply Titus 1:14 — Not Heeding Jewish Myths Titus 1:15 — To the Pure All Things Are Pure Titus 1:16 — They Profess to Know God`
+  },
+  {
+    title: "Titus 2 — Greek Exegesis",
+    excerpt: "A Household Ordered by the Grace That Has Appeared",
+    url: "/greek/titus/titus-2",
+    tags: ["Greek Exegesis"],
+    content: `Titus 2:1 — Speak What Fits Sound Doctrine Titus 2:2 — Older Men: Sound in Faith, Love and Endurance Titus 2:3 — Older Women: Reverent in Bearing Titus 2:4 — Training the Younger Women Titus 2:5 — That the Word of God Not Be Blasphemed Titus 2:6 — Younger Men: One Command Titus 2:7 — Yourself a Pattern of Good Works Titus 2:8 — Speech That Cannot Be Condemned Titus 2:9 — Servants Subject to Their Own Masters Titus 2:10 — Adorning the Doctrine of God Our Savior Titus 2:11 — The Grace of God Has Appeared Titus 2:12 — Grace Training Us to Live Now Titus 2:13 — The Blessed Hope and the Great God and Savior Titus 2:14 — He Gave Himself for Us Titus 2:15 — Speak with All Authority`
+  },
+  {
+    title: "Titus 3 — Greek Exegesis",
+    excerpt: "Not by Works of Righteousness, but According to His Mercy",
+    url: "/greek/titus/titus-3",
+    tags: ["Greek Exegesis"],
+    content: `Titus 3:1 — Subject to Rulers, Ready for Every Good Work Titus 3:2 — Gentleness Toward All Men Titus 3:3 — For We Ourselves Were Once Titus 3:4 — When the Kindness of God Appeared Titus 3:5 — Not by Works of Righteousness Titus 3:6 — Poured Out on Us Richly Titus 3:7 — Justified by His Grace, Heirs in Hope Titus 3:8 — Faithful Is the Word Titus 3:9 — Avoid Foolish Disputes Titus 3:10 — A Divisive Man After Two Warnings Titus 3:11 — Self-Condemned Titus 3:12 — Come to Me at Nicopolis Titus 3:13 — Send Zenas and Apollos On Their Way Titus 3:14 — Let Our People Learn Titus 3:15 — Grace Be with You All`
+  },
+  {
     title: "Galatians 1:1–10 — Greek Exegesis",
     excerpt: "An Apostleship Not from Men, and a Gospel That Admits No Rival",
     url: "/greek/galatians/galatians-1-1-10",
