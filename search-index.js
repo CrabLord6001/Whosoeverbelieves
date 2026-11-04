@@ -360,6 +360,62 @@ const searchIndex = [
     content: `Titus 3:1 — Subject to Rulers, Ready for Every Good Work Titus 3:2 — Gentleness Toward All Men Titus 3:3 — For We Ourselves Were Once Titus 3:4 — When the Kindness of God Appeared Titus 3:5 — Not by Works of Righteousness Titus 3:6 — Poured Out on Us Richly Titus 3:7 — Justified by His Grace, Heirs in Hope Titus 3:8 — Faithful Is the Word Titus 3:9 — Avoid Foolish Disputes Titus 3:10 — A Divisive Man After Two Warnings Titus 3:11 — Self-Condemned Titus 3:12 — Come to Me at Nicopolis Titus 3:13 — Send Zenas and Apollos On Their Way Titus 3:14 — Let Our People Learn Titus 3:15 — Grace Be with You All`
   },
   {
+    title: "1 John 1:1–2:2 — Greek Exegesis",
+    excerpt: "The Prologue, the Terms of Fellowship, and the Advocate",
+    url: "/greek/1john/1john-1-1-2-2",
+    tags: ["Greek Exegesis"],
+    content: `1 John 1:1 — That Which Was from the Beginning 1 John 1:2 — The Life Was Manifested 1 John 1:3 — Declared, So That You May Have Fellowship 1 John 1:4 — That Our Joy May Be Full 1 John 1:5 — God Is Light, and No Darkness At All 1 John 1:6 — Claiming Fellowship While Walking in Darkness 1 John 1:7 — Walking in the Light, and the Blood That Cleanses 1 John 1:8 — If We Say We Have No Sin 1 John 1:9 — If We Confess Our Sins 1 John 1:10 — Making Him a Liar 1 John 2:1 — An Advocate with the Father 1 John 2:2 — The Propitiation for the Whole World`
+  },
+  {
+    title: "1 John 2:3–17 — Greek Exegesis",
+    excerpt: "Knowing Him, Loving the Brother, and Not Loving the World",
+    url: "/greek/1john/1john-2-3-17",
+    tags: ["Greek Exegesis"],
+    content: `1 John 2:3 — By This We Know That We Know Him 1 John 2:4 — The One Who Says He Knows Him 1 John 2:5 — In Him the Love of God Has Been Perfected 1 John 2:6 — He Ought to Walk Just as He Walked 1 John 2:7 — Not a New Commandment but an Old One 1 John 2:8 — Again, a New Commandment 1 John 2:9 — Claiming the Light While Hating a Brother 1 John 2:10 — No Cause of Stumbling in Him 1 John 2:11 — The Darkness Has Blinded His Eyes 1 John 2:12 — Because Your Sins Have Been Forgiven 1 John 2:13 — Fathers, Young Men, Little Children 1 John 2:14 — You Are Strong, and the Word Abides in You 1 John 2:15 — Do Not Love the World 1 John 2:16 — All That Is in the World 1 John 2:17 — The World Is Passing Away`
+  },
+  {
+    title: "1 John 2:18–29 — Greek Exegesis",
+    excerpt: "Antichrists, the Anointing, and Confidence at His Appearing",
+    url: "/greek/1john/1john-2-18-29",
+    tags: ["Greek Exegesis"],
+    content: `1 John 2:18 — It Is the Last Hour 1 John 2:19 — They Went Out from Us 1 John 2:20 — You Have an Anointing from the Holy One 1 John 2:21 — I Wrote Because You Know the Truth 1 John 2:22 — Who Is the Liar? 1 John 2:23 — Denying the Son, Not Having the Father 1 John 2:24 — Let What You Heard Abide in You 1 John 2:25 — This Is the Promise: Eternal Life 1 John 2:26 — Concerning Those Who Deceive You 1 John 2:27 — The Anointing Teaches You 1 John 2:28 — Abide, So That We May Not Be Ashamed 1 John 2:29 — Everyone Who Practices Righteousness Is Born of Him`
+  },
+  {
+    title: "1 John 3:1–10 — Greek Exegesis",
+    excerpt: "Children of God, and the Two Sources of Conduct",
+    url: "/greek/1john/1john-3-1-10",
+    tags: ["Greek Exegesis"],
+    content: `1 John 3:1 — See What Manner of Love 1 John 3:2 — Now We Are Children of God 1 John 3:3 — Everyone Who Has This Hope 1 John 3:4 — Sin Is Lawlessness 1 John 3:5 — He Was Manifested to Take Away Sins 1 John 3:6 — Whoever Abides in Him Does Not Sin 1 John 3:7 — Let No One Deceive You 1 John 3:8 — The One Who Sins Is of the Devil 1 John 3:9 — His Seed Remains in Him 1 John 3:10 — The Children of God and the Children of the Devil`
+  },
+  {
+    title: "1 John 3:11–24 — Greek Exegesis",
+    excerpt: "Loving the Brother, and a Heart That Accuses",
+    url: "/greek/1john/1john-3-11-24",
+    tags: ["Greek Exegesis"],
+    content: `1 John 3:11 — The Message You Heard from the Beginning 1 John 3:12 — Not as Cain 1 John 3:13 — Do Not Marvel If the World Hates You 1 John 3:14 — We Have Passed from Death to Life 1 John 3:15 — No Murderer Has Eternal Life Abiding in Him 1 John 3:16 — He Laid Down His Life for Us 1 John 3:17 — Shutting Up One’s Heart 1 John 3:18 — Not in Word, but in Deed and Truth 1 John 3:19 — We Shall Assure Our Hearts Before Him 1 John 3:20 — God Is Greater Than Our Heart 1 John 3:21 — Confidence Toward God 1 John 3:22 — Whatever We Ask We Receive 1 John 3:23 — This Is His Commandment 1 John 3:24 — By the Spirit He Has Given Us`
+  },
+  {
+    title: "1 John 4:1–16 — Greek Exegesis",
+    excerpt: "Testing the Spirits, and the Love That God Is",
+    url: "/greek/1john/1john-4-1-16",
+    tags: ["Greek Exegesis"],
+    content: `1 John 4:1 — Test the Spirits 1 John 4:2 — Confessing Jesus Christ Come in the Flesh 1 John 4:3 — The Spirit of the Antichrist 1 John 4:4 — Greater Is He Who Is in You 1 John 4:5 — They Are of the World 1 John 4:6 — The Spirit of Truth and the Spirit of Error 1 John 4:7 — Love Is of God 1 John 4:8 — God Is Love 1 John 4:9 — That We Might Live Through Him 1 John 4:10 — Not That We Loved God 1 John 4:11 — We Also Ought to Love One Another 1 John 4:12 — His Love Is Perfected in Us 1 John 4:13 — He Has Given Us of His Spirit 1 John 4:14 — The Savior of the World 1 John 4:15 — Whoever Confesses That Jesus Is the Son of God 1 John 4:16 — We Have Known and Believed`
+  },
+  {
+    title: "1 John 4:17–5:5 — Greek Exegesis",
+    excerpt: "Confidence at the Judgment, and the Faith That Overcomes",
+    url: "/greek/1john/1john-4-17-5-5",
+    tags: ["Greek Exegesis"],
+    content: `1 John 4:17 — Boldness in the Day of Judgment 1 John 4:18 — Perfect Love Casts Out Fear 1 John 4:19 — We Love Him Because He First Loved Us 1 John 4:20 — Loving God and Hating a Brother 1 John 4:21 — This Commandment We Have from Him 1 John 5:1 — Everyone Who Believes Has Been Born of God 1 John 5:2 — By This We Know That We Love God’s Children 1 John 5:3 — His Commandments Are Not Burdensome 1 John 5:4 — This Is the Victory: Our Faith 1 John 5:5 — Who Is He Who Overcomes the World?`
+  },
+  {
+    title: "1 John 5:6–21 — Greek Exegesis",
+    excerpt: "The Witness, and That You May Know You Have Eternal Life",
+    url: "/greek/1john/1john-5-6-21",
+    tags: ["Greek Exegesis"],
+    content: `1 John 5:6 — He Came by Water and Blood 1 John 5:7 — There Are Three That Bear Witness 1 John 5:8 — The Spirit, the Water, and the Blood 1 John 5:9 — The Witness of God Is Greater 1 John 5:10 — He Who Does Not Believe Has Made Him a Liar 1 John 5:11 — God Has Given Us Eternal Life 1 John 5:12 — He Who Has the Son Has Life 1 John 5:13 — That You May Know That You Have Eternal Life 1 John 5:14 — If We Ask Anything According to His Will 1 John 5:15 — We Have the Requests We Have Asked 1 John 5:16 — A Sin Leading to Death 1 John 5:17 — All Unrighteousness Is Sin 1 John 5:18 — The One Born of God Keeps Himself 1 John 5:19 — The Whole World Lies in the Evil One 1 John 5:20 — This Is the True God and Eternal Life 1 John 5:21 — Keep Yourselves from Idols`
+  },
+  {
     title: "Galatians 1:1–10 — Greek Exegesis",
     excerpt: "An Apostleship Not from Men, and a Gospel That Admits No Rival",
     url: "/greek/galatians/galatians-1-1-10",
