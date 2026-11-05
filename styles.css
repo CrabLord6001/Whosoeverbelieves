@@ -1950,6 +1950,15 @@ a.hp-panel:hover { border-color: rgba(201,168,76,0.45); }
 :root.light-mode .hp-feature:hover,
 :root.light-mode .hp-tool:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
 
+/* Light mode: several card paintings are dark in themselves - Reading Plans is 81%
+   near-black pixels - so on the parchment background they read as holes in the page.
+   Brightness alone cannot fix both ends, since the multiplier needed to lift a mean of
+   54 would blow out the cards already near 150. Reducing contrast pulls values toward
+   mid-gray instead, which raises the dark cards hard and the bright ones barely:
+   Reading Plans 54 -> 73, Discipleship 79 -> 94, Greek 148 -> 152. Dark mode untouched. */
+:root.light-mode .hp-tool img,
+:root.light-mode .hp-feature img { filter: brightness(1.08) contrast(0.78); }
+
 @media (max-width: 800px) {
   .hp-lead, .hp-tools, .hp-writing, .hp-bottom { grid-template-columns: minmax(0, 1fr); }
   .hp-votd, .hp-feature, .hp-side { grid-column: auto; }

@@ -25,6 +25,16 @@
   .gk-banner{position:relative;max-width:940px;margin:0 auto;height:250px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 1.5rem 1.8rem;
     background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.55) 55%,rgba(13,17,23,.96) 100%),url("/images/gk/greek-banner.webp") center 40%/cover no-repeat,#0d1117}
   :root.light-mode .gk-banner{background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.15) 0%,rgba(8,12,20,.55) 55%,rgba(8,12,20,.85) 100%),url("/images/gk/greek-banner.webp") center 40%/cover no-repeat,#1a1a1a}
+  /* Light mode: the scrim exists so the white title reads over the art, so it belongs
+     under the title band only. Spread across the whole card it turned these into dark
+     slabs on the parchment background. Dark mode is untouched. */
+  :root.light-mode .gk-card{background:#e8e0cc;border-color:rgba(138,106,31,.3);box-shadow:0 8px 24px rgba(60,45,15,.16)}
+  :root.light-mode .gk-card img{filter:saturate(.95) brightness(1.02)}
+  :root.light-mode .gk-card::after{background:linear-gradient(180deg,rgba(8,12,20,0) 0%,rgba(8,12,20,0) 45%,rgba(8,12,20,.35) 65%,rgba(8,12,20,.82) 100%)}
+  :root.light-mode .gk-card:hover,:root.light-mode .gk-card:focus-within{border-color:rgba(138,106,31,.6);box-shadow:0 12px 32px rgba(60,45,15,.22)}
+  :root.light-mode .gk-card:hover img,:root.light-mode .gk-card:focus-within img{filter:saturate(1) brightness(1.06)}
+  /* on hover the description expands upward, so the band has to reach higher */
+  :root.light-mode .gk-card:hover::after,:root.light-mode .gk-card:focus-within::after{background:linear-gradient(180deg,rgba(8,12,20,0) 0%,rgba(8,12,20,.3) 35%,rgba(8,12,20,.9) 100%)}
   .gk-banner h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.12em;color:#fff;margin:0;text-wrap:balance;text-shadow:0 2px 12px rgba(0,0,0,.7)}
   .gk-banner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;font-weight:500;color:#f3eee4;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.75);margin:.45rem auto 0;max-width:40rem;text-wrap:balance}
   .gk-banner cite{display:block;font-style:normal;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.2em;color:#e5c97a;margin-top:.4rem;text-shadow:0 1px 2px rgba(0,0,0,.9)}
@@ -208,6 +218,18 @@
               <div class="gk-btns">
                 <a class="gk-btn" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">Read Online</a>
                 <a class="gk-btn ghost" href="../resources/basics-of-biblical-greek-notes.pdf" download>Download PDF</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="gk-card">
+          <img src="/images/gk/greek-variants.webp" alt="Medieval scribe copying the Bible" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">Textual Variant &mdash; Charts</h3>
+            <div class="gk-more">
+              <span class="gk-desc">TR, MT, and CT compared line by line</span>
+              <div class="gk-btns">
+                <a class="gk-btn" href="/greek/compare">Open the Charts</a>
               </div>
             </div>
           </div>

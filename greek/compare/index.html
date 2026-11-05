@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-05VNP2PXN4');
+  // Analytics loads just after the page finishes, so it doesn't slow the first paint.
+  window.addEventListener('load', function () { setTimeout(function () { var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4'; document.head.appendChild(s); }, 1500); });
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greek Text Comparison — Whosoever Believes</title>
+<meta name="description" content="Compare the Textus Receptus, the Byzantine Majority Text and the SBL Greek New Testament verse by verse across the whole New Testament, each with a matching English translation." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap" /></noscript>
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../greek-tools.css">
+  <!-- SEO metadata -->
+  <link rel="canonical" href="https://whosoeverbelieves.com/greek/compare" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/icon-96.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Whosoever Believes" />
+  <meta property="og:url" content="https://whosoeverbelieves.com/greek/compare" />
+  <meta property="og:title" content="Greek Text Comparison — Whosoever Believes" />
+  <meta property="og:description" content="Compare the Textus Receptus, the Byzantine Majority Text and the SBL Greek New Testament verse by verse, each with a matching English translation." />
+  <meta property="og:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Greek Text Comparison — Whosoever Believes" />
+  <meta name="twitter:description" content="Compare the Textus Receptus, the Byzantine Majority Text and the SBL Greek New Testament verse by verse." />
+  <meta name="twitter:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
+
+<style>
+  /* ── CONTROLS ─────────────────────────────────────────────────────────── */
+  .cmp-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+    padding: 0.9rem 1rem; margin-bottom: 1.25rem;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 8px; position: sticky; top: 0; z-index: 20;
+    backdrop-filter: blur(10px);
+  }
+  .cmp-bar select {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--rule); border-radius: 5px;
+    padding: 0.4rem 0.6rem; min-height: 2.4rem;
+  }
+  .cmp-bar select:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .cmp-spacer { flex: 1 1 auto; }
+  .cmp-toggle {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-mid); cursor: pointer;
+    padding: 0.45rem 0.7rem; border: 1px solid var(--rule); border-radius: 4px;
+    background: transparent; min-height: 2.2rem;
+  }
+  .cmp-toggle input { accent-color: var(--gold); margin: 0; }
+  .cmp-toggle:hover { color: var(--gold); border-color: var(--gold-faint); }
+
+  /* ── LEGEND ───────────────────────────────────────────────────────────── */
+  .cmp-legend {
+    display: flex; flex-wrap: wrap; gap: 0.9rem 1.6rem;
+    font-size: 0.82rem; color: var(--text-mid); padding: 0 0.25rem 1.25rem;
+  }
+  .cmp-legend-rule { font-style: italic; color: var(--text-faint); flex-basis: 100%; margin-bottom: -0.3rem; }
+  .cmp-legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .cmp-legend .sw { width: 1.1rem; height: 0.85rem; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── COLUMN GRID ──────────────────────────────────────────────────────── */
+  .cmp-heads { display: none; }
+  @media (min-width: 900px) {
+    .cmp-heads {
+      display: grid; grid-template-columns: 3.1rem repeat(3, minmax(0,1fr));
+      gap: 0 1.1rem; padding: 0 0.25rem 0.5rem;
+      position: sticky; top: 4.2rem; z-index: 15;
+      background: var(--bg); border-bottom: 1px solid var(--rule);
+    }
+    .cmp-heads > div {
+      font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.16em;
+      text-transform: uppercase; padding: 0.3rem 0 0.4rem;
+    }
+    .cmp-heads > div small {
+      display: block; font-family: 'EB Garamond', serif; font-size: 0.72rem;
+      letter-spacing: 0; text-transform: none; color: var(--text-faint); margin-top: 0.15rem;
+    }
+    .hd-tr  { border-top: 2px solid #c9a84c; color: #c9a84c; }
+    .hd-mt  { border-top: 2px solid #4fa89b; color: #4fa89b; }
+    .hd-sbl { border-top: 2px solid #d98141; color: #d98141; }
+    :root.light-mode .hd-tr  { border-top-color: #8a6a1f; color: #8a6a1f; }
+    :root.light-mode .hd-mt  { border-top-color: #2d7268; color: #2d7268; }
+    :root.light-mode .hd-sbl { border-top-color: #a9561c; color: #a9561c; }
+  }
+
+  .cmp-row { border-bottom: 1px solid var(--rule); padding: 0.9rem 0.25rem; }
+  .cmp-row:last-child { border-bottom: 0; }
+  .cmp-row.is-same { opacity: 0.62; }
+  .cmp-num { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); padding-top: 0.15rem; }
+  .cmp-num a { color: var(--gold); text-decoration: none; }
+  .cmp-num a:hover { text-decoration: underline; }
+
+  .cmp-cols { display: grid; gap: 1.1rem; }
+  @media (min-width: 900px) {
+    .cmp-row { display: grid; grid-template-columns: 3.1rem minmax(0,1fr); gap: 0 1.1rem; }
+    .cmp-cols { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0 1.1rem; }
+  }
+
+  .cmp-cell { min-width: 0; }
+  .cmp-label {
+    display: none; font-family: 'Cinzel', serif; font-size: 0.55rem;
+    letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.25rem;
+  }
+  @media (max-width: 899px) {
+    .cmp-label { display: inline-block; border-top: 2px solid; padding-top: 0.25rem; }
+    .cmp-cell.c-tr  .cmp-label { border-color: #c9a84c; color: #c9a84c; }
+    .cmp-cell.c-mt  .cmp-label { border-color: #4fa89b; color: #4fa89b; }
+    .cmp-cell.c-sbl .cmp-label { border-color: #d98141; color: #d98141; }
+    :root.light-mode .cmp-cell.c-tr  .cmp-label { border-color: #8a6a1f; color: #8a6a1f; }
+    :root.light-mode .cmp-cell.c-mt  .cmp-label { border-color: #2d7268; color: #2d7268; }
+    :root.light-mode .cmp-cell.c-sbl .cmp-label { border-color: #a9561c; color: #a9561c; }
+  }
+
+  .grk {
+    font-family: 'Gentium Book Plus', 'EB Garamond', serif;
+    font-size: 1.06rem; line-height: 1.95; color: var(--text);
+  }
+  .cmp-missing { font-family: 'EB Garamond', serif; font-style: italic; font-size: 0.9rem; }
+  .c-tr  .cmp-missing { color: #c9a84c; }
+  .c-mt  .cmp-missing { color: #4fa89b; }
+  .c-sbl .cmp-missing { color: #d98141; }
+
+  /* ── DIFFERENCE MARKS — highlighted only where this edition stands alone ─ */
+  .dT, .dM, .dS { border-radius: 2px; padding: 0 0.08em; box-shadow: inset 0 -2px 0 currentColor; }
+  .dT { color: #c9a84c; background: rgba(201,168,76,0.16); }
+  .dM { color: #4fa89b; background: rgba(79,168,155,0.16); }
+  .dS { color: #d98141; background: rgba(217,129,65,0.16); }
+  .dT, .dM, .dS { -webkit-text-fill-color: var(--text); }
+  :root.light-mode .dT { color: #8a6a1f; background: rgba(138,106,31,0.17); }
+  :root.light-mode .dM { color: #2d7268; background: rgba(45,114,104,0.15); }
+  :root.light-mode .dS { color: #a9561c; background: rgba(169,86,28,0.15); }
+  .d1 { border-bottom: 1px dotted var(--text-faint); }
+  .dT[data-tip], .dM[data-tip], .dS[data-tip] { cursor: help; }
+
+  /* shared gloss tooltip (hover on desktop, tap on touch) */
+  #cmp-tip {
+    position: absolute; z-index: 60; max-width: 19rem;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--glass-border); border-radius: 6px;
+    padding: 0.5rem 0.7rem; font-family: 'EB Garamond', serif;
+    font-size: 0.88rem; line-height: 1.5; pointer-events: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45); display: none;
+  }
+  #cmp-tip.on { display: block; }
+  #cmp-tip .tip-gk {
+    font-family: 'Gentium Book Plus','EB Garamond',serif;
+    color: var(--gold); display: block; margin-bottom: 0.1rem;
+  }
+  #cmp-tip .tip-code {
+    display: block; margin-top: 0.3rem; padding-top: 0.3rem;
+    border-top: 1px solid var(--rule);
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+  :root.light-mode #cmp-tip { box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
+  body.hide-minor .d1 { border-bottom: 0; }
+
+  /* gap: this edition lacks words the others have */
+  .gap {
+    display: inline-block; width: 0.95em; text-align: center;
+    font-family: 'Cinzel', serif; font-weight: 600; cursor: help;
+    border-bottom: 2px solid currentColor; line-height: 1.1; margin: 0 0.1em;
+  }
+  .c-tr  .gap { color: #c9a84c; }
+  .c-mt  .gap { color: #4fa89b; }
+  .c-sbl .gap { color: #d98141; }
+  :root.light-mode .c-tr .gap { color: #8a6a1f; }
+  :root.light-mode .c-mt .gap { color: #2d7268; }
+  :root.light-mode .c-sbl .gap { color: #a9561c; }
+
+  /* ── PER-COLUMN ENGLISH ───────────────────────────────────────────────── */
+  .cmp-en {
+    font-family: 'EB Garamond', serif; font-size: 0.9rem; line-height: 1.65;
+    color: var(--text-mid); margin-top: 0.5rem; padding: 0.45rem 0.7rem;
+    background: var(--glass); border-left: 2px solid var(--rule); border-radius: 0 4px 4px 0;
+  }
+  .cmp-en b {
+    font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-faint); display: block;
+    margin-bottom: 0.15rem; font-weight: 400;
+  }
+  body:not(.show-en) .cmp-en { display: none; }
+
+  /* ── STATUS BADGES ────────────────────────────────────────────────────── */
+  .cmp-note { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
+  .cmp-badge {
+    font-family: 'Cinzel', serif; font-size: 0.52rem; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 0.22rem 0.55rem; border-radius: 3px;
+    border: 1px solid; white-space: nowrap;
+  }
+  .b-tr  { color: #c9a84c; border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.1); }
+  .b-abs { color: #d98141; border-color: rgba(217,129,65,0.5); background: rgba(217,129,65,0.1); }
+  .b-num { color: #9ab6d8; border-color: rgba(120,150,190,0.45); background: rgba(120,150,190,0.1); }
+  .b-rel { color: #b9a6d6; border-color: rgba(150,125,195,0.45); background: rgba(150,125,195,0.1); }
+  .b-dbl { color: var(--text-mid); border-color: var(--rule); background: var(--glass); }
+  :root.light-mode .b-tr  { color: #6d5112; }
+  :root.light-mode .b-abs { color: #a9561c; }
+  :root.light-mode .b-num { color: #2f5680; }
+  :root.light-mode .b-rel { color: #553d82; }
+  .cmp-note em { font-family: 'EB Garamond', serif; font-size: 0.85rem; color: var(--text-mid); font-style: italic; }
+
+  /* ── STATE / SOURCES ──────────────────────────────────────────────────── */
+  .cmp-status { font-family: 'EB Garamond', serif; color: var(--text-mid); padding: 2rem 0.25rem; font-style: italic; }
+  .cmp-count {
+    font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-faint); padding: 0 0.25rem 0.9rem;
+  }
+  .cmp-sources {
+    margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
+    font-family: 'EB Garamond', serif; font-size: 0.86rem; line-height: 1.75; color: var(--text-faint);
+  }
+  .cmp-sources h3 {
+    font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.7rem;
+  }
+  .cmp-sources ul { list-style: none; margin: 0 0 0.9rem; }
+  .cmp-sources li { padding: 0.22rem 0; }
+  .cmp-sources a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+  .cmp-sources a:hover { color: var(--gold-light); }
+  .cmp-key {
+    display: grid; gap: 1.1rem; margin: 0.9rem 0 1.2rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .cmp-key > div {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 6px; padding: 0.75rem 0.9rem;
+  }
+  .cmp-key b {
+    font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.4rem;
+    font-weight: 400;
+  }
+  .cmp-key span { display: block; font-size: 0.83rem; line-height: 1.6; color: var(--text-mid); }
+  .cmp-key .cmp-key-eg { margin-top: 0.4rem; color: var(--text-faint); font-style: italic; }
+  .cmp-key code {
+    font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.06em;
+    color: var(--gold-light); font-style: normal;
+  }
+  :root.light-mode .cmp-key code { color: var(--gold); }
+</style>
+</head>
+
+<body class="page-article hide-minor show-en">
+<div class="site-wrapper">
+
+  <!-- NAV -->
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Small Groups</button>
+      <div class="nav-drop-menu">
+        <a href="/studies/titus">Titus Study</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+  <!-- BANNER -->
+  <div class="gk-banner">
+    <h1>Greek Text Comparison</h1>
+    <p>Three printed editions of the Greek New Testament, side by side, each with the English translation made from its own text.</p>
+  </div>
+
+  <main class="gk-main">
+
+    <div class="cmp-bar">
+      <label class="visually-hidden" for="cmp-book">Book</label>
+      <select id="cmp-book" aria-label="Book"></select>
+      <label class="visually-hidden" for="cmp-ch">Chapter</label>
+      <select id="cmp-ch" aria-label="Chapter"></select>
+      <span class="cmp-spacer"></span>
+      <label class="cmp-toggle"><input type="checkbox" id="t-sig"> Differences only</label>
+      <label class="cmp-toggle"><input type="checkbox" id="t-minor"> Show minor</label>
+      <label class="cmp-toggle"><input type="checkbox" id="t-en" checked> English</label>
+    </div>
+
+    <div class="cmp-legend">
+      <span class="cmp-legend-rule">A word is highlighted only where that edition&rsquo;s reading is found in neither of the other two:</span>
+      <span><i class="sw" style="background:rgba(201,168,76,0.16);box-shadow:inset 0 -2px 0 #c9a84c"></i> Only the Textus Receptus reads this</span>
+      <span><i class="sw" style="background:rgba(79,168,155,0.16);box-shadow:inset 0 -2px 0 #4fa89b"></i> Only the Majority Text</span>
+      <span><i class="sw" style="background:rgba(217,129,65,0.16);box-shadow:inset 0 -2px 0 #d98141"></i> Only the SBLGNT</span>
+      <span><b style="font-family:Cinzel,serif;border-bottom:2px solid currentColor">&#8249;&#8250;</b> Words the other editions have here, and this one does not</span>
+      <span><i class="sw" style="border-bottom:1px dotted var(--text-faint);height:0.6rem"></i> Minor &mdash; word order or article only</span>
+      <span class="cmp-legend-rule" style="margin-top:0.2rem">Hover a highlighted word &mdash; or tap it on a phone &mdash; for its dictionary form and meaning.</span>
+    </div>
+
+    <div class="cmp-count" id="cmp-count"></div>
+
+    <div class="cmp-heads">
+      <div></div>
+      <div class="hd-tr">Textus Receptus<small>Scrivener 1894 &middot; English: KJV</small></div>
+      <div class="hd-mt">Majority Text<small>Robinson&ndash;Pierpont 2018 &middot; English: WEB</small></div>
+      <div class="hd-sbl">SBLGNT<small>Holmes 2010 &middot; English: ASV</small></div>
+    </div>
+
+    <div id="cmp-body"><div class="cmp-status">Loading&hellip;</div></div>
+
+    <div class="cmp-sources">
+      <h3>About these texts</h3>
+      <p>Each column is a printed edition, not a single manuscript. Spelling conventions that carry no difference in meaning &mdash; the movable nu (<span class="grk" style="font-size:1rem">&#7952;&#947;&#941;&#957;&#957;&#951;&#963;&#949;</span> / <span class="grk" style="font-size:1rem">&#7952;&#947;&#941;&#957;&#957;&#951;&#963;&#949;&#957;</span>), elision, accents, capitalization, and the spelling of names such as <span class="grk" style="font-size:1rem">&#916;&#945;&#946;&#943;&#948;</span> / <span class="grk" style="font-size:1rem">&#916;&#945;&#965;&#943;&#948;</span> &mdash; are treated as the same reading and are not marked.</p>
+      <ul>
+        <li><strong>Textus Receptus</strong> &mdash; F. H. A. Scrivener, <em>The New Testament in the Original Greek according to the Text followed in the Authorised Version</em> (Cambridge, 1894). Public domain.</li>
+        <li><strong>Byzantine Majority Text</strong> &mdash; Maurice A. Robinson and William G. Pierpont, <em>The New Testament in the Original Greek: Byzantine Textform</em> (2018). Released into the public domain by the editors.</li>
+        <li><strong>SBLGNT</strong> &mdash; Michael W. Holmes, ed., <em>The Greek New Testament: SBL Edition</em> (Society of Biblical Literature and Logos Bible Software, 2010). Licensed <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC BY 4.0</a>.</li>
+      </ul>
+
+      <h3>Reading the parsing codes</h3>
+      <p>Hovering a highlighted word shows its dictionary form, its meaning, and a parsing code.
+      The three editions here ship two different coding systems &mdash; Robinson&rsquo;s and MorphGNT&rsquo;s
+      &mdash; which disagree on real points, so both have been converted to the one scheme below.
+      The code is often the whole story behind a variant: roughly half of the differences between
+      these texts leave the English unchanged, and in those the parsing is what actually differs.</p>
+      <div class="cmp-key">
+        <div>
+          <b>Part of speech</b>
+          <span>N noun &middot; V verb &middot; Adj adjective &middot; Art article &middot; Adv adverb</span>
+          <span>Prep preposition &middot; Conj conjunction &middot; Prtcl particle &middot; Cond conditional</span>
+          <span>PPro personal &middot; RelPro relative &middot; DemPro demonstrative &middot; IntPro interrogative</span>
+          <span>IndefPro indefinite &middot; RefPro reflexive &middot; PossPro possessive &middot; Interj interjection</span>
+        </div>
+        <div>
+          <b>Case &middot; Number &middot; Gender</b>
+          <span>N nominative &middot; G genitive &middot; D dative &middot; A accusative &middot; V vocative</span>
+          <span>S singular &middot; P plural</span>
+          <span>M masculine &middot; F feminine &middot; N neuter</span>
+          <span class="cmp-key-eg">So <code>N-ASF</code> is a noun, accusative singular feminine.</span>
+        </div>
+        <div>
+          <b>Verbs: tense &middot; voice &middot; mood</b>
+          <span>P present &middot; I imperfect &middot; F future &middot; A aorist &middot; R perfect &middot; L pluperfect</span>
+          <span>A active &middot; M middle &middot; P passive</span>
+          <span>I indicative &middot; S subjunctive &middot; M imperative &middot; O optative &middot; N infinitive &middot; P participle</span>
+          <span class="cmp-key-eg">A finite verb then carries person and number (<code>V-PAI-3S</code>,
+          present active indicative, third person singular); a participle or infinitive carries case,
+          number and gender instead (<code>V-RPP-ASF</code>, perfect passive participle, accusative
+          singular feminine).</span>
+        </div>
+      </div>
+
+      <h3>About the English</h3>
+      <p>Each column carries a translation made from its own family of text, so the English moves with the Greek above it rather than against it. The fit is not equally tight in all three. The <strong>King James Version</strong> sits closest: Scrivener assembled his Greek text to match the readings the KJV translators followed, so the two correspond almost by construction. The <strong>World English Bible</strong> New Testament rests on the Majority Text. The <strong>American Standard Version</strong> (1901) was made from the critical text of its own day, not from the SBLGNT, so it reflects the critical tradition broadly but will not follow every editorial decision Holmes made. All three are public domain.</p>
+      <p>Word meanings shown on hover come from the dictionary of Greek words in James Strong&rsquo;s <em>Exhaustive Concordance</em> (1890), which is in the public domain; the machine-readable edition is maintained by <a href="https://github.com/openscriptures/strongs" rel="noopener" target="_blank">Open Scriptures</a>. A gloss gives the general range of a word&rsquo;s meaning, not the sense it carries in this particular verse, and it is shown only for nouns, verbs, adjectives and adverbs &mdash; for articles, pronouns and prepositions only the dictionary form appears, because Strong&rsquo;s renderings for those are too broad to be useful.</p>
+      <p>The Nestle&ndash;Aland text is not shown. It is under copyright and cannot be reproduced in full; the SBLGNT stands here as the critical text.</p>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+(function () {
+  var man = null, cache = {}, enCache = {};
+  var elBook = document.getElementById('cmp-book'),
+      elCh   = document.getElementById('cmp-ch'),
+      elBody = document.getElementById('cmp-body'),
+      elCount= document.getElementById('cmp-count');
+
+  var BADGE = {
+    'tr-only':    ['b-tr',  'TR only'],
+    'absent-sbl': ['b-abs', 'Not in SBLGNT'],
+    'versediv':   ['b-num', 'Numbering'],
+    'reloc':      ['b-rel', 'Relocated'],
+    'asym':       ['b-abs', 'Not in all three']
+  };
+  var TITLE = {
+    'T': 'Only the Textus Receptus reads this',
+    'M': 'Only the Majority Text reads this',
+    'S': 'Only the SBLGNT reads this',
+    '1': 'Minor — word order or article only'
+  };
+  var GAPTIP = 'The other editions have words here that this one does not';
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  }
+
+  /* marks: one digit/letter per whitespace token. gaps: token indices to prefix with a marker. */
+  function render(text, marks, gaps, tips) {
+    if (!text) return '';
+    var parts = text.split(/\s+/), g = {}, out = [], i;
+    if (gaps) for (i = 0; i < gaps.length; i++) g[gaps[i]] = 1;
+    for (i = 0; i < parts.length; i++) {
+      if (g[i]) out.push('<span class="gap" title="' + GAPTIP + '">‹›</span>');
+      var m = marks && marks[i] ? marks[i] : '0';
+      if (m === '0') { out.push(esc(parts[i])); continue; }
+      var tip = tips && tips[i];
+      /* when our own tooltip handles the word, omit title= so the browser's
+         native tooltip does not stack a second box on top of it */
+      /* no tooltip to offer? then no title either - the color and the column
+         heading already say which edition this reading belongs to */
+      out.push('<span class="d' + m + '"' +
+        (tip ? ' data-tip="' + esc(tip) + '" tabindex="0"' : '') +
+        '>' + esc(parts[i]) + '</span>');
+    }
+    if (g[parts.length]) out.push('<span class="gap" title="' + GAPTIP + '">‹›</span>');
+    return out.join(' ');
+  }
+
+  function cell(cls, label, text, marks, gaps, tips, enLabel, enText) {
+    var inner = text
+      ? '<div class="grk">' + render(text, marks, gaps, tips) + '</div>'
+      : '<div class="cmp-missing">&mdash; not present in this edition &mdash;</div>';
+    var en = enText ? '<div class="cmp-en"><b>' + enLabel + '</b>' + esc(enText) + '</div>' : '';
+    return '<div class="cmp-cell ' + cls + '"><div class="cmp-label">' + label + '</div>' + inner + en + '</div>';
+  }
+
+  function draw() {
+    var b = elBook.value, c = elCh.value;
+    var data = cache[b + '.' + c];
+    if (!data) return;
+    var sigOnly = document.getElementById('t-sig').checked;
+    var en = enCache[b] || {};
+    var ci = data.c - 1;
+    function verseEn(which, v) {
+      var t = en[which];
+      return (t && t[ci] && t[ci][v - 1]) ? t[ci][v - 1] : '';
+    }
+    var html = [], shown = 0, sig = 0;
+
+    data.vv.forEach(function (r) {
+      if (r.t === 2) sig++;
+      if (sigOnly && r.t !== 2) return;
+      shown++;
+      var row = '<div class="cmp-row' + (r.t === 0 ? ' is-same' : '') + '" id="v' + r.v + '">';
+      row += '<div class="cmp-num"><a href="#v' + r.v + '">' + r.v + '</a></div>';
+      row += '<div><div class="cmp-cols">';
+      row += cell('c-tr',  'Textus Receptus', r.tr,  r.trm,  r.trg,  r.trt,  'King James Version',        verseEn('kjv', r.v));
+      row += cell('c-mt',  'Majority Text',   r.mt,  r.mtm,  r.mtg,  r.mtt,  'World English Bible',       verseEn('web', r.v));
+      row += cell('c-sbl', 'SBLGNT',          r.sbl, r.sblm, r.sblg, r.sblt, 'American Standard Version', verseEn('asv', r.v));
+      row += '</div>';
+
+      var notes = [];
+      if (r.s && BADGE[r.s]) notes.push('<i class="cmp-badge ' + BADGE[r.s][0] + '">' + BADGE[r.s][1] + '</i>');
+      if (r.db) notes.push('<i class="cmp-badge b-dbl">SBLGNT double brackets</i>');
+      if (r.n) notes.push('<em>' + esc(r.n) + '</em>');
+      if (notes.length) row += '<div class="cmp-note">' + notes.join(' ') + '</div>';
+      row += '</div></div>';
+      html.push(row);
+    });
+
+    elCount.textContent = sig + ' of ' + data.vv.length +
+      ' verses in this chapter carry a difference that may affect meaning' +
+      (sigOnly ? ' · showing those only' : '');
+    elBody.innerHTML = html.length ? html.join('') :
+      '<div class="cmp-status">No differences affecting meaning in this chapter.</div>';
+  }
+
+  function loadEn(b) {
+    if (enCache[b]) return Promise.resolve();
+    var entry = man.books.filter(function (x) { return x.b === b; })[0];
+    if (!entry) return Promise.resolve();
+    var want = [['kjv', '/bible/kjv/'], ['web', '/bible/web/'], ['asv', '/bible/asv/']];
+    return Promise.all(want.map(function (w) {
+      return fetch(w[1] + entry.en + '.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return [w[0], j && j.c]; })
+        .catch(function () { return [w[0], null]; });
+    })).then(function (res) {
+      var o = {};
+      res.forEach(function (p) { if (p[1]) o[p[0]] = p[1]; });
+      enCache[b] = o;
+    });
+  }
+
+  function loadCh() {
+    var b = elBook.value, c = elCh.value, key = b + '.' + c;
+    elBody.innerHTML = '<div class="cmp-status">Loading&hellip;</div>';
+    var need = cache[key]
+      ? Promise.resolve(cache[key])
+      : fetch('data/' + b + '/' + c + '.json').then(function (r) {
+          if (!r.ok) throw new Error('missing');
+          return r.json();
+        }).then(function (j) { cache[key] = j; return j; });
+    Promise.all([need, loadEn(b)]).then(draw).catch(function () {
+      elBody.innerHTML = '<div class="cmp-status">That chapter could not be loaded.</div>';
+    });
+  }
+
+  function fillCh() {
+    var entry = man.books.filter(function (x) { return x.b === elBook.value; })[0];
+    elCh.innerHTML = '';
+    for (var i = 1; i <= entry.ch; i++) {
+      var o = document.createElement('option');
+      o.value = i; o.textContent = 'Chapter ' + i;
+      elCh.appendChild(o);
+    }
+  }
+
+  function applyHash() {
+    var m = (location.hash || '').replace(/^#/, '').match(/^([1-3]?[A-Za-z]+)\.(\d+)$/);
+    if (!m) return false;
+    var hit = man.books.filter(function (x) { return x.b.toLowerCase() === m[1].toLowerCase(); })[0];
+    if (!hit) return false;
+    elBook.value = hit.b; fillCh();
+    elCh.value = Math.min(parseInt(m[2], 10), hit.ch);
+    return true;
+  }
+
+  fetch('data/manifest.json').then(function (r) { return r.json(); }).then(function (j) {
+    man = j;
+    man.books.forEach(function (x) {
+      var o = document.createElement('option');
+      o.value = x.b; o.textContent = x.name;
+      elBook.appendChild(o);
+    });
+    if (!applyHash()) { elBook.value = man.books[0].b; fillCh(); }
+    loadCh();
+  }).catch(function () {
+    elBody.innerHTML = '<div class="cmp-status">The comparison data could not be loaded.</div>';
+  });
+
+  elBook.addEventListener('change', function () { fillCh(); loadCh(); });
+  elCh.addEventListener('change', loadCh);
+  document.getElementById('t-sig').addEventListener('change', draw);
+  document.getElementById('t-minor').addEventListener('change', function () {
+    document.body.classList.toggle('hide-minor', !this.checked);
+  });
+  document.getElementById('t-en').addEventListener('change', function () {
+    document.body.classList.toggle('show-en', this.checked);
+  });
+  window.addEventListener('hashchange', function () { if (applyHash()) loadCh(); });
+
+  /* ── gloss tooltip ─────────────────────────────────────────────────── */
+  var tipEl = document.createElement('div');
+  tipEl.id = 'cmp-tip';
+  document.body.appendChild(tipEl);
+  var touch = window.matchMedia('(hover: none)').matches;
+
+  function showTip(el) {
+    var t = el.getAttribute('data-tip');
+    if (!t) return;
+    var parts = t.split(' \u2014 ');
+    var body = parts[1] || '', code = '';
+    var dot = body.lastIndexOf(' \u00b7 ');
+    if (dot > -1) { code = body.slice(dot + 3); body = body.slice(0, dot); }
+    else if (!parts[1]) {
+      var d2 = parts[0].lastIndexOf(' \u00b7 ');
+      if (d2 > -1) { code = parts[0].slice(d2 + 3); parts[0] = parts[0].slice(0, d2); }
+    }
+    tipEl.innerHTML = '<span class="tip-gk">' + esc(parts[0]) + '</span>' + esc(body) +
+      (code ? '<span class="tip-code">' + esc(code) + '</span>' : '');
+    tipEl.classList.add('on');
+    var r = el.getBoundingClientRect();
+    var top = window.scrollY + r.bottom + 6;
+    var left = window.scrollX + r.left;
+    var w = tipEl.offsetWidth;
+    if (left + w > window.scrollX + document.documentElement.clientWidth - 10)
+      left = window.scrollX + document.documentElement.clientWidth - w - 10;
+    if (left < 6) left = 6;
+    tipEl.style.top = top + 'px';
+    tipEl.style.left = left + 'px';
+  }
+  function hideTip() { tipEl.classList.remove('on'); }
+
+  elBody.addEventListener('mouseover', function (e) {
+    if (touch) return;
+    var el = e.target.closest && e.target.closest('[data-tip]');
+    if (el) showTip(el);
+  });
+  elBody.addEventListener('mouseout', function (e) {
+    if (touch) return;
+    if (e.target.closest && e.target.closest('[data-tip]')) hideTip();
+  });
+  elBody.addEventListener('focusin', function (e) {
+    var el = e.target.closest && e.target.closest('[data-tip]');
+    if (el) showTip(el);
+  });
+  elBody.addEventListener('focusout', hideTip);
+  elBody.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('[data-tip]');
+    if (el) { showTip(el); e.stopPropagation(); } else hideTip();
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('[data-tip]')) hideTip();
+  });
+  window.addEventListener('scroll', hideTip, { passive: true });
+})();
+</script>
+<script src="../../scripts.js"></script>
+</body>
+</html>
