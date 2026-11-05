@@ -54,10 +54,6 @@
   .gk-more{display:flex;flex-direction:column;gap:.2rem;max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease}
   .gk-desc{color:#e2dccf;font-size:1.02rem;max-width:34rem}
   .gk-go{margin-top:.35rem;color:#e5c97a;font-size:1rem}
-  .gk-btns{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.6rem}
-  .gk-btn{display:inline-flex;align-items:center;min-height:40px;padding:0 1.1rem;border-radius:3px;font-family:'Cinzel',serif;font-size:.64rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;background:#c9a84c;color:#0d1117;border:1px solid #c9a84c}
-  .gk-btn.ghost{background:rgba(8,12,20,.35);color:#f1ece2;border-color:rgba(255,255,255,.35)}
-  .gk-btn:hover{background:#e5c97a;border-color:#e5c97a;color:#0d1117}
   .gk-card:hover img,.gk-card:focus-within img{transform:scale(1.04);filter:saturate(.95) brightness(.9)}
   .gk-card:hover::after,.gk-card:focus-within::after{background:linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.92) 100%)}
   .gk-card:hover .gk-more,.gk-card:focus-within .gk-more{max-height:10rem;opacity:1}
@@ -209,31 +205,26 @@
         <h2 id="gk-res-h">Koine Greek Resources</h2>
       </div>
       <div class="gk-grid">
-        <div class="gk-card">
+        <a class="gk-card" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">
           <img src="/images/gk/greek-notes.webp" alt="Gerrit Dou, A Scholar Sharpening His Quill" loading="lazy" decoding="async">
           <div class="gk-body">
             <h3 class="gk-title">Basics of Biblical Greek - Notes</h3>
             <div class="gk-more">
               <span class="gk-desc">My personal notes condensed from first year Greek</span>
-              <div class="gk-btns">
-                <a class="gk-btn" href="../resources/basics-of-biblical-greek-notes.pdf" target="_blank" rel="noopener">Read Online</a>
-                <a class="gk-btn ghost" href="../resources/basics-of-biblical-greek-notes.pdf" download>Download PDF</a>
-              </div>
+              <span class="gk-go">Read Online &#8594;</span>
             </div>
           </div>
-        </div>
-        <div class="gk-card">
+        </a>
+        <a class="gk-card" href="/greek/compare">
           <img src="/images/gk/greek-variants.webp" alt="Medieval scribe copying the Bible" loading="lazy" decoding="async">
           <div class="gk-body">
             <h3 class="gk-title">Textual Variant &mdash; Charts</h3>
             <div class="gk-more">
               <span class="gk-desc">TR, MT, and CT compared line by line</span>
-              <div class="gk-btns">
-                <a class="gk-btn" href="/greek/compare">Open the Charts</a>
-              </div>
+              <span class="gk-go">Open the Charts &#8594;</span>
             </div>
           </div>
-        </div>
+        </a>
       </div>
     </section>
 
