@@ -229,6 +229,8 @@
     font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--gold); margin-bottom: 0.7rem;
   }
+  .cmp-sources p { margin: 0 0 1rem; }
+  .cmp-sources p:last-child { margin-bottom: 0; }
   .cmp-sources ul { list-style: none; margin: 0 0 0.9rem; }
   .cmp-sources li { padding: 0.22rem 0; }
   .cmp-sources a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
@@ -247,12 +249,22 @@
     font-weight: 400;
   }
   .cmp-key span { display: block; font-size: 0.83rem; line-height: 1.6; color: var(--text-mid); }
+  .cmp-key ul {
+    list-style: none; margin: 0 0 0.45rem; padding: 0;
+    columns: 2; column-gap: 1rem;
+    font-size: 0.83rem; line-height: 1.6; color: var(--text-mid);
+  }
+  .cmp-key ul:last-of-type { margin-bottom: 0; }
+  .cmp-key li { break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid; }
+  @media (max-width: 420px) { .cmp-key ul { columns: 1; } }
   .cmp-key .cmp-key-eg { margin-top: 0.4rem; color: var(--text-faint); font-style: italic; }
-  .cmp-key code {
+  .cmp-key-note { color: var(--text-faint); font-style: italic; }
+  .cmp-key code, .cmp-key-note code {
     font-family: 'Cinzel', serif; font-size: 0.72rem; letter-spacing: 0.06em;
     color: var(--gold-light); font-style: normal;
   }
-  :root.light-mode .cmp-key code { color: var(--gold); }
+  :root.light-mode .cmp-key code,
+  :root.light-mode .cmp-key-note code { color: var(--gold); }
 </style>
 </head>
 
@@ -354,29 +366,75 @@
       <div class="cmp-key">
         <div>
           <b>Part of speech</b>
-          <span>N noun &middot; V verb &middot; Adj adjective &middot; Art article &middot; Adv adverb</span>
-          <span>Prep preposition &middot; Conj conjunction &middot; Prtcl particle &middot; Cond conditional</span>
-          <span>PPro personal &middot; RelPro relative &middot; DemPro demonstrative &middot; IntPro interrogative</span>
-          <span>IndefPro indefinite &middot; RefPro reflexive &middot; PossPro possessive &middot; Interj interjection</span>
+          <ul>
+            <li>N: noun</li>
+            <li>V: verb</li>
+            <li>Adj: adjective</li>
+            <li>Art: article</li>
+            <li>Adv: adverb</li>
+            <li>Prep: preposition</li>
+            <li>Conj: conjunction</li>
+            <li>Prtcl: particle</li>
+            <li>Cond: conditional</li>
+            <li>PPro: personal</li>
+            <li>RelPro: relative</li>
+            <li>DemPro: demonstrative</li>
+            <li>IntPro: interrogative</li>
+            <li>IndefPro: indefinite</li>
+            <li>RefPro: reflexive</li>
+            <li>PossPro: possessive</li>
+            <li>Interj: interjection</li>
+          </ul>
         </div>
         <div>
           <b>Case &middot; Number &middot; Gender</b>
-          <span>N nominative &middot; G genitive &middot; D dative &middot; A accusative &middot; V vocative</span>
-          <span>S singular &middot; P plural</span>
-          <span>M masculine &middot; F feminine &middot; N neuter</span>
-          <span class="cmp-key-eg">So <code>N-ASF</code> is a noun, accusative singular feminine.</span>
+          <ul>
+            <li>N: nominative</li>
+            <li>G: genitive</li>
+            <li>D: dative</li>
+            <li>A: accusative</li>
+            <li>V: vocative</li>
+          </ul>
+          <ul>
+            <li>S: singular</li>
+            <li>P: plural</li>
+          </ul>
+          <ul>
+            <li>M: masculine</li>
+            <li>F: feminine</li>
+            <li>N: neuter</li>
+          </ul>
         </div>
         <div>
           <b>Verbs: tense &middot; voice &middot; mood</b>
-          <span>P present &middot; I imperfect &middot; F future &middot; A aorist &middot; R perfect &middot; L pluperfect</span>
-          <span>A active &middot; M middle &middot; P passive</span>
-          <span>I indicative &middot; S subjunctive &middot; M imperative &middot; O optative &middot; N infinitive &middot; P participle</span>
-          <span class="cmp-key-eg">A finite verb then carries person and number (<code>V-PAI-3S</code>,
-          present active indicative, third person singular); a participle or infinitive carries case,
-          number and gender instead (<code>V-RPP-ASF</code>, perfect passive participle, accusative
-          singular feminine).</span>
+          <ul>
+            <li>P: present</li>
+            <li>I: imperfect</li>
+            <li>F: future</li>
+            <li>A: aorist</li>
+            <li>R: perfect</li>
+            <li>L: pluperfect</li>
+          </ul>
+          <ul>
+            <li>A: active</li>
+            <li>M: middle</li>
+            <li>P: passive</li>
+          </ul>
+          <ul>
+            <li>I: indicative</li>
+            <li>S: subjunctive</li>
+            <li>M: imperative</li>
+            <li>O: optative</li>
+            <li>N: infinitive</li>
+            <li>P: participle</li>
+          </ul>
         </div>
       </div>
+      <p class="cmp-key-note">So <code>N-ASF</code> is a noun, accusative singular feminine.
+      A finite verb then carries person and number (<code>V-PAI-3S</code>, present active
+      indicative, third person singular); a participle or infinitive carries case, number and
+      gender instead (<code>V-RPP-ASF</code>, perfect passive participle, accusative singular
+      feminine).</p>
 
       <h3>About the English</h3>
       <p>Each column carries a translation made from its own family of text, so the English moves with the Greek above it rather than against it. The fit is not equally tight in all three. The <strong>King James Version</strong> sits closest: Scrivener assembled his Greek text to match the readings the KJV translators followed, so the two correspond almost by construction. The <strong>World English Bible</strong> New Testament rests on the Majority Text. The <strong>American Standard Version</strong> (1901) was made from the critical text of its own day, not from the SBLGNT, so it reflects the critical tradition broadly but will not follow every editorial decision Holmes made. All three are public domain.</p>
