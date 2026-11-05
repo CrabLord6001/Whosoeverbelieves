@@ -12,7 +12,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Greek Text Comparison — Whosoever Believes</title>
+<title>Textual Variant Charts — Whosoever Believes</title>
 <meta name="description" content="Compare the Textus Receptus, the Byzantine Majority Text and the SBL Greek New Testament verse by verse across the whole New Testament, each with a matching English translation." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,11 +30,11 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Whosoever Believes" />
   <meta property="og:url" content="https://whosoeverbelieves.com/greek/compare" />
-  <meta property="og:title" content="Greek Text Comparison — Whosoever Believes" />
+  <meta property="og:title" content="Textual Variant Charts — Whosoever Believes" />
   <meta property="og:description" content="Compare the Textus Receptus, the Byzantine Majority Text and the SBL Greek New Testament verse by verse, each with a matching English translation." />
   <meta property="og:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Greek Text Comparison — Whosoever Believes" />
+  <meta name="twitter:title" content="Textual Variant Charts — Whosoever Believes" />
   <meta name="twitter:description" content="Compare the Textus Receptus, the Byzantine Majority Text and the SBL Greek New Testament verse by verse." />
   <meta name="twitter:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
 
@@ -67,10 +67,10 @@
 
   /* ── LEGEND ───────────────────────────────────────────────────────────── */
   .cmp-legend {
-    display: flex; flex-wrap: wrap; gap: 0.9rem 1.6rem;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.9rem 1.6rem;
     font-size: 0.82rem; color: var(--text-mid); padding: 0 0.25rem 1.25rem;
   }
-  .cmp-legend-rule { font-style: italic; color: var(--text-faint); flex-basis: 100%; margin-bottom: -0.3rem; }
+  .cmp-legend-rule { font-style: italic; color: var(--text-faint); flex-basis: 100%; justify-content: center; text-align: center; margin-bottom: -0.3rem; }
   .cmp-legend span { display: inline-flex; align-items: center; gap: 0.45rem; }
   .cmp-legend .sw { width: 1.1rem; height: 0.85rem; border-radius: 2px; flex-shrink: 0; }
 
@@ -85,12 +85,13 @@
     }
     .cmp-heads > div {
       font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.16em;
-      text-transform: uppercase; padding: 0.3rem 0 0.4rem;
+      text-transform: uppercase; padding: 0.3rem 0 0.4rem; text-align: center;
     }
     .cmp-heads > div small {
-      display: block; font-family: 'EB Garamond', serif; font-size: 0.72rem;
-      letter-spacing: 0; text-transform: none; color: var(--text-faint); margin-top: 0.15rem;
+      font-family: 'EB Garamond', serif; font-size: 0.72rem; letter-spacing: 0;
+      text-transform: none; color: var(--text-faint);
     }
+    .cmp-heads > div small::before { content: ' \00b7 '; }
     .hd-tr  { border-top: 2px solid #c9a84c; color: #c9a84c; }
     .hd-mt  { border-top: 2px solid #4fa89b; color: #4fa89b; }
     .hd-sbl { border-top: 2px solid #d98141; color: #d98141; }
@@ -145,7 +146,13 @@
   :root.light-mode .dT { color: #8a6a1f; background: rgba(138,106,31,0.17); }
   :root.light-mode .dM { color: #2d7268; background: rgba(45,114,104,0.15); }
   :root.light-mode .dS { color: #a9561c; background: rgba(169,86,28,0.15); }
-  .d1 { border-bottom: 1px dotted var(--text-faint); }
+  .d1 { border-bottom: 2px dashed currentColor; -webkit-text-fill-color: var(--text); }
+  .c-tr  .d1 { color: rgba(201,168,76,0.8); }
+  .c-mt  .d1 { color: rgba(79,168,155,0.8); }
+  .c-sbl .d1 { color: rgba(217,129,65,0.8); }
+  :root.light-mode .c-tr  .d1 { color: rgba(138,106,31,0.85); }
+  :root.light-mode .c-mt  .d1 { color: rgba(45,114,104,0.85); }
+  :root.light-mode .c-sbl .d1 { color: rgba(169,86,28,0.85); }
   .dT[data-tip], .dM[data-tip], .dS[data-tip] { cursor: help; }
 
   /* shared gloss tooltip (hover on desktop, tap on touch) */
@@ -162,6 +169,13 @@
     font-family: 'Gentium Book Plus','EB Garamond',serif;
     color: var(--gold); display: block; margin-bottom: 0.1rem;
   }
+  #cmp-tip .tip-grp { display: block; }
+  #cmp-tip .tip-grp + .tip-grp { margin-top: 0.45rem; }
+  #cmp-tip .tip-src {
+    display: block; font-family: 'Cinzel', serif; font-size: 0.56rem;
+    letter-spacing: 0.13em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 0.2rem;
+  }
   #cmp-tip .tip-code {
     display: block; margin-top: 0.3rem; padding-top: 0.3rem;
     border-top: 1px solid var(--rule);
@@ -169,7 +183,6 @@
     color: var(--text-faint);
   }
   :root.light-mode #cmp-tip { box-shadow: 0 10px 30px rgba(0,0,0,0.18); }
-  body.hide-minor .d1 { border-bottom: 0; }
 
   /* gap: this edition lacks words the others have */
   .gap {
@@ -217,21 +230,18 @@
 
   /* ── STATE / SOURCES ──────────────────────────────────────────────────── */
   .cmp-status { font-family: 'EB Garamond', serif; color: var(--text-mid); padding: 2rem 0.25rem; font-style: italic; }
-  .cmp-count {
-    font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--text-faint); padding: 0 0.25rem 0.9rem;
-  }
   .cmp-sources {
     margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
     font-family: 'EB Garamond', serif; font-size: 0.86rem; line-height: 1.75; color: var(--text-faint);
   }
   .cmp-sources h3 {
     font-family: 'Cinzel', serif; font-size: 0.62rem; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 0.7rem;
+    text-transform: uppercase; color: var(--gold); margin: 2rem 0 0.7rem;
   }
+  .cmp-sources h3:first-child { margin-top: 0; }
   .cmp-sources p { margin: 0 0 1rem; }
   .cmp-sources p:last-child { margin-bottom: 0; }
-  .cmp-sources ul { list-style: none; margin: 0 0 0.9rem; }
+  .cmp-sources ul { list-style: disc; margin: 0 0 0.9rem; padding-left: 1.15rem; }
   .cmp-sources li { padding: 0.22rem 0; }
   .cmp-sources a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
   .cmp-sources a:hover { color: var(--gold-light); }
@@ -246,16 +256,17 @@
   .cmp-key b {
     font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--gold); display: block; margin-bottom: 0.4rem;
-    font-weight: 400;
+    font-weight: 400; text-align: center;
   }
   .cmp-key span { display: block; font-size: 0.83rem; line-height: 1.6; color: var(--text-mid); }
   .cmp-key ul {
     list-style: none; margin: 0 0 0.45rem; padding: 0;
-    columns: 2; column-gap: 1rem;
+    columns: 2; column-gap: 1.6rem;
     font-size: 0.83rem; line-height: 1.6; color: var(--text-mid);
   }
   .cmp-key ul:last-of-type { margin-bottom: 0; }
-  .cmp-key li { break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid; }
+  .cmp-key-cols { width: fit-content; max-width: 100%; margin: 0 auto; }
+  .cmp-key li { break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid; text-align: left; }
   @media (max-width: 420px) { .cmp-key ul { columns: 1; } }
   .cmp-key .cmp-key-eg { margin-top: 0.4rem; color: var(--text-faint); font-style: italic; }
   .cmp-key-note { color: var(--text-faint); font-style: italic; }
@@ -268,7 +279,7 @@
 </style>
 </head>
 
-<body class="page-article hide-minor show-en">
+<body class="page-article show-en">
 <div class="site-wrapper">
 
   <!-- NAV -->
@@ -309,9 +320,9 @@
 </nav>
 
   <!-- BANNER -->
-  <div class="gk-banner">
-    <h1>Greek Text Comparison</h1>
-    <p>Three printed editions of the Greek New Testament, side by side, each with the English translation made from its own text.</p>
+  <div class="vt-banner" style="--vt-img:url('/images/gk/greek-variants.webp');--vt-pos:center 22%">
+    <h1>Textual Variant Charts</h1>
+    <p>Comparing Three Editions of the Greek NT</p>
   </div>
 
   <main class="gk-main">
@@ -322,39 +333,33 @@
       <label class="visually-hidden" for="cmp-ch">Chapter</label>
       <select id="cmp-ch" aria-label="Chapter"></select>
       <span class="cmp-spacer"></span>
-      <label class="cmp-toggle"><input type="checkbox" id="t-sig"> Differences only</label>
-      <label class="cmp-toggle"><input type="checkbox" id="t-minor"> Show minor</label>
+      <label class="cmp-toggle"><input type="checkbox" id="t-all"> Show entire NT</label>
       <label class="cmp-toggle"><input type="checkbox" id="t-en" checked> English</label>
     </div>
 
     <div class="cmp-legend">
-      <span class="cmp-legend-rule">A word is highlighted only where that edition&rsquo;s reading is found in neither of the other two:</span>
-      <span><i class="sw" style="background:rgba(201,168,76,0.16);box-shadow:inset 0 -2px 0 #c9a84c"></i> Only the Textus Receptus reads this</span>
-      <span><i class="sw" style="background:rgba(79,168,155,0.16);box-shadow:inset 0 -2px 0 #4fa89b"></i> Only the Majority Text</span>
-      <span><i class="sw" style="background:rgba(217,129,65,0.16);box-shadow:inset 0 -2px 0 #d98141"></i> Only the SBLGNT</span>
-      <span><b style="font-family:Cinzel,serif;border-bottom:2px solid currentColor">&#8249;&#8250;</b> Words the other editions have here, and this one does not</span>
-      <span><i class="sw" style="border-bottom:1px dotted var(--text-faint);height:0.6rem"></i> Minor &mdash; word order or article only</span>
-      <span class="cmp-legend-rule" style="margin-top:0.2rem">Hover a highlighted word &mdash; or tap it on a phone &mdash; for its dictionary form and meaning.</span>
+      <span class="cmp-legend-rule">Text highlighted only when edition reading is unique among the three. Mouse hover (or mobile tap) to reveal highlighted meaning &amp; parsing.</span>
+      <span><b style="font-family:Cinzel,serif;border-bottom:2px solid currentColor">&#8249;&#8250;</b> Words absent from this edition</span>
+      <span><i class="sw" style="border-bottom:2px dashed var(--text-mid);height:0.6rem"></i> Minor: word order, article use, or spelling</span>
     </div>
 
-    <div class="cmp-count" id="cmp-count"></div>
 
     <div class="cmp-heads">
       <div></div>
-      <div class="hd-tr">Textus Receptus<small>Scrivener 1894 &middot; English: KJV</small></div>
-      <div class="hd-mt">Majority Text<small>Robinson&ndash;Pierpont 2018 &middot; English: WEB</small></div>
-      <div class="hd-sbl">SBLGNT<small>Holmes 2010 &middot; English: ASV</small></div>
+      <div class="hd-tr">Textus Receptus<small>Scrivener 1894</small></div>
+      <div class="hd-mt">Majority Text<small>Robinson&ndash;Pierpont 2018</small></div>
+      <div class="hd-sbl">SBLGNT<small>Holmes 2010</small></div>
     </div>
 
     <div id="cmp-body"><div class="cmp-status">Loading&hellip;</div></div>
 
     <div class="cmp-sources">
       <h3>About these texts</h3>
-      <p>Each column is a printed edition, not a single manuscript. Spelling conventions that carry no difference in meaning &mdash; the movable nu (<span class="grk" style="font-size:1rem">&#7952;&#947;&#941;&#957;&#957;&#951;&#963;&#949;</span> / <span class="grk" style="font-size:1rem">&#7952;&#947;&#941;&#957;&#957;&#951;&#963;&#949;&#957;</span>), elision, accents, capitalization, and the spelling of names such as <span class="grk" style="font-size:1rem">&#916;&#945;&#946;&#943;&#948;</span> / <span class="grk" style="font-size:1rem">&#916;&#945;&#965;&#943;&#948;</span> &mdash; are treated as the same reading and are not marked.</p>
+      <p>Each column is a printed edition, not a single manuscript. Spelling conventions that carry no difference in meaning &mdash; the movable nu (<span class="grk" style="font-size:1rem">&#7952;&#947;&#941;&#957;&#957;&#951;&#963;&#949;</span> / <span class="grk" style="font-size:1rem">&#7952;&#947;&#941;&#957;&#957;&#951;&#963;&#949;&#957;</span>), elision, accents, and capitalization &mdash; are treated as the same reading and are not marked.</p>
       <ul>
         <li><strong>Textus Receptus</strong> &mdash; F. H. A. Scrivener, <em>The New Testament in the Original Greek according to the Text followed in the Authorised Version</em> (Cambridge, 1894). Public domain.</li>
         <li><strong>Byzantine Majority Text</strong> &mdash; Maurice A. Robinson and William G. Pierpont, <em>The New Testament in the Original Greek: Byzantine Textform</em> (2018). Released into the public domain by the editors.</li>
-        <li><strong>SBLGNT</strong> &mdash; Michael W. Holmes, ed., <em>The Greek New Testament: SBL Edition</em> (Society of Biblical Literature and Logos Bible Software, 2010). Licensed <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC BY 4.0</a>.</li>
+        <li><strong>SBLGNT</strong> &mdash; Michael W. Holmes, ed., <em>The Greek New Testament: SBL Edition</em> (Society of Biblical Literature and Logos Bible Software, 2010). Licensed <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener" target="_blank">CC BY 4.0</a>. About 98.5% agreement with the Westcott&ndash;Hort (1881), where both are considered Critical Text.</li>
       </ul>
 
       <h3>Reading the parsing codes</h3>
@@ -366,68 +371,75 @@
       <div class="cmp-key">
         <div>
           <b>Part of speech</b>
-          <ul>
-            <li>N: noun</li>
-            <li>V: verb</li>
-            <li>Adj: adjective</li>
-            <li>Art: article</li>
-            <li>Adv: adverb</li>
-            <li>Prep: preposition</li>
-            <li>Conj: conjunction</li>
-            <li>Prtcl: particle</li>
-            <li>Cond: conditional</li>
-            <li>PPro: personal</li>
-            <li>RelPro: relative</li>
-            <li>DemPro: demonstrative</li>
-            <li>IntPro: interrogative</li>
-            <li>IndefPro: indefinite</li>
-            <li>RefPro: reflexive</li>
-            <li>PossPro: possessive</li>
-            <li>Interj: interjection</li>
-          </ul>
+          <div class="cmp-key-cols">
+            <ul>
+              <li>N: noun</li>
+              <li>V: verb</li>
+              <li>Adj: adjective</li>
+              <li>Art: article</li>
+              <li>Adv: adverb</li>
+              <li>Prep: preposition</li>
+              <li>Conj: conjunction</li>
+              <li>Prtcl: particle</li>
+              <li>Cond: conditional</li>
+              <li>PPro: personal</li>
+              <li>RelPro: relative</li>
+              <li>DemPro: demonstrative</li>
+              <li>IntPro: interrogative</li>
+              <li>IndefPro: indefinite</li>
+              <li>CorrPro: correlative</li>
+              <li>RefPro: reflexive</li>
+              <li>PossPro: possessive</li>
+              <li>Interj: interjection</li>
+            </ul>
+          </div>
         </div>
         <div>
           <b>Case &middot; Number &middot; Gender</b>
-          <ul>
-            <li>N: nominative</li>
-            <li>G: genitive</li>
-            <li>D: dative</li>
-            <li>A: accusative</li>
-            <li>V: vocative</li>
-          </ul>
-          <ul>
-            <li>S: singular</li>
-            <li>P: plural</li>
-          </ul>
-          <ul>
-            <li>M: masculine</li>
-            <li>F: feminine</li>
-            <li>N: neuter</li>
-          </ul>
+          <div class="cmp-key-cols">
+            <ul>
+              <li>N: nominative</li>
+              <li>G: genitive</li>
+              <li>D: dative</li>
+              <li>A: accusative</li>
+              <li>V: vocative</li>
+            </ul>
+            <ul>
+              <li>S: singular</li>
+              <li>P: plural</li>
+            </ul>
+            <ul>
+              <li>M: masculine</li>
+              <li>F: feminine</li>
+              <li>N: neuter</li>
+            </ul>
+          </div>
         </div>
         <div>
           <b>Verbs: tense &middot; voice &middot; mood</b>
-          <ul>
-            <li>P: present</li>
-            <li>I: imperfect</li>
-            <li>F: future</li>
-            <li>A: aorist</li>
-            <li>R: perfect</li>
-            <li>L: pluperfect</li>
-          </ul>
-          <ul>
-            <li>A: active</li>
-            <li>M: middle</li>
-            <li>P: passive</li>
-          </ul>
-          <ul>
-            <li>I: indicative</li>
-            <li>S: subjunctive</li>
-            <li>M: imperative</li>
-            <li>O: optative</li>
-            <li>N: infinitive</li>
-            <li>P: participle</li>
-          </ul>
+          <div class="cmp-key-cols">
+            <ul>
+              <li>P: present</li>
+              <li>I: imperfect</li>
+              <li>F: future</li>
+              <li>A: aorist</li>
+              <li>R: perfect</li>
+              <li>L: pluperfect</li>
+            </ul>
+            <ul>
+              <li>A: active</li>
+              <li>M: middle</li>
+              <li>P: passive</li>
+            </ul>
+            <ul>
+              <li>I: indicative</li>
+              <li>S: subjunctive</li>
+              <li>M: imperative</li>
+              <li>O: optative</li>
+              <li>N: infinitive</li>
+              <li>P: participle</li>
+            </ul>
+          </div>
         </div>
       </div>
       <p class="cmp-key-note">So <code>N-ASF</code> is a noun, accusative singular feminine.
@@ -451,8 +463,7 @@
   var man = null, cache = {}, enCache = {};
   var elBook = document.getElementById('cmp-book'),
       elCh   = document.getElementById('cmp-ch'),
-      elBody = document.getElementById('cmp-body'),
-      elCount= document.getElementById('cmp-count');
+      elBody = document.getElementById('cmp-body');
 
   var BADGE = {
     'tr-only':    ['b-tr',  'TR only'],
@@ -461,13 +472,23 @@
     'reloc':      ['b-rel', 'Relocated'],
     'asym':       ['b-abs', 'Not in all three']
   };
+  /* These say only that a column has no verse here, which that column already
+     says for itself. versediv and reloc carry information found nowhere else. */
+  var SELFEVIDENT = { 'tr-only': 1, 'absent-sbl': 1, 'asym': 1 };
   var TITLE = {
     'T': 'Only the Textus Receptus reads this',
     'M': 'Only the Majority Text reads this',
     'S': 'Only the SBLGNT reads this',
     '1': 'Minor — word order or article only'
   };
-  var GAPTIP = 'The other editions have words here that this one does not';
+  /* A gap marker carries what the other editions read there, built by the
+     generator as "TR and MT read|<words>", several groups joined by a guillemet. */
+  function gapMark(gapw, i) {
+    var t = gapw && gapw[i];
+    return '<span class="gap"' +
+      (t ? ' data-tip="\u00ab' + esc(t) + '" tabindex="0"' : '') +
+      '>\u2039\u203a</span>';
+  }
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -476,12 +497,12 @@
   }
 
   /* marks: one digit/letter per whitespace token. gaps: token indices to prefix with a marker. */
-  function render(text, marks, gaps, tips) {
+  function render(text, marks, gaps, tips, gapw) {
     if (!text) return '';
     var parts = text.split(/\s+/), g = {}, out = [], i;
     if (gaps) for (i = 0; i < gaps.length; i++) g[gaps[i]] = 1;
     for (i = 0; i < parts.length; i++) {
-      if (g[i]) out.push('<span class="gap" title="' + GAPTIP + '">‹›</span>');
+      if (g[i]) out.push(gapMark(gapw, i));
       var m = marks && marks[i] ? marks[i] : '0';
       if (m === '0') { out.push(esc(parts[i])); continue; }
       var tip = tips && tips[i];
@@ -493,13 +514,13 @@
         (tip ? ' data-tip="' + esc(tip) + '" tabindex="0"' : '') +
         '>' + esc(parts[i]) + '</span>');
     }
-    if (g[parts.length]) out.push('<span class="gap" title="' + GAPTIP + '">‹›</span>');
+    if (g[parts.length]) out.push(gapMark(gapw, parts.length));
     return out.join(' ');
   }
 
-  function cell(cls, label, text, marks, gaps, tips, enLabel, enText) {
+  function cell(cls, label, text, marks, gaps, tips, enLabel, enText, gapw) {
     var inner = text
-      ? '<div class="grk">' + render(text, marks, gaps, tips) + '</div>'
+      ? '<div class="grk">' + render(text, marks, gaps, tips, gapw) + '</div>'
       : '<div class="cmp-missing">&mdash; not present in this edition &mdash;</div>';
     var en = enText ? '<div class="cmp-en"><b>' + enLabel + '</b>' + esc(enText) + '</div>' : '';
     return '<div class="cmp-cell ' + cls + '"><div class="cmp-label">' + label + '</div>' + inner + en + '</div>';
@@ -509,7 +530,7 @@
     var b = elBook.value, c = elCh.value;
     var data = cache[b + '.' + c];
     if (!data) return;
-    var sigOnly = document.getElementById('t-sig').checked;
+    var showAll = document.getElementById('t-all').checked;
     var en = enCache[b] || {};
     var ci = data.c - 1;
     function verseEn(which, v) {
@@ -520,46 +541,51 @@
 
     data.vv.forEach(function (r) {
       if (r.t === 2) sig++;
-      if (sigOnly && r.t !== 2) return;
+      /* Minor differences are always shown; only verses identical in all three
+         are hidden, and "Show entire NT" brings those back. */
+      if (!showAll && r.t === 0) return;
       shown++;
       var row = '<div class="cmp-row' + (r.t === 0 ? ' is-same' : '') + '" id="v' + r.v + '">';
       row += '<div class="cmp-num"><a href="#v' + r.v + '">' + r.v + '</a></div>';
       row += '<div><div class="cmp-cols">';
-      row += cell('c-tr',  'Textus Receptus', r.tr,  r.trm,  r.trg,  r.trt,  'King James Version',        verseEn('kjv', r.v));
-      row += cell('c-mt',  'Majority Text',   r.mt,  r.mtm,  r.mtg,  r.mtt,  'World English Bible',       verseEn('web', r.v));
-      row += cell('c-sbl', 'SBLGNT',          r.sbl, r.sblm, r.sblg, r.sblt, 'American Standard Version', verseEn('asv', r.v));
+      row += cell('c-tr',  'Textus Receptus', r.tr,  r.trm,  r.trg,  r.trt,  'King James Version',        verseEn('kjv', r.v), r.trgw);
+      row += cell('c-mt',  'Majority Text',   r.mt,  r.mtm,  r.mtg,  r.mtt,  'World English Bible',       verseEn('web', r.v), r.mtgw);
+      row += cell('c-sbl', 'SBLGNT',          r.sbl, r.sblm, r.sblg, r.sblt, 'American Standard Version', verseEn('asv', r.v), r.sblgw);
       row += '</div>';
 
-      var notes = [];
-      if (r.s && BADGE[r.s]) notes.push('<i class="cmp-badge ' + BADGE[r.s][0] + '">' + BADGE[r.s][1] + '</i>');
+      var notes = [], say = r.s && !SELFEVIDENT[r.s];
+      if (say && BADGE[r.s]) notes.push('<i class="cmp-badge ' + BADGE[r.s][0] + '">' + BADGE[r.s][1] + '</i>');
       if (r.db) notes.push('<i class="cmp-badge b-dbl">SBLGNT double brackets</i>');
-      if (r.n) notes.push('<em>' + esc(r.n) + '</em>');
+      if (say && r.n) notes.push('<em>' + esc(r.n) + '</em>');
       if (notes.length) row += '<div class="cmp-note">' + notes.join(' ') + '</div>';
       row += '</div></div>';
       html.push(row);
     });
 
-    elCount.textContent = sig + ' of ' + data.vv.length +
-      ' verses in this chapter carry a difference that may affect meaning' +
-      (sigOnly ? ' · showing those only' : '');
     elBody.innerHTML = html.length ? html.join('') :
-      '<div class="cmp-status">No differences affecting meaning in this chapter.</div>';
+      '<div class="cmp-status">No Greek manuscript differences this chapter.</div>';
   }
 
   function loadEn(b) {
-    if (enCache[b]) return Promise.resolve();
     var entry = man.books.filter(function (x) { return x.b === b; })[0];
     if (!entry) return Promise.resolve();
-    var want = [['kjv', '/bible/kjv/'], ['web', '/bible/web/'], ['asv', '/bible/asv/']];
+    /* Cache per translation, not per book. Previously a single failed fetch was
+       dropped and the two that succeeded were cached under the book, and the
+       early return meant the failed one stayed blank for the rest of the session
+       - one transient blip and that column lost its English until a reload.
+       Now only what actually arrived is kept, and anything still missing is
+       retried the next time a chapter in this book is drawn. */
+    var have = enCache[b] || (enCache[b] = {});
+    var want = [['kjv', '/bible/kjv/'], ['web', '/bible/web/'], ['asv', '/bible/asv/']]
+      .filter(function (w) { return !have[w[0]]; });
+    if (!want.length) return Promise.resolve();
     return Promise.all(want.map(function (w) {
       return fetch(w[1] + entry.en + '.json')
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (j) { return [w[0], j && j.c]; })
         .catch(function () { return [w[0], null]; });
     })).then(function (res) {
-      var o = {};
-      res.forEach(function (p) { if (p[1]) o[p[0]] = p[1]; });
-      enCache[b] = o;
+      res.forEach(function (p) { if (p[1]) have[p[0]] = p[1]; });
     });
   }
 
@@ -612,10 +638,7 @@
 
   elBook.addEventListener('change', function () { fillCh(); loadCh(); });
   elCh.addEventListener('change', loadCh);
-  document.getElementById('t-sig').addEventListener('change', draw);
-  document.getElementById('t-minor').addEventListener('change', function () {
-    document.body.classList.toggle('hide-minor', !this.checked);
-  });
+  document.getElementById('t-all').addEventListener('change', draw);
   document.getElementById('t-en').addEventListener('change', function () {
     document.body.classList.toggle('show-en', this.checked);
   });
@@ -630,6 +653,15 @@
   function showTip(el) {
     var t = el.getAttribute('data-tip');
     if (!t) return;
+    if (t.charAt(0) === '\u00ab') {
+      tipEl.innerHTML = t.slice(1).split('\u00ab').map(function (grp) {
+        var bar = grp.indexOf('|');
+        return '<span class="tip-grp"><span class="tip-src">' + esc(grp.slice(0, bar)) +
+               '</span><span class="tip-gk">' + esc(grp.slice(bar + 1)) + '</span></span>';
+      }).join('');
+      placeTip(el);
+      return;
+    }
     var parts = t.split(' \u2014 ');
     var body = parts[1] || '', code = '';
     var dot = body.lastIndexOf(' \u00b7 ');
@@ -640,11 +672,22 @@
     }
     tipEl.innerHTML = '<span class="tip-gk">' + esc(parts[0]) + '</span>' + esc(body) +
       (code ? '<span class="tip-code">' + esc(code) + '</span>' : '');
+    placeTip(el);
+  }
+
+  function placeTip(el) {
     tipEl.classList.add('on');
     var r = el.getBoundingClientRect();
-    var top = window.scrollY + r.bottom + 6;
+    var w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    /* Sit above the word. The pointer is on the word itself, so a box placed
+       below it opens under the cursor - and under a fingertip on a phone.
+       Flip back down only when there is no room above, which means clearing
+       the sticky column headers rather than just the top of the viewport. */
+    var heads = document.querySelector('.cmp-heads');
+    var guard = heads ? heads.getBoundingClientRect().bottom : 0;
+    var top = (r.top - h - 8 > guard) ? window.scrollY + r.top - h - 8
+                                      : window.scrollY + r.bottom + 10;
     var left = window.scrollX + r.left;
-    var w = tipEl.offsetWidth;
     if (left + w > window.scrollX + document.documentElement.clientWidth - 10)
       left = window.scrollX + document.documentElement.clientWidth - w - 10;
     if (left < 6) left = 6;
