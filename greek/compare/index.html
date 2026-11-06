@@ -39,6 +39,33 @@
   <meta name="twitter:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
 
 <style>
+  /* ── PAGE WIDTH ────────────────────────────────────────────── */
+  /* styles.css caps .site-wrapper at 940px, which is right for an article but
+     squeezes three Greek columns to ~277px each and wraps every verse four
+     times. This block only exists on this page, and it loads after styles.css,
+     so the override is scoped to the charts. Change the one number to taste. */
+  @media (min-width: 1100px) {
+    .site-wrapper { max-width: 1320px; }
+    /* greek-tools.css caps .vt-banner at 940px too, and that file is shared
+       with the vocabulary and parsing pages - so the override is scoped here,
+       not edited there. Height rises with the width: the band crops the
+       artwork with background-size:cover, so holding 170px while widening to
+       1320 would show a thinner horizontal slice than the 940px version
+       Jonathan already approved. 1320/940 x 170 = 239 keeps the same share of
+       the image visible. --vt-pos keeps the focal point where it was. */
+    .vt-banner { max-width: 1320px; height: 240px; }
+    /* The footer prose runs the full width like everything else. What makes a
+       long line hard to follow is the character count, not the pixel width,
+       so the type goes up instead of the column coming in - same effect, and
+       it fills the space rather than leaving a gap on the right. 0.86rem was
+       small for this block anyway. Readers who want more have the A-/A/A+
+       buttons in the masthead. */
+    /* .site-wrapper prefix only to outrank the .cmp-sources rule further down
+       this same style block, which sets 0.86rem and would otherwise win on
+       source order - a media query adds no specificity of its own. */
+    .site-wrapper .cmp-sources { font-size: 1.02rem; }
+  }
+
   /* ── CONTROLS ─────────────────────────────────────────────────────────── */
   .cmp-bar {
     display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
@@ -54,6 +81,15 @@
     padding: 0.4rem 0.6rem; min-height: 2.4rem;
   }
   .cmp-bar select:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .cmp-bar input[type="search"] {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--rule); border-radius: 5px;
+    padding: 0.4rem 0.6rem; min-height: 2.4rem; width: 10.5rem;
+  }
+  .cmp-bar input[type="search"]::placeholder { color: var(--text-faint); }
+  .cmp-bar input[type="search"]:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .cmp-bar input.is-bad { border-color: #c4604a; }
   .cmp-spacer { flex: 1 1 auto; }
   .cmp-toggle {
     display: inline-flex; align-items: center; gap: 0.4rem;
@@ -78,20 +114,25 @@
   .cmp-heads { display: none; }
   @media (min-width: 900px) {
     .cmp-heads {
-      display: grid; grid-template-columns: 3.1rem repeat(3, minmax(0,1fr));
+      display: grid; grid-template-columns: 3.6rem repeat(3, minmax(0,1fr));
       gap: 0 1.1rem; padding: 0 0.25rem 0.5rem;
-      position: sticky; top: 4.2rem; z-index: 15;
+      position: sticky; top: 4.4rem; z-index: 15;
       background: var(--bg); border-bottom: 1px solid var(--rule);
     }
     .cmp-heads > div {
-      font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.16em;
-      text-transform: uppercase; padding: 0.3rem 0 0.4rem; text-align: center;
+      font-family: 'Cinzel', serif; font-size: 1.15rem; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 0.4rem 0 0.5rem; text-align: center;
+      line-height: 1.25;
     }
+    /* The edition name used to render smaller (0.6rem) than the citation nested
+       inside it (0.72rem), which is why the headers read as fine print. The
+       citation is now a line of its own underneath, so the inline middot that
+       used to join them is gone. */
     .cmp-heads > div small {
-      font-family: 'EB Garamond', serif; font-size: 0.72rem; letter-spacing: 0;
-      text-transform: none; color: var(--text-faint);
+      display: block; font-family: 'EB Garamond', serif; font-size: 0.78rem;
+      letter-spacing: 0; text-transform: none; color: var(--text-faint);
+      margin-top: 0.15rem;
     }
-    .cmp-heads > div small::before { content: ' \00b7 '; }
     .hd-tr  { border-top: 2px solid #c9a84c; color: #c9a84c; }
     .hd-mt  { border-top: 2px solid #4fa89b; color: #4fa89b; }
     .hd-sbl { border-top: 2px solid #d98141; color: #d98141; }
@@ -103,20 +144,26 @@
   .cmp-row { border-bottom: 1px solid var(--rule); padding: 0.9rem 0.25rem; }
   .cmp-row:last-child { border-bottom: 0; }
   .cmp-row.is-same { opacity: 0.62; }
-  .cmp-num { font-family: 'Cinzel', serif; font-size: 0.7rem; color: var(--gold); padding-top: 0.15rem; }
+  .cmp-row.is-target { background: var(--glass); border-radius: 6px; }
+  .cmp-num { font-family: 'Cinzel', serif; font-size: 1.2rem; line-height: 1.5; color: var(--gold); padding-top: 0.1rem; }
   .cmp-num a { color: var(--gold); text-decoration: none; }
   .cmp-num a:hover { text-decoration: underline; }
 
   .cmp-cols { display: grid; gap: 1.1rem; }
   @media (min-width: 900px) {
-    .cmp-row { display: grid; grid-template-columns: 3.1rem minmax(0,1fr); gap: 0 1.1rem; }
+    .cmp-row { display: grid; grid-template-columns: 3.6rem minmax(0,1fr); gap: 0 1.1rem; }
     .cmp-cols { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 0 1.1rem; }
+    /* Right-aligned against a hairline so the gutter reads as a column. Grid
+       stretches the cell to the row's full height, so the rule runs the whole
+       way down. Desktop only - below 900px the number is its own line above
+       the stacked columns, where a right rule would make no sense. */
+    .cmp-num { text-align: right; padding-right: 0.75rem; border-right: 1px solid var(--rule); }
   }
 
   .cmp-cell { min-width: 0; }
   .cmp-label {
-    display: none; font-family: 'Cinzel', serif; font-size: 0.55rem;
-    letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 0.25rem;
+    display: none; font-family: 'Cinzel', serif; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem;
   }
   @media (max-width: 899px) {
     .cmp-label { display: inline-block; border-top: 2px solid; padding-top: 0.25rem; }
@@ -230,6 +277,70 @@
 
   /* ── STATE / SOURCES ──────────────────────────────────────────────────── */
   .cmp-status { font-family: 'EB Garamond', serif; color: var(--text-mid); padding: 2rem 0.25rem; font-style: italic; }
+  /* ── PARSING KEY ──────────────────────────────────────── */
+  /* The three boxes were a glossary: they said what a letter meant but not
+     which slot it sat in, and S is singular, subjunctive and superlative in
+     three different positions. The table reads in code order instead, so the
+     order is carried by the layout; the worked examples underneath it supply
+     the patterns. A table also has a reason to be a given width, which the
+     shrink-wrapped lists never did. */
+  .cmp-ptable-wrap {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 6px; overflow: hidden; margin: 0 0 1.2rem;
+  }
+  .cmp-ptable { width: 100%; border-collapse: collapse; }
+  .cmp-ptable th, .cmp-ptable td {
+    text-align: left; vertical-align: baseline;
+    padding: 0.55rem 0.95rem; border-bottom: 1px solid var(--rule);
+  }
+  .cmp-ptable tr:last-child th, .cmp-ptable tr:last-child td { border-bottom: 0; }
+  .cmp-ptable th {
+    font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold); font-weight: 400;
+    white-space: nowrap; width: 1%;
+  }
+  .cmp-ptable td { color: var(--text-mid); font-size: 0.86rem; line-height: 1.75; }
+  .cmp-ptable td span {
+    display: inline-block; margin-right: 1.5rem; white-space: nowrap;
+  }
+  .cmp-ptable td span:last-child { margin-right: 0; }
+  .cmp-ptable b {
+    font-family: 'Cinzel', serif; font-weight: 400; font-size: 0.8rem;
+    letter-spacing: 0.04em; color: var(--text); margin-right: 0.15rem;
+  }
+  /* Narrow screens: the row label sits above its values instead of beside. */
+  @media (max-width: 599px) {
+    .cmp-ptable th, .cmp-ptable td { display: block; width: auto; }
+    .cmp-ptable th { border-bottom: 0; padding-bottom: 0.15rem; }
+    .cmp-ptable td { padding-top: 0; }
+  }
+
+  /* ── CHAPTER NAV ──────────────────────────────────────────────────────── */
+  .cmp-chnav {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 0.6rem; margin: 1.5rem 0 0; padding: 1.25rem 0 0;
+    border-top: 1px solid var(--rule);
+  }
+  /* .cmp-sources draws its own top rule, which stacked a second hairline a
+     few rem under this one. Suppress it where the nav already supplies the
+     divider, but leave the rule on .cmp-sources itself so the footer is still
+     separated if the nav is ever absent. */
+  .cmp-chnav + .cmp-sources { border-top: 0; margin-top: 1.75rem; padding-top: 0; }
+  .cmp-chnav button {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    background: transparent; color: var(--gold); cursor: pointer;
+    border: 1px solid var(--rule); border-radius: 5px;
+    padding: 0.5rem 0.9rem; min-height: 2.4rem;
+  }
+  .cmp-chnav button:hover { color: var(--gold-light); border-color: var(--gold-faint); }
+  .cmp-chnav button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .cmp-chnav .cmp-nav-top { color: var(--text-mid); border-color: transparent; }
+  .cmp-chnav .cmp-nav-top:hover { color: var(--gold); }
+  .cmp-chnav .is-off {
+    font-family: 'EB Garamond', serif; font-size: 0.95rem;
+    color: var(--text-faint); padding: 0.5rem 0.9rem;
+  }
+
   .cmp-sources {
     margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule);
     font-family: 'EB Garamond', serif; font-size: 0.86rem; line-height: 1.75; color: var(--text-faint);
@@ -266,6 +377,17 @@
   }
   .cmp-key ul:last-of-type { margin-bottom: 0; }
   .cmp-key-cols { width: fit-content; max-width: 100%; margin: 0 auto; }
+  /* Shrink-wrapped and centred, the lists left a wide gutter on both sides of
+     each card. Letting the columns span the card uses that width instead.
+     The pronouns sit in a second list inside Part of speech, so they read as
+     their own group without taking a card of their own. */
+  @media (min-width: 1100px) {
+    /* The lists stay shrink-wrapped and centred in their card (width:100%
+       left-aligned them and opened a gap down the right). The cards come in
+       instead, so the content sits close to the card edges rather than
+       floating in the middle of a 428px box. */
+    .cmp-key { max-width: 1040px; margin-left: auto; margin-right: auto; }
+  }
   .cmp-key li { break-inside: avoid; -webkit-column-break-inside: avoid; page-break-inside: avoid; text-align: left; }
   @media (max-width: 420px) { .cmp-key ul { columns: 1; } }
   .cmp-key .cmp-key-eg { margin-top: 0.4rem; color: var(--text-faint); font-style: italic; }
@@ -327,13 +449,18 @@
 
   <main class="gk-main">
 
+    <span id="cmp-top" aria-hidden="true"></span>
+
     <div class="cmp-bar">
       <label class="visually-hidden" for="cmp-book">Book</label>
       <select id="cmp-book" aria-label="Book"></select>
       <label class="visually-hidden" for="cmp-ch">Chapter</label>
       <select id="cmp-ch" aria-label="Chapter"></select>
+      <label class="visually-hidden" for="cmp-ref">Go to a reference</label>
+      <input type="search" id="cmp-ref" placeholder="Go to&hellip; John 3:16"
+             autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
       <span class="cmp-spacer"></span>
-      <label class="cmp-toggle"><input type="checkbox" id="t-all"> Show entire NT</label>
+      <label class="cmp-toggle"><input type="checkbox" id="t-all"> Show entire chapter</label>
       <label class="cmp-toggle"><input type="checkbox" id="t-en" checked> English</label>
     </div>
 
@@ -346,12 +473,14 @@
 
     <div class="cmp-heads">
       <div></div>
-      <div class="hd-tr">Textus Receptus<small>Scrivener 1894</small></div>
-      <div class="hd-mt">Majority Text<small>Robinson&ndash;Pierpont 2018</small></div>
-      <div class="hd-sbl">SBLGNT<small>Holmes 2010</small></div>
+      <div class="hd-tr">Textus Receptus<small>Scrivener 1894 &middot; behind the KJV</small></div>
+      <div class="hd-mt">Majority Text<small>Robinson&ndash;Pierpont 2018 &middot; behind the WEB</small></div>
+      <div class="hd-sbl">SBLGNT<small>Holmes 2010 &middot; Critical Text</small></div>
     </div>
 
     <div id="cmp-body"><div class="cmp-status">Loading&hellip;</div></div>
+
+    <nav class="cmp-chnav" id="cmp-nav" aria-label="Chapter navigation"></nav>
 
     <div class="cmp-sources">
       <h3>About these texts</h3>
@@ -368,79 +497,20 @@
       &mdash; which disagree on real points, so both have been converted to the one scheme below.
       The code is often the whole story behind a variant: roughly half of the differences between
       these texts leave the English unchanged, and in those the parsing is what actually differs.</p>
-      <div class="cmp-key">
-        <div>
-          <b>Part of speech</b>
-          <div class="cmp-key-cols">
-            <ul>
-              <li>N: noun</li>
-              <li>V: verb</li>
-              <li>Adj: adjective</li>
-              <li>Art: article</li>
-              <li>Adv: adverb</li>
-              <li>Prep: preposition</li>
-              <li>Conj: conjunction</li>
-              <li>Prtcl: particle</li>
-              <li>Cond: conditional</li>
-              <li>PPro: personal</li>
-              <li>RelPro: relative</li>
-              <li>DemPro: demonstrative</li>
-              <li>IntPro: interrogative</li>
-              <li>IndefPro: indefinite</li>
-              <li>CorrPro: correlative</li>
-              <li>RefPro: reflexive</li>
-              <li>PossPro: possessive</li>
-              <li>Interj: interjection</li>
-            </ul>
-          </div>
-        </div>
-        <div>
-          <b>Case &middot; Number &middot; Gender</b>
-          <div class="cmp-key-cols">
-            <ul>
-              <li>N: nominative</li>
-              <li>G: genitive</li>
-              <li>D: dative</li>
-              <li>A: accusative</li>
-              <li>V: vocative</li>
-            </ul>
-            <ul>
-              <li>S: singular</li>
-              <li>P: plural</li>
-            </ul>
-            <ul>
-              <li>M: masculine</li>
-              <li>F: feminine</li>
-              <li>N: neuter</li>
-            </ul>
-          </div>
-        </div>
-        <div>
-          <b>Verbs: tense &middot; voice &middot; mood</b>
-          <div class="cmp-key-cols">
-            <ul>
-              <li>P: present</li>
-              <li>I: imperfect</li>
-              <li>F: future</li>
-              <li>A: aorist</li>
-              <li>R: perfect</li>
-              <li>L: pluperfect</li>
-            </ul>
-            <ul>
-              <li>A: active</li>
-              <li>M: middle</li>
-              <li>P: passive</li>
-            </ul>
-            <ul>
-              <li>I: indicative</li>
-              <li>S: subjunctive</li>
-              <li>M: imperative</li>
-              <li>O: optative</li>
-              <li>N: infinitive</li>
-              <li>P: participle</li>
-            </ul>
-          </div>
-        </div>
+      <div class="cmp-ptable-wrap">
+      <table class="cmp-ptable">
+        <tbody>
+          <tr><th scope="row">Part of speech</th><td><span><b>N</b> noun</span><span><b>V</b> verb</span><span><b>Adj</b> adjective</span><span><b>Art</b> article</span><span><b>Adv</b> adverb</span><span><b>Prep</b> preposition</span><span><b>Conj</b> conjunction</span><span><b>Prtcl</b> particle</span><span><b>Cond</b> conditional</span><span><b>Interj</b> interjection</span></td></tr>
+          <tr><th scope="row">Pronouns</th><td><span><b>PPro</b> personal</span><span><b>RelPro</b> relative</span><span><b>DemPro</b> demonstrative</span><span><b>IntPro</b> interrogative</span><span><b>IndefPro</b> indefinite</span><span><b>CorrPro</b> correlative</span><span><b>RefPro</b> reflexive</span><span><b>PossPro</b> possessive</span></td></tr>
+          <tr><th scope="row">Tense</th><td><span><b>P</b> present</span><span><b>I</b> imperfect</span><span><b>F</b> future</span><span><b>A</b> aorist</span><span><b>R</b> perfect</span><span><b>L</b> pluperfect</span></td></tr>
+          <tr><th scope="row">Voice</th><td><span><b>A</b> active</span><span><b>M</b> middle</span><span><b>P</b> passive</span></td></tr>
+          <tr><th scope="row">Mood</th><td><span><b>I</b> indicative</span><span><b>S</b> subjunctive</span><span><b>M</b> imperative</span><span><b>O</b> optative</span><span><b>N</b> infinitive</span><span><b>P</b> participle</span></td></tr>
+          <tr><th scope="row">Person</th><td><span><b>1</b> first</span><span><b>2</b> second</span><span><b>3</b> third</span></td></tr>
+          <tr><th scope="row">Case</th><td><span><b>N</b> nominative</span><span><b>G</b> genitive</span><span><b>D</b> dative</span><span><b>A</b> accusative</span><span><b>V</b> vocative</span></td></tr>
+          <tr><th scope="row">Number</th><td><span><b>S</b> singular</span><span><b>P</b> plural</span></td></tr>
+          <tr><th scope="row">Gender</th><td><span><b>M</b> masculine</span><span><b>F</b> feminine</span><span><b>N</b> neuter</span></td></tr>
+        </tbody>
+      </table>
       </div>
       <p class="cmp-key-note">So <code>N-ASF</code> is a noun, accusative singular feminine.
       A finite verb then carries person and number (<code>V-PAI-3S</code>, present active
@@ -461,9 +531,12 @@
 <script>
 (function () {
   var man = null, cache = {}, enCache = {};
+  var navKey = '', pendingVerse = 0;
   var elBook = document.getElementById('cmp-book'),
       elCh   = document.getElementById('cmp-ch'),
-      elBody = document.getElementById('cmp-body');
+      elBody = document.getElementById('cmp-body'),
+      elNav  = document.getElementById('cmp-nav'),
+      elRef  = document.getElementById('cmp-ref');
 
   var BADGE = {
     'tr-only':    ['b-tr',  'TR only'],
@@ -542,11 +615,14 @@
     data.vv.forEach(function (r) {
       if (r.t === 2) sig++;
       /* Minor differences are always shown; only verses identical in all three
-         are hidden, and "Show entire NT" brings those back. */
+         are hidden, and "Show entire chapter" brings those back. */
       if (!showAll && r.t === 0) return;
       shown++;
       var row = '<div class="cmp-row' + (r.t === 0 ? ' is-same' : '') + '" id="v' + r.v + '">';
-      row += '<div class="cmp-num"><a href="#v' + r.v + '">' + r.v + '</a></div>';
+      /* was href="#v5", which overwrote the book.chapter hash with something
+         applyHash cannot read - the URL then lost the chapter entirely and a
+         reload landed on Matthew 1. */
+      row += '<div class="cmp-num"><a href="#' + b + '.' + c + '.' + r.v + '">' + r.v + '</a></div>';
       row += '<div><div class="cmp-cols">';
       row += cell('c-tr',  'Textus Receptus', r.tr,  r.trm,  r.trg,  r.trt,  'King James Version',        verseEn('kjv', r.v), r.trgw);
       row += cell('c-mt',  'Majority Text',   r.mt,  r.mtm,  r.mtg,  r.mtt,  'World English Bible',       verseEn('web', r.v), r.mtgw);
@@ -564,7 +640,121 @@
 
     elBody.innerHTML = html.length ? html.join('') :
       '<div class="cmp-status">No Greek manuscript differences this chapter.</div>';
+    drawNav();
+    focusVerse(data);
   }
+
+  /* ── reference box ───────────────────────────────────────────────────── */
+
+  /* Only the abbreviations prefix matching cannot reach: "jn" is not a prefix
+     of "john". The one real clash is Phil, which by convention means
+     Philippians - Philemon is Phlm or Philem. */
+  var ALIAS = {
+    mt: 'Matt', mk: 'Mark', mrk: 'Mark', lk: 'Luke', jn: 'John', jhn: 'John',
+    jm: 'Jas', phil: 'Phil', php: 'Phil', phm: 'Phlm', philem: 'Phlm'
+  };
+
+  function norm(x) { return String(x).toLowerCase().replace(/[\s\-]/g, ''); }
+
+  /* "John 3:16", "1 Cor 13", "2tim2", "Rev" -> [book, chapter, verse|null] */
+  function parseRef(q) {
+    var str = String(q).toLowerCase().replace(/\./g, ' ').replace(/\s+/g, ' ').trim();
+    if (!str) return null;
+    var tail = str.match(/(\d+)(?:\s*[:\s]\s*(\d+))?\s*$/);
+    var ch = null, vs = null, head = str;
+    if (tail) {
+      ch = parseInt(tail[1], 10);
+      vs = tail[2] ? parseInt(tail[2], 10) : null;
+      head = str.slice(0, tail.index);
+    }
+    var key = norm(head);
+    if (!key || !/[a-z]/.test(key)) return null;
+    var b = ALIAS[key];
+    /* "1jn" - a numbered book written with an alias the prefix match cannot
+       reach. Resolve the alias on its own, then re-attach the numeral. */
+    if (!b) {
+      var num = key.match(/^([123])(.+)$/);
+      if (num && ALIAS[num[2]]) b = num[1] + ALIAS[num[2]];
+    }
+    if (!b) {
+      var exact = man.books.filter(function (x) {
+        return norm(x.b) === key || norm(x.name) === key || norm(x.en) === key;
+      });
+      var pool = exact.length ? exact : man.books.filter(function (x) {
+        return norm(x.name).indexOf(key) === 0 || norm(x.b).indexOf(key) === 0;
+      });
+      if (pool.length !== 1) return null;
+      b = pool[0].b;
+    }
+    var entry = man.books.filter(function (x) { return x.b === b; })[0];
+    if (!entry) return null;
+    if (ch === null) ch = 1;
+    if (ch < 1 || ch > entry.ch) return null;
+    return [entry.b, ch, vs];
+  }
+
+  elRef.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    var hit = parseRef(elRef.value);
+    if (!hit) {
+      elRef.classList.add('is-bad');
+      setTimeout(function () { elRef.classList.remove('is-bad'); }, 1400);
+      return;
+    }
+    elRef.classList.remove('is-bad');
+    pendingVerse = hit[2] || 0;
+    go(hit[0], hit[1], true);
+    elRef.value = '';
+    elRef.blur();
+    if (!pendingVerse) toChartTop();
+  });
+
+  /* ── chapter navigation ──────────────────────────────────────────────── */
+
+  /* dir is +1 or -1. Rolls across book boundaries (Matthew 28 -> Mark 1) and
+     returns null at the two ends of the NT. */
+  function step(dir) {
+    var i = -1, cur = elBook.value;
+    man.books.forEach(function (x, k) { if (x.b === cur) i = k; });
+    if (i < 0) return null;
+    var c = parseInt(elCh.value, 10) + dir;
+    if (c >= 1 && c <= man.books[i].ch) return [cur, c];
+    var j = i + dir;
+    if (j < 0 || j >= man.books.length) return null;
+    return [man.books[j].b, dir > 0 ? 1 : man.books[j].ch];
+  }
+
+  function navName(b, c) {
+    var e = man.books.filter(function (x) { return x.b === b; })[0];
+    return e ? e.name + ' ' + c : '';
+  }
+
+  function drawNav() {
+    var p = step(-1), nx = step(1), h = '';
+    h += p ? '<button type="button" data-go="' + p[0] + '.' + p[1] + '">&#8249; ' +
+             esc(navName(p[0], p[1])) + '</button>'
+           : '<span class="is-off">&#8249; Start of the New Testament</span>';
+    h += '<button type="button" class="cmp-nav-top">Back to top</button>';
+    h += nx ? '<button type="button" data-go="' + nx[0] + '.' + nx[1] + '">' +
+              esc(navName(nx[0], nx[1])) + ' &#8250;</button>'
+            : '<span class="is-off">End of the New Testament &#8250;</span>';
+    elNav.innerHTML = h;
+  }
+
+  function toChartTop() {
+    var a = document.getElementById('cmp-top');
+    window.scrollTo({ top: a.getBoundingClientRect().top + window.scrollY, behavior: 'smooth' });
+  }
+
+  elNav.addEventListener('click', function (e) {
+    if (e.target.closest('.cmp-nav-top')) { toChartTop(); return; }
+    var btn = e.target.closest('[data-go]');
+    if (!btn) return;
+    var parts = btn.getAttribute('data-go').split('.');
+    go(parts[0], parts[1], true);
+    toChartTop();
+  });
 
   function loadEn(b) {
     var entry = man.books.filter(function (x) { return x.b === b; })[0];
@@ -614,13 +804,38 @@
   }
 
   function applyHash() {
-    var m = (location.hash || '').replace(/^#/, '').match(/^([1-3]?[A-Za-z]+)\.(\d+)$/);
+    var m = (location.hash || '').replace(/^#/, '')
+              .match(/^([1-3]?[A-Za-z]+)\.(\d+)(?:\.(\d+))?$/);
     if (!m) return false;
     var hit = man.books.filter(function (x) { return x.b.toLowerCase() === m[1].toLowerCase(); })[0];
     if (!hit) return false;
     elBook.value = hit.b; fillCh();
     elCh.value = Math.min(parseInt(m[2], 10), hit.ch);
+    if (m[3]) pendingVerse = parseInt(m[3], 10);
     return true;
+  }
+
+  /* Scroll to the verse a reference or a link asked for. If that verse reads
+     the same in all three editions it is not on the page, so tick "Show entire
+     chapter" and draw again rather than leaving the reader staring at nothing
+     - the toggle visibly flipping is its own explanation. */
+  function focusVerse(data) {
+    var v = pendingVerse;
+    if (!v) return;
+    var row = document.getElementById('v' + v);
+    if (!row) {
+      var known = data.vv.filter(function (r) { return r.v === v; })[0];
+      var all = document.getElementById('t-all');
+      if (known && !all.checked) { all.checked = true; draw(); return; }
+      pendingVerse = 0;
+      return;
+    }
+    pendingVerse = 0;
+    row.classList.add('is-target');
+    setTimeout(function () { row.classList.remove('is-target'); }, 2200);
+    var heads = document.querySelector('.cmp-heads');
+    var off = (heads && heads.offsetHeight ? heads.getBoundingClientRect().bottom : 72) + 12;
+    window.scrollTo({ top: row.getBoundingClientRect().top + window.scrollY - off, behavior: 'smooth' });
   }
 
   fetch('data/manifest.json').then(function (r) { return r.json(); }).then(function (j) {
@@ -631,18 +846,48 @@
       elBook.appendChild(o);
     });
     if (!applyHash()) { elBook.value = man.books[0].b; fillCh(); }
+    navKey = elBook.value + '.' + elCh.value;
     loadCh();
   }).catch(function () {
     elBody.innerHTML = '<div class="cmp-status">The comparison data could not be loaded.</div>';
   });
 
-  elBook.addEventListener('change', function () { fillCh(); loadCh(); });
-  elCh.addEventListener('change', loadCh);
+  /* Every move routes through go(), so the URL always names the chapter on
+     screen and a link can be shared. The next/prev buttons push a history
+     entry (so Back returns to the chapter you came from); a dropdown change
+     replaces it, which keeps Back out of a 28-entry trail through Matthew.
+     Neither pushState nor replaceState fires hashchange, so there is no
+     double load; navKey catches the case where the hash we just wrote is
+     echoed back to us anyway. */
+  function go(b, c, push) {
+    if (b !== elBook.value) { elBook.value = b; fillCh(); }
+    elCh.value = c;
+    navKey = b + '.' + c;
+    try { history[push ? 'pushState' : 'replaceState'](null, '', '#' + navKey); }
+    catch (err) { /* file:// and sandboxed frames reject history writes */ }
+    loadCh();
+  }
+
+  function fromUrl() {
+    if (!applyHash()) return;
+    var key = elBook.value + '.' + elCh.value;
+    if (key === navKey) {
+      /* same chapter - a verse link within the page. Nothing to fetch. */
+      if (pendingVerse) focusVerse(cache[key] || { vv: [] });
+      return;
+    }
+    navKey = key;
+    loadCh();
+  }
+
+  elBook.addEventListener('change', function () { fillCh(); go(elBook.value, elCh.value, false); });
+  elCh.addEventListener('change', function () { go(elBook.value, elCh.value, false); });
   document.getElementById('t-all').addEventListener('change', draw);
   document.getElementById('t-en').addEventListener('change', function () {
     document.body.classList.toggle('show-en', this.checked);
   });
-  window.addEventListener('hashchange', function () { if (applyHash()) loadCh(); });
+  window.addEventListener('hashchange', fromUrl);
+  window.addEventListener('popstate', fromUrl);
 
   /* ── gloss tooltip ─────────────────────────────────────────────────── */
   var tipEl = document.createElement('div');
