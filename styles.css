@@ -2443,12 +2443,12 @@ section.hp-subscribe {
 /* On /updates the list sits on .article-body, which paints --surface */
 .article-body .upd-row::before { box-shadow: 0 0 0 3px var(--surface); }
 
-/* On the homepage the heading is centred, so the list is centred as a column
+/* On the homepage the heading is centered, so the list is centered as a column
    under it rather than stranded against the left edge of a 940px section. */
 #updates .upd-list { max-width: 26rem; margin: 0 auto; }
 
 /* .article-body underlines its links; the update rows are whole-row links and
-   must not pick that up (nor the grey article-link hover). */
+   must not pick that up (nor the gray article-link hover). */
 .article-body .upd-row,
 .article-body .upd-row:hover { text-decoration: none; color: inherit; }
 

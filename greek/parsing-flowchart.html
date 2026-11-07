@@ -47,8 +47,8 @@
    charts.css is deliberately NOT linked: it defines .vt and .vt-row,
    which in greek-tools.css are this page's container and button row.
    These rules are copied verbatim from it. Keep them in step. */
-:root{--hl:#c9a84c;--hl-soft:rgba(201,168,76,.18);--gr:#6f95d8;--gr-soft:rgba(111,149,216,.16);--rd:#c9765f;--rd-soft:rgba(201,118,95,.14);--gn:#7fb896;--gn-soft:rgba(127,184,150,.14);--band:rgba(255,255,255,.025);--bar:#1b2433;--bar-line:rgba(255,255,255,.14);--halo:#10151d}
-:root.light-mode{--hl:#9a7621;--hl-soft:rgba(154,118,33,.16);--gr:#2f5aa8;--gr-soft:rgba(47,90,168,.12);--rd:#a8503a;--rd-soft:rgba(168,80,58,.1);--gn:#2c7350;--gn-soft:rgba(44,115,80,.1);--band:rgba(0,0,0,.03);--bar:#e4dcc8;--bar-line:rgba(0,0,0,.18);--halo:#efe8d8}
+:root{--hl:#c9a84c;--hl-soft:rgba(201,168,76,.18);--gr:#6f95d8;--gr-soft:rgba(111,149,216,.16);--rd:#c9765f;--rd-soft:rgba(201,118,95,.14);--gn:#7fb896;--gn-soft:rgba(127,184,150,.14);--pu:#a98fd0;--pu-soft:rgba(169,143,208,.16);--band:rgba(255,255,255,.025);--bar:#1b2433;--bar-line:rgba(255,255,255,.14);--halo:#10151d}
+:root.light-mode{--hl:#9a7621;--hl-soft:rgba(154,118,33,.16);--gr:#2f5aa8;--gr-soft:rgba(47,90,168,.12);--rd:#a8503a;--rd-soft:rgba(168,80,58,.1);--gn:#2c7350;--gn-soft:rgba(44,115,80,.1);--pu:#5b3f8c;--pu-soft:rgba(91,63,140,.12);--band:rgba(0,0,0,.03);--bar:#e4dcc8;--bar-line:rgba(0,0,0,.18);--halo:#efe8d8}
 .fc-chart{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .fc-chart svg{display:block;width:100%;min-width:820px;height:auto}
 .fc-chart svg.narrow{min-width:620px}
@@ -120,6 +120,9 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   /* .site-wrapper caps the site at 940px, which cut the chart off. The chart
      breaks out of that, but the card hugs the chart rather than spanning the
      viewport and leaving empty wings. */
+  .fc-credit{max-width:62rem;margin:.9rem auto 0;text-align:center;font-size:.8rem;
+             color:var(--text-faint);line-height:1.5}
+  .fc-credit a{color:var(--text-faint);text-decoration:underline}
   .fc-chart img{display:block;width:1387px;height:auto}
   .fc-chart{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
              width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
@@ -224,18 +227,54 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   /* The buttons sit on the summary card as its header, rather than floating
      over it, so nothing overlaps. */
   .gm-panel{position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);
-            width:min(62ch,94%);z-index:3;pointer-events:none}
+            width:min(86ch,96%);z-index:3;pointer-events:none}
   .gm-bar{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;padding:.5rem;
           pointer-events:auto;background:rgba(10,14,22,.94);
           border:1px solid var(--rule);border-bottom:0;border-radius:12px 12px 0 0}
   :root.light-mode .gm-bar{background:rgba(239,232,216,.95)}
   .gm-bar.hidden{display:none}
-  .gm-msg{font-family:'EB Garamond',serif;font-size:clamp(1.02rem,2.5vw,1.2rem);
+  .gm-msg{font-family:'EB Garamond',serif;font-size:clamp(1.12rem,2.6vw,1.42rem);
           line-height:1.5;color:var(--text-mid);text-align:center;pointer-events:none;
           background:rgba(10,14,22,.88);border:1px solid var(--rule);border-radius:12px;padding:.6rem .9rem}
   .gm-bar:not(.hidden) + .gm-msg{border-radius:0 0 12px 12px;border-top:0}
   :root.light-mode .gm-msg{background:rgba(239,232,216,.86)}
   .gm-msg:empty{display:none}
+  /* The reveal: the word in its parts, then the parse, then the verse it came
+     from. Each part is colored by what it does, with the name under it so the
+     color is learnable rather than decorative. */
+  .gm-break{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center;
+            gap:.1rem .15rem;margin:.1rem 0 .7rem}
+  .mp{display:inline-flex;flex-direction:column;align-items:center;gap:.3rem;
+      padding:.3rem .45rem .22rem;border-radius:6px;line-height:1}
+  .mp b{font-family:'Gentium Book Plus','EB Garamond',serif;font-weight:400;
+        font-size:clamp(1.9rem,4.6vw,2.7rem);letter-spacing:.01em;line-height:1.18}
+  .mp i{font-family:'Cinzel',serif;font-style:normal;font-size:.6rem;
+        letter-spacing:.1em;text-transform:uppercase;opacity:.85;white-space:nowrap}
+  .mp-plus{align-self:center;color:var(--text-faint);font-size:1rem;padding-bottom:.9rem}
+  .mp-aug   b,.mp-aug   i{color:var(--rd)}  .mp-aug{background:var(--rd-soft)}
+  .mp-redup b,.mp-redup i{color:var(--hl)}  .mp-redup{background:var(--hl-soft)}
+  .mp-stem  b,.mp-stem  i{color:var(--gr)}  .mp-stem{background:var(--gr-soft)}
+  /* a fused σ sits flush against its stem, so drop the gap between them */
+  .mp-stem + .mp-plus + .mp-fuse{margin-left:-.1rem}
+  .mp-fmt   b,.mp-fmt   i{color:var(--pu)}  .mp-fmt{background:var(--pu-soft)}
+  .mp-end   b,.mp-end   i{color:var(--gn)}  .mp-end{background:var(--gn-soft)}
+  .mp-prep  b,.mp-prep  i{color:var(--text-faint)}
+  /* the σ welded onto a stop: still the formative, so it keeps that color,
+     with a dotted edge where the boundary would have been */
+  .mp-fuse b,.mp-fuse i{color:var(--pu)}
+  .mp-fuse{background:var(--pu-soft);border-left:2px dotted var(--pu)}
+  /* keep the sigma lowercase: uppercasing it names a different letter */
+  .mp-fuse i{text-transform:none;letter-spacing:.06em}
+  .gm-verse u{text-decoration:none;border-bottom:2px solid var(--hl);color:var(--text)}
+  .gm-verse{font-family:'EB Garamond',serif;font-style:italic;font-size:1.12rem;line-height:1.6;
+            color:var(--text-mid);margin:.85rem auto 0;max-width:62rem;
+            padding-top:.6rem;border-top:1px solid var(--rule);text-align:left}
+  .gm-msg .gm-ref{margin-top:.3rem;text-align:right;max-width:62rem;
+                  margin-left:auto;margin-right:auto}
+  @media (max-width:560px){
+    .mp b{font-size:1.55rem} .mp i{font-size:.5rem} .mp{padding:.14rem .32rem}
+    .gm-verse{font-size:.98rem}
+  }
   .gm-msg.bad{color:var(--rd);box-shadow:inset 0 0 0 1px var(--rd-soft)}
   .gm-msg.ok{color:var(--gn);box-shadow:inset 0 0 0 1px var(--gn-soft)}
   /* these must outrank .cv-bar.hl and .cv-in.dark, hence the long selectors */
@@ -249,7 +288,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   svg.cv g.is-ok rect.cv-bar,svg.cv g.is-ok polygon.cv-dia{fill:var(--gn-soft);stroke:var(--gn);stroke-width:2.2;animation:none}
   svg.cv g.is-ok text.cv-chip,svg.cv g.is-ok text.cv-in,svg.cv g.is-ok text.cv-stage{fill:var(--gn)}
   svg.cv path.cv-line.is-ok{stroke:var(--gn);stroke-width:2;opacity:1}
-  /* the branch you ruled out stays visible, unemphasised, so the chart fills
+  /* the branch you ruled out stays visible, unemphasized, so the chart fills
      in as you play and you can reason by elimination */
   svg.cv g.is-dead rect.cv-bar,svg.cv g.is-dead polygon.cv-dia{fill:transparent;stroke:var(--rule);stroke-width:1;animation:none}
   svg.cv g.is-dead text{fill:var(--text-faint)}
@@ -261,9 +300,9 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   /* The solve action reads in the game's own "correct" green rather than a
      filled gold slab: gold stays reserved for what is clickable on the board,
      and dark-on-gold micro-caps were the hardest thing here to read. */
-  .gm-act.go{font-size:.74rem;letter-spacing:.09em;border-radius:6px;font-weight:600;
-             background:var(--gn-soft);border-color:var(--gn);color:var(--gn)}
-  .gm-act.go:hover{background:var(--gn);border-color:var(--gn);color:var(--halo)}
+  /* the in-game control wears the same pixel frame as Play, one step down */
+  .pxbtn-sm{--px:5px;font-size:1.05rem;padding:1rem 1.6rem}
+  @media (max-width:560px){.pxbtn-sm{--px:4px;font-size:.85rem;padding:.8rem 1.1rem}}
   svg.cv [data-node] rect,svg.cv [data-node] polygon,svg.cv [data-node] text{transition:fill .25s ease,stroke .25s ease}
   .gm-stage{flex:1;min-height:0;width:100%;display:block;touch-action:none;
     -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 46px,#000 calc(100% - 26px),transparent 100%);
@@ -347,6 +386,9 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
            decoding="async"
            alt="Flowchart for parsing a Koine Greek verb in the indicative: stem form, augment, reduplication and tense formative, leading to each tense and voice.">
     </div>
+    <p class="fc-credit">Verses from the World English Bible. Word-level English renderings from the
+      Translators Amalgamated Greek New Testament (<a href="https://www.stepbible.org/" rel="noopener">STEPBible</a>,
+      <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>).</p>
   </div>
 </main>
 
@@ -383,7 +425,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
     </svg>
     <div class="gm-panel" id="gmPanel">
       <div class="gm-bar hidden" id="gmActions">
-        <button type="button" class="gm-act go" id="gmNext" onclick="newForm()">Next verb &#8594;</button>
+        <button type="button" class="pxbtn pxbtn-sm" id="gmNext" onclick="newForm()">NEXT VERB</button>
       </div>
       <div class="gm-msg" id="gmMsg" aria-live="polite"></div>
     </div>
@@ -733,6 +775,13 @@ const poolReady = fetch('parsing-pool.json')
   .then(function(r){ return r.ok ? r.json() : null; })
   .then(function(j){ if(j&&j.length) POOL=j; return POOL; })
   .catch(function(){ return null; });
+/* Verse text is only wanted at the reveal, so it loads behind the pool and the
+   panel simply leaves the quotation out if it has not arrived. */
+let VERSES=null;
+poolReady.then(function(){
+  fetch('parsing-verses.json').then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(j){ VERSES=j; }).catch(function(){});
+});
 
 poolReady.then(function(p){
   const b=document.getElementById('playBtn');
@@ -976,6 +1025,41 @@ function choosePN(to){
   GC[at].kids.forEach(function(k){ if(live.indexOf(k.to)<0) dead.add(k.to); });
   finish(fresh); flash(to,'flash-ok'); sndSolved();
 }
+const PART={aug:'augment', redup:'reduplication', stem:'stem',
+            fuse:'fused σ', fmt:'tense formative', end:'ending',
+            prep:'preposition'};
+function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+/* The word laid out in its parts. Not every form can be cut cleanly — where the
+   σ has merged into the stem (βλέπ+σ → βλέψ) the piece is shown whole and
+   labeled as both, rather than split at a boundary that is not there. */
+function breakdown(e){
+  if(!e.seg || !e.seg.length) return '';
+  const cells = e.seg.map(function(p){
+    return '<span class="mp mp-'+p[0]+'"><b>'+esc(p[1])+'</b>'
+         + '<i>'+PART[p[0]]+'</i></span>';
+  }).join('<span class="mp-plus">+</span>');
+  return '<div class="gm-break">'+cells+'</div>';
+}
+/* e.wi is the span of the WEB verse that renders this exact Greek word. It is
+   precomputed from a word-level Greek-English alignment, with the occurrence
+   chosen by Greek word order, so a verse using the word several times still
+   underlines the right one. Absent (about 7%) where the WEB chose wording the
+   alignment does not contain — "became the father of" for begat — and never
+   guessed. */
+function verseHtml(e){
+  if(!VERSES) return '';
+  const t = VERSES[e.ref]; if(!t) return '';
+  const w = t.split(/\s+/);
+  let body;
+  if(e.wi && e.wi.length===2 && e.wi[1] < w.length){
+    body = w.map(esc);
+    body[e.wi[0]] = '<u>'+body[e.wi[0]];
+    body[e.wi[1]] = body[e.wi[1]]+'</u>';
+    body = body.join(' ');
+  } else body = esc(t);
+  return '<div class="gm-verse">'+body+'</div>';
+}
+
 function finish(fresh){
   done=true; solved++; streak++;
   document.getElementById('gmSolved').textContent=solved;
@@ -993,8 +1077,9 @@ function finish(fresh){
     note = '<br>Same ending for both; only context decides. Here it is '
          + pnLong(pnOf(cur.p)).toLowerCase()+'.';
   }
-  msg(head+'<br><span class="gm-lex">'+cur.lex+'</span> — '+cur.gl+
-      '<br><span class="gm-ref">'+cur.ref+'</span>'+note,'ok');
+  msg(breakdown(cur)+head+'<br><span class="gm-lex">'+cur.lex+'</span> — '+cur.gl
+      +note+verseHtml(cur)+'<div class="gm-ref">'+cur.ref
+      +(VERSES&&VERSES[cur.ref]?' \u00b7 WEB':'')+'</div>','ok');
   document.getElementById('gmActions').classList.remove('hidden');
   board(fresh);
   document.getElementById('gmNext').focus();

@@ -2,7 +2,7 @@
    James — Greek audio player (fixed bar at the bottom of the page)
    Reads the chapters for this page from <div id="audio-bar" data-chapters="3,4">
    Twin of galatians-audio.js: only the labels, the audio path and the two
-   timing globals differ. Any behaviour change has to be made in both.
+   timing globals differ. Any behavior change has to be made in both.
    ========================================================================== */
 (function () {
   const host = document.getElementById('audio-bar');

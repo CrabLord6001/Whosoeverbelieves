@@ -3482,7 +3482,7 @@ function _syncUpdate(force) {
   if (!track) return;
 
   // Measured times are used as they are; only the estimate gets remapped to an
-  // anchor, and only the estimate honours the reader's manual delay.
+  // anchor, and only the estimate honors the reader's manual delay.
   const starts = _syncExact
     ? _syncStarts
     : _syncRemap(_syncStarts, _audio.duration, _syncAnchor);
@@ -4068,7 +4068,7 @@ function _audioUpdateMediaSession(track) {
     _audioUpdatePosition();
   });
   // Only offer track skips that actually go somewhere, so the lock screen
-  // greys out the rest instead of showing dead buttons.
+  // grays out the rest instead of showing dead buttons.
   set('previoustrack', (_audioIdx > 0 || _audio.currentTime > 5) ? () => audioGoPrev() : null);
   set('nexttrack', _audioIdx < _audioQueue.length - 1 ? () => audioGoNext() : null);
 }

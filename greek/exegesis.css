@@ -273,7 +273,7 @@ body.has-audio-bar { padding-bottom: 5.5rem; }
 
    .word-now is deliberately the strongest mark on the page: the point of this
    is hearing one word clearly, so the eye has to find it without searching.
-   The parts-of-speech colour survives underneath — the word is still parsed
+   The parts-of-speech color survives underneath — the word is still parsed
    while it is being read. The mix is against transparent rather than --bg so
    it sits correctly on whatever is behind it. */
 .exegesis-page .greek-line .word-seek {

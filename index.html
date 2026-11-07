@@ -539,7 +539,7 @@
   function dayNumber(y, m, d) { return Math.floor(Date.UTC(y, m - 1, d) / 86400000); }
   function pickBackdrop(text, day) {
     var n = BACKDROPS.length;
-    // Fixed shuffle so neighbouring days don't land on similar paintings.
+    // Fixed shuffle so neighboring days don't land on similar paintings.
     var rot = BACKDROPS[(day * 17) % n];
     if (!text) return rot;
     var t = text.toLowerCase(), hits = {}, best = 0, top = [];
@@ -850,7 +850,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // The discipleship challenge used to appear here as "Day N of 30", but that
       // counted calendar days since the start date and never read challenge_checks,
       // so it measured elapsed time rather than anything the reader had done. The
-      // challenge is organised in weekly themes, not days. Removed; it is still
+      // challenge is organized in weekly themes, not days. Removed; it is still
       // reached from the nav and its tool card. The strip is now the reading plan.
       strip.hidden = !any;
     }).catch(function () { strip.hidden = true; });

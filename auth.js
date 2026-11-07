@@ -514,7 +514,7 @@
   // The click and Escape handling in scripts.js is delegated on document, so it
   // picks this menu up on its own. Its hover coordination is not — those
   // listeners are bound at page load, before this element exists — so the
-  // one-menu-at-a-time behaviour is wired up here instead.
+  // one-menu-at-a-time behavior is wired up here instead.
   function addHover(drop) {
     if (!window.matchMedia || !window.matchMedia('(hover: hover)').matches) return;
     drop.addEventListener('mouseenter', function () {
