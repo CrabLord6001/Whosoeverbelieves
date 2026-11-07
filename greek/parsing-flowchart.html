@@ -127,6 +127,17 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   .fc-chart{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
              width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
   @media (max-width:980px){.fc-chart{width:auto;max-width:none;left:0;transform:none}}
+  /* Below 980px the baked image does not survive the trip: it is 1567px wide,
+     so a phone shows a fraction of it and the rest is a swipe away, and
+     pinching in only enlarges the blur. The same chart drawn live is vector,
+     so it stays sharp however far a reader zooms. Desktop keeps the image. */
+  #fcLive,.fc-hint{display:none}
+  @media (max-width:980px){
+    .fc-chart img{display:none}
+    #fcLive{display:block}
+    .fc-hint{display:block;margin:0 auto .5rem;text-align:center;font-size:.8rem;
+             letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint)}
+  }
   .ch-acts{gap:.6rem}
   .ch-acts{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:.9rem}
   /* The one line telling a visitor what they are about to play, so it is
@@ -232,6 +243,14 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
           pointer-events:auto;background:rgba(10,14,22,.94);
           border:1px solid var(--rule);border-bottom:0;border-radius:12px 12px 0 0}
   :root.light-mode .gm-bar{background:rgba(239,232,216,.95)}
+  .gm-bar{position:relative}
+  .gm-fold{position:absolute;right:.6rem;top:50%;transform:translateY(-50%);
+           background:none;border:1px solid currentColor;border-radius:999px;color:inherit;
+           font-family:inherit;font-size:.78rem;letter-spacing:.04em;opacity:.55;
+           padding:.34rem .72rem;min-height:32px;cursor:pointer}
+  .gm-fold:hover,.gm-fold:focus-visible{opacity:1}
+  .gm-panel.folded #gmMsg{display:none}
+  @media (max-width:560px){.gm-fold{font-size:.72rem;padding:.3rem .55rem;right:.45rem}}
   .gm-bar.hidden{display:none}
   .gm-msg{font-family:'EB Garamond',serif;font-size:clamp(1.12rem,2.6vw,1.42rem);
           line-height:1.5;color:var(--text-mid);text-align:center;pointer-events:none;
@@ -386,10 +405,13 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   <p class="vt-desc">Study the master verb parsing flowchart, then test yourself choosing the correct path for a word.</p>
 
   <div id="chartMode">
+    <p class="fc-hint">Pinch &amp; Scroll to See More</p>
     <div class="fc-chart">
       <img id="fcChart" src="/images/gk/parsing-flowchart-dark.webp" width="1387" height="824"
            decoding="async"
            alt="Flowchart for parsing a Koine Greek verb in the indicative: stem form, augment, reduplication and tense formative, leading to each tense and voice.">
+      <svg class="cv" id="fcLive" role="img"
+           aria-label="Flowchart for parsing a Koine Greek verb in the indicative: stem form, augment, reduplication and tense formative, leading to each tense and voice."><g id="fcLiveG"></g></svg>
     </div>
     <p class="fc-credit">Verses from the World English Bible. Word-level English renderings from the
       Translators Amalgamated Greek New Testament (<a href="https://www.stepbible.org/" rel="noopener">STEPBible</a>,
@@ -431,6 +453,8 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
     <div class="gm-panel" id="gmPanel">
       <div class="gm-bar hidden" id="gmActions">
         <button type="button" class="pxbtn pxbtn-sm" id="gmNext" onclick="newForm()">NEXT VERB</button>
+        <button type="button" class="gm-fold" id="gmFold" onclick="foldPanel()"
+                aria-controls="gmMsg" aria-expanded="true">Hide answer</button>
       </div>
       <div class="gm-msg" id="gmMsg" aria-live="polite"></div>
     </div>
@@ -849,6 +873,27 @@ function renderFlow(host, vis, opt){
     {attributes:true, attributeFilter:['class']});
 })();
 
+/* The narrow layout draws that same chart live instead of fetching the image.
+   Once only, on the first narrow layout, and only once the fonts are in:
+   layout() measures text, so measuring against a fallback face puts every
+   column in the wrong place. The theme needs no redraw — the SVG reads the
+   same CSS variables the rest of the page does. */
+(function(){
+  const svg=document.getElementById('fcLive'), host=document.getElementById('fcLiveG');
+  if(!svg||!host) return;
+  const mq=window.matchMedia('(max-width:980px)');
+  let drawn=false;
+  const draw=function(){
+    if(drawn || !mq.matches) return;
+    drawn=true;
+    const L=renderFlow(host, new Set(Object.keys(G)), {});
+    svg.setAttribute('viewBox','0 0 '+L.W+' '+L.H);
+  };
+  const ready=(document.fonts && document.fonts.ready) || Promise.resolve();
+  ready.then(draw);
+  mq.addEventListener('change', function(){ ready.then(draw); });
+})();
+
 /* ── Form pool ───────────────────────────────────────────────────
    Indicative forms attested in the NT text, for the most common
    verbs. Prefetched so Play never starts before
@@ -940,7 +985,12 @@ function board(fresh){
   }
   const svg=document.getElementById('gmSvg');
   const r=svg.getBoundingClientRect();
-  gVert = r.height > r.width;                // taller than wide: run the tree downward
+  /* Portrait runs the tree downward and spreads siblings sideways, which suits
+     the handful of nodes on screen mid-round. At the reveal every node is
+     showing, and that same mode sprawls to roughly 5:1 while the default comes
+     out near 0.6:1 — the shape a phone actually is. So once the round is
+     solved, keep the default layout whatever the board's proportions. */
+  gVert = done ? false : (r.height > r.width);
   gL=renderFlow(document.getElementById('gmCam'), vis,
     {graph:GC, ghost:ghost, pick:pick, fresh:fresh||new Set(), labelOf:labelOf,
      ok:new Set(pathIds.filter(function(i){ return GC[i] && GC[i].kind==='chip'; })),
@@ -993,12 +1043,13 @@ function centerOn(ids, anim){
 }
 /* Solved: the board now carries the whole chart, grayed except the live path,
    so pull back far enough to read it all, clear of the summary panel. */
-function frameAll(anim){
+function frameAll(anim, only){
   const r=stageRect(); if(!r.width || !gL) return;
   const p=document.getElementById('gmPanel');
   const ph=(p?p.getBoundingClientRect().height:0)+28;
   let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
-  Object.keys(gL.S).forEach(function(i){ const n=gL.S[i];
+  const keys=(only && only.length) ? only : Object.keys(gL.S);
+  keys.forEach(function(i){ const n=gL.S[i]; if(!n) return;
     x0=Math.min(x0,n.x); x1=Math.max(x1,n.x+n.w); y0=Math.min(y0,n.y-n.h/2); y1=Math.max(y1,n.y+n.h/2); });
   if(x1<x0) return;
   const avail=Math.max(140, r.height-ph);
@@ -1013,6 +1064,16 @@ function cam(instant){
   else centerOn(activeIds(), !instant);
 }
 function recenter(){ camAuto=true; cam(false); }
+/* The reveal box takes roughly half a phone screen, which leaves the solved
+   chart a strip. Folding it away hands that height back to the chart so the
+   whole path can be explored, and the camera re-fits to the new room. */
+function foldPanel(){
+  const p=document.getElementById('gmPanel'), b=document.getElementById('gmFold');
+  const folded=p.classList.toggle('folded');
+  b.textContent = folded ? 'Show answer' : 'Hide answer';
+  b.setAttribute('aria-expanded', folded ? 'false' : 'true');
+  requestAnimationFrame(function(){ cam(false); });
+}
 function zoomAt(px,py,f){
   const ns=Math.min(4, Math.max(0.08, camS*f));
   if(ns===camS) return;
@@ -1185,6 +1246,9 @@ function finish(fresh){
   msg(breakdown(cur)+head+'<br><span class="gm-lex">'+cur.lex+'</span> — '+cur.gl
       +note+verseHtml(cur)+'<div class="gm-ref">'+cur.ref
       +(VERSES&&VERSES[cur.ref]?' \u00b7 WEB':'')+'</div>','ok');
+  document.getElementById('gmPanel').classList.remove('folded');
+  const fold=document.getElementById('gmFold');
+  if(fold){ fold.textContent='Hide answer'; fold.setAttribute('aria-expanded','true'); }
   document.getElementById('gmActions').classList.remove('hidden');
   board(fresh);
   document.getElementById('gmNext').focus();
@@ -1254,7 +1318,7 @@ window.addEventListener('resize', function(){
   clearTimeout(rzT);
   rzT=setTimeout(function(){
     const r=document.getElementById('gmSvg').getBoundingClientRect();
-    if((r.height > r.width) !== gVert) board();       // orientation flipped: rebuild
+    if(!done && (r.height > r.width) !== gVert) board();       // orientation flipped: rebuild
     else cam(true);
   },150);
 });
