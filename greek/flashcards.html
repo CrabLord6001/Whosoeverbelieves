@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-05VNP2PXN4');
+    // Analytics loads just after the page finishes, so it doesn't slow the first paint.
+    window.addEventListener('load', function () { setTimeout(function () { var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4'; document.head.appendChild(s); }, 1500); });
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vocab Flashcards &#8212; Whosoever Believes</title>
+  <meta name="description" content="Greek flashcards and drills — 1,000 vocabulary words from Mounce's BBG and 387 verb forms across all five moods." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+  .gk-banner{position:relative;max-width:940px;margin:0 auto;height:250px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;text-align:center;padding:0 1.5rem 1.8rem;
+    background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.55) 55%,rgba(13,17,23,.96) 100%),url("/images/gk/greek-banner.webp") center 40%/cover no-repeat,#0d1117}
+  :root.light-mode .gk-banner{background:radial-gradient(ellipse 60% 70% at 50% 62%,rgba(8,12,20,.62) 0%,rgba(8,12,20,.3) 55%,rgba(8,12,20,0) 100%),linear-gradient(180deg,rgba(8,12,20,.15) 0%,rgba(8,12,20,.55) 55%,rgba(8,12,20,.85) 100%),url("/images/gk/greek-banner.webp") center 40%/cover no-repeat,#1a1a1a}
+  /* Light mode: the scrim exists so the white title reads over the art, so it belongs
+     under the title band only. Spread across the whole card it turned these into dark
+     slabs on the parchment background. Dark mode is untouched. */
+  :root.light-mode .gk-card{background:#e8e0cc;border-color:rgba(138,106,31,.3);box-shadow:0 8px 24px rgba(60,45,15,.16)}
+  :root.light-mode .gk-card img{filter:saturate(.95) brightness(1.02)}
+  :root.light-mode .gk-card::after{background:linear-gradient(180deg,rgba(8,12,20,0) 0%,rgba(8,12,20,0) 45%,rgba(8,12,20,.35) 65%,rgba(8,12,20,.82) 100%)}
+  :root.light-mode .gk-card:hover,:root.light-mode .gk-card:focus-within{border-color:rgba(138,106,31,.6);box-shadow:0 12px 32px rgba(60,45,15,.22)}
+  :root.light-mode .gk-card:hover img,:root.light-mode .gk-card:focus-within img{filter:saturate(1) brightness(1.06)}
+  /* on hover the description expands upward, so the band has to reach higher */
+  :root.light-mode .gk-card:hover::after,:root.light-mode .gk-card:focus-within::after{background:linear-gradient(180deg,rgba(8,12,20,0) 0%,rgba(8,12,20,.3) 35%,rgba(8,12,20,.9) 100%)}
+  .gk-banner h1{font-family:'Cinzel',serif;font-weight:600;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.12em;color:#fff;margin:0;text-wrap:balance;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+  .gk-banner p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;font-weight:500;color:#f3eee4;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 14px rgba(0,0,0,.75);margin:.45rem auto 0;max-width:40rem;text-wrap:balance}
+  .gk-banner cite{display:block;font-style:normal;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.2em;color:#e5c97a;margin-top:.4rem;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+  .gk-main{display:flex;flex-direction:column;gap:3.2rem;padding:2.4rem 2rem 3rem}
+  .gk-main>section{padding:0;margin:0;background:none;border:0;box-shadow:none;max-width:none}
+  .gk-main>section::before,.gk-main>section::after{display:none}
+  .gk-main>section.gk-essay{max-width:760px;margin:0 auto}
+  .gk-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.2rem;margin-bottom:1.3rem}
+  .gk-head h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:2rem;margin:0;color:var(--text);text-wrap:balance}
+  .gk-head p{color:var(--text-mid);margin:0}
+  .gk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem}
+  .gk-card{position:relative;display:block;aspect-ratio:3/2;border-radius:10px;overflow:hidden;border:1px solid var(--glass-border);color:#fff;text-decoration:none;background:#0d1117}
+  .gk-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.75) brightness(.85);transition:transform .5s ease,filter .4s ease}
+  .gk-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,12,20,.25) 0%,rgba(8,12,20,.45) 45%,rgba(8,12,20,.9) 100%);transition:background .4s ease}
+  .gk-body{position:absolute;left:0;right:0;bottom:0;z-index:1;padding:1.3rem 1.5rem 1.4rem;display:flex;flex-direction:column;gap:.3rem}
+  .gk-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.75rem;line-height:1.15;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6);text-wrap:balance}
+  .gk-more{display:flex;flex-direction:column;gap:.2rem;max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease}
+  .gk-desc{color:#e2dccf;font-size:1.02rem;max-width:34rem;text-wrap:balance}
+  .gk-go{margin-top:.35rem;color:#e5c97a;font-size:1rem}
+  .gk-card:hover img,.gk-card:focus-within img{transform:scale(1.04);filter:saturate(.95) brightness(.9)}
+  .gk-card:hover::after,.gk-card:focus-within::after{background:linear-gradient(180deg,rgba(8,12,20,.2) 0%,rgba(8,12,20,.92) 100%)}
+  .gk-card:hover .gk-more,.gk-card:focus-within .gk-more{max-height:10rem;opacity:1}
+  .gk-card:hover{border-color:rgba(201,168,76,.55)}
+  a.gk-card:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  @media (hover:none){.gk-more{max-height:none;opacity:1}}
+  .gk-essay{max-width:760px;margin:0 auto;color:var(--text-mid)}
+  .gk-essay h2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.8rem;color:var(--text);text-align:center;margin:0 0 1rem;text-wrap:balance}
+  .gk-essay p{margin:0 0 1rem;line-height:1.8}
+  .gk-essay strong{color:var(--text);font-weight:500}
+  @media (min-width:761px){
+    /* A card with no partner on its row is centred: the only card in a grid, or
+       an odd-numbered last card (3rd of 3). Adding a 4th makes it stop matching. */
+    .gk-grid > .gk-card:only-child,
+    .gk-grid > .gk-card:last-child:nth-child(odd){grid-column:1 / -1;justify-self:center;width:calc((100% - 1.25rem)/2)}
+  }
+  @media (max-width:760px){
+    .gk-grid{grid-template-columns:minmax(0,1fr)}
+    .gk-main{padding:1.8rem 1rem 2rem;gap:2.6rem}
+    .gk-banner{height:auto;min-height:190px;padding-top:2.2rem;padding-bottom:1.4rem}
+    .gk-banner h1{font-size:1.5rem;letter-spacing:.08em}
+    .gk-banner p{font-size:.98rem}
+    .gk-card{aspect-ratio:auto;min-height:250px}
+    .gk-title{font-size:1.45rem}
+    .gk-desc{font-size:.95rem}
+    .gk-body{padding:1.1rem 1.15rem 1.2rem}
+  }
+</style>
+  <!-- SEO metadata -->
+  <link rel="canonical" href="https://whosoeverbelieves.com/greek/flashcards" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/icon-96.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Whosoever Believes" />
+  <meta property="og:url" content="https://whosoeverbelieves.com/greek/" />
+  <meta property="og:title" content="Vocab Flashcards — Whosoever Believes" />
+  <meta property="og:description" content="Greek flashcards and drills — vocabulary from Mounce's BBG and verb forms across all five moods." />
+  <meta property="og:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Vocab Flashcards — Whosoever Believes" />
+  <meta name="twitter:description" content="Greek flashcards and drills — vocabulary from Mounce's BBG and verb forms across all five moods." />
+  <meta name="twitter:image" content="https://whosoeverbelieves.com/images/cross-sunrise.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Whosoever Believes",
+      "item": "https://whosoeverbelieves.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Greek Studies",
+      "item": "https://whosoeverbelieves.com/greek/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Vocab Flashcards",
+      "item": "https://whosoeverbelieves.com/greek/flashcards"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="site-wrapper">
+
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Small Groups</button>
+      <div class="nav-drop-menu">
+        <a href="/studies/titus">Titus Study</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+  <div class="gk-banner">
+    <h1>Vocab Flashcards</h1>
+    <p>Each tool runs entirely in your browser &#8212; no login or installation required.</p>
+  </div>
+
+  <main class="gk-main">
+    <section aria-labelledby="fc-h">
+      <div class="gk-head">
+        <h2 id="fc-h">Drills</h2>
+      </div>
+      <div class="gk-grid">
+        <a class="gk-card" href="vocabulary">
+          <img src="/images/gk/greek-vocab.webp" alt="Adriaen van Ostade, The Schoolmaster" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">NT Greek Vocabulary</h3>
+            <div class="gk-more">
+              <span class="gk-desc">1,000 words from Mounce's BBG — flashcards, quizzes, and speed rounds filtered by chapter.</span>
+              <span class="gk-go">Launch Tool &#8594;</span>
+            </div>
+          </div>
+        </a>
+        <a class="gk-card" href="Verb-Parsing">
+          <img src="/images/gk/greek-parsing.webp" alt="Rembrandt, Two Old Men Disputing" loading="lazy" decoding="async">
+          <div class="gk-body">
+            <h3 class="gk-title">Verb Parsing Drills</h3>
+            <div class="gk-more">
+              <span class="gk-desc">387 forms across all five moods — Indicative, Subjunctive, Imperative, Infinitive, and Participle.</span>
+              <span class="gk-go">Launch Tool &#8594;</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="greek">&#960;&#8118;&#962; &#8001; &#960;&#953;&#963;&#964;&#949;&#973;&#969;&#957; &#949;&#7984;&#962; &#945;&#8016;&#964;&#8056;&#957; &#7948;&#967;&#8131; &#950;&#969;&#8052;&#957; &#945;&#7984;&#974;&#957;&#953;&#959;&#957;</span>
+    <div class="footer-nav">
+      <a href="/about">About</a>
+      <span>&#183;</span>
+      <span>&#169; 2026 Whosoever Believes</span>
+    </div>
+  </footer>
+</div>
+
+<script src="../scripts.js"></script>
+<script src="/auth.js" defer></script>
+</body>
+</html>

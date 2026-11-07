@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-05VNP2PXN4');
+  window.addEventListener('load', function () { setTimeout(function () { var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4'; document.head.appendChild(s); }, 1500); });
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Greek Verb Parsing Flowchart &#8212; Whosoever Believes</title>
+<meta name="description" content="Parse any Greek indicative verb by walking a decision tree: augment, reduplication, and tense formative, on forms drawn from the Greek New Testament.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap" /></noscript>
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="greek-tools.css">
+<link rel="canonical" href="https://whosoeverbelieves.com/greek/parsing-flowchart" />
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="/images/icon-96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:site_name" content="Whosoever Believes" />
+<meta property="og:title" content="Greek Verb Parsing Flowchart &#8212; Whosoever Believes" />
+<meta property="og:description" content="Parse any Greek indicative verb by walking a decision tree, on forms drawn from the Greek New Testament." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Greek Verb Parsing Flowchart &#8212; Whosoever Believes" />
+<meta name="twitter:description" content="Parse any Greek indicative verb by walking a decision tree, on forms drawn from the Greek New Testament." />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Whosoever Believes", "item": "https://whosoeverbelieves.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Greek Studies", "item": "https://whosoeverbelieves.com/greek/" },
+    { "@type": "ListItem", "position": 3, "name": "Greek Verb Parsing Flowchart", "item": "https://whosoeverbelieves.com/greek/parsing-flowchart" }
+  ]
+}
+</script>
+<style>
+/* ── Chart primitives ────────────────────────────────────────────
+   charts.css is deliberately NOT linked: it defines .vt and .vt-row,
+   which in greek-tools.css are this page's container and button row.
+   These rules are copied verbatim from it. Keep them in step. */
+:root{--hl:#c9a84c;--hl-soft:rgba(201,168,76,.18);--gr:#6f95d8;--gr-soft:rgba(111,149,216,.16);--rd:#c9765f;--rd-soft:rgba(201,118,95,.14);--gn:#7fb896;--gn-soft:rgba(127,184,150,.14);--band:rgba(255,255,255,.025);--bar:#1b2433;--bar-line:rgba(255,255,255,.14);--halo:#10151d}
+:root.light-mode{--hl:#9a7621;--hl-soft:rgba(154,118,33,.16);--gr:#2f5aa8;--gr-soft:rgba(47,90,168,.12);--rd:#a8503a;--rd-soft:rgba(168,80,58,.1);--gn:#2c7350;--gn-soft:rgba(44,115,80,.1);--band:rgba(0,0,0,.03);--bar:#e4dcc8;--bar-line:rgba(0,0,0,.18);--halo:#efe8d8}
+.ch-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ch-scroll svg{display:block;width:100%;min-width:820px;height:auto}
+.ch-scroll svg.narrow{min-width:620px}
+svg.cv{font-family:'EB Garamond',Georgia,serif}
+svg.cv .cv-bg{fill:transparent}
+svg.cv .cv-band{fill:var(--band)}
+svg.cv .cv-lane{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.12em;fill:var(--text-mid);text-transform:uppercase}
+svg.cv .cv-axis{stroke:var(--text-faint);stroke-width:1}
+svg.cv .cv-grid{stroke:var(--rule);stroke-width:1}
+svg.cv .cv-tick{font-size:14px;fill:var(--text-faint)}
+svg.cv .cv-bar{fill:var(--bar);stroke:var(--bar-line)}
+svg.cv .cv-bar.hl{fill:var(--hl-soft);stroke:var(--hl);stroke-width:1.5}
+svg.cv .cv-bar.solid{fill:var(--hl);stroke:var(--hl)}
+svg.cv .cv-bar.gr{fill:var(--gr-soft);stroke:var(--gr)}
+svg.cv .cv-bar.rd{fill:var(--rd-soft);stroke:var(--rd)}
+svg.cv .cv-bar.gn{fill:var(--gn-soft);stroke:var(--gn)}
+svg.cv .cv-in{font-size:14.5px;fill:var(--text)}
+svg.cv .cv-in.hl{fill:var(--hl);font-weight:500}
+svg.cv .cv-in.dark{fill:#0d1117;font-weight:500}
+svg.cv .cv-in-sub{font-size:12px;fill:var(--text-faint)}
+svg.cv .cv-txt,svg.cv .cv-sub,svg.cv .cv-note{paint-order:stroke;stroke:var(--halo);stroke-width:5px;stroke-linejoin:round}
+svg.cv .cv-txt{font-size:15px;fill:var(--text)}
+svg.cv .cv-sub{font-size:12.5px;fill:var(--text-mid)}
+svg.cv .cv-note{font-size:14px;font-style:italic;fill:var(--hl)}
+svg.cv .cv-stem{stroke:var(--hl);stroke-width:1;opacity:.55}
+svg.cv .cv-dot{fill:var(--hl)}
+svg.cv .cv-stem.gr{stroke:var(--gr)}
+svg.cv .cv-dot.gr{fill:var(--gr)}
+svg.cv .cv-stem.rd{stroke:var(--rd)}
+svg.cv .cv-dot.rd{fill:var(--rd)}
+svg.cv .cv-bracket{fill:none;stroke:var(--hl);stroke-dasharray:3 3}
+svg.cv .cv-line{fill:none;stroke:var(--text-faint);stroke-width:1.2}
+svg.cv .cv-line.hl{stroke:var(--hl);stroke-width:2}
+.ch-scroll svg.cv{cursor:zoom-in}
+.cz-overlay{position:fixed;inset:0;z-index:3000;background:var(--bg);display:flex;flex-direction:column}
+.cz-bar{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.cz-title{flex:1;min-width:10rem;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.3rem;color:var(--text)}
+.cz-bar button{font-family:'Cinzel',serif;font-size:.7rem;font-weight:600;letter-spacing:.12em;min-width:44px;min-height:44px;padding:0 .9rem;border-radius:4px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text);cursor:pointer}
+.cz-bar button:hover{border-color:var(--gold);color:var(--gold)}
+.cz-bar .cz-close{border-color:var(--gold);color:var(--gold)}
+.cz-pct{min-width:3.5rem;text-align:center;color:var(--text-mid);font-size:.95rem}
+.cz-body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;display:flex}
+.cz-body svg.cv{margin:auto;display:block;height:auto;min-width:0;cursor:default;flex:none}
+.cz-hint{font-size:.85rem;color:var(--text-faint);font-style:italic}
+body.cz-open{overflow:hidden}
+:root{--sea:#0f1a2a;--land:#2b3342;--coast:rgba(255,255,255,.22)}
+:root.light-mode{--sea:#d8e2e8;--land:#efe6d2;--coast:rgba(0,0,0,.25)}
+svg.cv .cv-sea{fill:var(--sea)}
+svg.cv .cv-land{fill:var(--land);stroke:var(--coast);stroke-width:.8;stroke-linejoin:round}
+svg.cv .cv-region{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.3em;fill:var(--text-faint)}
+svg.cv .cv-seaname{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;letter-spacing:.08em;fill:var(--gr);opacity:.7}
+svg.cv .cv-city{fill:var(--text);stroke:var(--sea);stroke-width:1.5}
+svg.cv .cv-city.major{fill:var(--text)}
+svg.cv .rt{fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;transition:opacity .25s ease}
+svg.cv .rt1{stroke:var(--hl)}
+svg.cv .rt2{stroke:var(--gr)}
+svg.cv .rt3{stroke:var(--gn)}
+svg.cv .rt4{stroke:var(--rd);stroke-dasharray:7 5}
+svg.cv[data-show="1"] .rt:not(.rt1),svg.cv[data-show="2"] .rt:not(.rt2),svg.cv[data-show="3"] .rt:not(.rt3),svg.cv[data-show="4"] .rt:not(.rt4){opacity:.08}
+svg.cv[data-show="1"] .rt1,svg.cv[data-show="2"] .rt2,svg.cv[data-show="3"] .rt3,svg.cv[data-show="4"] .rt4{stroke-width:3.4}
+svg.cv .cv-river{fill:none;stroke:var(--gr);stroke-width:1.6;opacity:.75}
+svg.cv .cv-lake{fill:var(--sea);stroke:var(--coast);stroke-width:.8}
+svg.cv .rt0{stroke:var(--text-faint);stroke-dasharray:2 5;stroke-width:2.2}
+svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
+.cz-key{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.4rem;padding:.6rem 1rem;border-bottom:1px solid var(--rule)}
+.cz-key .ch-legend{margin:0;font-size:1rem}
+.cz-key .mp-controls{margin:0}
+  svg.cv .cv-dia{fill:var(--bar);stroke:var(--bar-line);stroke-width:1}
+  /* Colour carries meaning: gold = you can click it now, green = you chose it,
+     neutral = context. So the reference chart is monochrome and the thread reads. */
+  svg.cv rect.cv-bar.term{fill:var(--bar);stroke:var(--bar-line);stroke-width:1.6}
+  svg.cv text.term-t{fill:var(--text);font-weight:600}
+  svg.cv rect.cv-bar.stg{fill:transparent;stroke:var(--rule);stroke-width:1}
+  svg.cv text.cv-stage{fill:var(--text-mid)}
+  svg.cv rect.cv-bar.hl{stroke-width:1.4}
+  svg.cv .cv-gk{font-family:'Gentium Book Plus',serif;font-size:15px;fill:var(--text);paint-order:stroke;stroke:var(--halo);stroke-width:5px;stroke-linejoin:round}
+  svg.cv .cv-edge{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;fill:var(--text-mid);paint-order:stroke;stroke:var(--halo);stroke-width:5px;stroke-linejoin:round}
+  svg.cv .cv-chip{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.07em;fill:var(--hl);font-weight:600}
+  svg.cv .cv-stage{font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;fill:var(--hl)}
+  svg.cv .cv-arrow{fill:var(--text-faint)}
+  /* .site-wrapper caps the whole site at 940px, which showed only about two
+     thirds of the chart. Rather than widen the nav and banner too, the chart
+     alone breaks out to the viewport. */
+  /* .site-wrapper caps the site at 940px, which cut the chart off. The chart
+     breaks out of that, but the card hugs the chart rather than spanning the
+     viewport and leaving empty wings. */
+  .ch-scroll{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
+             width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
+  @media (max-width:980px){.ch-scroll{width:auto;max-width:none;left:0;transform:none}}
+  .ch-acts{gap:.6rem}
+  .ch-scroll svg{cursor:zoom-in}
+  .ch-acts{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:.9rem}
+
+/* ── Play panel ── */
+  .play{display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center;
+        border:1px solid var(--rule);border-radius:10px;background:var(--glass);padding:1.8rem 1.4rem}
+  .play h2{font-family:'Cinzel',serif;font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:0}
+  .play p{font-family:'EB Garamond',serif;color:var(--text-mid);margin:0;max-width:44ch;line-height:1.55}
+  .play-btn{font-family:'Cinzel',serif;font-size:.8rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+            min-height:54px;padding:0 2.4rem;border-radius:4px;border:1px solid var(--gold);background:var(--gold);color:#0d1117;cursor:pointer}
+  .play-btn:hover{background:#e5c97a;border-color:#e5c97a}
+  .play-btn[disabled]{opacity:.5;cursor:default}
+  :root.light-mode .play-btn{color:#fff}
+
+/* ── Full-screen game ──────────────────────────────────────────── */
+  .gm{position:fixed;inset:0;z-index:300;display:flex;flex-direction:column;
+      background:radial-gradient(ellipse at 50% 38%,#18223200 0%,#070a10 72%),#0a0e16;
+      padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  :root.light-mode .gm{background:radial-gradient(ellipse at 50% 38%,#f3ecdc 0%,#ddd3bd 75%),#efe8d8}
+  .gm[hidden]{display:none}
+  /* dragging to pan was selecting the verb and the buttons */
+  .gm{-webkit-user-select:none;user-select:none}
+  .gm-msg{-webkit-user-select:text;user-select:text}
+  body.gm-open{overflow:hidden}
+  .gm-hud{flex:none;display:flex;justify-content:space-between;align-items:center;gap:.6rem;
+          padding:.5rem .8rem}
+  .gm-ico{min-width:40px;min-height:40px;border:1px solid var(--rule);border-radius:999px;background:var(--glass);
+          color:var(--text-mid);cursor:pointer;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.1em}
+  .gm-ico:hover{border-color:var(--gold);color:var(--gold)}
+  .gm-set{display:flex;gap:.35rem;align-items:center}
+  .gm-stats{flex:none;display:flex;gap:1.6rem;justify-content:center;align-items:baseline;
+            padding:.45rem 1rem .6rem;border-top:1px solid var(--rule);
+            font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;
+            color:var(--text-faint)}
+  .gm-stats b{font-size:1rem;letter-spacing:0;color:var(--text);margin-left:.45rem}
+  .gm-stats .hot b{color:var(--gold)}
+  .gm-word{text-align:center;font-family:'Gentium Book Plus',serif;line-height:1.1;color:var(--gold);
+           font-size:clamp(1.9rem,7.2vw,3.4rem);text-shadow:0 2px 20px rgba(201,168,76,.25);
+           overflow-wrap:anywhere;margin-bottom:.15rem}
+  .gm-ask{flex:none;padding:0 1rem .6rem;text-align:center;border-bottom:1px solid var(--rule)}
+  .gm-gloss{font-family:'EB Garamond',serif;font-style:italic;color:var(--text-mid);
+            font-size:clamp(.95rem,2.6vw,1.1rem);line-height:1.3;margin:0 auto .4rem;max-width:40ch}
+  .gm-gloss:empty{display:none}
+  .gm-q{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.25;color:var(--text);
+        font-size:clamp(1.25rem,3.9vw,1.9rem);text-wrap:balance;max-width:34ch;margin:0 auto}
+  .gm-board{position:relative;flex:1;min-height:0;display:flex}
+  /* The buttons sit on the summary card as its header, rather than floating
+     over it, so nothing overlaps. */
+  .gm-panel{position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);
+            width:min(62ch,94%);z-index:3;pointer-events:none}
+  .gm-bar{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;padding:.5rem;
+          pointer-events:auto;background:rgba(10,14,22,.94);
+          border:1px solid var(--rule);border-bottom:0;border-radius:12px 12px 0 0}
+  :root.light-mode .gm-bar{background:rgba(239,232,216,.95)}
+  .gm-bar.hidden{display:none}
+  .gm-msg{font-family:'EB Garamond',serif;font-size:clamp(1.02rem,2.5vw,1.2rem);
+          line-height:1.5;color:var(--text-mid);text-align:center;pointer-events:none;
+          background:rgba(10,14,22,.88);border:1px solid var(--rule);border-radius:12px;padding:.6rem .9rem}
+  .gm-bar:not(.hidden) + .gm-msg{border-radius:0 0 12px 12px;border-top:0}
+  :root.light-mode .gm-msg{background:rgba(239,232,216,.86)}
+  .gm-msg:empty{display:none}
+  .gm-msg.bad{color:var(--rd);box-shadow:inset 0 0 0 1px var(--rd-soft)}
+  .gm-msg.ok{color:var(--gn);box-shadow:inset 0 0 0 1px var(--gn-soft)}
+  /* these must outrank .cv-bar.hl and .cv-in.dark, hence the long selectors */
+  svg.cv g.flash-ok rect.cv-bar,svg.cv g.flash-ok polygon.cv-dia{fill:var(--gn-soft);stroke:var(--gn);stroke-width:2.5;animation:none}
+  svg.cv g.flash-ok text.cv-chip,svg.cv g.flash-ok text.cv-in,svg.cv g.flash-ok text.cv-stage{fill:var(--gn)}
+  svg.cv g.flash-bad rect.cv-bar,svg.cv g.flash-bad polygon.cv-dia{fill:var(--rd-soft);stroke:var(--rd);stroke-width:2.5;animation:none}
+  svg.cv g.flash-bad text.cv-chip,svg.cv g.flash-bad text.cv-in,svg.cv g.flash-bad text.cv-stage{fill:var(--rd)}
+  /* answers you got right stay green for the rest of the round */
+  /* the fill has to change too — a green frame over the gold-tinted fill
+     of a pending chip blends to brown */
+  svg.cv g.is-ok rect.cv-bar,svg.cv g.is-ok polygon.cv-dia{fill:var(--gn-soft);stroke:var(--gn);stroke-width:2.2;animation:none}
+  svg.cv g.is-ok text.cv-chip,svg.cv g.is-ok text.cv-in,svg.cv g.is-ok text.cv-stage{fill:var(--gn)}
+  svg.cv path.cv-line.is-ok{stroke:var(--gn);stroke-width:2;opacity:1}
+  /* the branch you ruled out stays visible, unemphasised, so the chart fills
+     in as you play and you can reason by elimination */
+  svg.cv g.is-dead rect.cv-bar,svg.cv g.is-dead polygon.cv-dia{fill:transparent;stroke:var(--rule);stroke-width:1;animation:none}
+  svg.cv g.is-dead text{fill:var(--text-faint)}
+  svg.cv path.cv-line.is-dead{stroke:var(--rule);opacity:.45}
+  .gm-act{font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+          min-height:44px;padding:0 1.1rem;border:1px solid var(--rule);border-radius:999px;
+          background:var(--glass);color:var(--text-mid);cursor:pointer;white-space:nowrap}
+  .gm-act:hover{border-color:var(--gold);color:var(--gold)}
+  /* The solve action reads in the game's own "correct" green rather than a
+     filled gold slab: gold stays reserved for what is clickable on the board,
+     and dark-on-gold micro-caps were the hardest thing here to read. */
+  .gm-act.go{font-size:.74rem;letter-spacing:.09em;border-radius:6px;font-weight:600;
+             background:var(--gn-soft);border-color:var(--gn);color:var(--gn)}
+  .gm-act.go:hover{background:var(--gn);border-color:var(--gn);color:var(--halo)}
+  svg.cv [data-node] rect,svg.cv [data-node] polygon,svg.cv [data-node] text{transition:fill .25s ease,stroke .25s ease}
+  .gm-stage{flex:1;min-height:0;width:100%;display:block;touch-action:none;
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 46px,#000 calc(100% - 26px),transparent 100%);
+    mask-image:linear-gradient(to bottom,transparent 0,#000 46px,#000 calc(100% - 26px),transparent 100%)}
+  #gmCam{transition:transform .55s cubic-bezier(.22,.61,.36,1)}
+  .gm-msg b{color:var(--text)}
+  .gm-lex{font-family:'Gentium Book Plus',serif;font-size:1.1rem;color:var(--gold)}
+  .gm-ref{font-style:italic;color:var(--text-faint)}
+  .gm-tap{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+  svg.cv .gm-pick{cursor:pointer}
+  svg.cv .gm-pick .cv-dia,svg.cv .gm-pick rect{animation:gmPulse 2s ease-in-out infinite}
+  svg.cv .gm-pick:hover .cv-dia,svg.cv .gm-pick:hover rect{stroke:var(--gold);stroke-width:2.5;animation:none}
+  svg.cv .gm-pick:focus-visible .cv-dia,svg.cv .gm-pick:focus-visible rect{stroke:var(--gold);stroke-width:2.5}
+  svg.cv .ghost{opacity:.5;stroke-dasharray:5 4}
+  svg.cv .cv-new{animation:gmIn .4s ease both}
+  @keyframes gmPulse{0%,100%{opacity:.5}50%{opacity:1}}
+  @keyframes gmIn{from{opacity:0}to{opacity:1}}
+  @keyframes gmShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-10px,3px)}30%{transform:translate(10px,-3px)}45%{transform:translate(-7px,2px)}60%{transform:translate(7px,-2px)}80%{transform:translate(-3px,1px)}}
+  .gm-shake{animation:gmShake .45s}
+  @media (prefers-reduced-motion:reduce){
+    #gmCam{transition:none}
+    svg.cv .cv-new,svg.cv .gm-pick .cv-dia,svg.cv .gm-pick rect,.gm-shake{animation:none}
+  }
+  @media print{nav,footer,.vt-banner,.vt-bar,.vt-desc,.ch-acts,.play,.gm{display:none!important}
+    .ch-scroll{border:none;background:none;padding:0}}
+</style>
+</head>
+<body class="vt-page">
+<div class="site-wrapper">
+
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Small Groups</button>
+      <div class="nav-drop-menu">
+        <a href="/studies/titus">Titus Study</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+<div class="vt-banner" style="--vt-img:url('/images/gk/greek-flowchart.webp');--vt-pos:center 92%">
+  <h1>Greek Verb Parsing Flowchart</h1>
+</div>
+
+<main class="vt" id="vt">
+  <p class="vt-desc">Study the master verb parsing flowchart, then test yourself choosing the correct path for a word.</p>
+
+  <div class="ch-acts">
+    <button type="button" class="vt-btn gold" id="playBtn" onclick="openGame()" disabled>Loading&#8230;</button>
+    <button type="button" class="vt-btn" onclick="downloadChart('fcSvg','greek-verb-parsing-flowchart.png')">Save PNG</button>
+  </div>
+
+  <div id="chartMode">
+    <div class="ch-scroll">
+      <svg id="fcSvg" class="cv" role="img" aria-labelledby="fcSvgT">
+        <title id="fcSvgT">Flowchart for parsing a Koine Greek verb in the indicative</title>
+        <g id="fcRoot"></g>
+      </svg>
+    </div>
+  </div>
+</main>
+
+<footer>
+    <span class="greek">&#960;&#8118;&#962; &#8001; &#960;&#953;&#963;&#964;&#949;&#973;&#969;&#957; &#949;&#7984;&#962; &#945;&#8016;&#964;&#8056;&#957; &#7948;&#967;&#8131; &#950;&#969;&#8052;&#957; &#945;&#7984;&#974;&#957;&#953;&#959;&#957;</span>
+    <div class="footer-nav">
+      <a href="/about">About</a>
+      <span>&#183;</span>
+      <span>&#169; 2026 Whosoever Believes</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ── Full-screen game ── -->
+<div class="gm" id="game" hidden role="dialog" aria-modal="true" aria-label="Verb parsing game">
+  <div class="gm-hud">
+    <button type="button" class="gm-ico" onclick="closeGame()" aria-label="Exit game">Exit</button>
+    <div class="gm-set">
+      <button type="button" class="gm-ico" onclick="camZoomBy(-1)" aria-label="Zoom out">&#8722;</button>
+      <button type="button" class="gm-ico" onclick="camZoomBy(1)" aria-label="Zoom in">+</button>
+      <button type="button" class="gm-ico" onclick="recenter()" aria-label="Recenter on this step">&#8982;</button>
+      <button type="button" class="gm-ico" id="gmSnd" onclick="toggleSound()" aria-pressed="true" aria-label="Sound on or off">&#128266;</button>
+      <button type="button" class="gm-ico" onclick="showHint()" aria-label="Hint">Hint</button>
+    </div>
+  </div>
+  <div class="gm-ask">
+    <div class="gm-word" id="gmWord" aria-live="polite">&#8212;</div>
+    <div class="gm-gloss" id="gmGloss"></div>
+    <div class="gm-q" id="gmQ" aria-live="polite">&#8212;</div>
+  </div>
+  <div class="gm-board">
+    <svg class="cv gm-stage" id="gmSvg" role="application" aria-label="Parsing chart">
+      <g id="gmCam"></g>
+    </svg>
+    <div class="gm-panel" id="gmPanel">
+      <div class="gm-bar hidden" id="gmActions">
+        <button type="button" class="gm-act go" id="gmNext" onclick="newForm()">Next verb &#8594;</button>
+      </div>
+      <div class="gm-msg" id="gmMsg" aria-live="polite"></div>
+    </div>
+  </div>
+  <div class="gm-stats" id="gmStats">
+    <div>Solved<b id="gmSolved">0</b></div>
+    <div class="hot">Streak<b id="gmStreak">0</b></div>
+    <div>Wrong<b id="gmWrong">0</b></div>
+  </div>
+</div>
+<script src="../charts/charts.js"></script>
+<script>
+/* ── The decision tree ──────────────────────────────────────────
+   Standard Mounce morphology: stem, augment, reduplication, tense
+   formative. One object feeds both the reference chart and the game,
+   so the diagram and the puzzle can never disagree. */
+const TREE = {
+  stem:{q:'Is the stem the lexical form, or an alternate?',
+        look:'Compare the stem letters against the verb’s lexical (present) form. A changed stem — λαμβάνω → λαβ-, στρέφω → στραφ- — points to a second aorist.',
+        opts:[{l:'Lexical',gl:'Lexical stem',to:'aug'},{l:'Alternate',gl:'Alternate stem',to:'aor2'}]},
+  aor2:{stage:'Aorist (2nd)',q:'Is there a tense formative?',
+        look:'With the second stem already carrying the aorist, a formative here (η or θη) marks the passive. Nothing between stem and ending means active or middle.',
+        opts:[{l:'Yes',gl:'Tense formative',to:'T_2aor_p'},{l:'No',gl:'No tense formative',to:'T_2aor_am'}]},
+  aug:{q:'Is there an augment?',
+       look:'An ε- prefixed to the stem, or a lengthened initial vowel (α → η, ε → η, ο → ω). In the indicative it marks the secondary (past) tenses.',
+       opts:[{l:'Yes',gl:'Augment',to:'redupA'},{l:'No',gl:'No augment',to:'redupB'}]},
+  redupA:{q:'Is there also reduplication?',
+          look:'The initial consonant repeated with ε — λυ- → λελυ-. Augment and reduplication together can only be the pluperfect.',
+          opts:[{l:'Yes',gl:'Reduplication',to:'T_plup'},{l:'No',gl:'No reduplication',to:'tfA'}]},
+  tfA:{q:'Is there a tense formative?',
+       look:'Look between the stem and the ending. An augment with nothing there is the imperfect; an augment with a formative is a first aorist.',
+       opts:[{l:'Yes',gl:'Tense formative',to:'aor1'},{l:'No',gl:'No tense formative',to:'T_impf'}]},
+  aor1:{stage:'Aorist (1st)',q:'What does the tense formative mark?',
+        look:'σα is the ordinary first aorist, active or middle. A bare α with a lengthened stem marks a liquid aorist (stems in λ, μ, ν, ρ). θη marks the passive.',
+        opts:[{l:'α',gl:'Liquid active',gk:1,to:'T_1aor_liq'},
+              {l:'σα',gl:'Active or middle',gk:1,to:'T_1aor_am'},
+              {l:'θη',gl:'Passive',gk:1,to:'T_1aor_p'}]},
+  redupB:{q:'Is there reduplication?',
+          look:'λελυ-, γεγραφ-. Careful: a vowel-initial stem reduplicates by lengthening, which looks exactly like an augment — check for κα or the perfect endings to tell them apart.',
+          opts:[{l:'Yes',gl:'Reduplication',to:'perf'},{l:'No',gl:'No reduplication',to:'tfB'}]},
+  perf:{stage:'Perfect',q:'Is there a tense formative?',
+        look:'The perfect active builds on a formative; the middle/passive attaches its endings straight to the reduplicated stem.',
+        opts:[{l:'Yes',gl:'Tense formative',to:'perfW'},{l:'No',gl:'No tense formative',to:'T_perf_mp'}]},
+  perfW:{q:'What does the tense formative mark?',
+         look:'κα is the first (weak) perfect. A bare α with no κ is the second (strong) perfect — γέγραφα.',
+         opts:[{l:'κα',gl:'First (weak) perfect',gk:1,to:'T_perf_1a'},
+               {l:'α',gl:'Second (strong) perfect',gk:1,to:'T_perf_2a'}]},
+  tfB:{q:'Is there a tense formative?',
+       look:'No augment and no reduplication. A formative here means future; nothing at all means present.',
+       opts:[{l:'Yes',gl:'Tense formative',to:'fut'},{l:'No',gl:'No tense formative',to:'T_pres'}]},
+  fut:{stage:'Future',q:'What does the tense formative mark?',
+       look:'σ is the plain future, active or middle. εσ is the liquid future, where the σ drops and the vowels contract (watch for the circumflex: μενεῖ). θησ is the first passive and ησ the second.',
+       opts:[{l:'σ',gl:'Active or middle',gk:1,to:'T_fut_am'},
+             {l:'εσ',gl:'Liquid active/middle',gk:1,to:'T_fut_liq'},
+             {l:'ησ',gl:'Second passive',gk:1,to:'T_fut_2p'},
+             {l:'θησ',gl:'First passive',gk:1,to:'T_fut_1p'}]},
+  T_pres:{end:'Present'}, T_impf:{end:'Imperfect'}, T_plup:{end:'Pluperfect'},
+  T_fut_am:{end:'Future · Active/Middle'}, T_fut_liq:{end:'Future · Liquid Active/Middle'},
+  T_fut_2p:{end:'Future · Passive (2nd)'}, T_fut_1p:{end:'Future · Passive (1st)'},
+  T_1aor_liq:{end:'Aorist (1st) · Liquid Active'}, T_1aor_am:{end:'Aorist (1st) · Active or Middle'},
+  T_1aor_p:{end:'Aorist (1st) · Passive'}, T_perf_1a:{end:'Perfect · Active (1st)'},
+  T_perf_2a:{end:'Perfect · Active (2nd)'}, T_perf_mp:{end:'Perfect · Middle/Passive'},
+  T_2aor_p:{end:'Aorist (2nd) · Passive'}, T_2aor_am:{end:'Aorist (2nd) · Active/Middle'}
+};
+const DLBL = {
+  stem:['Stem form?'], aug:['Augment?'], redupA:['Reduplication?'], redupB:['Reduplication?'],
+  tfA:['Tense','formative?'], tfB:['Tense','formative?'], perf:['Tense','formative?'], aor2:['Tense','formative?'],
+  aor1:['Which tense','formative?'], perfW:['Which tense','formative?'], fut:['Which tense','formative?']
+};
+const NS = 'http://www.w3.org/2000/svg';
+
+/* Layout graph: a stage caption becomes its own box in the chain. */
+const G = {};
+const ROOT = (function build(k){
+  const n = TREE[k];
+  if(n.end){ G[k] = {kind:'end', lines:n.end.split(' · '), kids:[]}; return k; }
+  const kids = n.opts.map(function(o){ return {to:build(o.to), label:o.l, gl:o.gl, gk:o.gk}; });
+  G[k] = {kind:'dec', lines:DLBL[k] || [n.q], kids:kids};
+  if(n.stage){ G['S_'+k] = {kind:'stage', lines:[n.stage], kids:[{to:k, label:'', gk:0}]}; return 'S_'+k; }
+  return k;
+})('stem');
+const ALL = new Set(Object.keys(G));
+
+/* Game graph. In the chart an answer is a label on a line; in the game
+   it has to BE the thing you click, or two branches that lead to the
+   same question look identical. Each labeled edge becomes a chip. */
+const GC = {};
+Object.keys(G).forEach(function(id){ GC[id]={kind:G[id].kind, lines:G[id].lines, kids:[]}; });
+Object.keys(G).forEach(function(id){
+  G[id].kids.forEach(function(k){
+    if(!k.label){ GC[id].kids.push({to:k.to, label:'', gk:0}); return; }
+    const cid = 'C:'+id+'>'+k.to;
+    GC[cid] = {kind:'chip', lines:[k.gl || k.label], kids:[{to:k.to, label:'', gk:0}], gk:k.gl?0:k.gk};
+    GC[id].kids.push({to:cid, label:'', gk:0});
+  });
+});
+/* Second stage. The chart settles tense and voice; person and number
+   live in the personal ending, which is a separate reading. The answer
+   the chart just gave selects which ending set applies (see hintEndings). */
+const PNL = ['1st Sg','2nd Sg','3rd Sg','1st Pl','2nd Pl','3rd Pl'];
+const PNFULL = {'1st Sg':'1st Singular','2nd Sg':'2nd Singular','3rd Sg':'3rd Singular',
+                '1st Pl':'1st Plural','2nd Pl':'2nd Plural','3rd Pl':'3rd Plural'};
+Object.keys(GC).forEach(function(id){
+  if(GC[id].kind !== 'end') return;
+  PNL.forEach(function(l){
+    const cid = 'P:'+id+':'+l;
+    GC[cid] = {kind:'chip', lines:[l], kids:[]};
+    GC[id].kids.push({to:cid, label:'', gk:0});
+  });
+});
+function pnOf(parse){
+  const m = parse.match(/,\s*(1st|2nd|3rd)\s+(Singular|Plural)$/);
+  return m ? m[1]+' '+(m[2]==='Singular'?'Sg':'Pl') : null;
+}
+/* Secondary active endings do not distinguish 1st singular from 3rd plural:
+   the imperfect and the 2nd aorist active take -ον for both (-ουν or -ων
+   after a contract vowel). Only context settles which, so these forms ask
+   for BOTH answers rather than being kept out of the pool — recognizing the
+   clash is the thing worth drilling. */
+function pnOptions(e){
+  const strip = function(x){ return x.normalize('NFD').replace(/[\u0300-\u036f]/g,''); };
+  const f = strip(e.f), lex = strip(e.lex);
+  const sec = /(Imperfect|Aorist \(2nd\)) Active Indicative/.test(e.p);
+  const both = ['1st Sg','3rd Pl'];
+  if(sec && /ουν$/.test(f)) return both;       // ε- and ο-contract imperfect
+  if(sec && /ον$/.test(f))  return both;       // thematic imperfect and 2nd aorist
+  /* -ων collides only in the α-contract imperfect (ἠρώτων, ἔζων). An athematic
+     root aorist in -ων (ἔγνων, ἔβην) is 1st singular alone — its 3rd plural
+     takes -σαν — so it must not be caught here. */
+  if(/Imperfect Active Indicative/.test(e.p) && /ων$/.test(f) && /αω$/.test(lex))
+    return both;
+  return [pnOf(e.p)];
+}
+function pnLong(l){
+  return l.replace(' Sg',' Singular').replace(' Pl',' Plural');
+}
+/* Which personal endings to expect, given what the chart already settled. */
+function hintEndings(parse){
+  const act = parse.indexOf('Active')>=0 && parse.indexOf('Deponent')<0;
+  if(parse.indexOf('Pluperfect')>=0) return ['pluperfect active','-ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν'];
+  if(parse.indexOf('Perfect')>=0) return act
+    ? ['perfect active','-α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν)']
+    : ['perfect middle/passive','-μαι, -σαι, -ται, -μεθα, -σθε, -νται'];
+  if(parse.indexOf('Aorist')>=0 && parse.indexOf('Passive')>=0)
+    return ['aorist passive','-ην, -ης, -η, -ημεν, -ητε, -ησαν'];
+  if(parse.indexOf('Aorist')>=0 && parse.indexOf('(2nd)')>=0) return act
+    ? ['secondary active','-ον, -ες, -ε(ν), -ομεν, -ετε, -ον']
+    : ['secondary middle/passive','-όμην, -ου, -ετο, -όμεθα, -εσθε, -οντο'];
+  if(parse.indexOf('Aorist')>=0) return act
+    ? ['first aorist active','-α, -ας, -ε(ν), -αμεν, -ατε, -αν']
+    : ['first aorist middle','-άμην, -ω, -ατο, -άμεθα, -ασθε, -αντο'];
+  if(parse.indexOf('Imperfect')>=0) return act
+    ? ['secondary active','-ον, -ες, -ε(ν), -ομεν, -ετε, -ον']
+    : ['secondary middle/passive','-όμην, -ου, -ετο, -όμεθα, -εσθε, -οντο'];
+  return act ? ['primary active','-ω, -εις, -ει, -ομεν, -ετε, -ουσι(ν)']
+             : ['primary middle/passive','-ομαι, -ῃ, -εται, -όμεθα, -εσθε, -ονται'];
+}
+
+function el(n,a,c){ const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); if(c) e.setAttribute('class',c); return e; }
+function withMeas(svg, fn){
+  const t = el('text',{visibility:'hidden'}); svg.appendChild(t);
+  const r = fn(function(x,cls){ t.setAttribute('class',cls); t.textContent=x; return t.getComputedTextLength(); });
+  svg.removeChild(t); return r;
+}
+function sizeOf(m,id,GR){
+  const g=GR[id];
+  if(g.kind==='end'){ const w=Math.max.apply(null,g.lines.map(function(l){return m(l,'cv-in');}));
+    return {w:Math.ceil(w)+22, h:g.lines.length>1?44:32}; }
+  if(g.kind==='stage') return {w:Math.ceil(m(g.lines[0],'cv-stage'))+20, h:26};
+  if(g.kind==='chip') return {w:Math.ceil(m(g.lines[0], g.gk?'cv-gk':'cv-chip'))+30, h:32};
+  const tw=Math.max.apply(null,g.lines.map(function(l){return m(l,'cv-in');}));
+  return {w:Math.ceil(tw)+44, h:g.lines.length>1?60:48};
+}
+function layout(svg, vis, vert, GR){
+  GR = GR || G;
+  return withMeas(svg, function(m){
+    const S={},depth={},nodes=[];
+    (function walk(id,d){ if(!vis.has(id))return; depth[id]=d; nodes.push(id); S[id]=sizeOf(m,id,GR);
+      GR[id].kids.forEach(function(k){ walk(k.to,d+1); }); })(ROOT,0);
+    let lw=0;
+    nodes.forEach(function(id){ GR[id].kids.forEach(function(k){
+      if(vis.has(k.to)&&k.label) lw=Math.max(lw,m(k.label,k.gk?'cv-gk':'cv-edge')); }); });
+    const GAPX=Math.max(38,Math.ceil(lw)+20), GAPY=12, PAD=16;
+    const maxD=Math.max.apply(null,nodes.map(function(i){return depth[i];}));
+    const colX=[]; let x=PAD;
+    for(let d=0;d<=maxD;d++){
+      const w=Math.max.apply(null,nodes.filter(function(i){return depth[i]===d;}).map(function(i){return S[i].w;}));
+      colX[d]=x; x+=w+GAPX;
+    }
+    let cur=PAD;
+    (function place(id){
+      const kids=GR[id].kids.filter(function(k){return vis.has(k.to);});
+      if(!kids.length){ S[id].y=cur+S[id].h/2; cur+=S[id].h+GAPY; return; }
+      kids.forEach(function(k){ place(k.to); });
+      const f=S[kids[0].to], l=S[kids[kids.length-1].to];
+      const top=f.y-f.h/2, bot=l.y+l.h/2;
+      if(bot-top<S[id].h) cur+=S[id].h-(bot-top);
+      S[id].y=(top+bot)/2;
+    })(ROOT);
+    nodes.forEach(function(id){ S[id].x=colX[depth[id]]; });
+    if(!vert) return {S:S,nodes:nodes,W:x-GAPX+PAD,H:cur-GAPY+PAD,GAPX:GAPX,vert:false};
+
+    /* Portrait: run the tree top-down instead, so a tall screen is
+       filled rather than letterboxed. Rows by depth, siblings spread
+       across; same measured box sizes. */
+    const GAPYV=46, GAPXV=18;
+    const rowY=[]; let yy=PAD;
+    for(let d=0;d<=maxD;d++){
+      const hh=Math.max.apply(null,nodes.filter(function(i){return depth[i]===d;}).map(function(i){return S[i].h;}));
+      rowY[d]=yy+hh/2; yy+=hh+GAPYV;
+    }
+    let cx=PAD;
+    (function placeV(id){
+      const kids=GR[id].kids.filter(function(k){return vis.has(k.to);});
+      if(!kids.length){ S[id].cx=cx+S[id].w/2; cx+=S[id].w+GAPXV; return; }
+      /* six person/number chips in one row would be far too wide on a
+         phone, so grid them three across */
+      if(kids.length>=5 && kids.every(function(k){return GR[k.to].kind==='chip';})){
+        const per=3, cw=[];
+        for(let c=0;c<per;c++){ let m=0;
+          for(let i=c;i<kids.length;i+=per) m=Math.max(m,S[kids[i].to].w);
+          cw[c]=m; }
+        const tw=cw.reduce(function(a,b){return a+b;},0)+(per-1)*GAPXV, x0=cx;
+        kids.forEach(function(k,i){
+          const col=i%per; let xx=x0;
+          for(let c=0;c<col;c++) xx+=cw[c]+GAPXV;
+          S[k.to].cx=xx+cw[col]/2; S[k.to].gridRow=(i/per)|0;
+        });
+        cx=x0+tw+GAPXV; S[id].cx=x0+tw/2; return;
+      }
+      kids.forEach(function(k){ placeV(k.to); });
+      const f=S[kids[0].to], l=S[kids[kids.length-1].to];
+      const lf=f.cx-f.w/2, rt=l.cx+l.w/2;
+      if(rt-lf<S[id].w) cx+=S[id].w-(rt-lf);
+      S[id].cx=(lf+rt)/2;
+    })(ROOT);
+    let gridExtra=0;
+    nodes.forEach(function(id){
+      S[id].x=S[id].cx-S[id].w/2;
+      const gr=S[id].gridRow||0;
+      S[id].y=rowY[depth[id]]+gr*(S[id].h+16);
+      if(gr) gridExtra=Math.max(gridExtra, gr*(S[id].h+16));
+    });
+    const xs=nodes.map(function(i){return S[i].x;}), xe=nodes.map(function(i){return S[i].x+S[i].w;});
+    return {S:S,nodes:nodes,W:Math.max.apply(null,xe)+PAD,H:yy-GAPYV+PAD+gridExtra,GAPX:GAPX,vert:true,
+            minX:Math.min.apply(null,xs)};
+  });
+}
+/* host is the <g> to fill; the owning <svg> is used for measuring. */
+function renderFlow(host, vis, opt){
+  opt = opt || {};
+  const svg = host.ownerSVGElement || host;
+  const GR = opt.graph || G;
+  const L = layout(svg, vis, opt.vert, GR);
+  while(host.firstChild) host.removeChild(host.firstChild);
+  const defs=el('defs'), mk=el('marker',{id:'fcArr',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'6',markerHeight:'6',orient:'auto'});
+  mk.appendChild(el('path',{d:'M0,1 L9,5 L0,9 z'},'cv-arrow')); defs.appendChild(mk); host.appendChild(defs);
+  const lines=el('g'), boxes=el('g'); host.appendChild(lines); host.appendChild(boxes);
+
+  L.nodes.forEach(function(id){
+    const a=L.S[id];
+    GR[id].kids.forEach(function(k){
+      if(!vis.has(k.to)) return;
+      const c=L.S[k.to], gh=opt.ghost&&opt.ghost.has(k.to);
+      let d, lx, ly, anch;
+      if(L.vert){
+        const pcx=a.x+a.w/2, pby=a.y+a.h/2, ccx=c.x+c.w/2, cty=c.y-c.h/2-7, my=(pby+cty)/2;
+        d='M'+pcx+','+pby+' V'+my+' H'+ccx+' V'+cty;
+        lx=ccx+8; ly=cty-6; anch='start';
+      } else {
+        const px=a.x+a.w, mx=px+L.GAPX/2, cx=c.x-7;
+        d='M'+px+','+a.y+' H'+mx+' V'+c.y+' H'+cx;
+        lx=c.x-11; ly=c.y-7; anch='end';
+      }
+      const okEdge = opt.okEdges && opt.okEdges.has(id+'>'+k.to);
+      const deadEdge = opt.dead && (opt.dead.has(k.to) || opt.dead.has(id));
+      lines.appendChild(el('path',{d:d,'marker-end':'url(#fcArr)'},
+        'cv-line'+(gh?' ghost':'')+(okEdge?' is-ok':'')+(deadEdge?' is-dead':'')));
+      if(k.label){ const t=el('text',{x:lx,y:ly,'text-anchor':anch}, k.gk?'cv-gk':'cv-edge');
+        t.textContent=k.label; lines.appendChild(t); }
+    });
+  });
+  L.nodes.forEach(function(id){
+    const g=GR[id], a=L.S[id], ghost=opt.ghost&&opt.ghost.has(id), pick=opt.pick&&opt.pick.has(id);
+    const grp=el('g',{'data-node':id},(opt.fresh&&opt.fresh.has(id)?'cv-new ':'')
+      +(opt.ok&&opt.ok.has(id)?'is-ok ':'')+(opt.dead&&opt.dead.has(id)?'is-dead ':'')
+      +(pick?'gm-pick':''));
+    let shape,txt;
+    if(g.kind==='dec'){ const cx=a.x+a.w/2;
+      shape=el('polygon',{points:a.x+','+a.y+' '+cx+','+(a.y-a.h/2)+' '+(a.x+a.w)+','+a.y+' '+cx+','+(a.y+a.h/2)},
+        'cv-dia'+(ghost?' ghost':'')); txt='cv-in';
+    } else {
+      const rx = g.kind==='chip' ? a.h/2 : 5;
+      shape=el('rect',{x:a.x,y:a.y-a.h/2,width:a.w,height:a.h,rx:rx},
+        (g.kind==='end'?'cv-bar term':(g.kind==='stage'?'cv-bar stg':'cv-bar hl'))+(ghost?' ghost':''));
+      txt = g.kind==='end' ? 'cv-in term-t' : (g.kind==='chip' ? (g.gk?'cv-gk':'cv-chip') : 'cv-stage');
+    }
+    grp.appendChild(shape);
+    const n=g.lines.length, lh=g.kind==='end'?15:17;
+    g.lines.forEach(function(line,i){
+      const t=el('text',{x:a.x+a.w/2,y:a.y+(i-(n-1)/2)*lh+5,'text-anchor':'middle'},txt);
+      t.textContent=line; grp.appendChild(t);
+    });
+    if(pick){
+      grp.setAttribute('tabindex','0'); grp.setAttribute('role','button');
+      grp.setAttribute('aria-label',(opt.labelOf&&opt.labelOf[id]?opt.labelOf[id]+': ':'')+g.lines.join(' '));
+      grp.addEventListener('click',function(e){ if(didPan) return; e.stopPropagation(); opt.onPick(id); });
+      grp.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); opt.onPick(id); } });
+    }
+    boxes.appendChild(grp);
+  });
+  return L;
+}
+
+/* ── Reference chart ── */
+function drawChart(){
+  const svg=document.getElementById('fcSvg');
+  const L=renderFlow(document.getElementById('fcRoot'), ALL, {});
+  svg.setAttribute('viewBox','0 0 '+L.W+' '+L.H);
+  /* an explicit width, so the card can shrink-wrap the chart exactly */
+  svg.style.width=Math.round(L.W)+'px';
+  svg.style.minWidth=Math.round(L.W)+'px';
+  svg.style.maxWidth=Math.round(L.W)+'px';
+  svg.addEventListener('click',function(){ if(window.enlargeChart) enlargeChart('fcSvg','Koine Greek Verb Parsing'); });
+}
+
+/* ── Form pool ───────────────────────────────────────────────────
+   Indicative forms attested in the NT text, for the most common
+   verbs. Prefetched so Play never starts before
+   the real forms are in hand. */
+let POOL=null;
+const poolReady = fetch('parsing-pool.json')
+  .then(function(r){ return r.ok ? r.json() : null; })
+  .then(function(j){ if(j&&j.length) POOL=j; return POOL; })
+  .catch(function(){ return null; });
+
+poolReady.then(function(p){
+  const b=document.getElementById('playBtn');
+  if(p){ b.disabled=false; b.textContent='Play ▸'; }
+  else { b.disabled=true; b.textContent='Unavailable'; b.title='The form list could not be loaded — please reload.'; }
+});
+
+/* ── Game ── */
+let cur=null, at=ROOT, pathIds=[ROOT], gL=null, solved=0, wrong=0, streak=0, done=false, gVert=false;
+let camS=1, camX=0, camY=0, camAuto=true, didPan=false;
+let dead=new Set();
+let pnWant=[], pnGot=new Set();   // person/number answers outstanding, and taken
+
+function gPath(target, from){
+  if(from===target) return [];
+  const g=GC[from]; if(!g.kids.length) return null;
+  for(let i=0;i<g.kids.length;i++){ const s=gPath(target,g.kids[i].to); if(s) return [g.kids[i].to].concat(s); }
+  return null;
+}
+function commit(id, fresh){
+  pathIds.push(id); at=id; if(fresh) fresh.add(id);
+  while((GC[at].kind==='chip' || GC[at].kind==='stage') && GC[at].kids.length){
+    const nx=GC[at].kids[0].to; pathIds.push(nx); at=nx; if(fresh) fresh.add(nx);
+  }
+}
+function openGame(){
+  if(!POOL) return;
+  const g=document.getElementById('game');
+  g.hidden=false; document.body.classList.add('gm-open');
+  requestAnimationFrame(function(){ newForm(); });
+}
+function closeGame(){
+  document.getElementById('game').hidden=true;
+  document.body.classList.remove('gm-open');
+  document.getElementById('playBtn').focus();
+}
+function newForm(){
+  cur=POOL[Math.floor(Math.random()*POOL.length)];
+  pathIds=[]; at=null; camAuto=true; done=false; dead=new Set();
+  pnWant=pnOptions(cur); pnGot=new Set();
+  commit(ROOT);
+  document.getElementById('gmWord').textContent=cur.f;
+  /* The meaning is free to show — this drills parsing, not vocabulary, and a
+     gloss carries no person, number, tense or voice. The LEXICAL FORM stays
+     hidden until the reveal, since it would answer the first question outright.
+     The leading "I " of Mounce's gloss is dropped so it cannot read as a
+     first-person hint at the ending stage. */
+  document.getElementById('gmGloss').textContent = (cur.gl||'').replace(/^I\s+/,'');
+  document.getElementById('gmActions').classList.add('hidden');
+  msg('');
+  board();
+}
+function board(fresh){
+  const vis=new Set(pathIds), ghost=new Set(), pick=new Set(), labelOf={};
+  dead.forEach(function(i){ vis.add(i); });
+  if(!done && GC[at].kids.length){
+    GC[at].kids.forEach(function(k){
+      vis.add(k.to);
+      if(pnGot.has(k.to)) return;          // taken already: shown green, not clickable
+      ghost.add(k.to); pick.add(k.to); labelOf[k.to]=GC[k.to].lines[0];
+    });
+  }
+  const svg=document.getElementById('gmSvg');
+  const r=svg.getBoundingClientRect();
+  gVert = r.height > r.width;                // taller than wide: run the tree downward
+  gL=renderFlow(document.getElementById('gmCam'), vis,
+    {graph:GC, ghost:ghost, pick:pick, fresh:fresh||new Set(), labelOf:labelOf,
+     ok:new Set(pathIds.filter(function(i){ return GC[i] && GC[i].kind==='chip'; })),
+     dead:dead, onPick:choose, vert:gVert});
+  document.getElementById('gmQ').textContent = done ? ''
+    : (GC[at].kind==='end' ? 'Which person and number?' : TREE[at].q);
+  cam(false);
+}
+/* ── Camera ──────────────────────────────────────────────────────
+   Free camera: wheel or pinch zooms about the pointer, drag pans.
+   It auto-frames the step you are on until you take over; the recenter
+   button hands control back. */
+function stageRect(){
+  const svg=document.getElementById('gmSvg'), r=svg.getBoundingClientRect();
+  if(r.width) svg.setAttribute('viewBox','0 0 '+r.width+' '+r.height);
+  return r;
+}
+function applyCam(anim){
+  const g=document.getElementById('gmCam');
+  g.style.transition = anim ? '' : 'none';
+  g.setAttribute('transform','translate('+camX+','+camY+') scale('+camS+')');
+  if(!anim) requestAnimationFrame(function(){ g.style.transition=''; });
+}
+function activeIds(){
+  return done ? pathIds.slice(-2) : [at].concat(GC[at].kids.map(function(k){ return k.to; }));
+}
+function frame(ids, fw, fh, anim){
+  const r=stageRect(); if(!r.width || !gL) return;
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+  ids.forEach(function(i){ const n=gL.S[i]; if(!n) return;
+    x0=Math.min(x0,n.x); x1=Math.max(x1,n.x+n.w); y0=Math.min(y0,n.y-n.h/2); y1=Math.max(y1,n.y+n.h/2); });
+  if(x1<x0) return;
+  camS=Math.max(0.08, Math.min(r.width*fw/Math.max(1,x1-x0), r.height*fh/Math.max(1,y1-y0), 3.1));
+  camX=r.width/2-(x0+x1)/2*camS;
+  camY=r.height/2-(y0+y1)/2*camS;
+  applyCam(anim!==false);
+}
+/* Following the frontier is not optional — losing it strands you. Taking
+   manual control sets your zoom LEVEL; the camera still re-centres on each
+   new step, it just stops overriding how far in you chose to be. */
+function centerOn(ids, anim){
+  const r=stageRect(); if(!r.width || !gL) return;
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+  ids.forEach(function(i){ const n=gL.S[i]; if(!n) return;
+    x0=Math.min(x0,n.x); x1=Math.max(x1,n.x+n.w); y0=Math.min(y0,n.y-n.h/2); y1=Math.max(y1,n.y+n.h/2); });
+  if(x1<x0){ applyCam(anim); return; }
+  camX=r.width/2-(x0+x1)/2*camS;
+  camY=r.height/2-(y0+y1)/2*camS;
+  applyCam(anim);
+}
+/* Solved: the board now carries the whole chart, greyed except the live path,
+   so pull back far enough to read it all, clear of the summary panel. */
+function frameAll(anim){
+  const r=stageRect(); if(!r.width || !gL) return;
+  const p=document.getElementById('gmPanel');
+  const ph=(p?p.getBoundingClientRect().height:0)+28;
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+  Object.keys(gL.S).forEach(function(i){ const n=gL.S[i];
+    x0=Math.min(x0,n.x); x1=Math.max(x1,n.x+n.w); y0=Math.min(y0,n.y-n.h/2); y1=Math.max(y1,n.y+n.h/2); });
+  if(x1<x0) return;
+  const avail=Math.max(140, r.height-ph);
+  camS=Math.max(0.08, Math.min(r.width*.94/Math.max(1,x1-x0), avail*.92/Math.max(1,y1-y0), 1.6));
+  camX=r.width/2-(x0+x1)/2*camS;
+  camY=avail/2-(y0+y1)/2*camS;
+  applyCam(anim!==false);
+}
+function cam(instant){
+  if(done) frameAll(!instant);
+  else if(camAuto) frame(activeIds(), .86, .72, !instant);
+  else centerOn(activeIds(), !instant);
+}
+function recenter(){ camAuto=true; cam(false); }
+function zoomAt(px,py,f){
+  const ns=Math.min(4, Math.max(0.08, camS*f));
+  if(ns===camS) return;
+  camX=px-(px-camX)*(ns/camS); camY=py-(py-camY)*(ns/camS);
+  camS=ns; camAuto=false; applyCam(false);
+}
+function camZoomBy(d){ const r=stageRect(); zoomAt(r.width/2, r.height/2, d>0?1.25:1/1.25); }
+
+(function(){
+  const svg=document.getElementById('gmSvg');
+  svg.addEventListener('wheel', function(e){
+    e.preventDefault();
+    const r=svg.getBoundingClientRect();
+    zoomAt(e.clientX-r.left, e.clientY-r.top, Math.pow(0.9985, e.deltaY));
+  }, {passive:false});
+  const pts=new Map(); let pan=null, pinch=null;
+  svg.addEventListener('pointerdown', function(e){
+    pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    if(pts.size===1){ pan={x:e.clientX, y:e.clientY, cx:camX, cy:camY}; didPan=false; }
+    else if(pts.size===2){
+      pan=null;
+      const a=Array.from(pts.values());
+      pinch={d0:Math.hypot(a[0].x-a[1].x, a[0].y-a[1].y), s0:camS};
+    }
+  });
+  window.addEventListener('pointermove', function(e){
+    if(!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+    const r=svg.getBoundingClientRect();
+    if(pinch && pts.size>=2){
+      const a=Array.from(pts.values());
+      const d=Math.hypot(a[0].x-a[1].x, a[0].y-a[1].y);
+      if(pinch.d0>0) zoomAt((a[0].x+a[1].x)/2-r.left, (a[0].y+a[1].y)/2-r.top, (pinch.s0*(d/pinch.d0))/camS);
+      didPan=true; return;
+    }
+    if(!pan) return;
+    const dx=e.clientX-pan.x, dy=e.clientY-pan.y;
+    if(!didPan && Math.abs(dx)+Math.abs(dy)<5) return;
+    didPan=true; camAuto=false;
+    camX=pan.cx+dx; camY=pan.cy+dy; applyCam(false);
+  });
+  function release(e){ pts.delete(e.pointerId); if(pts.size<2) pinch=null; if(!pts.size) pan=null; }
+  window.addEventListener('pointerup', release);
+  window.addEventListener('pointercancel', release);
+})();
+function msg(html, cls){
+  const m=document.getElementById('gmMsg'); m.innerHTML=html||''; m.className='gm-msg'+(cls?' '+cls:'');
+}
+function choose(to){
+  if(done) return;
+  const pnStage = GC[at].kind === 'end';     // tense and voice settled; now the ending
+  if(pnStage){ choosePN(to); return; }
+  const want = (gPath(cur.end, at)||[])[0];
+  if(want === to){
+    /* everything else on offer here is now ruled out for this verb: keep it on
+       the board, greyed, along with where it would have led */
+    GC[at].kids.forEach(function(k){
+      if(k.to===to) return;
+      (function bury(id,depth){
+        if(!GC[id] || dead.has(id)) return;
+        /* person/number chips are not on the master chart: show them only under
+           the outcome actually in play, never under a ruled-out one */
+        if(depth && id.indexOf('P:')===0) return;
+        dead.add(id);
+        GC[id].kids.forEach(function(c){ bury(c.to,depth+1); });
+      })(k.to,0);
+    });
+    const fresh=new Set(); commit(to,fresh);
+    if(!GC[at].kids.length){ finish(fresh); flash(to,'flash-ok'); sndSolved(); return; }
+    msg(''); board(fresh); flash(to,'flash-ok'); sndRight();
+  } else {
+    wrong++; streak=0;
+    document.getElementById('gmWrong').textContent=wrong;
+    document.getElementById('gmStreak').textContent=streak;
+    msg('Not that branch. '+TREE[at].look,'bad');
+    flash(to,'flash-bad'); sndWrong(); shake();
+  }
+}
+/* The ending stage takes every answer the form admits. An ambiguous form is
+   not finished on the first right click — the round stays open until both are
+   in, which is the point: the ending alone cannot tell you. */
+function choosePN(to){
+  const live = pnWant.map(function(l){ return 'P:'+at+':'+l; });
+  if(live.indexOf(to) < 0 || pnGot.has(to)){
+    wrong++; streak=0;
+    document.getElementById('gmWrong').textContent=wrong;
+    document.getElementById('gmStreak').textContent=streak;
+    const e=hintEndings(cur.p);
+    msg('Not that one. Read the ending \u2014 this takes the <b>'+e[0]+
+        '</b> endings: <span class="gm-lex">'+e[1]+'</span>','bad');
+    flash(to,'flash-bad'); sndWrong(); shake();
+    return;
+  }
+  pnGot.add(to); pathIds.push(to);
+  const fresh=new Set([to]);
+  if(pnGot.size < live.length){
+    msg('Right \u2014 and the same ending fits another person and number here. '
+       +'Take that one too.','ok');
+    board(fresh); flash(to,'flash-ok'); sndRight();
+    return;
+  }
+  /* done: the endings never in play for this form go grey like any other
+     ruled-out branch, now that greying them gives nothing away */
+  GC[at].kids.forEach(function(k){ if(live.indexOf(k.to)<0) dead.add(k.to); });
+  finish(fresh); flash(to,'flash-ok'); sndSolved();
+}
+function finish(fresh){
+  done=true; solved++; streak++;
+  document.getElementById('gmSolved').textContent=solved;
+  document.getElementById('gmStreak').textContent=streak;
+  camAuto=true;                       // the whole-chart reveal is the payoff: show it
+  /* Fill the panel BEFORE laying the board out: the camera measures the panel
+     to keep the chart clear of it, and an unhidden Next row is ~60px taller. */
+  /* An ambiguous form is named as both, with the attested reading alongside:
+     the ending cannot decide between them, and seeing which one the verse
+     actually carries is the whole lesson. */
+  let head = '<b>'+cur.p+'</b>', note = '';
+  if(pnWant.length > 1){
+    const base = cur.p.replace(/,\s*(1st|2nd|3rd)\s+(Singular|Plural)$/,'');
+    head = '<b>'+base+'</b> — '+pnWant.map(pnLong).join(' or ');
+    note = '<br>Same ending for both; only context decides. Here it is '
+         + pnLong(pnOf(cur.p)).toLowerCase()+'.';
+  }
+  msg(head+'<br><span class="gm-lex">'+cur.lex+'</span> — '+cur.gl+
+      '<br><span class="gm-ref">'+cur.ref+'</span>'+note,'ok');
+  document.getElementById('gmActions').classList.remove('hidden');
+  board(fresh);
+  document.getElementById('gmNext').focus();
+}
+/* ── Sound ───────────────────────────────────────────────────────
+   Synthesized, so there are no audio files to ship or license. The
+   context is created on the first click, which satisfies autoplay. */
+let AC=null, sndOff=false;
+try{ sndOff = localStorage.getItem('wb-parse-sound')==='off'; }catch(e){}
+function ac(){
+  if(sndOff) return null;
+  try{
+    if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended') AC.resume();
+    return AC;
+  }catch(e){ return null; }
+}
+function tone(freq, start, dur, type, vol, slideTo){
+  const a=ac(); if(!a) return;
+  const t=a.currentTime+start, o=a.createOscillator(), g=a.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,t);
+  if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t+dur);
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.linearRampToValueAtTime(vol, t+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+0.02);
+}
+function sndRight(){ tone(680,0,.3,'sine',.16); tone(1020,.085,.34,'sine',.13); }
+function sndWrong(){ tone(160,0,.26,'square',.1,85); tone(120,.02,.24,'sawtooth',.05,70); }
+function sndSolved(){ tone(660,0,.22,'triangle',.14); tone(880,.1,.22,'triangle',.14); tone(1320,.2,.5,'triangle',.15); }
+function toggleSound(){
+  sndOff=!sndOff;
+  try{ localStorage.setItem('wb-parse-sound', sndOff?'off':'on'); }catch(e){}
+  const b=document.getElementById('gmSnd');
+  b.textContent = sndOff ? '\uD83D\uDD07' : '\uD83D\uDD0A';
+  b.setAttribute('aria-pressed', sndOff?'false':'true');
+  if(!sndOff) sndRight();
+}
+function flash(id, cls){
+  const g=[].slice.call(document.querySelectorAll('#gmCam [data-node]'))
+    .filter(function(n){ return n.getAttribute('data-node')===id; })[0];
+  if(!g) return;
+  g.classList.add(cls);
+  setTimeout(function(){ g.classList.remove(cls); }, 720);
+}
+function shake(){
+  const g=document.getElementById('game');
+  g.classList.remove('gm-shake'); void g.offsetWidth; g.classList.add('gm-shake');
+  setTimeout(function(){ g.classList.remove('gm-shake'); }, 500);
+}
+function showHint(){
+  if(done) return;
+  if(GC[at].kind === 'end'){
+    const e=hintEndings(cur.p);
+    msg('The <b>'+e[0]+'</b> endings: <span class="gm-lex">'+e[1]+'</span>');
+  } else {
+    msg(TREE[at].look);
+  }
+}
+
+/* Advancing is deliberate only: the Next verb button, or Space/Enter.
+   Tapping the board used to do it, which fired on stray clicks and on
+   the end of a drag, before you had a chance to study the verb. */
+let rzT=null;
+window.addEventListener('resize', function(){
+  if(document.getElementById('game').hidden) return;
+  clearTimeout(rzT);
+  rzT=setTimeout(function(){
+    const r=document.getElementById('gmSvg').getBoundingClientRect();
+    if((r.height > r.width) !== gVert) board();       // orientation flipped: rebuild
+    else cam(true);
+  },150);
+});
+document.addEventListener('keydown', function(e){
+  const open=!document.getElementById('game').hidden;
+  if(!open) return;
+  if(e.key==='Escape'){ closeGame(); return; }
+  if(done && (e.key===' '||e.key==='Enter')){ e.preventDefault(); newForm(); return; }
+  if(e.key==='h'||e.key==='H'){ showHint(); return; }
+  if(e.key==='+'||e.key==='='){ camZoomBy(1); return; }
+  if(e.key==='-'){ camZoomBy(-1); return; }
+  if(e.key==='0'||e.key==='c'||e.key==='C'){ recenter(); return; }
+  const n=parseInt(e.key,10);
+  if(!done && n>=1 && n<=GC[at].kids.length){ choose(GC[at].kids[n-1].to); }
+});
+
+/* ── Views ── */
+(function(){ const b=document.getElementById('gmSnd');
+  if(b && sndOff){ b.textContent='\uD83D\uDD07'; b.setAttribute('aria-pressed','false'); } })();
+if(document.fonts && document.fonts.ready){ document.fonts.ready.then(drawChart); } else { drawChart(); }
+</script>
+<script src="../scripts.js"></script>
+<script src="/auth.js" defer></script>
+</body>
+</html>
