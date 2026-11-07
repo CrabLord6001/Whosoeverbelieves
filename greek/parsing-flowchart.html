@@ -49,9 +49,9 @@
    These rules are copied verbatim from it. Keep them in step. */
 :root{--hl:#c9a84c;--hl-soft:rgba(201,168,76,.18);--gr:#6f95d8;--gr-soft:rgba(111,149,216,.16);--rd:#c9765f;--rd-soft:rgba(201,118,95,.14);--gn:#7fb896;--gn-soft:rgba(127,184,150,.14);--band:rgba(255,255,255,.025);--bar:#1b2433;--bar-line:rgba(255,255,255,.14);--halo:#10151d}
 :root.light-mode{--hl:#9a7621;--hl-soft:rgba(154,118,33,.16);--gr:#2f5aa8;--gr-soft:rgba(47,90,168,.12);--rd:#a8503a;--rd-soft:rgba(168,80,58,.1);--gn:#2c7350;--gn-soft:rgba(44,115,80,.1);--band:rgba(0,0,0,.03);--bar:#e4dcc8;--bar-line:rgba(0,0,0,.18);--halo:#efe8d8}
-.ch-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.ch-scroll svg{display:block;width:100%;min-width:820px;height:auto}
-.ch-scroll svg.narrow{min-width:620px}
+.fc-chart{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fc-chart svg{display:block;width:100%;min-width:820px;height:auto}
+.fc-chart svg.narrow{min-width:620px}
 svg.cv{font-family:'EB Garamond',Georgia,serif}
 svg.cv .cv-bg{fill:transparent}
 svg.cv .cv-band{fill:var(--band)}
@@ -82,18 +82,6 @@ svg.cv .cv-dot.rd{fill:var(--rd)}
 svg.cv .cv-bracket{fill:none;stroke:var(--hl);stroke-dasharray:3 3}
 svg.cv .cv-line{fill:none;stroke:var(--text-faint);stroke-width:1.2}
 svg.cv .cv-line.hl{stroke:var(--hl);stroke-width:2}
-.ch-scroll svg.cv{cursor:zoom-in}
-.cz-overlay{position:fixed;inset:0;z-index:3000;background:var(--bg);display:flex;flex-direction:column}
-.cz-bar{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border-bottom:1px solid var(--rule);flex-wrap:wrap}
-.cz-title{flex:1;min-width:10rem;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.3rem;color:var(--text)}
-.cz-bar button{font-family:'Cinzel',serif;font-size:.7rem;font-weight:600;letter-spacing:.12em;min-width:44px;min-height:44px;padding:0 .9rem;border-radius:4px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text);cursor:pointer}
-.cz-bar button:hover{border-color:var(--gold);color:var(--gold)}
-.cz-bar .cz-close{border-color:var(--gold);color:var(--gold)}
-.cz-pct{min-width:3.5rem;text-align:center;color:var(--text-mid);font-size:.95rem}
-.cz-body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:1rem;display:flex}
-.cz-body svg.cv{margin:auto;display:block;height:auto;min-width:0;cursor:default;flex:none}
-.cz-hint{font-size:.85rem;color:var(--text-faint);font-style:italic}
-body.cz-open{overflow:hidden}
 :root{--sea:#0f1a2a;--land:#2b3342;--coast:rgba(255,255,255,.22)}
 :root.light-mode{--sea:#d8e2e8;--land:#efe6d2;--coast:rgba(0,0,0,.25)}
 svg.cv .cv-sea{fill:var(--sea)}
@@ -113,11 +101,8 @@ svg.cv .cv-river{fill:none;stroke:var(--gr);stroke-width:1.6;opacity:.75}
 svg.cv .cv-lake{fill:var(--sea);stroke:var(--coast);stroke-width:.8}
 svg.cv .rt0{stroke:var(--text-faint);stroke-dasharray:2 5;stroke-width:2.2}
 svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
-.cz-key{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.4rem;padding:.6rem 1rem;border-bottom:1px solid var(--rule)}
-.cz-key .ch-legend{margin:0;font-size:1rem}
-.cz-key .mp-controls{margin:0}
   svg.cv .cv-dia{fill:var(--bar);stroke:var(--bar-line);stroke-width:1}
-  /* Colour carries meaning: gold = you can click it now, green = you chose it,
+  /* Color carries meaning: gold = you can click it now, green = you chose it,
      neutral = context. So the reference chart is monochrome and the thread reads. */
   svg.cv rect.cv-bar.term{fill:var(--bar);stroke:var(--bar-line);stroke-width:1.6}
   svg.cv text.term-t{fill:var(--text);font-weight:600}
@@ -135,11 +120,10 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   /* .site-wrapper caps the site at 940px, which cut the chart off. The chart
      breaks out of that, but the card hugs the chart rather than spanning the
      viewport and leaving empty wings. */
-  .ch-scroll{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
+  .fc-chart{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
              width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
-  @media (max-width:980px){.ch-scroll{width:auto;max-width:none;left:0;transform:none}}
+  @media (max-width:980px){.fc-chart{width:auto;max-width:none;left:0;transform:none}}
   .ch-acts{gap:.6rem}
-  .ch-scroll svg{cursor:zoom-in}
   .ch-acts{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:.9rem}
 
 /* ── Play panel ── */
@@ -252,7 +236,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
     svg.cv .cv-new,svg.cv .gm-pick .cv-dia,svg.cv .gm-pick rect,.gm-shake{animation:none}
   }
   @media print{nav,footer,.vt-banner,.vt-bar,.vt-desc,.ch-acts,.play,.gm{display:none!important}
-    .ch-scroll{border:none;background:none;padding:0}}
+    .fc-chart{border:none;background:none;padding:0}}
 </style>
 </head>
 <body class="vt-page">
@@ -307,7 +291,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   </div>
 
   <div id="chartMode">
-    <div class="ch-scroll">
+    <div class="fc-chart">
       <svg id="fcSvg" class="cv" role="img" aria-labelledby="fcSvgT">
         <title id="fcSvgT">Flowchart for parsing a Koine Greek verb in the indicative</title>
         <g id="fcRoot"></g>
@@ -673,7 +657,6 @@ function drawChart(){
   svg.style.width=Math.round(L.W)+'px';
   svg.style.minWidth=Math.round(L.W)+'px';
   svg.style.maxWidth=Math.round(L.W)+'px';
-  svg.addEventListener('click',function(){ if(window.enlargeChart) enlargeChart('fcSvg','Koine Greek Verb Parsing'); });
 }
 
 /* ── Form pool ───────────────────────────────────────────────────
@@ -788,7 +771,7 @@ function frame(ids, fw, fh, anim){
   applyCam(anim!==false);
 }
 /* Following the frontier is not optional — losing it strands you. Taking
-   manual control sets your zoom LEVEL; the camera still re-centres on each
+   manual control sets your zoom LEVEL; the camera still re-centers on each
    new step, it just stops overriding how far in you chose to be. */
 function centerOn(ids, anim){
   const r=stageRect(); if(!r.width || !gL) return;
@@ -800,7 +783,7 @@ function centerOn(ids, anim){
   camY=r.height/2-(y0+y1)/2*camS;
   applyCam(anim);
 }
-/* Solved: the board now carries the whole chart, greyed except the live path,
+/* Solved: the board now carries the whole chart, grayed except the live path,
    so pull back far enough to read it all, clear of the summary panel. */
 function frameAll(anim){
   const r=stageRect(); if(!r.width || !gL) return;
@@ -877,7 +860,7 @@ function choose(to){
   const want = (gPath(cur.end, at)||[])[0];
   if(want === to){
     /* everything else on offer here is now ruled out for this verb: keep it on
-       the board, greyed, along with where it would have led */
+       the board, grayed, along with where it would have led */
     GC[at].kids.forEach(function(k){
       if(k.to===to) return;
       (function bury(id,depth){
@@ -923,8 +906,8 @@ function choosePN(to){
     board(fresh); flash(to,'flash-ok'); sndRight();
     return;
   }
-  /* done: the endings never in play for this form go grey like any other
-     ruled-out branch, now that greying them gives nothing away */
+  /* done: the endings never in play for this form go gray like any other
+     ruled-out branch, now that graying them gives nothing away */
   GC[at].kids.forEach(function(k){ if(live.indexOf(k.to)<0) dead.add(k.to); });
   finish(fresh); flash(to,'flash-ok'); sndSolved();
 }
