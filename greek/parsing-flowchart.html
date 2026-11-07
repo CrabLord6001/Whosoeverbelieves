@@ -15,8 +15,8 @@
 <meta name="description" content="Parse any Greek indicative verb by walking a decision tree: augment, reduplication, and tense formative, on forms drawn from the Greek New Testament.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&display=swap" /></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&family=Press+Start+2P&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400&family=Press+Start+2P&display=swap" /></noscript>
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="greek-tools.css">
 <link rel="canonical" href="https://whosoeverbelieves.com/greek/parsing-flowchart" />
@@ -120,11 +120,63 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   /* .site-wrapper caps the site at 940px, which cut the chart off. The chart
      breaks out of that, but the card hugs the chart rather than spanning the
      viewport and leaving empty wings. */
+  .fc-chart img{display:block;width:1378px;height:auto}
   .fc-chart{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
              width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
   @media (max-width:980px){.fc-chart{width:auto;max-width:none;left:0;transform:none}}
   .ch-acts{gap:.6rem}
   .ch-acts{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:.9rem}
+  /* The one line telling a visitor what they are about to play, so it is
+     sized to be read rather than skimmed past. 16px base elsewhere. */
+  /* An explicit width, not fit-content: fit-content collapses text to the
+     900px wrapper, which is why this sat in a narrow column. The chart card
+     escapes only because an image cannot shrink below its own width. */
+  .vt-desc{font-size:2rem;line-height:1.3;color:var(--text);
+           width:min(1409px,98vw);max-width:none;margin:1.3rem auto 1.1rem;
+           position:relative;left:50%;transform:translateX(-50%)}
+  /* same breakout and same 980px cutover as .fc-chart, so the line and the
+     chart card below it keep the same edges at every width */
+  @media (max-width:1180px){.vt-desc{font-size:1.6rem;text-wrap:balance}}
+  @media (max-width:980px){.vt-desc{left:0;transform:none;width:auto;max-width:none}}
+  @media (max-width:720px){.vt-desc{font-size:1.35rem}}
+  /* The chart above is for reading; this is the way into the game, so it is
+     the one element on the page allowed to look like one. Built from inset
+     shadows on a pixel-stepped clip-path — no image, so it stays crisp. */
+  /* Press Start 2P sits on an 8px grid, so 24px keeps whole pixels in the
+     glyphs; --px scales the frame and the gleam with it. */
+  .pxbtn{--px:6px;font-family:'Press Start 2P','Courier New',monospace;
+         font-size:1.5rem;line-height:1;letter-spacing:.04em;
+         color:#1b1405;background:var(--gold);border:0;border-radius:0;
+         padding:1.5rem 2.5rem;cursor:pointer;position:relative;
+         clip-path:polygon(var(--px) 0,calc(100% - var(--px)) 0,
+           calc(100% - var(--px)) var(--px),100% var(--px),
+           100% calc(100% - var(--px)),calc(100% - var(--px)) calc(100% - var(--px)),
+           calc(100% - var(--px)) 100%,var(--px) 100%,
+           var(--px) calc(100% - var(--px)),0 calc(100% - var(--px)),
+           0 var(--px),var(--px) var(--px));
+         box-shadow:inset 0 0 0 var(--px) #2a1f08,
+                    inset 0 calc(var(--px)*2) 0 0 #f2e0a8,
+                    inset 0 calc(var(--px)*-3) 0 0 #8c6c1c}
+  /* the little specular gleam, two blocks like a hand-placed highlight */
+  .pxbtn::before,.pxbtn::after{content:"";position:absolute;background:#fff8e2}
+  .pxbtn::before{left:calc(var(--px)*2.5);top:calc(var(--px)*2);width:calc(var(--px)*3);height:var(--px)}
+  .pxbtn::after{left:calc(var(--px)*2.5);top:calc(var(--px)*3);width:var(--px);height:var(--px)}
+  .pxbtn:hover:not(:disabled){background:#e5c97a}
+  .pxbtn:active:not(:disabled){transform:translateY(var(--px));
+    box-shadow:inset 0 0 0 var(--px) #2a1f08,inset 0 calc(var(--px)*-2) 0 0 #8c6c1c}
+  /* clip-path cuts an outline off, so the focus ring goes inside */
+  .pxbtn:focus-visible{outline:none;
+    box-shadow:inset 0 0 0 var(--px) #fff8e2,inset 0 0 0 calc(var(--px)*2) #2a1f08,
+               inset 0 calc(var(--px)*-3) 0 0 #8c6c1c}
+  .pxbtn:disabled{opacity:.4;cursor:default}
+  :root.light-mode .pxbtn{color:#fff8e2;
+    box-shadow:inset 0 0 0 var(--px) #2a1f08,
+               inset 0 calc(var(--px)*2) 0 0 #c49a3c,
+               inset 0 calc(var(--px)*-3) 0 0 #6d5115}
+  :root.light-mode .pxbtn::before,:root.light-mode .pxbtn::after{background:#f6e6bb}
+  @media (prefers-reduced-motion:reduce){.pxbtn:active:not(:disabled){transform:none}}
+  @media (max-width:720px){.pxbtn{font-size:1.125rem;padding:1.15rem 1.75rem;--px:4px}}
+  @media (max-width:430px){.pxbtn{font-size:.9rem;padding:1rem 1.3rem}}
 
 /* ── Play panel ── */
   .play{display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center;
@@ -278,24 +330,22 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   <div id="search-results"></div>
 </nav>
 
-<div class="vt-banner" style="--vt-img:url('/images/gk/greek-flowchart.webp');--vt-pos:center 92%">
+<div class="vt-banner" style="--vt-img:url('/images/gk/greek-flowchart.webp');--vt-pos:center 48%">
   <h1>Greek Verb Parsing Flowchart</h1>
 </div>
 
 <main class="vt" id="vt">
-  <p class="vt-desc">Study the master verb parsing flowchart, then test yourself choosing the correct path for a word.</p>
-
   <div class="ch-acts">
-    <button type="button" class="vt-btn gold" id="playBtn" onclick="openGame()" disabled>Loading&#8230;</button>
-    <button type="button" class="vt-btn" onclick="downloadChart('fcSvg','greek-verb-parsing-flowchart.png')">Save PNG</button>
+    <button type="button" class="pxbtn" id="playBtn" onclick="openGame()" disabled>LOADING</button>
   </div>
+
+  <p class="vt-desc">Study the master verb parsing flowchart, then test yourself choosing the correct path for a word.</p>
 
   <div id="chartMode">
     <div class="fc-chart">
-      <svg id="fcSvg" class="cv" role="img" aria-labelledby="fcSvgT">
-        <title id="fcSvgT">Flowchart for parsing a Koine Greek verb in the indicative</title>
-        <g id="fcRoot"></g>
-      </svg>
+      <img id="fcChart" src="/images/gk/parsing-flowchart-dark.webp" width="1378" height="824"
+           decoding="async"
+           alt="Flowchart for parsing a Koine Greek verb in the indicative: stem form, augment, reduplication and tense formative, leading to each tense and voice.">
     </div>
   </div>
 </main>
@@ -344,7 +394,6 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
     <div>Wrong<b id="gmWrong">0</b></div>
   </div>
 </div>
-<script src="../charts/charts.js"></script>
 <script>
 /* ── The decision tree ──────────────────────────────────────────
    Standard Mounce morphology: stem, augment, reduplication, tense
@@ -415,7 +464,6 @@ const ROOT = (function build(k){
   if(n.stage){ G['S_'+k] = {kind:'stage', lines:[n.stage], kids:[{to:k, label:'', gk:0}]}; return 'S_'+k; }
   return k;
 })('stem');
-const ALL = new Set(Object.keys(G));
 
 /* Game graph. In the chart an answer is a label on a line; in the game
    it has to BE the thing you click, or two branches that lead to the
@@ -649,15 +697,21 @@ function renderFlow(host, vis, opt){
 }
 
 /* ── Reference chart ── */
-function drawChart(){
-  const svg=document.getElementById('fcSvg');
-  const L=renderFlow(document.getElementById('fcRoot'), ALL, {});
-  svg.setAttribute('viewBox','0 0 '+L.W+' '+L.H);
-  /* an explicit width, so the card can shrink-wrap the chart exactly */
-  svg.style.width=Math.round(L.W)+'px';
-  svg.style.minWidth=Math.round(L.W)+'px';
-  svg.style.maxWidth=Math.round(L.W)+'px';
-}
+/* The study chart is a baked image, one file per theme, so it follows the
+   site's light/dark toggle by swapping src instead of inheriting CSS vars.
+   Regenerate both files whenever the tree changes. */
+(function(){
+  const img=document.getElementById('fcChart');
+  if(!img) return;
+  const set=function(){
+    const light=document.documentElement.classList.contains('light-mode');
+    const want='/images/gk/parsing-flowchart-'+(light?'light':'dark')+'.webp';
+    if(img.getAttribute('src')!==want) img.setAttribute('src',want);
+  };
+  set();
+  new MutationObserver(set).observe(document.documentElement,
+    {attributes:true, attributeFilter:['class']});
+})();
 
 /* ── Form pool ───────────────────────────────────────────────────
    Indicative forms attested in the NT text, for the most common
@@ -671,8 +725,8 @@ const poolReady = fetch('parsing-pool.json')
 
 poolReady.then(function(p){
   const b=document.getElementById('playBtn');
-  if(p){ b.disabled=false; b.textContent='Play ▸'; }
-  else { b.disabled=true; b.textContent='Unavailable'; b.title='The form list could not be loaded — please reload.'; }
+  if(p){ b.disabled=false; b.textContent='PLAY'; }
+  else { b.disabled=true; b.textContent='UNAVAILABLE'; b.title='The form list could not be loaded — please reload.'; }
 });
 
 /* ── Game ── */
@@ -1019,7 +1073,6 @@ document.addEventListener('keydown', function(e){
 /* ── Views ── */
 (function(){ const b=document.getElementById('gmSnd');
   if(b && sndOff){ b.textContent='\uD83D\uDD07'; b.setAttribute('aria-pressed','false'); } })();
-if(document.fonts && document.fonts.ready){ document.fonts.ready.then(drawChart); } else { drawChart(); }
 </script>
 <script src="../scripts.js"></script>
 <script src="/auth.js" defer></script>
