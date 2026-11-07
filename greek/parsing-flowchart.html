@@ -635,11 +635,33 @@ function layout(svg, vis, vert, GR){
       colX[d]=x; x+=w+GAPX;
     }
     let cur=PAD;
+    const placed={}, bare={};
     (function place(id){
-      const kids=GR[id].kids.filter(function(k){return vis.has(k.to);});
-      if(!kids.length){ S[id].y=cur+S[id].h/2; cur+=S[id].h+GAPY; return; }
+      /* Where branches converge a node has more than one parent, and without
+         this guard its whole subtree was laid out twice: the second pass
+         overwrote the positions and the first pass's vertical band was left
+         empty, which also stranded the first parent above a node that had
+         since moved. Lay each node out once; a parent whose children are all
+         placed already takes its own slot. */
+      if(placed[id]) return;
+      placed[id]=1;
+      const all=GR[id].kids.filter(function(k){return vis.has(k.to);});
+      const kids=all.filter(function(k){return !placed[k.to];});
+      if(!kids.length){ bare[id]=1; S[id].y=cur+S[id].h/2; cur+=S[id].h+GAPY; return; }
       kids.forEach(function(k){ place(k.to); });
-      const f=S[kids[0].to], l=S[kids[kids.length-1].to];
+      /* A child pointing at a node some earlier branch already placed has no
+         subtree of its own to be centred on, so it took a bare slot and ended
+         up hugging the sibling before it. Space those evenly between the
+         siblings that do have a position of their own. */
+      for(let i=0;i<all.length;i++){
+        if(!bare[all[i].to]) continue;
+        let a=i-1; while(a>=0 && bare[all[a].to]) a--;
+        let b=i+1; while(b<all.length && bare[all[b].to]) b++;
+        if(a<0 || b>=all.length) continue;
+        const ya=S[all[a].to].y, yb=S[all[b].to].y;
+        S[all[i].to].y = ya + (yb-ya)*((i-a)/(b-a));
+      }
+      const f=S[all[0].to], l=S[all[all.length-1].to];
       const top=f.y-f.h/2, bot=l.y+l.h/2;
       if(bot-top<S[id].h) cur+=S[id].h-(bot-top);
       S[id].y=(top+bot)/2;
@@ -716,7 +738,8 @@ function renderFlow(host, vis, opt){
       if(!vis.has(k.to)) return;
       const c=L.S[k.to]; if(!c) return;
       const gap=Math.abs(a.y-c.y);
-      if(!(k.to in primary) || gap<primary[k.to].gap) primary[k.to]={key:id+'#'+ki, gap:gap};
+      if(!(k.to in primary) || gap<primary[k.to].gap)
+        primary[k.to]={key:id+'#'+ki, gap:gap, bend:a.x+a.w+L.GAPX/2};
     });
   });
   L.nodes.forEach(function(id){
@@ -731,19 +754,23 @@ function renderFlow(host, vis, opt){
            the same side would run both lines alongside each other and cross, so
            take the free corner: along the node's vertical axis, into the top or
            bottom point depending on which side this branch starts from. */
+        /* Straight along this branch's own row, then one turn into the node's
+           near corner — from below it rises into the bottom point, from above
+           it drops into the top. Two segments, one turn, and the label lies
+           flat on the straight run like every other edge label. */
         const ccx=c.x+c.w/2, px=a.x+a.w;
-        const topY=c.y-c.h/2-34;                 // a lane above the node
-        const mx=Math.max(px+22, ccx-170);       // where this branch leaves the row
+        const below=a.y>c.y;
+        const endY=below ? c.y+c.h/2+7 : c.y-c.h/2-7;
         const okE=opt.okEdges&&opt.okEdges.has(id+'>'+k.to);
         const deadE=opt.dead&&(opt.dead.has(k.to)||opt.dead.has(id));
         lines.appendChild(el('path',{
-          d:'M'+px+','+a.y+' H'+mx+' V'+topY+' H'+ccx+' V'+(c.y-c.h/2-7),
+          d:'M'+px+','+a.y+' H'+ccx+' V'+endY,
           'marker-end':'url(#fcArr)'},
           'cv-line'+(gh?' ghost':'')+(okE?' is-ok':'')+(deadE?' is-dead':'')));
         if(k.label){
           /* flat on the horizontal run, right-aligned before the turn, the way
              every other edge label in the chart sits */
-          const t0=el('text',{x:ccx-8,y:topY-8,'text-anchor':'end'}, k.gk?'cv-gk':'cv-edge');
+          const t0=el('text',{x:ccx-8,y:a.y-8,'text-anchor':'end'}, k.gk?'cv-gk':'cv-edge');
           t0.textContent=k.label; lines.appendChild(t0);
         }
         return;
