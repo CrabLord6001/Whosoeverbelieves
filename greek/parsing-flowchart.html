@@ -123,7 +123,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   .fc-credit{max-width:62rem;margin:.9rem auto 0;text-align:center;font-size:.8rem;
              color:var(--text-faint);line-height:1.5}
   .fc-credit a{color:var(--text-faint);text-decoration:underline}
-  .fc-chart img{display:block;width:1387px;height:auto}
+  .fc-chart img{display:block;width:1567px;height:auto}
   .fc-chart{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
              width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
   @media (max-width:980px){.fc-chart{width:auto;max-width:none;left:0;transform:none}}
@@ -135,7 +135,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
      900px wrapper, which is why this sat in a narrow column. The chart card
      escapes only because an image cannot shrink below its own width. */
   .vt-desc{font-size:2rem;line-height:1.3;color:var(--text);
-           width:min(1418px,98vw);max-width:none;margin:1.3rem auto 1.1rem;
+           width:min(1598px,98vw);max-width:none;margin:1.3rem auto 1.1rem;
            position:relative;left:50%;transform:translateX(-50%)}
   /* same breakout and same 980px cutover as .fc-chart, so the line and the
      chart card below it keep the same edges at every width */
@@ -250,19 +250,24 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
         font-size:clamp(1.9rem,4.6vw,2.7rem);letter-spacing:.01em;line-height:1.18}
   .mp i{font-family:'Cinzel',serif;font-style:normal;font-size:.6rem;
         letter-spacing:.1em;text-transform:uppercase;opacity:.85;white-space:nowrap}
+  .mp-eq{font-size:1.25rem;margin:0 .15rem}
+  .mp-whole b{color:var(--hl)}
+  .mp-whole{background:none}
   .mp-plus{align-self:center;color:var(--text-faint);font-size:1rem;padding-bottom:.9rem}
   .mp-aug   b,.mp-aug   i{color:var(--rd)}  .mp-aug{background:var(--rd-soft)}
   .mp-redup b,.mp-redup i{color:var(--hl)}  .mp-redup{background:var(--hl-soft)}
   .mp-stem  b,.mp-stem  i{color:var(--gr)}  .mp-stem{background:var(--gr-soft)}
   /* a fused σ sits flush against its stem, so drop the gap between them */
-  .mp-stem + .mp-plus + .mp-fuse{margin-left:-.1rem}
+  .mp-stem + .mp-plus + .mp-fuse,.mp-stem + .mp-plus + .mp-fusa{margin-left:-.1rem}
   .mp-fmt   b,.mp-fmt   i{color:var(--pu)}  .mp-fmt{background:var(--pu-soft)}
-  .mp-end   b,.mp-end   i{color:var(--gn)}  .mp-end{background:var(--gn-soft)}
+  .mp-end   b,.mp-end   i{color:var(--hl)}  .mp-end{background:var(--hl-soft)}
   .mp-prep  b,.mp-prep  i{color:var(--text-faint)}
   /* the σ welded onto a stop: still the formative, so it keeps that color,
      with a dotted edge where the boundary would have been */
-  .mp-fuse b,.mp-fuse i{color:var(--pu)}
-  .mp-fuse{background:var(--pu-soft);border-left:2px dotted var(--pu)}
+  .mp-fuse b,.mp-fuse i,.mp-fusa b,.mp-fusa i{color:var(--pu)}
+  .mp-fuse,.mp-fusa{background:var(--pu-soft);border-left:2px dotted var(--pu)}
+  .mp-augst{background:var(--rd-soft);border-left:2px dotted var(--rd)}
+  .mp-augst b,.mp-augst i{color:var(--rd)}
   /* keep the sigma lowercase: uppercasing it names a different letter */
   .mp-fuse i{text-transform:none;letter-spacing:.06em}
   .gm-verse u{text-decoration:none;border-bottom:2px solid var(--hl);color:var(--text)}
@@ -276,7 +281,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
     .gm-verse{font-size:.98rem}
   }
   .gm-msg.bad{color:var(--rd);box-shadow:inset 0 0 0 1px var(--rd-soft)}
-  .gm-msg.ok{color:var(--gn);box-shadow:inset 0 0 0 1px var(--gn-soft)}
+  .gm-msg.ok{color:var(--text);box-shadow:inset 0 0 0 1px var(--gn-soft)}
   /* these must outrank .cv-bar.hl and .cv-in.dark, hence the long selectors */
   svg.cv g.flash-ok rect.cv-bar,svg.cv g.flash-ok polygon.cv-dia{fill:var(--gn-soft);stroke:var(--gn);stroke-width:2.5;animation:none}
   svg.cv g.flash-ok text.cv-chip,svg.cv g.flash-ok text.cv-in,svg.cv g.flash-ok text.cv-stage{fill:var(--gn)}
@@ -457,7 +462,9 @@ const TREE = {
          opts:[{l:'Yes',gl:'Reduplication',to:'pfplu'},{l:'No',gl:'No reduplication',to:'aug'}]},
   aug:{q:'Is there an augment?',
        look:'An ε- prefixed to the stem, or a lengthened initial vowel (α → η, ε → η, ο → ω). With no reduplication in the way, an augment marks the secondary (past) tenses.',
-       opts:[{l:'Yes',gl:'Augment',to:'tfA'},{l:'No',gl:'No augment',to:'tfB'}]},
+       opts:[{l:'Yes',gl:'Augment',to:'tfA'},
+        {l:'No — exception',gl:'Unaugmented imperfect / aorist',to:'tfA',alt:'noaug'},
+        {l:'No',gl:'No augment',to:'tfB'}]},
   tfA:{q:'Is there a tense formative?',
        look:'Look between the stem and the ending. An augment with nothing there is the imperfect; an augment with a formative is a first aorist.',
        opts:[{l:'Yes',gl:'Tense formative',to:'aor1'},{l:'No',gl:'No tense formative',to:'T_impf'}]},
@@ -510,7 +517,7 @@ const G = {};
 const ROOT = (function build(k){
   const n = TREE[k];
   if(n.end){ G[k] = {kind:'end', lines:n.end.split(' · '), kids:[]}; return k; }
-  const kids = n.opts.map(function(o){ return {to:build(o.to), label:o.l, gl:o.gl, gk:o.gk}; });
+  const kids = n.opts.map(function(o){ return {to:build(o.to), label:o.l, gl:o.gl, gk:o.gk, alt:o.alt}; });
   G[k] = {kind:'dec', lines:DLBL[k] || [n.q], kids:kids};
   if(n.stage){ G['S_'+k] = {kind:'stage', lines:[n.stage], kids:[{to:k, label:'', gk:0}]}; return 'S_'+k; }
   return k;
@@ -524,8 +531,8 @@ Object.keys(G).forEach(function(id){ GC[id]={kind:G[id].kind, lines:G[id].lines,
 Object.keys(G).forEach(function(id){
   G[id].kids.forEach(function(k){
     if(!k.label){ GC[id].kids.push({to:k.to, label:'', gk:0}); return; }
-    const cid = 'C:'+id+'>'+k.to;
-    GC[cid] = {kind:'chip', lines:[k.gl || k.label], kids:[{to:k.to, label:'', gk:0}], gk:k.gl?0:k.gk};
+    const cid = 'C:'+id+'>'+k.to+(k.alt?'/'+k.alt:'');
+    GC[cid] = {kind:'chip', lines:[k.gl || k.label], kids:[{to:k.to, label:'', gk:0}], gk:k.gl?0:k.gk, alt:k.alt||null};
     GC[id].kids.push({to:cid, label:'', gk:0});
   });
 });
@@ -612,7 +619,10 @@ function layout(svg, vis, vert, GR){
   GR = GR || G;
   return withMeas(svg, function(m){
     const S={},depth={},nodes=[];
-    (function walk(id,d){ if(!vis.has(id))return; depth[id]=d; nodes.push(id); S[id]=sizeOf(m,id,GR);
+    const seen={};
+    (function walk(id,d){ if(!vis.has(id))return;
+      if(seen[id]){ if(d>depth[id]) depth[id]=d; return; }
+      seen[id]=1; depth[id]=d; nodes.push(id); S[id]=sizeOf(m,id,GR);
       GR[id].kids.forEach(function(k){ walk(k.to,d+1); }); })(ROOT,0);
     let lw=0;
     nodes.forEach(function(id){ GR[id].kids.forEach(function(k){
@@ -694,12 +704,58 @@ function renderFlow(host, vis, opt){
   mk.appendChild(el('path',{d:'M0,1 L9,5 L0,9 z'},'cv-arrow')); defs.appendChild(mk); host.appendChild(defs);
   const lines=el('g'), boxes=el('g'); host.appendChild(lines); host.appendChild(boxes);
 
+  /* Where branches converge, a node has more than one edge coming in. Drawn the
+     same way they overlap: on the printed chart the later label hid the earlier,
+     and on the board the second line ran along a row and disappeared behind the
+     chip sitting there. Exactly one edge per node keeps the straight run — the
+     one starting nearest its row — and the rest come over the top corner. */
+  const primary={};
   L.nodes.forEach(function(id){
     const a=L.S[id];
-    GR[id].kids.forEach(function(k){
+    GR[id].kids.forEach(function(k,ki){
+      if(!vis.has(k.to)) return;
+      const c=L.S[k.to]; if(!c) return;
+      const gap=Math.abs(a.y-c.y);
+      if(!(k.to in primary) || gap<primary[k.to].gap) primary[k.to]={key:id+'#'+ki, gap:gap};
+    });
+  });
+  L.nodes.forEach(function(id){
+    const a=L.S[id];
+    GR[id].kids.forEach(function(k,ki){
       if(!vis.has(k.to)) return;
       const c=L.S[k.to], gh=opt.ghost&&opt.ghost.has(k.to);
+      const n = (primary[k.to] && primary[k.to].key===id+'#'+ki) ? 0 : 1;
       let d, lx, ly, anch;
+      if(n>0 && !L.vert){
+        /* A second branch into a node the first one already reaches. Coming in
+           the same side would run both lines alongside each other and cross, so
+           take the free corner: along the node's vertical axis, into the top or
+           bottom point depending on which side this branch starts from. */
+        const ccx=c.x+c.w/2, px=a.x+a.w;
+        const topY=c.y-c.h/2-34;                 // a lane above the node
+        const mx=Math.max(px+22, ccx-170);       // where this branch leaves the row
+        const okE=opt.okEdges&&opt.okEdges.has(id+'>'+k.to);
+        const deadE=opt.dead&&(opt.dead.has(k.to)||opt.dead.has(id));
+        lines.appendChild(el('path',{
+          d:'M'+px+','+a.y+' H'+mx+' V'+topY+' H'+ccx+' V'+(c.y-c.h/2-7),
+          'marker-end':'url(#fcArr)'},
+          'cv-line'+(gh?' ghost':'')+(okE?' is-ok':'')+(deadE?' is-dead':'')));
+        if(k.label){
+          /* flat on the horizontal run, right-aligned before the turn, the way
+             every other edge label in the chart sits */
+          const t0=el('text',{x:ccx-8,y:topY-8,'text-anchor':'end'}, k.gk?'cv-gk':'cv-edge');
+          t0.textContent=k.label; lines.appendChild(t0);
+        }
+        return;
+      }
+      if(n>0){
+        if(k.label){
+          const t0=el('text',{x:c.x+c.w/2+8, y:c.y-c.h/2-6-15*n, 'text-anchor':'start'},
+            k.gk?'cv-gk':'cv-edge');
+          t0.textContent=k.label; lines.appendChild(t0);
+        }
+        return;
+      }
       if(L.vert){
         const pcx=a.x+a.w/2, pby=a.y+a.h/2, ccx=c.x+c.w/2, cty=c.y-c.h/2-7, my=(pby+cty)/2;
         d='M'+pcx+','+pby+' V'+my+' H'+ccx+' V'+cty;
@@ -798,7 +854,18 @@ let pnWant=[], pnGot=new Set();   // person/number answers outstanding, and take
 function gPath(target, from){
   if(from===target) return [];
   const g=GC[from]; if(!g.kids.length) return null;
-  for(let i=0;i<g.kids.length;i++){ const s=gPath(target,g.kids[i].to); if(s) return [g.kids[i].to].concat(s); }
+  /* Two branches can lead to the same tense — a verb that takes no augment in
+     Koine still lands on the imperfect. The chart cannot tell them apart, so the
+     verb carries the flag (cur.noaug) that says which branch is its own. */
+  const takesAlt = g.kids.some(function(k){
+    const c=GC[k.to]; return c && c.alt && cur && cur[c.alt]; });
+  for(let i=0;i<g.kids.length;i++){
+    const c=GC[g.kids[i].to];
+    if(c && c.kind==='chip'){
+      if(takesAlt ? !(c.alt && cur && cur[c.alt]) : !!c.alt) continue;
+    }
+    const s=gPath(target,g.kids[i].to); if(s) return [g.kids[i].to].concat(s);
+  }
   return null;
 }
 function commit(id, fresh){
@@ -975,10 +1042,16 @@ function choose(to){
   if(want === to){
     /* everything else on offer here is now ruled out for this verb: keep it on
        the board, grayed, along with where it would have led */
+    /* Branches converge, so a ruled-out option can lead to a node the chosen
+       one still reaches. Mark what stays live first: without this, burying the
+       sibling walks through the shared node and greys out the player's own path. */
+    const live=new Set();
+    (function mark(id){ if(!GC[id] || live.has(id)) return; live.add(id);
+      GC[id].kids.forEach(function(c){ mark(c.to); }); })(to);
     GC[at].kids.forEach(function(k){
       if(k.to===to) return;
       (function bury(id,depth){
-        if(!GC[id] || dead.has(id)) return;
+        if(!GC[id] || dead.has(id) || live.has(id)) return;
         /* person/number chips are not on the master chart: show them only under
            the outcome actually in play, never under a ruled-out one */
         if(depth && id.indexOf('P:')===0) return;
@@ -1026,8 +1099,8 @@ function choosePN(to){
   finish(fresh); flash(to,'flash-ok'); sndSolved();
 }
 const PART={aug:'augment', redup:'reduplication', stem:'stem',
-            fuse:'fused σ', fmt:'tense formative', end:'ending',
-            prep:'preposition'};
+            fuse:'fused σ', fusa:'tense formative', fmt:'tense formative', end:'ending',
+            prep:'preposition', pfx:'prefix', augst:'augmented stem'};
 function esc(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 /* The word laid out in its parts. Not every form can be cut cleanly — where the
    σ has merged into the stem (βλέπ+σ → βλέψ) the piece is shown whole and
@@ -1038,7 +1111,12 @@ function breakdown(e){
     return '<span class="mp mp-'+p[0]+'"><b>'+esc(p[1])+'</b>'
          + '<i>'+PART[p[0]]+'</i></span>';
   }).join('<span class="mp-plus">+</span>');
-  return '<div class="gm-break">'+cells+'</div>';
+  /* Read it as an equation: the pieces really do rejoin to the exact accented
+     form, so showing the result makes that check visible to the student. */
+  return '<div class="gm-break">'+cells
+       + '<span class="mp-plus mp-eq">=</span>'
+       + '<span class="mp mp-whole"><b>'+esc(e.f)+'</b><i></i></span>'
+       + '</div>';
 }
 /* e.wi is the span of the WEB verse that renders this exact Greek word. It is
    precomputed from a word-level Greek-English alignment, with the occurrence
