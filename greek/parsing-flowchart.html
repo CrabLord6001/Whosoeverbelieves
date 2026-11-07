@@ -120,7 +120,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   /* .site-wrapper caps the site at 940px, which cut the chart off. The chart
      breaks out of that, but the card hugs the chart rather than spanning the
      viewport and leaving empty wings. */
-  .fc-chart img{display:block;width:1378px;height:auto}
+  .fc-chart img{display:block;width:1387px;height:auto}
   .fc-chart{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
              width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
   @media (max-width:980px){.fc-chart{width:auto;max-width:none;left:0;transform:none}}
@@ -132,7 +132,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
      900px wrapper, which is why this sat in a narrow column. The chart card
      escapes only because an image cannot shrink below its own width. */
   .vt-desc{font-size:2rem;line-height:1.3;color:var(--text);
-           width:min(1409px,98vw);max-width:none;margin:1.3rem auto 1.1rem;
+           width:min(1418px,98vw);max-width:none;margin:1.3rem auto 1.1rem;
            position:relative;left:50%;transform:translateX(-50%)}
   /* same breakout and same 980px cutover as .fc-chart, so the line and the
      chart card below it keep the same edges at every width */
@@ -343,7 +343,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
 
   <div id="chartMode">
     <div class="fc-chart">
-      <img id="fcChart" src="/images/gk/parsing-flowchart-dark.webp" width="1378" height="824"
+      <img id="fcChart" src="/images/gk/parsing-flowchart-dark.webp" width="1387" height="824"
            decoding="async"
            alt="Flowchart for parsing a Koine Greek verb in the indicative: stem form, augment, reduplication and tense formative, leading to each tense and voice.">
     </div>
@@ -402,16 +402,20 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
 const TREE = {
   stem:{q:'Is the stem the lexical form, or an alternate?',
         look:'Compare the stem letters against the verb’s lexical (present) form. A changed stem — λαμβάνω → λαβ-, στρέφω → στραφ- — points to a second aorist.',
-        opts:[{l:'Lexical',gl:'Lexical stem',to:'aug'},{l:'Alternate',gl:'Alternate stem',to:'aor2'}]},
+        opts:[{l:'Lexical',gl:'Lexical stem',to:'redup'},{l:'Alternate',gl:'Alternate stem',to:'aor2'}]},
   aor2:{stage:'Aorist (2nd)',q:'Is there a tense formative?',
         look:'With the second stem already carrying the aorist, a formative here (η or θη) marks the passive. Nothing between stem and ending means active or middle.',
         opts:[{l:'Yes',gl:'Tense formative',to:'T_2aor_p'},{l:'No',gl:'No tense formative',to:'T_2aor_am'}]},
+  /* Reduplication comes first because it marks the perfect system outright.
+     Asking about the augment first does not discriminate for a reduplicated
+     verb, and for a stem like γινώσκω the reduplication IS the ε-, so the
+     question has no answer. */
+  redup:{q:'Is there reduplication?',
+         look:'The initial consonant repeated with ε — λυ- → λελυ-, γραφ- → γεγραφ-. A vowel-initial or awkward stem reduplicates by lengthening instead, which can look exactly like an augment (γινώσκω → ἔγνωκα). Reduplication marks the perfect system.',
+         opts:[{l:'Yes',gl:'Reduplication',to:'pfplu'},{l:'No',gl:'No reduplication',to:'aug'}]},
   aug:{q:'Is there an augment?',
-       look:'An ε- prefixed to the stem, or a lengthened initial vowel (α → η, ε → η, ο → ω). In the indicative it marks the secondary (past) tenses.',
-       opts:[{l:'Yes',gl:'Augment',to:'redupA'},{l:'No',gl:'No augment',to:'redupB'}]},
-  redupA:{q:'Is there also reduplication?',
-          look:'The initial consonant repeated with ε — λυ- → λελυ-. Augment and reduplication together can only be the pluperfect.',
-          opts:[{l:'Yes',gl:'Reduplication',to:'T_plup'},{l:'No',gl:'No reduplication',to:'tfA'}]},
+       look:'An ε- prefixed to the stem, or a lengthened initial vowel (α → η, ε → η, ο → ω). With no reduplication in the way, an augment marks the secondary (past) tenses.',
+       opts:[{l:'Yes',gl:'Augment',to:'tfA'},{l:'No',gl:'No augment',to:'tfB'}]},
   tfA:{q:'Is there a tense formative?',
        look:'Look between the stem and the ending. An augment with nothing there is the imperfect; an augment with a formative is a first aorist.',
        opts:[{l:'Yes',gl:'Tense formative',to:'aor1'},{l:'No',gl:'No tense formative',to:'T_impf'}]},
@@ -420,9 +424,13 @@ const TREE = {
         opts:[{l:'α',gl:'Liquid active',gk:1,to:'T_1aor_liq'},
               {l:'σα',gl:'Active or middle',gk:1,to:'T_1aor_am'},
               {l:'θη',gl:'Passive',gk:1,to:'T_1aor_p'}]},
-  redupB:{q:'Is there reduplication?',
-          look:'λελυ-, γεγραφ-. Careful: a vowel-initial stem reduplicates by lengthening, which looks exactly like an augment — check for κα or the perfect endings to tell them apart.',
-          opts:[{l:'Yes',gl:'Reduplication',to:'perf'},{l:'No',gl:'No reduplication',to:'tfB'}]},
+  /* Koine drops the pluperfect augment freely, so a reduplicated stem is not
+     automatically a perfect. The endings decide: πεποιήκασιν against
+     πεποιήκεισαν. One path to each outcome, so no label repeats. */
+  pfplu:{q:'Primary or secondary endings?',
+         look:'The perfect is a primary tense: -α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν). The pluperfect is a secondary one: -ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν. The third plural shows it plainest — primary -ασι(ν) against secondary -εισαν. In Koine the pluperfect augment is often dropped, so the ending settles it, not the ε-.',
+         opts:[{l:'Primary',gl:'Primary endings',to:'perf'},
+               {l:'Secondary',gl:'Secondary endings',to:'T_plup'}]},
   perf:{stage:'Perfect',q:'Is there a tense formative?',
         look:'The perfect active builds on a formative; the middle/passive attaches its endings straight to the reduplicated stem.',
         opts:[{l:'Yes',gl:'Tense formative',to:'perfW'},{l:'No',gl:'No tense formative',to:'T_perf_mp'}]},
@@ -448,9 +456,10 @@ const TREE = {
   T_2aor_p:{end:'Aorist (2nd) · Passive'}, T_2aor_am:{end:'Aorist (2nd) · Active/Middle'}
 };
 const DLBL = {
-  stem:['Stem form?'], aug:['Augment?'], redupA:['Reduplication?'], redupB:['Reduplication?'],
+  stem:['Stem form?'], aug:['Augment?'], redup:['Reduplication?'],
   tfA:['Tense','formative?'], tfB:['Tense','formative?'], perf:['Tense','formative?'], aor2:['Tense','formative?'],
-  aor1:['Which tense','formative?'], perfW:['Which tense','formative?'], fut:['Which tense','formative?']
+  aor1:['Which tense','formative?'], perfW:['Which tense','formative?'], fut:['Which tense','formative?'],
+  pfplu:['Primary or','secondary?']
 };
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -521,9 +530,11 @@ function pnLong(l){
 /* Which personal endings to expect, given what the chart already settled. */
 function hintEndings(parse){
   const act = parse.indexOf('Active')>=0 && parse.indexOf('Deponent')<0;
-  if(parse.indexOf('Pluperfect')>=0) return ['pluperfect active','-ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν'];
+  if(parse.indexOf('Pluperfect')>=0) return act
+    ? ['secondary active (pluperfect)','-ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν']
+    : ['pluperfect middle/passive','-μην, -σο, -το, -μεθα, -σθε, -ντο'];
   if(parse.indexOf('Perfect')>=0) return act
-    ? ['perfect active','-α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν)']
+    ? ['primary active (perfect)','-α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν)']
     : ['perfect middle/passive','-μαι, -σαι, -ται, -μεθα, -σθε, -νται'];
   if(parse.indexOf('Aorist')>=0 && parse.indexOf('Passive')>=0)
     return ['aorist passive','-ην, -ης, -η, -ημεν, -ητε, -ησαν'];
