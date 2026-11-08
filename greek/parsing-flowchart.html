@@ -808,9 +808,21 @@ function renderFlow(host, vis, opt){
         return;
       }
       if(L.vert){
-        const pcx=a.x+a.w/2, pby=a.y+a.h/2, ccx=c.x+c.w/2, cty=c.y-c.h/2-7, my=(pby+cty)/2;
-        d='M'+pcx+','+pby+' V'+my+' H'+ccx+' V'+cty;
-        lx=ccx+8; ly=cty-6; anch='start';
+        const pcx=a.x+a.w/2, pby=a.y+a.h/2, ccx=c.x+c.w/2;
+        const gr=c.gridRow||0;
+        if(gr){
+          /* Second row of the person/number grid sits directly under the first,
+             so dropping into its top ran the line straight through the chip
+             above. Come down the gutter beside the column instead and enter
+             from the side — the gutter is empty by construction. */
+          const row0top=c.y-gr*(c.h+16)-c.h/2, lane=(pby+row0top)/2, gx=c.x-9;
+          d='M'+pcx+','+pby+' V'+lane+' H'+gx+' V'+c.y+' H'+(c.x-7);
+          lx=c.x-11; ly=c.y-7; anch='end';
+        } else {
+          const cty=c.y-c.h/2-7, my=(pby+cty)/2;
+          d='M'+pcx+','+pby+' V'+my+' H'+ccx+' V'+cty;
+          lx=ccx+8; ly=cty-6; anch='start';
+        }
       } else {
         const px=a.x+a.w, mx=px+L.GAPX/2, cx=c.x-7;
         d='M'+px+','+a.y+' H'+mx+' V'+c.y+' H'+cx;
