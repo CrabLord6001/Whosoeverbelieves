@@ -706,36 +706,23 @@ function layout(svg, vis, vert, GR){
     (function placeV(id){
       const kids=GR[id].kids.filter(function(k){return vis.has(k.to);});
       if(!kids.length){ S[id].cx=cx+S[id].w/2; cx+=S[id].w+GAPXV; return; }
-      /* six person/number chips in one row would be far too wide on a
-         phone, so grid them three across */
-      if(kids.length>=5 && kids.every(function(k){return GR[k.to].kind==='chip';})){
-        const per=3, cw=[];
-        for(let c=0;c<per;c++){ let m=0;
-          for(let i=c;i<kids.length;i+=per) m=Math.max(m,S[kids[i].to].w);
-          cw[c]=m; }
-        const tw=cw.reduce(function(a,b){return a+b;},0)+(per-1)*GAPXV, x0=cx;
-        kids.forEach(function(k,i){
-          const col=i%per; let xx=x0;
-          for(let c=0;c<col;c++) xx+=cw[c]+GAPXV;
-          S[k.to].cx=xx+cw[col]/2; S[k.to].gridRow=(i/per)|0;
-        });
-        cx=x0+tw+GAPXV; S[id].cx=x0+tw/2; return;
-      }
+      /* The six person/number chips used to be gridded three across to keep the
+         board narrow. That stacked the plurals directly under the singulars, and
+         no edge can reach the lower row without passing the chip above it or
+         detouring around it — both read as clutter. One row crosses nothing, and
+         the board already pans and zooms, so the extra width costs nothing. */
       kids.forEach(function(k){ placeV(k.to); });
       const f=S[kids[0].to], l=S[kids[kids.length-1].to];
       const lf=f.cx-f.w/2, rt=l.cx+l.w/2;
       if(rt-lf<S[id].w) cx+=S[id].w-(rt-lf);
       S[id].cx=(lf+rt)/2;
     })(ROOT);
-    let gridExtra=0;
     nodes.forEach(function(id){
       S[id].x=S[id].cx-S[id].w/2;
-      const gr=S[id].gridRow||0;
-      S[id].y=rowY[depth[id]]+gr*(S[id].h+16);
-      if(gr) gridExtra=Math.max(gridExtra, gr*(S[id].h+16));
+      S[id].y=rowY[depth[id]];
     });
     const xs=nodes.map(function(i){return S[i].x;}), xe=nodes.map(function(i){return S[i].x+S[i].w;});
-    return {S:S,nodes:nodes,W:Math.max.apply(null,xe)+PAD,H:yy-GAPYV+PAD+gridExtra,GAPX:GAPX,vert:true,
+    return {S:S,nodes:nodes,W:Math.max.apply(null,xe)+PAD,H:yy-GAPYV+PAD,GAPX:GAPX,vert:true,
             minX:Math.min.apply(null,xs)};
   });
 }
@@ -808,21 +795,9 @@ function renderFlow(host, vis, opt){
         return;
       }
       if(L.vert){
-        const pcx=a.x+a.w/2, pby=a.y+a.h/2, ccx=c.x+c.w/2;
-        const gr=c.gridRow||0;
-        if(gr){
-          /* Second row of the person/number grid sits directly under the first,
-             so dropping into its top ran the line straight through the chip
-             above. Come down the gutter beside the column instead and enter
-             from the side — the gutter is empty by construction. */
-          const row0top=c.y-gr*(c.h+16)-c.h/2, lane=(pby+row0top)/2, gx=c.x-9;
-          d='M'+pcx+','+pby+' V'+lane+' H'+gx+' V'+c.y+' H'+(c.x-7);
-          lx=c.x-11; ly=c.y-7; anch='end';
-        } else {
-          const cty=c.y-c.h/2-7, my=(pby+cty)/2;
-          d='M'+pcx+','+pby+' V'+my+' H'+ccx+' V'+cty;
-          lx=ccx+8; ly=cty-6; anch='start';
-        }
+        const pcx=a.x+a.w/2, pby=a.y+a.h/2, ccx=c.x+c.w/2, cty=c.y-c.h/2-7, my=(pby+cty)/2;
+        d='M'+pcx+','+pby+' V'+my+' H'+ccx+' V'+cty;
+        lx=ccx+8; ly=cty-6; anch='start';
       } else {
         const px=a.x+a.w, mx=px+L.GAPX/2, cx=c.x-7;
         d='M'+px+','+a.y+' H'+mx+' V'+c.y+' H'+cx;
