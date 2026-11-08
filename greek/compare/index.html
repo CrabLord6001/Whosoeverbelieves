@@ -67,13 +67,20 @@
   }
 
   /* ── CONTROLS ─────────────────────────────────────────────────────────── */
-  .cmp-bar {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  /* The wrapper IS the bar on a wide screen. On a phone it dissolves, so
+     .cmp-bar can stick by itself and the toggles scroll away with the page:
+     a sticky child only sticks while its own parent is on screen, so the
+     wrapper cannot stay a box there. */
+  .cmp-barwrap {
+    display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: space-between; gap: 0.6rem;
     padding: 0.9rem 1rem; margin-bottom: 1.25rem;
     background: var(--glass); border: 1px solid var(--glass-border);
     border-radius: 8px; position: sticky; top: 0; z-index: 20;
     backdrop-filter: blur(10px);
   }
+  .cmp-bar  { display: flex; align-items: center; gap: 0.6rem; min-width: 0; }
+  .cmp-opts { display: flex; align-items: center; gap: 0.6rem; }
   .cmp-bar select {
     font-family: 'EB Garamond', serif; font-size: 0.95rem;
     background: var(--surface); color: var(--text);
@@ -90,7 +97,24 @@
   .cmp-bar input[type="search"]::placeholder { color: var(--text-faint); }
   .cmp-bar input[type="search"]:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
   .cmp-bar input.is-bad { border-color: #c4604a; }
-  .cmp-spacer { flex: 1 1 auto; }
+  @media (max-width: 699px) {
+    .cmp-barwrap { display: contents; }
+    .cmp-bar {
+      position: sticky; top: 0; z-index: 20;
+      gap: 0.4rem; padding: 0.5rem 0.55rem; margin-bottom: 0.55rem;
+      background: var(--glass); border: 1px solid var(--glass-border);
+      border-radius: 8px; backdrop-filter: blur(10px);
+    }
+    /* All three share the row. Selects carry an intrinsic minimum width, so
+       min-width:0 is what actually lets them shrink to fit. */
+    .cmp-bar select,
+    .cmp-bar input[type="search"] {
+      flex: 1 1 0; min-width: 0; width: auto;
+      font-size: 0.85rem; padding: 0.35rem 0.4rem; min-height: 2.2rem;
+    }
+    #cmp-book { flex-grow: 1.15; }   /* "1 Corinthians" is the long one */
+    .cmp-opts { flex-wrap: wrap; margin-bottom: 1.25rem; }
+  }
   .cmp-toggle {
     display: inline-flex; align-items: center; gap: 0.4rem;
     font-family: 'Cinzel', serif; font-size: 0.58rem; letter-spacing: 0.12em;
@@ -451,17 +475,20 @@
 
     <span id="cmp-top" aria-hidden="true"></span>
 
-    <div class="cmp-bar">
-      <label class="visually-hidden" for="cmp-book">Book</label>
-      <select id="cmp-book" aria-label="Book"></select>
-      <label class="visually-hidden" for="cmp-ch">Chapter</label>
-      <select id="cmp-ch" aria-label="Chapter"></select>
-      <label class="visually-hidden" for="cmp-ref">Go to a reference</label>
-      <input type="search" id="cmp-ref" placeholder="Go to&hellip; John 3:16"
-             autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
-      <span class="cmp-spacer"></span>
-      <label class="cmp-toggle"><input type="checkbox" id="t-all"> Show entire chapter</label>
-      <label class="cmp-toggle"><input type="checkbox" id="t-en" checked> English</label>
+    <div class="cmp-barwrap">
+      <div class="cmp-bar">
+        <label class="visually-hidden" for="cmp-book">Book</label>
+        <select id="cmp-book" aria-label="Book"></select>
+        <label class="visually-hidden" for="cmp-ch">Chapter</label>
+        <select id="cmp-ch" aria-label="Chapter"></select>
+        <label class="visually-hidden" for="cmp-ref">Go to a reference</label>
+        <input type="search" id="cmp-ref" placeholder="Go to&hellip; John 3:16"
+               autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+      </div>
+      <div class="cmp-opts">
+        <label class="cmp-toggle"><input type="checkbox" id="t-all"> Show entire chapter</label>
+        <label class="cmp-toggle"><input type="checkbox" id="t-en" checked> English</label>
+      </div>
     </div>
 
     <div class="cmp-legend">
@@ -692,6 +719,15 @@
     if (ch < 1 || ch > entry.ch) return null;
     return [entry.b, ch, vs];
   }
+
+  /* The full placeholder is wider than the field on a phone and would just
+     be clipped. The aria-label carries the meaning either way. */
+  function refPlaceholder() {
+    elRef.placeholder = window.matchMedia('(max-width: 699px)').matches
+      ? 'John 3:16' : 'Go to\u2026 John 3:16';
+  }
+  refPlaceholder();
+  window.addEventListener('resize', refPlaceholder);
 
   elRef.addEventListener('keydown', function (e) {
     if (e.key !== 'Enter') return;
