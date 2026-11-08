@@ -123,7 +123,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   .fc-credit{max-width:62rem;margin:.9rem auto 0;text-align:center;font-size:.8rem;
              color:var(--text-faint);line-height:1.5}
   .fc-credit a{color:var(--text-faint);text-decoration:underline}
-  .fc-chart img{display:block;width:1567px;height:auto}
+  .fc-chart img{display:block;width:1848px;height:auto}
   .fc-chart{border:1px solid var(--rule);border-radius:8px;background:var(--glass);padding:.9rem;
              width:fit-content;max-width:98vw;position:relative;left:50%;transform:translateX(-50%)}
   @media (max-width:980px){.fc-chart{width:auto;max-width:none;left:0;transform:none}}
@@ -146,7 +146,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
      900px wrapper, which is why this sat in a narrow column. The chart card
      escapes only because an image cannot shrink below its own width. */
   .vt-desc{font-size:2rem;line-height:1.3;color:var(--text);
-           width:min(1598px,98vw);max-width:none;margin:1.3rem auto 1.1rem;
+           width:min(1879px,98vw);max-width:none;margin:1.3rem auto 1.1rem;
            position:relative;left:50%;transform:translateX(-50%)}
   /* same breakout and same 980px cutover as .fc-chart, so the line and the
      chart card below it keep the same edges at every width */
@@ -472,18 +472,37 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
    so the diagram and the puzzle can never disagree. */
 const TREE = {
   stem:{q:'Is the stem the lexical form, or an alternate?',
-        look:'Compare the stem letters against the verb’s lexical (present) form. A changed stem — λαμβάνω → λαβ-, στρέφω → στραφ- — points to a second aorist.',
+        look:'Compare the stem letters against the verb’s lexical (present) form. A changed stem — λαμβάνω → λαβ-, στρέφω → στραφ- — points to a second aorist. Where the lexical form carries a reduplication (δίδωμι, τίθημι, ἵστημι), compare against the stem underneath it: δω-, θη-, στη- are the lexical stem, not an alternate.',
         opts:[{l:'Lexical',gl:'Lexical stem',to:'redup'},{l:'Alternate',gl:'Alternate stem',to:'aor2'}]},
   aor2:{stage:'Aorist (2nd)',q:'Is there a tense formative?',
         look:'With the second stem already carrying the aorist, a formative here (η or θη) marks the passive. Nothing between stem and ending means active or middle.',
-        opts:[{l:'Yes',gl:'Tense formative',to:'T_2aor_p'},{l:'No',gl:'No tense formative',to:'T_2aor_am'}]},
+        opts:[{l:'Yes',gl:'Tense formative',to:'T_2aor_p'},{l:'No',gl:'No tense formative',to:'rootA'}]},
+  /* The same question as rootI, with its own endpoint box rather than a second
+     edge into rootI's. Converging here spans the chart's whole height, and the
+     second edge then crosses whatever lies between; a repeated endpoint is
+     ordinary in a flowchart and renders clean. */
+  rootA:{q:'Does the ending attach straight to the stem?',
+         look:'ἔγνω, ἀνέστη — a changed stem with the ending straight on it is the athematic aorist. The ordinary second aorist is thematic: ἔ-λαβ-ο-ν, ἔ-φαγ-ο-ν, εἶδ-ο-ν.',
+         opts:[{l:'Yes',gl:'Ending straight on the stem',to:'T_raor2'},
+               {l:'No',gl:'Connecting vowel ο/ε',to:'T_2aor_am'}]},
   /* Reduplication comes first because it marks the perfect system outright.
      Asking about the augment first does not discriminate for a reduplicated
      verb, and for a stem like γινώσκω the reduplication IS the ε-, so the
      question has no answer. */
   redup:{q:'Is there reduplication?',
          look:'The initial consonant repeated with ε — λυ- → λελυ-, γραφ- → γεγραφ-. A vowel-initial or awkward stem reduplicates by lengthening instead, which can look exactly like an augment (γινώσκω → ἔγνωκα). Reduplication marks the perfect system.',
-         opts:[{l:'Yes',gl:'Reduplication',to:'pfplu'},{l:'No',gl:'No reduplication',to:'aug'}]},
+         opts:[{l:'Yes',gl:'Reduplication',to:'redupv'},{l:'No',gl:'No reduplication',to:'aug'}]},
+  /* Perfect reduplication repeats the stem consonant with ε; the athematic
+     present repeats it with ι — δί-δωμι, τί-θημι, ἱ-στημι. A bare yes/no on
+     ι would misfire on εἴρηκα and εὕρηκα, whose reduplication is a diphthong
+     carrying an iota, so the question asks which vowel rather than whether. */
+  redupv:{q:'Which vowel does the reduplication carry?',
+          look:'The stem consonant repeated with ι — δι-, τι-, ἱ- — is the present system of an athematic verb, not a perfect. Repeated with ε (λε-, γε-, πε-), or a lengthened initial vowel (ἑώρακα, εἴρηκα), it is the perfect system. A diphthong counts as lengthening, not as ι.',
+          opts:[{l:'ι',gl:'Consonant + ι',gk:1,to:'miaug'},
+                {l:'ε / lengthened',gl:'Consonant + ε, or lengthened',to:'pfplu'}]},
+  miaug:{stage:'-μι (Athematic)',q:'Is there an augment?',
+         look:'The reduplication already sits in front of the stem, so the augment goes before it: δίδωμι → ἐδίδουν. Watch the singular against the plural — δίδωμι but δίδομεν, the long vowel shortening outside the singular.',
+         opts:[{l:'Yes',gl:'Augment',to:'T_mi_impf'},{l:'No',gl:'No augment',to:'T_mi_pres'}]},
   aug:{q:'Is there an augment?',
        look:'An ε- prefixed to the stem, or a lengthened initial vowel (α → η, ε → η, ο → ω). With no reduplication in the way, an augment marks the secondary (past) tenses.',
        opts:[{l:'Yes',gl:'Augment',to:'tfA'},
@@ -491,11 +510,19 @@ const TREE = {
         {l:'No',gl:'No augment',to:'tfB'}]},
   tfA:{q:'Is there a tense formative?',
        look:'Look between the stem and the ending. An augment with nothing there is the imperfect; an augment with a formative is a first aorist.',
-       opts:[{l:'Yes',gl:'Tense formative',to:'aor1'},{l:'No',gl:'No tense formative',to:'T_impf'}]},
+       opts:[{l:'Yes',gl:'Tense formative',to:'aor1'},{l:'No',gl:'No tense formative',to:'rootI'}]},
+  /* An augment with no formative used to mean the imperfect outright, but the
+     athematic aorists land here too — ἔστη, ἔθετο, ἀπέδοτο. The connecting
+     vowel is what separates them, not the length of the stem: ἔθετο is short. */
+  rootI:{q:'Does the ending attach straight to the stem?',
+         look:'ἔστη, ἔθετο, ἀπέδοτο — the secondary ending sits straight on the stem with no connecting ο/ε. That is the athematic aorist, active or middle. The imperfect is thematic, with the vowel showing between stem and ending: ἐ-λύ-ο-ν, ἐ-λύ-ε-το.',
+         opts:[{l:'Yes',gl:'Ending straight on the stem',to:'T_raor'},
+               {l:'No',gl:'Connecting vowel ο/ε',to:'T_impf'}]},
   aor1:{stage:'Aorist (1st)',q:'What does the tense formative mark?',
-        look:'σα is the ordinary first aorist, active or middle. A bare α with a lengthened stem marks a liquid aorist (stems in λ, μ, ν, ρ). θη marks the passive.',
+        look:'σα is the ordinary first aorist, active or middle. A bare α with a lengthened stem marks a liquid aorist (stems in λ, μ, ν, ρ). κα is the aorist of the athematic verbs — ἔδωκα, ἔθηκα, ἀφῆκα; the perfect that also uses κα reduplicates, so it never reaches this question. θη marks the passive.',
         opts:[{l:'α',gl:'Liquid active',gk:1,to:'T_1aor_liq'},
               {l:'σα',gl:'Active or middle',gk:1,to:'T_1aor_am'},
+              {l:'κα',gl:'Kappa active',gk:1,to:'T_kaor'},
               {l:'θη',gl:'Passive',gk:1,to:'T_1aor_p'}]},
   /* Koine drops the pluperfect augment freely, so a reduplicated stem is not
      automatically a perfect. The endings decide: πεποιήκασιν against
@@ -526,13 +553,19 @@ const TREE = {
   T_1aor_liq:{end:'Aorist (1st) · Liquid Active'}, T_1aor_am:{end:'Aorist (1st) · Active or Middle'},
   T_1aor_p:{end:'Aorist (1st) · Passive'}, T_perf_1a:{end:'Perfect · Active (1st)'},
   T_perf_2a:{end:'Perfect · Active (2nd)'}, T_perf_mp:{end:'Perfect · Middle/Passive'},
-  T_2aor_p:{end:'Aorist (2nd) · Passive'}, T_2aor_am:{end:'Aorist (2nd) · Active/Middle'}
+  T_2aor_p:{end:'Aorist (2nd) · Passive'}, T_2aor_am:{end:'Aorist (2nd) · Active/Middle'},
+  T_mi_pres:{end:'Present · -μι Athematic'}, T_mi_impf:{end:'Imperfect · -μι Athematic'},
+  T_kaor:{end:'Aorist (1st) · Kappa Active'},
+  /* Two boxes, one outcome — see rootA. */
+  T_raor:{end:'Aorist · Athematic'}, T_raor2:{end:'Aorist · Athematic'}
 };
 const DLBL = {
   stem:['Stem form?'], aug:['Augment?'], redup:['Reduplication?'],
   tfA:['Tense','formative?'], tfB:['Tense','formative?'], perf:['Tense','formative?'], aor2:['Tense','formative?'],
   aor1:['Which tense','formative?'], perfW:['Which tense','formative?'], fut:['Which tense','formative?'],
-  pfplu:['Primary or','secondary?']
+  pfplu:['Primary or','secondary?'],
+  redupv:['Which','redup. vowel?'], miaug:['Augment?'],
+  rootI:['Ending straight','on stem?'], rootA:['Ending straight','on stem?']
 };
 const NS = 'http://www.w3.org/2000/svg';
 
@@ -674,7 +707,7 @@ function layout(svg, vis, vert, GR){
       if(!kids.length){ bare[id]=1; S[id].y=cur+S[id].h/2; cur+=S[id].h+GAPY; return; }
       kids.forEach(function(k){ place(k.to); });
       /* A child pointing at a node some earlier branch already placed has no
-         subtree of its own to be centred on, so it took a bare slot and ended
+         subtree of its own to be centered on, so it took a bare slot and ended
          up hugging the sibling before it. Space those evenly between the
          siblings that do have a position of their own. */
       for(let i=0;i<all.length;i++){
@@ -1119,7 +1152,7 @@ function choose(to){
        the board, grayed, along with where it would have led */
     /* Branches converge, so a ruled-out option can lead to a node the chosen
        one still reaches. Mark what stays live first: without this, burying the
-       sibling walks through the shared node and greys out the player's own path. */
+       sibling walks through the shared node and grays out the player's own path. */
     const live=new Set();
     (function mark(id){ if(!GC[id] || live.has(id)) return; live.add(id);
       GC[id].kids.forEach(function(c){ mark(c.to); }); })(to);
