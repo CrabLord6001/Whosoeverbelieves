@@ -483,7 +483,7 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
    so the diagram and the puzzle can never disagree. */
 const TREE = {
   stem:{q:'Is the stem the lexical form, or an alternate?',
-        look:'Compare the stem letters against the verb’s lexical (present) form. A changed stem — λαμβάνω → λαβ-, στρέφω → στραφ- — points to a second aorist. Where the lexical form carries a reduplication (δίδωμι, τίθημι, ἵστημι), compare against the stem underneath it: δω-, θη-, στη- are the lexical stem, not an alternate.',
+        look:'Compare the stem letters against the verb’s lexical (present) form. A changed stem (λαμβάνω → λαβ-, στρέφω → στραφ-) points to a second aorist. If lexical forms have reduplications (δίδωμι, τίθημι, ἵστημι), compare the stem.',
         opts:[{l:'Lexical',gl:'Lexical stem',to:'redup'},{l:'Alternate',gl:'Alternate stem',to:'aor2'}]},
   aor2:{stage:'Aorist (2nd)',q:'Is there a tense formative?',
         look:'With the second stem already carrying the aorist, a formative here (η or θη) marks the passive. Nothing between stem and ending means active or middle.',
@@ -493,26 +493,26 @@ const TREE = {
      second edge then crosses whatever lies between; a repeated endpoint is
      ordinary in a flowchart and renders clean. */
   rootA:{q:'Does the ending attach straight to the stem?',
-         look:'ἔγνω, ἀνέστη — a changed stem with the ending straight on it is the athematic aorist. The ordinary second aorist is thematic: ἔ-λαβ-ο-ν, ἔ-φαγ-ο-ν, εἶδ-ο-ν.',
+         look:'A changed stem with the ending straight on it is the athematic aorist (ἔγνω, ἀνέστη). The ordinary second aorist is thematic: ἔ-λαβ-ο-ν, ἔ-φαγ-ο-ν, εἶδ-ο-ν.',
          opts:[{l:'Yes',gl:'Ending straight on the stem',to:'T_raor2'},
                {l:'No',gl:'Connecting vowel ο/ε',to:'T_2aor_am'}]},
-  /* Reduplication comes first because it marks the perfect system outright.
+  /* Reduplication comes first because it marks the perfect or pluperfect outright.
      Asking about the augment first does not discriminate for a reduplicated
      verb, and for a stem like γινώσκω the reduplication IS the ε-, so the
      question has no answer. */
   redup:{q:'Is there reduplication?',
-         look:'The initial consonant repeated with ε — λυ- → λελυ-, γραφ- → γεγραφ-. A vowel-initial or awkward stem reduplicates by lengthening instead, which can look exactly like an augment (γινώσκω → ἔγνωκα). Reduplication marks the perfect system.',
+         look:'The initial consonant repeated with ε (λυ- → λελυ-, γραφ- → γεγραφ-). Stems beginning with vowels reduplicate by lengthening it, while stems beginning with a consonant cluster add an ἐ instead, unless the cluster is a stop plus λ or ρ (γινώσκω → ἔγνωκα, but γράφω → γέγραφα). Reduplications are the primary giveaway for either the perfect or pluperfect tense.',
          opts:[{l:'Yes',gl:'Reduplication',to:'redupv'},{l:'No',gl:'No reduplication',to:'aug'}]},
   /* Perfect reduplication repeats the stem consonant with ε; the athematic
      present repeats it with ι — δί-δωμι, τί-θημι, ἱ-στημι. A bare yes/no on
      ι would misfire on εἴρηκα and εὕρηκα, whose reduplication is a diphthong
      carrying an iota, so the question asks which vowel rather than whether. */
   redupv:{q:'Which vowel does the reduplication carry?',
-          look:'The stem consonant repeated with ι — δι-, τι-, ἱ- — is the present system of an athematic verb, not a perfect. Repeated with ε (λε-, γε-, πε-), or a lengthened initial vowel (ἑώρακα, εἴρηκα), it is the perfect system. A diphthong counts as lengthening, not as ι.',
+          look:'The stem consonant repeated with ι (δι-, τι-, ἱ-) marks the present or imperfect of an athematic verb, not a perfect. Repeated with ε (λε-, γε-, πε-), or a lengthened initial vowel (ἑώρακα, εἴρηκα), it marks the perfect or pluperfect. A diphthong counts as lengthening, not as ι.',
           opts:[{l:'ι',gl:'Consonant + ι',gk:1,to:'miaug'},
                 {l:'ε / lengthened',gl:'Consonant + ε, or lengthened',to:'pfplu'}]},
   miaug:{stage:'-μι (Athematic)',q:'Is there an augment?',
-         look:'The reduplication already sits in front of the stem, so the augment goes before it: δίδωμι → ἐδίδουν. Watch the singular against the plural — δίδωμι but δίδομεν, the long vowel shortening outside the singular.',
+         look:'The reduplication already sits in front of the stem, so the augment goes before it: δίδωμι → ἐδίδουν. Watch the singular against the plural (δίδωμι but δίδομεν), the long vowel shortening outside the singular.',
          opts:[{l:'Yes',gl:'Augment',to:'T_mi_impf'},{l:'No',gl:'No augment',to:'T_mi_pres'}]},
   aug:{q:'Is there an augment?',
        look:'An ε- prefixed to the stem, or a lengthened initial vowel (α → η, ε → η, ο → ω). With no reduplication in the way, an augment marks the secondary (past) tenses.',
@@ -526,11 +526,11 @@ const TREE = {
      athematic aorists land here too — ἔστη, ἔθετο, ἀπέδοτο. The connecting
      vowel is what separates them, not the length of the stem: ἔθετο is short. */
   rootI:{q:'Does the ending attach straight to the stem?',
-         look:'ἔστη, ἔθετο, ἀπέδοτο — the secondary ending sits straight on the stem with no connecting ο/ε. That is the athematic aorist, active or middle. The imperfect is thematic, with the vowel showing between stem and ending: ἐ-λύ-ο-ν, ἐ-λύ-ε-το.',
+         look:'The secondary ending sits straight on the stem with no connecting ο/ε (ἔστη, ἔθετο, ἀπέδοτο). That is the athematic aorist, active or middle. The imperfect is thematic, with the vowel showing between stem and ending: ἐ-λύ-ο-ν, ἐ-λύ-ε-το.',
          opts:[{l:'Yes',gl:'Ending straight on the stem',to:'T_raor'},
                {l:'No',gl:'Connecting vowel ο/ε',to:'T_impf'}]},
   aor1:{stage:'Aorist (1st)',q:'What does the tense formative mark?',
-        look:'σα is the ordinary first aorist, active or middle. A bare α with a lengthened stem marks a liquid aorist (stems in λ, μ, ν, ρ). κα is the aorist of the athematic verbs — ἔδωκα, ἔθηκα, ἀφῆκα; the perfect that also uses κα reduplicates, so it never reaches this question. θη marks the passive.',
+        look:'σα is the ordinary first aorist, active or middle. A bare α with a lengthened stem marks a liquid aorist (stems in λ, μ, ν, ρ). κα is the aorist tense formative in some common athematic verbs ("kappa aorists", ἔδωκα, ἔθηκα, ἀφῆκα). However, the first perfect active also uses κα, so check for reduplications. θη marks the passive.',
         opts:[{l:'α',gl:'Liquid active',gk:1,to:'T_1aor_liq'},
               {l:'σα',gl:'Active or middle',gk:1,to:'T_1aor_am'},
               {l:'κα',gl:'Kappa active',gk:1,to:'T_kaor'},
@@ -539,7 +539,7 @@ const TREE = {
      automatically a perfect. The endings decide: πεποιήκασιν against
      πεποιήκεισαν. One path to each outcome, so no label repeats. */
   pfplu:{q:'Primary or secondary endings?',
-         look:'Perfect uses primary personal endings: -α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν). Pluperfect uses secondary personal endings: -ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν. The third plural shows it plainest — primary -ασι(ν) against secondary -εισαν. In Koine the pluperfect augment is often dropped, so the ending settles it, not the ε-.',
+         look:'Perfect uses primary personal endings: -α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν). Pluperfect uses secondary personal endings: -ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν. The third plural shows it plainest (primary -ασι(ν) against secondary -εισαν). In Koine the pluperfect augment is often dropped, so the ending settles it, not the ε-.',
          opts:[{l:'Primary',gl:'Primary endings',to:'perf'},
                {l:'Secondary',gl:'Secondary endings',to:'T_plup'}]},
   perf:{stage:'Perfect',q:'Is there a tense formative?',
@@ -1215,7 +1215,7 @@ function choosePN(to){
     document.getElementById('gmWrong').textContent=wrong;
     document.getElementById('gmStreak').textContent=streak;
     const e=hintEndings(cur.p);
-    msg('<span class="gm-line">Read the ending \u2014 this takes the <b>'+e[0]+'</b> endings:</span>'
+    msg('<span class="gm-line">Read the ending. This takes the <b>'+e[0]+'</b> endings:</span>'
        +'<span class="gm-line"><span class="gm-lex">'+e[1]+'</span></span>','bad hint');
     flash(to,'flash-bad'); sndWrong(); shake();
     return;
