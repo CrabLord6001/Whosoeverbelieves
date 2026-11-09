@@ -258,6 +258,17 @@ svg.cv .cv-bar.evil{fill:var(--rd);fill-opacity:.7;stroke:var(--rd)}
   .gm-bar:not(.hidden) + .gm-msg{border-radius:0 0 12px 12px;border-top:0}
   :root.light-mode .gm-msg{background:rgba(239,232,216,.86)}
   .gm-msg:empty{display:none}
+  /* A hint often carries three or four separate points. Run together as one
+     centered paragraph they are hard to pick apart mid-round, so each sentence
+     takes its own line and the panel widens to let the longer ones sit on one.
+     Only hints widen — the reveal panel keeps its own measure. */
+  .gm-panel.wide{width:min(108ch,96%)}
+  /* Hints read as a list of points, so they set flush left and every line
+     starts on the same edge. The reveal keeps its centered measure. */
+  .gm-msg.hint{text-align:left;padding:.85rem 1.15rem}
+  .gm-msg .gm-line{display:block}
+  .gm-msg .gm-line + .gm-line{margin-top:.5rem}
+  @media (max-width:560px){.gm-msg .gm-line + .gm-line{margin-top:.4rem}}
   /* The reveal: the word in its parts, then the parse, then the verse it came
      from. Each part is colored by what it does, with the name under it so the
      color is learnable rather than decorative. */
@@ -528,7 +539,7 @@ const TREE = {
      automatically a perfect. The endings decide: πεποιήκασιν against
      πεποιήκεισαν. One path to each outcome, so no label repeats. */
   pfplu:{q:'Primary or secondary endings?',
-         look:'The perfect is a primary tense: -α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν). The pluperfect is a secondary one: -ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν. The third plural shows it plainest — primary -ασι(ν) against secondary -εισαν. In Koine the pluperfect augment is often dropped, so the ending settles it, not the ε-.',
+         look:'Perfect uses primary personal endings: -α, -ας, -ε(ν), -αμεν, -ατε, -ασι(ν). Pluperfect uses secondary personal endings: -ειν, -εις, -ει, -ειμεν, -ειτε, -εισαν. The third plural shows it plainest — primary -ασι(ν) against secondary -εισαν. In Koine the pluperfect augment is often dropped, so the ending settles it, not the ε-.',
          opts:[{l:'Primary',gl:'Primary endings',to:'perf'},
                {l:'Secondary',gl:'Secondary endings',to:'T_plup'}]},
   perf:{stage:'Perfect',q:'Is there a tense formative?',
@@ -1141,6 +1152,20 @@ function camZoomBy(d){ const r=stageRect(); zoomAt(r.width/2, r.height/2, d>0?1.
 })();
 function msg(html, cls){
   const m=document.getElementById('gmMsg'); m.innerHTML=html||''; m.className='gm-msg'+(cls?' '+cls:'');
+  const p=document.getElementById('gmPanel');
+  if(p) p.classList.toggle('wide', /\bhint\b/.test(cls||''));
+}
+/* The look strings are plain text with no markup, so splitting them on the
+   sentence boundary is safe. The reveal is HTML and never comes through here. */
+function hintLines(text){
+  const s=String(text).trim(), out=[];
+  let buf='';
+  for(let i=0;i<s.length;i++){
+    buf+=s[i];
+    if(/[.!?]/.test(s[i]) && /\s/.test(s[i+1]||' ')){ out.push(buf.trim()); buf=''; }
+  }
+  if(buf.trim()) out.push(buf.trim());
+  return out.map(function(t){ return '<span class="gm-line">'+t+'</span>'; }).join('');
 }
 function choose(to){
   if(done) return;
@@ -1174,7 +1199,9 @@ function choose(to){
     wrong++; streak=0;
     document.getElementById('gmWrong').textContent=wrong;
     document.getElementById('gmStreak').textContent=streak;
-    msg('Not that branch. '+TREE[at].look,'bad');
+    /* No "wrong" line: the red text and the buzzer already say that. The hint
+       is the only thing here that carries information. */
+    msg(hintLines(TREE[at].look),'bad hint');
     flash(to,'flash-bad'); sndWrong(); shake();
   }
 }
@@ -1188,16 +1215,16 @@ function choosePN(to){
     document.getElementById('gmWrong').textContent=wrong;
     document.getElementById('gmStreak').textContent=streak;
     const e=hintEndings(cur.p);
-    msg('Not that one. Read the ending \u2014 this takes the <b>'+e[0]+
-        '</b> endings: <span class="gm-lex">'+e[1]+'</span>','bad');
+    msg('<span class="gm-line">Read the ending \u2014 this takes the <b>'+e[0]+'</b> endings:</span>'
+       +'<span class="gm-line"><span class="gm-lex">'+e[1]+'</span></span>','bad hint');
     flash(to,'flash-bad'); sndWrong(); shake();
     return;
   }
   pnGot.add(to); pathIds.push(to);
   const fresh=new Set([to]);
   if(pnGot.size < live.length){
-    msg('Right \u2014 and the same ending fits another person and number here. '
-       +'Take that one too.','ok');
+    msg('<span class="gm-line">Right \u2014 and the same ending fits another person and number here.</span>'
+       +'<span class="gm-line">Take that one too.</span>','ok hint');
     board(fresh); flash(to,'flash-ok'); sndRight();
     return;
   }
@@ -1323,9 +1350,10 @@ function showHint(){
   if(done) return;
   if(GC[at].kind === 'end'){
     const e=hintEndings(cur.p);
-    msg('The <b>'+e[0]+'</b> endings: <span class="gm-lex">'+e[1]+'</span>');
+    msg('<span class="gm-line">The <b>'+e[0]+'</b> endings:</span>'
+       +'<span class="gm-line"><span class="gm-lex">'+e[1]+'</span></span>','hint');
   } else {
-    msg(TREE[at].look);
+    msg(hintLines(TREE[at].look),'hint');
   }
 }
 
