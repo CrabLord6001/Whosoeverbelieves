@@ -116,10 +116,16 @@ body::before {
 /* ── SITE WRAPPER ──────────────────────────────────────────────────────── */
 
 .site-wrapper {
-  max-width: 940px;
+  max-width: var(--wrap-max, 1100px);
   margin: 0 auto;
   position: relative;
 }
+
+/* Index and tool pages are card grids and read better wide; reading pages keep
+   the 940px measure their layout was built around - .article-body's 740px prose
+   column, the 860px figures, and article-toc.css's left: calc(50% - 694px),
+   which only clears the text at 940. Change one, check the others. */
+body.page-article { --wrap-max: 940px; }
 
 /* ── Mobile Optimization ──────────────────────────────────────────────────────── */
 
@@ -2119,7 +2125,10 @@ nav #search-results a::after { display: none; }
 }
 
 /* no lone words on the last line of homepage titles */
-.hp-feature-title, .hp-mini-title, .hp-tool-title, .hp-start-title, .hp-votd-text { text-wrap: balance; }
+.hp-tool-title, .hp-start-title, .hp-votd-text { text-wrap: balance; }
+/* balance broke these two across lines well short of the card edge once the
+   wrapper widened; pretty keeps the orphan control without the early wrap */
+.hp-feature-title, .hp-mini-title { text-wrap: pretty; }
 
 /* ── HEADER BANNER (crosses at sunrise) ────────────────────────────────── */
 
@@ -2479,4 +2488,79 @@ section.hp-subscribe {
 .article-body ol.upd-list { padding: 0 0 0 1.6rem; margin: 0; }
 @media (max-width: 480px) {
   .article-body ol.upd-list { padding-left: 1.35rem; }
+}
+
+
+/* ── HOMEPAGE: What’s New beside the Mailing List ───────────────────
+   Above 860px the updates timeline and the subscribe card share one row, so
+   the CTA sits just under the Theology Blog block rather than a screen below
+   it. Narrower than that they stack, updates first, as they did before.
+   Both blocks are cards at every width: Burnand’s resurrection morning over
+   the timeline answers the Valentin de Boulogne over the subscribe form. The
+   painting is full-bleed inside the card’s padding, hence the negative
+   margins — don’t "fix" those without putting the image in its own wrapper. */
+
+.hp-split { display: flex; flex-direction: column; gap: 4rem; }
+/* nested sections must skip the generic section band, as .hp-main's do */
+:where(.hp-split) > section { padding: 0; border-top: 0; background: none; }
+
+.hp-split > #updates {
+  display: flex;
+  flex-direction: column;
+  background: #16130f;
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 0 1.2rem 1.4rem;
+}
+.upd-art {
+  width: calc(100% + 2.4rem);
+  margin: 0 -1.2rem;
+  height: 190px;
+  object-fit: cover;
+  object-position: 50% 32%;
+  -webkit-mask-image: linear-gradient(180deg, #000 58%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 58%, transparent 100%);
+}
+/* the card stays dark in both themes, like the subscribe block beside it */
+.hp-split > #updates .hp-section-head { margin: -1.4rem 0 1rem; }
+.hp-split > #updates .hp-section-head h2 { color: #f1ece2; }
+.hp-split > #updates .upd-text { color: #e8e2d6; }
+.hp-split > #updates .upd-date { color: #d8b964; opacity: 1; }
+.hp-split > #updates .upd-row::before { box-shadow: 0 0 0 3px #16130f; }
+.hp-split > #updates .upd-list { max-width: 29rem; margin: 0 auto; }
+.hp-split > #updates .hp-all { margin-top: 1rem; }
+
+@media (min-width: 861px) {
+  .hp-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    align-items: stretch;
+    gap: 2.75rem;
+  }
+  /* in a narrow column the painting sits above the text and takes whatever
+     height the updates card sets, so the two columns end level */
+  .hp-split > .hp-subscribe {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(140px, 1fr) auto;
+    min-height: 0;
+  }
+  .hp-split > .hp-subscribe .hp-subscribe-art {
+    order: -1; height: 100%; min-height: 0; object-position: 45% 35%;
+    -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
+  }
+  /* the card reads as one column here, so the copy centers under the painting */
+  .hp-split > .hp-subscribe .hp-subscribe-text {
+    padding: 0 1.9rem 1.8rem;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+  }
+  .hp-split > .hp-subscribe .hp-subscribe-actions { align-items: center; }
+}
+
+@media (max-width: 480px) {
+  .hp-split { gap: 3rem; }
+  .upd-art { height: 165px; }
 }
