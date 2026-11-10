@@ -79,7 +79,7 @@
   }
   .an-tile-value.live { color: var(--gold); }
   .an-tile-sub {
-    display: block; margin-top: 0.45rem; font-size: 0.78rem;
+    display: block; margin-top: 0.45rem; font-size: 0.86rem;
     color: var(--text-mid); font-style: italic;
   }
   .an-delta { font-style: normal; font-variant-numeric: tabular-nums; }
@@ -106,7 +106,7 @@
     font-family: 'Cinzel', serif; font-size: 0.64rem; font-weight: 600;
     letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-mid);
   }
-  .an-panel-note { font-size: 0.74rem; color: var(--text-faint); font-style: italic; }
+  .an-panel-note { font-size: 0.8rem; color: var(--text-mid); font-style: italic; }
   .an-panel-rule { height: 1px; background: var(--rule); margin: 0.6rem 0 1rem; }
 
   /* ── chart ─────────────────────────────────────────────────────────── */
@@ -144,13 +144,13 @@
   }
   .an-row-main { position: relative; flex: 1 1 auto; min-width: 0; }
   .an-row-name {
-    display: block; font-size: 0.9rem; color: var(--text);
+    display: block; font-size: 0.98rem; color: var(--text);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     text-decoration: none;
   }
   a.an-row-name:hover { color: var(--gold); }
   .an-row-sub {
-    display: block; font-size: 0.72rem; color: var(--text-faint);
+    display: block; font-size: 0.82rem; color: var(--text-mid);
     font-style: italic; margin-top: 0.15rem;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
@@ -174,7 +174,7 @@
   .an-feed .an-row { padding: 0.45rem 0.1rem; }
   .an-feed-time {
     flex: 0 0 auto; font-variant-numeric: tabular-nums;
-    font-size: 0.72rem; color: var(--text-faint); min-width: 4.6rem;
+    font-size: 0.82rem; color: var(--text-mid); min-width: 5rem;
   }
 
   .an-empty {
@@ -182,14 +182,14 @@
     font-style: italic; font-size: 0.88rem;
   }
 
+  /* Sits in the grid's last cell, beside Activity, rather than as a band
+     under everything - five panels in a two-column grid otherwise leave an
+     empty cell. Stacked, not side by side, since it is now half width. */
   .an-foot {
-    margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-    gap: 2.5rem;
-    font-size: 0.78rem; color: var(--text-faint); font-style: italic;
-    line-height: 1.7;
+    font-size: 0.92rem; color: var(--text-mid); line-height: 1.75;
   }
-  .an-foot p { margin: 0; max-width: 60ch; }
+  .an-foot p { margin: 0 0 1rem; max-width: 60ch; }
+  .an-foot p:last-child { margin-bottom: 0; }
   .an-foot b { font-style: normal; font-weight: 600; color: var(--text-mid); }
 
   /* ── sign-in gate ──────────────────────────────────────────────────── */
@@ -357,9 +357,12 @@
           <div id="p-feed" class="an-feed"></div>
         </div>
 
-      </div>
-
-      <div class="an-foot">
+        <div class="an-panel">
+          <div class="an-panel-head">
+            <span class="an-panel-title">About These Numbers</span>
+          </div>
+          <div class="an-panel-rule"></div>
+          <div class="an-foot">
         <p>
         <b>These numbers are first-party and have no lag.</b> Every page writes its own
         row the moment it loads, so this page is current to the second and counts readers
@@ -376,7 +379,11 @@
         normally runs 2–3 days behind and cannot be made live. The searches panel above
         is the site's own search box, which is instant.
         </p>
+          </div>
+        </div>
+
       </div>
+
 
     </div>
   </div>
