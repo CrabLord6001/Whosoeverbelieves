@@ -462,44 +462,89 @@ window.wbCheckBookAbbr = function () {
     session_id: SID
   });
 
-  /* ── site searches ──────────────────────────────────────────────────────
-     runSearch fires on every keystroke, so only the settled term is logged:
-     the timer restarts on each call and the row is written 1.4s after typing
-     stops. The result count repeats runSearch's own filter because that
-     function does not return one - see CLAUDE.md, the two must stay in step. */
-  var searchTimer = null, lastLogged = '';
+  /* -- site searches ------------------------------------------------------
+     This box filters as you type, so there is no submit event and no natural
+     "the search is finished" moment. The first version guessed at one with a
+     debounce, and guessed wrong: a slow typist pausing longer than the delay
+     logged "John 3:", "John 3:1" and "John 3:16" as three separate searches.
+     No delay fixes that - whatever you pick is too short for someone, and too
+     long is worse, because a considered phrase like "free grace theology Zane
+     Hodges John 3" takes a while to type and must not be cut into fragments.
 
-  function queueSearch(raw) {
-    var term = String(raw == null ? '' : raw).trim();
-    clearTimeout(searchTimer);
+     So nothing is timed. A search is logged when the reader does something
+     that means they are done with it:
+
+       Enter            - explicit
+       clicks a result  - found it; the term that produced the click is logged
+       leaves the box   - searched, clicked nothing. The most useful row here,
+                          because it is somebody who did not find what they
+                          wanted, whether or not there were results
+       leaves the page  - same, caught on the way out
+
+     One row per search: committing a term blocks it from being logged again
+     until the term changes, so the blur that precedes a result click does not
+     double up. Clearing the box resets that, since searching the same thing
+     again later is a real second search.
+
+     admin_top_searches still collapses a term that a longer term from the
+     same session extends. Belt and braces: it also tidies the case where
+     somebody blurs mid-phrase and comes back to finish it.
+
+     The result count repeats runSearch's own filter because that function
+     does not return one - if you change the filter there, change it here. */
+  var pendingTerm = '';     // what is in the box right now
+  var committedTerm = '';   // lower-cased, already logged
+
+  function resultCountFor(term) {
+    var key = term.toLowerCase(), n = 0;
+    try {
+      if (typeof searchIndex !== 'undefined' && searchIndex && searchIndex.length) {
+        n = searchIndex.filter(function (a) {
+          return (a.title + ' ' + a.excerpt + ' ' + a.content + ' ' + (a.tags || []).join(' '))
+            .toLowerCase().indexOf(key) > -1;
+        }).length;
+      }
+    } catch (e) { /* index not loaded yet */ }
+    return n;
+  }
+
+  function commitSearch() {
+    var term = pendingTerm;
     if (term.length < 3 || term.length > 120) return;
-    searchTimer = setTimeout(function () {
-      var key = term.toLowerCase();
-      if (key === lastLogged) return;
-      lastLogged = key;
-      var n = 0;
-      try {
-        if (typeof searchIndex !== 'undefined' && searchIndex && searchIndex.length) {
-          n = searchIndex.filter(function (a) {
-            return (a.title + ' ' + a.excerpt + ' ' + a.content + ' ' + (a.tags || []).join(' '))
-              .toLowerCase().indexOf(key) > -1;
-          }).length;
-        }
-      } catch (e) { /* index not loaded yet */ }
-      post('search_events', {
-        term: term.slice(0, 120),
-        results_count: Math.max(0, Math.min(n, 32767)),
-        path: trim(location.pathname, 400),
-        session_id: SID
-      });
-    }, 1400);
+    if (term.toLowerCase() === committedTerm) return;
+    committedTerm = term.toLowerCase();
+    post('search_events', {
+      term: term.slice(0, 120),
+      results_count: Math.max(0, Math.min(resultCountFor(term), 32767)),
+      path: trim(location.pathname, 400),
+      session_id: SID
+    });
   }
 
   if (typeof window.runSearch === 'function') {
     var innerRunSearch = window.runSearch;
     window.runSearch = function (q) {
-      queueSearch(q);
+      var t = String(q == null ? '' : q).trim();
+      pendingTerm = t;
+      if (!t) committedTerm = '';     // box cleared - the next search starts fresh
       return innerRunSearch.apply(this, arguments);
     };
   }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target && e.target.id === 'site-search' && e.key === 'Enter') commitSearch();
+  });
+
+  /* Capture phase, so the row is written before the browser starts leaving.
+     keepalive on the fetch is what lets it survive the navigation. */
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t && t.closest && t.closest('#search-results a')) commitSearch();
+  }, true);
+
+  document.addEventListener('focusout', function (e) {
+    if (e.target && e.target.id === 'site-search') commitSearch();
+  });
+
+  window.addEventListener('pagehide', commitSearch);
 })();
