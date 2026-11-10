@@ -170,7 +170,24 @@
   .an-chip.miss { color: var(--gold); border-color: rgba(201,168,76,0.45); }
 
   /* ── feed ──────────────────────────────────────────────────────────── */
-  .an-feed { max-height: 420px; overflow-y: auto; }
+  /* The default chrome scrollbar is far too loud inside a hand-styled
+     panel, so it is thinned and tinted to the panel's own rule colour, and
+     only shows up on hover. */
+  .an-feed {
+    max-height: 460px; overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.25s;
+    padding-right: 0.4rem;
+  }
+  .an-feed:hover { scrollbar-color: var(--rule) transparent; }
+  .an-feed::-webkit-scrollbar { width: 6px; }
+  .an-feed::-webkit-scrollbar-track { background: transparent; }
+  .an-feed::-webkit-scrollbar-thumb {
+    background: transparent; border-radius: 3px; transition: background 0.25s;
+  }
+  .an-feed:hover::-webkit-scrollbar-thumb { background: var(--rule); }
+  .an-feed:hover::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,0.45); }
   .an-feed .an-row { padding: 0.45rem 0.1rem; }
   .an-feed-time {
     flex: 0 0 auto; font-variant-numeric: tabular-nums;
