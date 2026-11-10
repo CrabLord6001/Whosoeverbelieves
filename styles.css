@@ -2231,7 +2231,8 @@ section.hp-subscribe {
           mask-image: linear-gradient(90deg, transparent 0%, #000 38%);
 }
 @media (max-width: 800px) {
-  .hp-subscribe { grid-template-columns: minmax(0, 1fr); }
+  /* section.hp-subscribe above is (0,1,1); a bare class here never won */
+  section.hp-subscribe { grid-template-columns: minmax(0, 1fr); }
   .hp-subscribe-art { order: -1; height: 190px;
     -webkit-mask-image: linear-gradient(180deg, #000 55%, transparent 100%);
             mask-image: linear-gradient(180deg, #000 55%, transparent 100%); }
@@ -2531,6 +2532,11 @@ section.hp-subscribe {
 .hp-split > #updates .upd-list { max-width: 29rem; margin: 0 auto; }
 .hp-split > #updates .hp-all { margin-top: 1rem; }
 
+/* the painting sits above the copy in both cards, so the copy centres under it
+   at every width - matching the centred "What's New?" heading opposite */
+.hp-split > .hp-subscribe .hp-subscribe-text { align-items: center; text-align: center; }
+.hp-split > .hp-subscribe .hp-subscribe-actions { align-items: center; }
+
 @media (min-width: 861px) {
   .hp-split {
     display: grid;
@@ -2550,17 +2556,13 @@ section.hp-subscribe {
     -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
             mask-image: linear-gradient(180deg, #000 62%, transparent 100%);
   }
-  /* the card reads as one column here, so the copy centers under the painting */
   .hp-split > .hp-subscribe .hp-subscribe-text {
     padding: 0 1.9rem 1.8rem;
     justify-content: flex-end;
-    align-items: center;
-    text-align: center;
   }
-  .hp-split > .hp-subscribe .hp-subscribe-actions { align-items: center; }
 }
 
 @media (max-width: 480px) {
   .hp-split { gap: 3rem; }
-  .upd-art { height: 165px; }
+  .upd-art, .hp-split > .hp-subscribe .hp-subscribe-art { height: 165px; }
 }
