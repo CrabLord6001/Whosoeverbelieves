@@ -340,3 +340,166 @@ window.wbCheckBookAbbr = function () {
     ? { missingFromAbbr: missing, notInBookCodes: extra }
     : 'in step: ' + a.length + ' books';
 };
+
+/* ── FIRST-PARTY PAGE ANALYTICS (ticket 162) ────────────────────────────────
+   One row per page view into Supabase `page_views`, one per settled site
+   search into `search_events`. Read back only by /analytics, which is gated
+   by is_admin() inside every admin_* RPC.
+
+   No library needed - a plain fetch to the REST endpoint - so this runs on
+   every page whether or not auth.js has finished loading supabase-js. It is
+   here in scripts.js rather than in its own file because all 93 pages
+   already load scripts.js; a separate file would mean 93 script tags.
+
+   Deliberately anonymous: no cookie, no IP, no user-agent string, no
+   cross-visit id. The session id is random, lives in sessionStorage and dies
+   with the tab, so it counts sessions without being able to link two visits
+   by the same reader. It counts every visitor, signed in or not - `anon` is
+   Supabase's not-signed-in role and it holds the INSERT grant.
+
+   Switches, per browser:
+     localStorage['wb-analytics-off']   = '1'  -> never log from this browser
+     localStorage['wb-analytics-local'] = '1'  -> also log from localhost
+   -------------------------------------------------------------------------- */
+(function () {
+  'use strict';
+
+  var REST = 'https://tgzsyfmnzagqijjlzxsa.supabase.co/rest/v1/';
+  var KEY  = 'sb_publishable_gck7v-L2PDbW2JKUoxTHDA_FidLWw8H';
+  var host = location.hostname;
+
+  function flag(name) {
+    try { return localStorage.getItem(name) === '1'; } catch (e) { return false; }
+  }
+
+  var isLocal = !host || host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+  if (flag('wb-analytics-off')) return;
+  if (isLocal && !flag('wb-analytics-local')) return;
+  if (navigator.globalPrivacyControl === true) return;   // legal opt-out in several US states
+  if (/^\/analytics(\.html)?$/.test(location.pathname)) return;   // don't inflate its own numbers
+
+  var SID = (function () {
+    try {
+      var k = 'wb-sid', v = sessionStorage.getItem(k);
+      if (!v) {
+        v = (Date.now().toString(36) + Math.random().toString(36).slice(2, 12)).slice(0, 24);
+        sessionStorage.setItem(k, v);
+      }
+      return v;
+    } catch (e) {
+      return 'nostore-' + Math.random().toString(36).slice(2, 12);
+    }
+  })();
+
+  /* Referrer buckets. AI is tested before search on purpose: gemini.google.com
+     would otherwise match the google. search rule and be filed as a search. */
+  var AI = ['chatgpt.com', 'openai.com', 'claude.ai', 'anthropic.com', 'perplexity.ai',
+            'copilot.microsoft.com', 'gemini.google.com', 'poe.com', 'you.com'];
+  var SEARCH = ['google.', 'bing.com', 'duckduckgo.com', 'yahoo.', 'ecosia.org',
+                'startpage.com', 'qwant.com', 'brave.com', 'yandex.', 'baidu.com',
+                'mojeek.com', 'marginalia.nu'];
+  var SOCIAL = ['facebook.com', 'fb.me', 't.co', 'twitter.com', 'x.com', 'instagram.com',
+                'reddit.com', 'youtube.com', 'youtu.be', 'linkedin.com', 'pinterest.',
+                'tiktok.com', 'discord.com', 'threads.net', 'substack.com', 'bsky.app',
+                'tumblr.com'];
+
+  function hit(list, h) {
+    for (var i = 0; i < list.length; i++) if (h.indexOf(list[i]) > -1) return true;
+    return false;
+  }
+
+  function classify(refHost) {
+    if (!refHost) return 'direct';
+    if (refHost === host || refHost === 'www.' + host || 'www.' + refHost === host) return 'internal';
+    if (hit(AI, refHost))     return 'ai';
+    if (hit(SEARCH, refHost)) return 'search';
+    if (hit(SOCIAL, refHost)) return 'social';
+    return 'referral';
+  }
+
+  function deviceClass() {
+    var w = window.innerWidth || (screen && screen.width) || 0;
+    if (w && w <= 640)  return 'mobile';
+    if (w && w <= 1024) return 'tablet';
+    return 'desktop';
+  }
+
+  function trim(s, n) { return s ? String(s).slice(0, n) : null; }
+
+  function post(table, row) {
+    try {
+      fetch(REST + table, {
+        method: 'POST',
+        keepalive: true,
+        headers: {
+          'apikey': KEY,
+          'Authorization': 'Bearer ' + KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(row)
+      })['catch'](function () {});      // analytics must never break a page
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ── the page view ───────────────────────────────────────────────────── */
+  var refHost = '', refPath = '';
+  if (document.referrer) {
+    try {
+      var u = new URL(document.referrer);
+      refHost = u.hostname || '';
+      refPath = (u.pathname || '') + (u.search || '');
+    } catch (e) { /* malformed referrer */ }
+  }
+
+  post('page_views', {
+    path: trim(location.pathname + location.search, 400) || '/',
+    title: trim(document.title, 300),
+    referrer_host: trim(refHost, 160),
+    referrer_path: trim(refPath, 400),
+    source: classify(refHost),
+    device: deviceClass(),
+    session_id: SID
+  });
+
+  /* ── site searches ──────────────────────────────────────────────────────
+     runSearch fires on every keystroke, so only the settled term is logged:
+     the timer restarts on each call and the row is written 1.4s after typing
+     stops. The result count repeats runSearch's own filter because that
+     function does not return one - see CLAUDE.md, the two must stay in step. */
+  var searchTimer = null, lastLogged = '';
+
+  function queueSearch(raw) {
+    var term = String(raw == null ? '' : raw).trim();
+    clearTimeout(searchTimer);
+    if (term.length < 3 || term.length > 120) return;
+    searchTimer = setTimeout(function () {
+      var key = term.toLowerCase();
+      if (key === lastLogged) return;
+      lastLogged = key;
+      var n = 0;
+      try {
+        if (typeof searchIndex !== 'undefined' && searchIndex && searchIndex.length) {
+          n = searchIndex.filter(function (a) {
+            return (a.title + ' ' + a.excerpt + ' ' + a.content + ' ' + (a.tags || []).join(' '))
+              .toLowerCase().indexOf(key) > -1;
+          }).length;
+        }
+      } catch (e) { /* index not loaded yet */ }
+      post('search_events', {
+        term: term.slice(0, 120),
+        results_count: Math.max(0, Math.min(n, 32767)),
+        path: trim(location.pathname, 400),
+        session_id: SID
+      });
+    }, 1400);
+  }
+
+  if (typeof window.runSearch === 'function') {
+    var innerRunSearch = window.runSearch;
+    window.runSearch = function (q) {
+      queueSearch(q);
+      return innerRunSearch.apply(this, arguments);
+    };
+  }
+})();

@@ -551,6 +551,7 @@
     }
 
     item('Taskboard', '/taskboard');
+    item('Analytics', '/analytics');
     item('Moderation', '/moderate-comments');
     item('Mailing', '/mailing');
 

@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Analytics — Whosoever Believes</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+<link rel="icon" type="image/png" sizes="96x96" href="/images/icon-96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=EB+Garamond:ital@0;1&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&family=EB+Garamond:ital@0;1&display=swap" /></noscript>
+<script>
+/* Site search data loads when someone clicks into the search box, or right after the page finishes loading. */
+(function () {
+  var asked = false;
+  function load() {
+    if (asked) return; asked = true;
+    var s = document.createElement('script'); s.src = 'search-index.js';
+    s.onload = function () { var b = document.getElementById('site-search'); if (b && b.value.trim() && window.runSearch) window.runSearch(b.value); };
+    document.head.appendChild(s);
+  }
+  document.addEventListener('focusin', function (e) { if (e.target.id === 'site-search') load(); });
+  window.addEventListener('load', function () { setTimeout(load, 0); });
+})();
+</script>
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  .an-wrap { padding: 3rem 2.5rem 4rem; background: var(--surface); }
+
+  .an-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: 0.5rem;
+  }
+  .an-title {
+    font-family: 'Cormorant Garamond', serif; font-size: 2.2rem;
+    font-weight: 300; color: var(--text); letter-spacing: 0.02em;
+  }
+  .an-rule {
+    width: 60px; height: 1px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 0 0 2rem;
+  }
+
+  /* ── range filters: one row above the charts ───────────────────────── */
+  .an-filters { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .an-tab {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.5rem 0.9rem; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--rule); background: none; color: var(--text-mid);
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .an-tab:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+  .an-tab.active { color: var(--gold); border-color: rgba(201,168,76,0.55); background: var(--glass); }
+
+  /* ── stat tiles ────────────────────────────────────────────────────── */
+  .an-tiles {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+    border-radius: 2px; margin-bottom: 2.5rem; overflow: hidden;
+  }
+  .an-tile { background: var(--surface); padding: 1.2rem 1.3rem 1.3rem; }
+  .an-tile-label {
+    font-family: 'Cinzel', serif; font-size: 0.56rem; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-faint);
+    display: block; margin-bottom: 0.55rem;
+  }
+  .an-tile-value {
+    font-family: 'Cormorant Garamond', serif; font-size: 2.1rem;
+    font-weight: 300; line-height: 1; color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+  .an-tile-value.live { color: var(--gold); }
+  .an-tile-sub {
+    display: block; margin-top: 0.45rem; font-size: 0.78rem;
+    color: var(--text-mid); font-style: italic;
+  }
+  .an-delta { font-style: normal; font-variant-numeric: tabular-nums; }
+
+  .an-pulse {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold); margin-right: 0.45rem; vertical-align: 0.12em;
+    animation: an-blink 2.4s ease-in-out infinite;
+  }
+  @keyframes an-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @media (prefers-reduced-motion: reduce) { .an-pulse { animation: none; } }
+
+  /* ── panels ────────────────────────────────────────────────────────── */
+  .an-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 2.5rem; margin-top: 2.5rem;
+  }
+  .an-panel { min-width: 0; }
+  .an-panel-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 0.75rem; margin-bottom: 0.2rem;
+  }
+  .an-panel-title {
+    font-family: 'Cinzel', serif; font-size: 0.64rem; font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-mid);
+  }
+  .an-panel-note { font-size: 0.74rem; color: var(--text-faint); font-style: italic; }
+  .an-panel-rule { height: 1px; background: var(--rule); margin: 0.6rem 0 1rem; }
+
+  /* ── chart ─────────────────────────────────────────────────────────── */
+  .an-chart-box { position: relative; }
+  .an-chart { width: 100%; display: block; }
+  .an-chart .bar { fill: var(--gold); opacity: 0.55; transition: opacity 0.15s; }
+  .an-chart .bar.on { opacity: 1; }
+  .an-chart .hit { fill: transparent; cursor: default; }
+  .an-chart .grid-line { stroke: var(--rule); stroke-width: 1; }
+  .an-chart .axis-text {
+    fill: var(--text-faint); font-size: 10px;
+    font-family: 'EB Garamond', serif;
+  }
+  .an-tip {
+    position: absolute; pointer-events: none; opacity: 0;
+    transform: translate(-50%, -115%); transition: opacity 0.12s;
+    background: var(--surface); border: 1px solid var(--rule);
+    border-radius: 2px; padding: 0.4rem 0.6rem; white-space: nowrap;
+    font-size: 0.78rem; color: var(--text); z-index: 5;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+  .an-tip.on { opacity: 1; }
+  .an-tip b { font-weight: 600; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .an-tip span { display: block; color: var(--text-faint); font-size: 0.68rem; font-style: italic; }
+
+  /* ── rows (top pages, sources, searches) ───────────────────────────── */
+  .an-row {
+    position: relative; display: flex; align-items: baseline; gap: 0.75rem;
+    padding: 0.55rem 0.1rem; border-bottom: 1px solid var(--rule);
+  }
+  .an-row:last-child { border-bottom: none; }
+  .an-row-fill {
+    position: absolute; left: 0; bottom: 0; top: 0;
+    background: var(--gold); opacity: 0.08; border-radius: 1px;
+  }
+  .an-row-main { position: relative; flex: 1 1 auto; min-width: 0; }
+  .an-row-name {
+    display: block; font-size: 0.9rem; color: var(--text);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    text-decoration: none;
+  }
+  a.an-row-name:hover { color: var(--gold); }
+  .an-row-sub {
+    display: block; font-size: 0.72rem; color: var(--text-faint);
+    font-style: italic; margin-top: 0.15rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .an-row-n {
+    position: relative; flex: 0 0 auto; font-variant-numeric: tabular-nums;
+    font-size: 0.95rem; color: var(--text); font-family: 'Cormorant Garamond', serif;
+  }
+  .an-row-n em { font-style: normal; font-size: 0.72rem; color: var(--text-faint); }
+
+  .an-chip {
+    display: inline-block; font-family: 'Cinzel', serif; font-size: 0.5rem;
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    border: 1px solid var(--rule); border-radius: 2px;
+    padding: 0.1rem 0.35rem; margin-left: 0.4rem; color: var(--text-faint);
+    vertical-align: 0.1em;
+  }
+  .an-chip.miss { color: var(--gold); border-color: rgba(201,168,76,0.45); }
+
+  /* ── feed ──────────────────────────────────────────────────────────── */
+  .an-feed { max-height: 420px; overflow-y: auto; }
+  .an-feed .an-row { padding: 0.45rem 0.1rem; }
+  .an-feed-time {
+    flex: 0 0 auto; font-variant-numeric: tabular-nums;
+    font-size: 0.72rem; color: var(--text-faint); min-width: 4.6rem;
+  }
+
+  .an-empty {
+    padding: 1.1rem 0; color: var(--text-faint);
+    font-style: italic; font-size: 0.88rem;
+  }
+
+  .an-foot {
+    margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--rule);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 2.5rem;
+    font-size: 0.78rem; color: var(--text-faint); font-style: italic;
+    line-height: 1.7;
+  }
+  .an-foot p { margin: 0; max-width: 60ch; }
+  .an-foot b { font-style: normal; font-weight: 600; color: var(--text-mid); }
+
+  /* ── sign-in gate ──────────────────────────────────────────────────── */
+  .an-gate { padding: 3rem 0; max-width: 34rem; }
+  .an-gate p { color: var(--text-mid); line-height: 1.8; margin-bottom: 1.2rem; }
+  .an-msg { margin-top: 0.9rem; font-size: 0.85rem; }
+  .an-msg.error { color: #c87b6b; }
+  .an-btn {
+    font-family: 'Cinzel', serif; font-size: 0.6rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.6rem 1.2rem; border-radius: 2px; cursor: pointer;
+    border: 1px solid var(--rule); background: none; color: var(--text-mid);
+  }
+  .an-btn:hover { color: var(--gold); border-color: rgba(201,168,76,0.5); }
+
+  @media (max-width: 700px) {
+    .an-wrap { padding: 2rem 1.25rem 3rem; }
+    .an-title { font-size: 1.8rem; }
+    .an-grid { gap: 2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="site-wrapper">
+
+  <nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Small Groups</button>
+      <div class="nav-drop-menu">
+        <a href="/studies/titus">Titus Study</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+  <div class="an-wrap">
+
+    <p id="boot-msg" class="an-empty">Loading…</p>
+
+    <!-- ── not signed in / not staff ──────────────────────────────── -->
+    <div id="gate-view" class="an-gate" style="display:none">
+      <h1 class="an-title">Analytics</h1>
+      <div class="an-rule"></div>
+      <p>This page is for site staff. Sign in to continue.</p>
+      <button type="button" class="an-btn" id="btn-signin">Sign In</button>
+      <p class="an-msg" id="gate-msg"></p>
+    </div>
+
+    <!-- ── the dashboard ──────────────────────────────────────────── -->
+    <div id="dash-view" style="display:none">
+
+      <div class="an-head">
+        <div>
+          <h1 class="an-title">Analytics</h1>
+        </div>
+        <div class="an-filters" role="group" aria-label="Time range">
+          <button type="button" class="an-tab active" data-hours="24">24 Hours</button>
+          <button type="button" class="an-tab" data-hours="168">7 Days</button>
+          <button type="button" class="an-tab" data-hours="720">30 Days</button>
+        </div>
+      </div>
+      <div class="an-rule"></div>
+
+      <div class="an-tiles">
+        <div class="an-tile">
+          <span class="an-tile-label">Reading Now</span>
+          <span class="an-tile-value live" id="t-live">—</span>
+          <span class="an-tile-sub" id="t-live-sub">last 30 minutes</span>
+        </div>
+        <div class="an-tile">
+          <span class="an-tile-label">Views</span>
+          <span class="an-tile-value" id="t-views">—</span>
+          <span class="an-tile-sub" id="t-views-sub">&nbsp;</span>
+        </div>
+        <div class="an-tile">
+          <span class="an-tile-label">Readers</span>
+          <span class="an-tile-value" id="t-readers">—</span>
+          <span class="an-tile-sub" id="t-readers-sub">&nbsp;</span>
+        </div>
+        <div class="an-tile">
+          <span class="an-tile-label">Site Searches</span>
+          <span class="an-tile-value" id="t-searches">—</span>
+          <span class="an-tile-sub" id="t-searches-sub">&nbsp;</span>
+        </div>
+      </div>
+
+      <div class="an-panel">
+        <div class="an-panel-head">
+          <span class="an-panel-title" id="chart-title">Views Per Hour</span>
+          <span class="an-panel-note" id="chart-note"></span>
+        </div>
+        <div class="an-panel-rule"></div>
+        <div class="an-chart-box" id="chart-box">
+          <svg class="an-chart" id="chart" role="img" aria-label="Views over time"></svg>
+          <div class="an-tip" id="chart-tip"></div>
+        </div>
+      </div>
+
+      <div class="an-grid">
+
+        <div class="an-panel">
+          <div class="an-panel-head"><span class="an-panel-title">Most Read</span></div>
+          <div class="an-panel-rule"></div>
+          <div id="p-pages"></div>
+        </div>
+
+        <div class="an-panel">
+          <div class="an-panel-head">
+            <span class="an-panel-title">Where Readers Came From</span>
+          </div>
+          <div class="an-panel-rule"></div>
+          <div id="p-sources"></div>
+        </div>
+
+        <div class="an-panel">
+          <div class="an-panel-head">
+            <span class="an-panel-title">Searched On The Site</span>
+            <span class="an-panel-note">last 30 days</span>
+          </div>
+          <div class="an-panel-rule"></div>
+          <div id="p-searches"></div>
+        </div>
+
+        <div class="an-panel">
+          <div class="an-panel-head">
+            <span class="an-panel-title">Searched On Google</span>
+            <span class="an-panel-note" id="gsc-note"></span>
+          </div>
+          <div class="an-panel-rule"></div>
+          <div id="p-google"></div>
+        </div>
+
+        <div class="an-panel">
+          <div class="an-panel-head">
+            <span class="an-panel-title">Activity</span>
+            <span class="an-panel-note" id="feed-note"></span>
+          </div>
+          <div class="an-panel-rule"></div>
+          <div id="p-feed" class="an-feed"></div>
+        </div>
+
+      </div>
+
+      <div class="an-foot">
+        <p>
+        <b>These numbers are first-party and have no lag.</b> Every page writes its own
+        row the moment it loads, so this page is current to the second and counts readers
+        whose ad blocker strips Google Analytics. Nothing identifying is stored: no IP
+        address, no cookie, no cross-visit identifier — a reader counted as one session
+        here cannot be matched to their next visit. Views from localhost are skipped, as
+        are browsers sending Global Privacy Control.
+
+        </p>
+        <p>
+        For comparison: <b>GA4</b> is live only in its Realtime report, a rolling
+        30-minute window, and its standard reports run about a day behind.
+        <b>Search Console</b> — the only source for what readers typed into Google —
+        normally runs 2–3 days behind and cannot be made live. The searches panel above
+        is the site's own search box, which is instant.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    <div class="footer-nav">
+      <a href="about">About</a>
+      <span>·</span>
+      <span>© 2026 Whosoever Believes</span>
+    </div>
+  </footer>
+</div>
+
+<script src="/auth.js" defer></script>
+<script>
+(function () {
+  'use strict';
+
+  var db = null;              // the shared client from auth.js, set at boot
+  var hours = 24;             // selected range
+  var pollTimer = null;
+  var subscribed = false;
+  var chartRows = [];
+  var chartIsDaily = false;
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function show(view) {
+    $('boot-msg').style.display  = view === 'boot' ? '' : 'none';
+    $('gate-view').style.display = view === 'gate' ? '' : 'none';
+    $('dash-view').style.display = view === 'dash' ? '' : 'none';
+  }
+
+  function gateMsg(text) {
+    var m = $('gate-msg');
+    m.textContent = text || '';
+    m.className = 'an-msg error';
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function num(n) { return Number(n || 0).toLocaleString('en-US'); }
+
+  function rangeWords() {
+    return hours === 24 ? 'last 24 hours' : hours === 168 ? 'last 7 days' : 'last 30 days';
+  }
+
+  function clockTime(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
+  }
+
+  function ago(iso) {
+    var s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if (s < 60)    return 'just now';
+    if (s < 3600)  return Math.floor(s / 60) + 'm ago';
+    if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+    return Math.floor(s / 86400) + 'd ago';
+  }
+
+  var KIND_WORDS = {
+    search: 'search engine', ai: 'AI assistant', social: 'social',
+    referral: 'another site', direct: 'typed or bookmarked', internal: 'elsewhere on the site'
+  };
+
+  /* ── stat tiles ───────────────────────────────────────────────────── */
+  function deltaText(now, prev) {
+    now = Number(now || 0); prev = Number(prev || 0);
+    if (!prev) return now ? 'no earlier period to compare' : ' ';
+    var pct = Math.round(((now - prev) / prev) * 100);
+    var arrow = pct > 0 ? '↑' : pct < 0 ? '↓' : '→';
+    return arrow + ' ' + Math.abs(pct) + '% vs previous ' + (hours === 24 ? 'day' : hours === 168 ? 'week' : 'month');
+  }
+
+  function renderSummary(s) {
+    var liveSessions = Number(s.sessions_live || 0);
+    $('t-live').textContent = liveSessions ? num(liveSessions) : '0';
+    var sub = $('t-live-sub');
+    sub.textContent = '';
+    if (liveSessions) {
+      sub.appendChild(el('span', 'an-pulse'));
+      sub.appendChild(document.createTextNode(
+        num(s.views_live) + (Number(s.views_live) === 1 ? ' view' : ' views') + ' in 30 min'));
+    } else {
+      sub.textContent = 'nobody in the last 30 minutes';
+    }
+
+    $('t-views').textContent   = num(s.views_window);
+    $('t-readers').textContent = num(s.sessions_window);
+    $('t-searches').textContent = num(s.searches_window);
+
+    $('t-views-sub').textContent   = deltaText(s.views_window, s.views_prev);
+    $('t-readers-sub').textContent = rangeWords();
+    $('t-searches-sub').textContent = rangeWords();
+  }
+
+  /* ── chart: one gold series, so identity needs no legend ──────────── */
+  function barPath(x, y, w, h, r) {
+    if (h <= 0.5) return '';
+    r = Math.min(r, w / 2, h);
+    return 'M' + x + ',' + (y + h) +
+           'L' + x + ',' + (y + r) +
+           'Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
+           'L' + (x + w - r) + ',' + y +
+           'Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) +
+           'L' + (x + w) + ',' + (y + h) + 'Z';
+  }
+
+  function svgEl(name, attrs) {
+    var n = document.createElementNS('http://www.w3.org/2000/svg', name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  function bucketLabel(iso, daily) {
+    var d = new Date(iso);
+    if (daily) return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return d.toLocaleTimeString('en-US', { hour: 'numeric' }).toLowerCase().replace(' ', '');
+  }
+
+  function renderChart() {
+    var svg = $('chart'), tip = $('chart-tip');
+    svg.textContent = '';
+    tip.className = 'an-tip';
+
+    var rows = chartRows;
+    var box = $('chart-box');
+    var W = Math.max(280, box.clientWidth || 600);
+    var H = 190, padL = 34, padR = 6, padT = 10, padB = 22;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('height', H);
+
+    if (!rows.length) return;
+
+    var max = 0, total = 0, i;
+    for (i = 0; i < rows.length; i++) {
+      var v = Number(rows[i].views || 0);
+      total += v; if (v > max) max = v;
+    }
+    /* Keep the midpoint a whole number, so a quiet range does not label
+       its axis 0 / 1 / 1. */
+    var scaleMax = Math.max(max, 1);
+    if (scaleMax % 2) scaleMax += 1;
+    var ticks = scaleMax <= 1 ? [0, 1] : [0, 0.5, 1];
+
+    svg.setAttribute('aria-label',
+      'Views ' + (chartIsDaily ? 'per day' : 'per hour') + ' over the ' + rangeWords() +
+      ': ' + num(total) + ' views in total, peaking at ' + num(max) + '.');
+
+    /* recessive gridlines at 0 / mid / max */
+    ticks.forEach(function (f) {
+      var y = padT + plotH - f * plotH;
+      svg.appendChild(svgEl('line', { x1: padL, x2: W - padR, y1: y, y2: y, 'class': 'grid-line' }));
+      var t = svgEl('text', { x: padL - 7, y: y + 3.5, 'class': 'axis-text', 'text-anchor': 'end' });
+      t.textContent = num(Math.round(f * scaleMax));
+      svg.appendChild(t);
+    });
+
+    var slot = plotW / rows.length;
+    var bw = Math.max(1.5, slot - 2);          // 2px surface gap between bars
+
+    /* x labels: about six, so they never collide */
+    var every = Math.max(1, Math.round(rows.length / 6));
+
+    for (i = 0; i < rows.length; i++) {
+      var val = Number(rows[i].views || 0);
+      var h = (val / scaleMax) * plotH;
+      var x = padL + i * slot + (slot - bw) / 2;
+      var y = padT + plotH - h;
+
+      if (h > 0.5) {
+        var p = svgEl('path', { d: barPath(x, y, bw, h, 4), 'class': 'bar' });
+        svg.appendChild(p);
+      }
+
+      /* hit target spans the whole slot and the full height */
+      var hit = svgEl('rect', { x: padL + i * slot, y: padT, width: slot, height: plotH, 'class': 'hit' });
+      hit.appendChild(svgEl('title')).textContent =
+        bucketLabel(rows[i].bucket, chartIsDaily) + ': ' + num(val) + ' views';
+      (function (idx, cx, cy, vv) {
+        hit.addEventListener('mouseenter', function () {
+          var bars = svg.querySelectorAll('.bar');
+          if (bars[idx]) bars[idx].classList.add('on');
+          tip.innerHTML = '';
+          tip.appendChild(document.createTextNode(num(vv) + (vv === 1 ? ' view' : ' views')));
+          var s = el('span', null, bucketLabel(rows[idx].bucket, chartIsDaily) +
+            ' · ' + num(rows[idx].sessions) + (Number(rows[idx].sessions) === 1 ? ' reader' : ' readers'));
+          tip.appendChild(s);
+          tip.style.left = cx + 'px';
+          tip.style.top  = Math.max(26, cy) + 'px';
+          tip.classList.add('on');
+        });
+      })(i, padL + i * slot + slot / 2, y, val);
+      hit.addEventListener('mouseleave', function () {
+        tip.classList.remove('on');
+        var on = svg.querySelector('.bar.on');
+        if (on) on.classList.remove('on');
+      });
+      svg.appendChild(hit);
+
+      if (i % every === 0 || i === rows.length - 1) {
+        var lx = padL + i * slot + slot / 2;
+        var lt = svgEl('text', { x: lx, y: H - 6, 'class': 'axis-text', 'text-anchor': 'middle' });
+        lt.textContent = bucketLabel(rows[i].bucket, chartIsDaily);
+        svg.appendChild(lt);
+      }
+    }
+  }
+
+  /* ── row lists ────────────────────────────────────────────────────── */
+  function rowList(host, rows, build, emptyText) {
+    var box = $(host);
+    box.textContent = '';
+    if (!rows || !rows.length) {
+      box.appendChild(el('p', 'an-empty', emptyText));
+      return;
+    }
+    var max = 0;
+    rows.forEach(function (r) { var n = build.weight(r); if (n > max) max = n; });
+    rows.forEach(function (r) {
+      var row = el('div', 'an-row');
+      var fill = el('div', 'an-row-fill');
+      fill.style.width = (max ? Math.max(1.5, (build.weight(r) / max) * 100) : 0) + '%';
+      row.appendChild(fill);
+      build.render(r, row);
+      box.appendChild(row);
+    });
+  }
+
+  function renderPages(rows) {
+    rowList('p-pages', rows, {
+      weight: function (r) { return Number(r.views || 0); },
+      render: function (r, row) {
+        var main = el('div', 'an-row-main');
+        var a = el('a', 'an-row-name', r.label || r.url);
+        a.href = r.url; a.target = '_blank'; a.rel = 'noopener';
+        main.appendChild(a);
+        main.appendChild(el('span', 'an-row-sub', r.url));
+        row.appendChild(main);
+        var n = el('div', 'an-row-n', num(r.views));
+        n.appendChild(el('em', null, ' / ' + num(r.sessions)));
+        row.appendChild(n);
+      }
+    }, 'No views recorded in this range yet.');
+  }
+
+  function renderSources(rows) {
+    rowList('p-sources', rows, {
+      weight: function (r) { return Number(r.views || 0); },
+      render: function (r, row) {
+        var main = el('div', 'an-row-main');
+        var name = r.host === '(none)'
+          ? (r.kind === 'direct' ? 'Typed in or bookmarked' : 'No referrer')
+          : r.host;
+        main.appendChild(el('span', 'an-row-name', name));
+        main.appendChild(el('span', 'an-row-sub', KIND_WORDS[r.kind] || r.kind));
+        row.appendChild(main);
+        row.appendChild(el('div', 'an-row-n', num(r.views)));
+      }
+    }, 'Nothing to show yet.');
+  }
+
+  function renderSearches(rows) {
+    rowList('p-searches', rows, {
+      weight: function (r) { return Number(r.searches || 0); },
+      render: function (r, row) {
+        var main = el('div', 'an-row-main');
+        var name = el('span', 'an-row-name', r.term_text);
+        if (Number(r.misses) > 0) {
+          /* a label, not colour alone: these are readers asking for an
+             article that does not exist yet */
+          name.appendChild(el('span', 'an-chip miss',
+            Number(r.misses) === Number(r.searches) ? 'no results' : Number(r.misses) + ' missed'));
+        }
+        main.appendChild(name);
+        main.appendChild(el('span', 'an-row-sub', 'last searched ' + ago(r.last_seen)));
+        row.appendChild(main);
+        row.appendChild(el('div', 'an-row-n', num(r.searches)));
+      }
+    }, 'No site searches recorded yet.');
+  }
+
+  /* Google's own view. Carries its own age in the panel head, and says so
+     when that age stops moving - a stale panel showing a plausible-looking
+     old number is the failure mode worth guarding against here, not a
+     visible error. */
+  function renderGoogle(rows, status) {
+    var note = $('gsc-note');
+    var through = status.covered_through;
+    if (!through) {
+      note.textContent = 'not synced yet';
+    } else {
+      var d = new Date(through + 'T00:00:00');
+      var label = 'as of ' + d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      note.textContent = status.is_stale
+        ? label + ' \u2014 ' + status.days_behind + ' days behind, sync may be broken'
+        : label;
+    }
+    rowList('p-google', rows, {
+      weight: function (r) { return Number(r.impressions || 0); },
+      render: function (r, row) {
+        var main = el('div', 'an-row-main');
+        main.appendChild(el('span', 'an-row-name', r.term_text));
+        var pos = Number(r.avg_position || 0);
+        main.appendChild(el('span', 'an-row-sub',
+          num(r.clicks) + (Number(r.clicks) === 1 ? ' click' : ' clicks') +
+          ' \u00b7 average position ' + (pos ? pos.toFixed(1) : '\u2014')));
+        row.appendChild(main);
+        var n = el('div', 'an-row-n', num(r.impressions));
+        n.appendChild(el('em', null, ' shown'));
+        row.appendChild(n);
+      }
+    }, 'No Google search data yet.');
+  }
+
+  function renderFeed(rows) {
+    var box = $('p-feed');
+    box.textContent = '';
+    if (!rows || !rows.length) {
+      box.appendChild(el('p', 'an-empty',
+        'No page views yet. The first one lands as soon as somebody opens a page on the live site.'));
+      return;
+    }
+    rows.forEach(function (r) {
+      var row = el('div', 'an-row');
+      row.appendChild(el('div', 'an-feed-time', clockTime(r.at)));
+      var main = el('div', 'an-row-main');
+      var a = el('a', 'an-row-name', r.label || r.url);
+      a.href = r.url; a.target = '_blank'; a.rel = 'noopener';
+      main.appendChild(a);
+      var bits = [KIND_WORDS[r.kind] || r.kind];
+      if (r.host) bits.push(r.host);
+      if (r.dev)  bits.push(r.dev);
+      main.appendChild(el('span', 'an-row-sub', bits.join(' · ')));
+      row.appendChild(main);
+      box.appendChild(row);
+    });
+    $('feed-note').textContent = 'newest first';
+  }
+
+  /* ── loading ──────────────────────────────────────────────────────── */
+  function loadAll() {
+    var daily = hours > 48;
+    chartIsDaily = daily;
+    $('chart-title').textContent = daily ? 'Views Per Day' : 'Views Per Hour';
+    $('chart-note').textContent  = rangeWords();
+
+    var calls = [
+      db.rpc('admin_traffic_summary', { p_hours: hours }),
+      db.rpc('admin_top_pages',       { p_hours: hours, p_limit: 12 }),
+      db.rpc('admin_top_sources',     { p_hours: hours, p_limit: 12 }),
+      db.rpc('admin_top_searches',    { p_hours: 720,   p_limit: 18 }),
+      db.rpc('admin_recent_activity', { p_limit: 40 }),
+      daily ? db.rpc('admin_views_by_day',  { p_days:  Math.round(hours / 24) })
+            : db.rpc('admin_views_by_hour', { p_hours: hours }),
+      db.rpc('admin_google_queries', { p_days: 28, p_limit: 15 }),
+      db.rpc('admin_gsc_status')
+    ];
+
+    return Promise.all(calls).then(function (res) {
+      var bad = res.filter(function (r) { return r.error; });
+      if (bad.length) throw bad[0].error;
+
+      var s = (res[0].data && res[0].data[0]) || {};
+      renderSummary(s);
+      renderPages(res[1].data || []);
+      renderSources(res[2].data || []);
+      renderSearches(res[3].data || []);
+      renderFeed(res[4].data || []);
+      chartRows = res[5].data || [];
+      renderChart();
+      renderGoogle(res[6].data || [], (res[7].data && res[7].data[0]) || {});
+    });
+  }
+
+  function startPolling() {
+    clearInterval(pollTimer);
+    /* A light refresh so the live tile stays honest even if the realtime
+       socket never connects. */
+    pollTimer = setInterval(function () {
+      if (document.hidden) return;
+      loadAll()['catch'](function () {});
+    }, 25000);
+  }
+
+  function subscribeLive() {
+    if (subscribed) return;
+    subscribed = true;
+    var pending = null;
+    try {
+      db.channel('analytics')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'page_views' }, function () {
+          clearTimeout(pending);
+          pending = setTimeout(function () { loadAll()['catch'](function () {}); }, 1200);
+        })
+        .subscribe();
+    } catch (e) {
+      console.warn('[analytics] live updates unavailable', e);   // polling still covers it
+    }
+  }
+
+  /* ── wiring ───────────────────────────────────────────────────────── */
+  document.querySelectorAll('.an-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      document.querySelectorAll('.an-tab').forEach(function (t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      hours = Number(tab.dataset.hours) || 24;
+      loadAll()['catch'](function (e) { console.error('[analytics]', e); });
+    });
+  });
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderChart, 150);
+  });
+
+  /* ── boot ─────────────────────────────────────────────────────────── */
+  function afterAuth(user) {
+    if (!user) { show('gate'); return; }
+    // The RPC is the real permission check - it fails for anyone is_admin() rejects.
+    loadAll().then(function () {
+      show('dash');
+      renderChart();           // measure again now the panel is visible
+      startPolling();
+      subscribeLive();
+    })['catch'](function () {
+      show('gate');
+      gateMsg('That account does not have analytics access.');
+    });
+  }
+
+  function boot() {
+    if (!window.WBAuth) {
+      show('gate');
+      gateMsg('Sign-in did not load. Reload the page.');
+      return;
+    }
+    $('btn-signin').addEventListener('click', function () { WBAuth.open('signin'); });
+    WBAuth.client().then(function (c) {
+      db = c;
+      WBAuth.onChange(afterAuth);      // fires now and on every change
+    })['catch'](function () {
+      show('gate');
+      gateMsg('Sign-in is unavailable right now.');
+    });
+  }
+
+  // auth.js is deferred, so it has run by the time this fires.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+
+  /* Theme preference, matching the rest of the site */
+  if (localStorage.getItem('themePref') === 'light') {
+    document.documentElement.classList.add('light-mode');
+  }
+})();
+</script>
+<script src="scripts.js" defer></script>
+</body>
+</html>
