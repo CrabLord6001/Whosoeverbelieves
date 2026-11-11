@@ -2566,3 +2566,27 @@ section.hp-subscribe {
   .hp-split { gap: 3rem; }
   .upd-art, .hp-split > .hp-subscribe .hp-subscribe-art { height: 165px; }
 }
+
+/* ── WHAT'S NEW + MAILING LIST in light mode ─────────────────────────────
+   Both cards were pinned to #16130f in both themes. Against the cream page
+   that reads as two black slabs, so in light mode they take the page's own
+   surface and text instead. The paintings keep their masks, which fade to
+   whatever ground sits behind them, and get the same lift the other homepage
+   images already have in this theme. */
+
+:root.light-mode .hp-split > #updates,
+:root.light-mode section.hp-subscribe {
+  background: var(--surface);
+  border-color: var(--gold-faint);
+}
+:root.light-mode .hp-split > #updates .hp-section-head h2,
+:root.light-mode .hp-subscribe-title { color: var(--text); }
+:root.light-mode .hp-split > #updates .upd-text { color: var(--text); }
+:root.light-mode .hp-split > #updates .upd-date { color: var(--gold); }
+:root.light-mode .hp-split > #updates .upd-row::before { box-shadow: 0 0 0 3px var(--surface); }
+:root.light-mode .hp-subscribe-line,
+:root.light-mode .hp-subscribe-msg { color: var(--text-mid); }
+:root.light-mode .hp-subscribe-text .hp-eyebrow { color: var(--gold); }
+:root.light-mode .hp-subscribe .hp-btn.ghost { color: var(--text); border-color: rgba(0,0,0,0.25); }
+:root.light-mode .upd-art,
+:root.light-mode .hp-subscribe-art { filter: brightness(1.06) contrast(0.82); }
