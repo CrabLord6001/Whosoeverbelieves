@@ -298,7 +298,7 @@ td.nw{white-space:nowrap}
 <h2>Notes</h2>
 <div class="notes">
   <h3>Herodias's first husband</h3>
-  <p>Mark and Matthew call Herodias's first husband Philip, and the chart follows them. Josephus names him Herod, the son of Herod the Great by Mariamne II, and says Herodias bore him Salome (<i>Antiquities</i> 18.136). Two readings reconcile this. The first takes Philip as a second name, on the pattern of Herod Antipas and Herod Agrippa, who each carried Herod along with another name; on that reading the Gospels and Josephus describe the same man. The second takes the Gospels to mean Philip the Tetrarch, who later married Herodias's daughter. The chart shows the Gospel name and leaves the identification to this&nbsp;note.</p>
+  <p>Mark and Matthew call Herodias's first husband Philip, and the chart follows them. Josephus names him Herod, the son of Herod the Great by Mariamne II, and says Herodias bore him Salome (<i>Antiquities</i> 18.136). Christian apologists generally reconcile this issue in two ways. The first takes Philip as a second name, on the pattern of Herod Antipas and Herod Agrippa, who each carried Herod along with another name; on that reading the Gospels and Josephus describe the same man. The second takes the Gospels to mean Philip the Tetrarch, who later married Herodias's daughter. The chart shows the Gospel name and leaves the identification to this&nbsp;note.</p>
 
   <h3>How the chart is drawn</h3>
   <p>Descent runs downward on solid lines; marriages are dotted. Herod the Great married at least nine times, so his wives hang down a line beneath him instead of spreading across one row, and each wife's children descend from her. This keeps the chart tall rather than wide, which suits a phone. Cousins in this family married each other constantly, so several people belong in two places. Each of them gets one main entry, and a dotted gray box everywhere else that points back to&nbsp;it.</p>
@@ -736,8 +736,20 @@ function apply(){
   stage.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
   pct.textContent = Math.round(scale * 100) + '%';
 }
+/* Zooming out past the point where the whole chart fits the frame only adds
+   empty space, so that is the floor. It is computed rather than fixed, because
+   the fitting scale depends on the frame, which changes with the window and
+   again in full screen. Fit matches the width, which is a closer view than
+   this floor; the floor is where the minus button and a pinch stop. */
+function minScale(){
+  const r = viewport.getBoundingClientRect();
+  const m = 28;
+  const byWidth  = (r.width  - m * 2) / content.w;
+  const byHeight = (r.height - m * 2) / content.h;
+  return Math.min(1, Math.max(0.02, Math.min(byWidth, byHeight)));
+}
 function setScale(next, cx, cy){
-  next = Math.min(2, Math.max(.08, next));
+  next = Math.min(2, Math.max(minScale(), next));
   const r = viewport.getBoundingClientRect();
   cx = cx == null ? r.width / 2 : cx; cy = cy == null ? r.height / 2 : cy;
   tx = cx - (cx - tx) * (next / scale);
