@@ -67,6 +67,13 @@ h3{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:1.05rem;color:va
 .chart{position:relative;background:#0b1628;border:1px solid var(--edge);
   border-radius:12px;overflow:hidden}
 .chart:fullscreen{border-radius:0;background:var(--navy)}
+/* iOS Safari has no Fullscreen API for anything but a <video>, so the button
+   did nothing on a phone. This class is the fallback: the panel is pinned over
+   the page instead. Column flex rather than a fixed height, so the viewport
+   still fills whatever the toolbar leaves once it wraps. */
+.chart.faux-full{position:fixed;inset:0;z-index:999;border:0;border-radius:0;
+  background:var(--navy);display:flex;flex-direction:column}
+.chart.faux-full .viewport{flex:1 1 auto;height:auto;min-height:0}
 .bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.7rem .85rem;
   border-bottom:1px solid var(--edge-soft);background:#0e1a2e}
 .btn{font-family:'EB Garamond',Georgia,serif;font-size:1rem;color:var(--gold);
@@ -77,7 +84,7 @@ h3{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:1.05rem;color:va
 .bar .spacer{flex:1 1 auto}
 .bar .pct{color:var(--text-dim);font-size:.95rem;min-width:3.4rem;text-align:right}
 .viewport{position:relative;height:min(78vh,820px);overflow:hidden;cursor:grab;touch-action:none}
-.chart:fullscreen .viewport{height:calc(100vh - 4.2rem)}
+.chart:fullscreen .viewport{height:calc(100vh - 4.2rem);height:calc(100dvh - 4.2rem)}
 .viewport.dragging{cursor:grabbing}
 .stage{position:absolute;top:0;left:0;transform-origin:0 0}
 .stage svg{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
@@ -159,8 +166,30 @@ td.nw{white-space:nowrap}
   h1{font-size:1.7rem}
   h2{font-size:1.15rem}
   .hd-notes{padding:1rem}
-  table{min-width:27rem}
   .card{width:16.5rem}
+
+  /* Pills wrapped into ragged rows of two and three and ate half a screen.
+     A fixed two-column grid lines them up and drops the padding. */
+  .key{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-top:.8rem}
+  .key button{border-radius:8px;padding:.35rem .5rem;font-size:.84rem;gap:.4rem}
+  .key i{width:1.1rem}
+  .k-nt,.k-sp,.k-ref,.k-exec{height:.85rem}
+
+  /* Three columns of prose cannot fit a phone: whichever one loses is the one
+     carrying the sentence. Each row becomes a block instead. The role
+     attributes in the markup keep the table semantics that display:block
+     would otherwise throw away. */
+  .tablewrap{overflow-x:visible}
+  table{display:block;min-width:0;width:100%}
+  /* A table-caption inside a block parent shrink-wraps to a few words a line. */
+  caption{display:block;width:100%}
+  thead{display:none}
+  tbody,tr,tbody th,tbody td{display:block}
+  tr{padding:.7rem 0;border-bottom:1px solid var(--edge-soft)}
+  tr:last-child{border-bottom:0}
+  tbody th,tbody td{padding:0;border-bottom:0;white-space:normal}
+  tbody th{color:var(--gold-bright);font-size:1.04rem;margin-bottom:.15rem}
+  tbody td:last-child{color:var(--gold);font-size:.9rem;margin-top:.2rem}
 }
 </style>
 
@@ -286,23 +315,23 @@ td.nw{white-space:nowrap}
 
 <h2 class="h2-center">Which Herod is which</h2>
 <div class="tablewrap">
-<table>
+<table role="table">
   <caption>Every Herodian the New Testament names or describes, with the passages.</caption>
-  <thead><tr><th scope="col">In the text</th><th scope="col">Who it is</th><th scope="col">Passages</th></tr></thead>
-  <tbody>
-    <tr><th scope="row">Herod the king</th><td>Herod the Great, at the birth of Jesus</td><td>Matthew 2:1&ndash;19; Luke 1:5</td></tr>
-    <tr><th scope="row">Archelaus</th><td>His son by Malthace, reigning in Judea when the family returned from Egypt</td><td class="nw">Matthew 2:22</td></tr>
-    <tr><th scope="row">Herod the tetrarch</th><td>Antipas, his son by Malthace, who killed John the Baptist and questioned Jesus</td><td>Matthew 14:1&ndash;12; Mark 6:14&ndash;29; Luke 3:1, 19&ndash;20; 9:7&ndash;9; 13:31&ndash;32; 23:7&ndash;12; Acts 4:27</td></tr>
-    <tr><th scope="row">Philip his brother</th><td>Herodias's first husband. Josephus names him Herod, the son of Mariamne&nbsp;II.</td><td class="nw">Matthew 14:3; Mark 6:17</td></tr>
-    <tr><th scope="row">Philip the tetrarch</th><td>His son by Cleopatra of Jerusalem, holding Iturea and Trachonitis</td><td class="nw">Luke 3:1</td></tr>
-    <tr><th scope="row">Herodias</th><td>Granddaughter of Herod the Great, wife of Antipas</td><td>Matthew 14:3&ndash;11; Mark 6:17&ndash;28; Luke 3:19</td></tr>
-    <tr><th scope="row">Her daughter</th><td>Salome, named by Josephus and not by the Gospels</td><td class="nw">Matthew 14:6&ndash;11; Mark 6:22&ndash;28</td></tr>
-    <tr><th scope="row">Herod the king</th><td>Agrippa I, who killed James and imprisoned Peter</td><td class="nw">Acts 12:1&ndash;23</td></tr>
-    <tr><th scope="row">King Agrippa</th><td>Agrippa II, before whom Paul made his defense</td><td class="nw">Acts 25:13 to 26:32</td></tr>
-    <tr><th scope="row">Bernice</th><td>Berenice, sister of Agrippa II</td><td class="nw">Acts 25:13, 23; 26:30</td></tr>
-    <tr><th scope="row">Drusilla</th><td>Sister of Agrippa II and wife of Felix</td><td class="nw">Acts 24:24</td></tr>
-    <tr><th scope="row">Felix</th><td>Governor of Judea, who kept Paul in custody at Caesarea</td><td class="nw">Acts 23:24 to 24:27</td></tr>
-    <tr><th scope="row">The Herodians</th><td>A party that supported the dynasty, not members of the family</td><td class="nw">Matthew 22:16; Mark 3:6; 12:13</td></tr>
+  <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">In the text</th><th scope="col" role="columnheader">Who it is</th><th scope="col" role="columnheader">Passages</th></tr></thead>
+  <tbody role="rowgroup">
+    <tr role="row"><th scope="row" role="rowheader">Herod the king</th><td role="cell">Herod the Great, at the birth of Jesus</td><td role="cell">Matthew 2:1&ndash;19; Luke 1:5</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Archelaus</th><td role="cell">His son by Malthace, reigning in Judea when the family returned from Egypt</td><td role="cell" class="nw">Matthew 2:22</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Herod the tetrarch</th><td role="cell">Antipas, his son by Malthace, who killed John the Baptist and questioned Jesus</td><td role="cell">Matthew 14:1&ndash;12; Mark 6:14&ndash;29; Luke 3:1, 19&ndash;20; 9:7&ndash;9; 13:31&ndash;32; 23:7&ndash;12; Acts 4:27</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Philip his brother</th><td role="cell">Herodias's first husband. Josephus names him Herod, the son of Mariamne&nbsp;II.</td><td role="cell" class="nw">Matthew 14:3; Mark 6:17</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Philip the tetrarch</th><td role="cell">His son by Cleopatra of Jerusalem, holding Iturea and Trachonitis</td><td role="cell" class="nw">Luke 3:1</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Herodias</th><td role="cell">Granddaughter of Herod the Great, wife of Antipas</td><td role="cell">Matthew 14:3&ndash;11; Mark 6:17&ndash;28; Luke 3:19</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Her daughter</th><td role="cell">Salome, named by Josephus and not by the Gospels</td><td role="cell" class="nw">Matthew 14:6&ndash;11; Mark 6:22&ndash;28</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Herod the king</th><td role="cell">Agrippa I, who killed James and imprisoned Peter</td><td role="cell" class="nw">Acts 12:1&ndash;23</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">King Agrippa</th><td role="cell">Agrippa II, before whom Paul made his defense</td><td role="cell" class="nw">Acts 25:13 to 26:32</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Bernice</th><td role="cell">Berenice, sister of Agrippa II</td><td role="cell" class="nw">Acts 25:13, 23; 26:30</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Drusilla</th><td role="cell">Sister of Agrippa II and wife of Felix</td><td role="cell" class="nw">Acts 24:24</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">Felix</th><td role="cell">Governor of Judea, who kept Paul in custody at Caesarea</td><td role="cell" class="nw">Acts 23:24 to 24:27</td></tr>
+    <tr role="row"><th scope="row" role="rowheader">The Herodians</th><td role="cell">A party that supported the dynasty, not members of the family</td><td role="cell" class="nw">Matthew 22:16; Mark 3:6; 12:13</td></tr>
   </tbody>
 </table>
 </div>
@@ -704,7 +733,11 @@ function hide(){ card.hidden = true; all.forEach(n => n.el.classList.remove('on'
 document.addEventListener('click', e => {
   if (!card.hidden && !card.contains(e.target)) hide();
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (!card.hidden){ hide(); return; }
+  if (chartEl.classList.contains('faux-full')) faux(false);
+});
 
 /* ============================ key ============================ */
 const keynote = document.getElementById('keynote');
@@ -772,11 +805,30 @@ document.getElementById('zoomIn').onclick = () => setScale(scale * 1.25);
 document.getElementById('zoomOut').onclick = () => setScale(scale / 1.25);
 document.getElementById('fit').onclick = fit;
 document.getElementById('top').onclick = topView;
-document.getElementById('full').onclick = () => {
-  const c = document.getElementById('chart');
-  if (document.fullscreenElement) document.exitFullscreen(); else if (c.requestFullscreen) c.requestFullscreen();
+const chartEl = document.getElementById('chart');
+const fullBtn = document.getElementById('full');
+/* Pinning the panel over the page is the fallback, not the first choice: the
+   real API gets the browser chrome out of the way, which this cannot. */
+function faux(on){
+  chartEl.classList.toggle('faux-full', on);
+  document.documentElement.style.overflow = on ? 'hidden' : '';
+  fullBtn.textContent = on ? 'Close' : 'Full screen';
+  setTimeout(fit, 60);
+}
+fullBtn.onclick = () => {
+  if (document.fullscreenElement){ document.exitFullscreen(); return; }
+  if (chartEl.classList.contains('faux-full')){ faux(false); return; }
+  /* Safari on iPad exposes requestFullscreen and then rejects it, so the
+     fallback hangs off the rejection as well as off the missing method. */
+  if (chartEl.requestFullscreen){
+    const r = chartEl.requestFullscreen();
+    if (r && r.catch) r.catch(() => faux(true));
+  } else faux(true);
 };
-document.addEventListener('fullscreenchange', () => setTimeout(fit, 60));
+document.addEventListener('fullscreenchange', () => {
+  fullBtn.textContent = document.fullscreenElement ? 'Close' : 'Full screen';
+  setTimeout(fit, 60);
+});
 
 const pointers = new Map(); let startDist = 0, startScale = 1, last = null;
 viewport.addEventListener('pointerdown', e => {
