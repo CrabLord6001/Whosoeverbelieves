@@ -189,26 +189,28 @@ td.nw{white-space:nowrap}
 <h2>Notes</h2>
 <div class="notes">
   <h3>Herodias's first husband</h3>
-  <p>Josephus says Herodias married Herod, the son of Herod the Great by Mariamne II, and bore him Salome (<i>Antiquities</i> 18.136). Mark and Matthew call the man Philip. Two readings are held. The first takes Philip as a second name, on the pattern of Herod Antipas and Herod Agrippa, who each carried Herod along with another name; on that reading the Gospels and Josephus describe the same man. The second takes the Gospels to mean Philip the Tetrarch, who married Herodias's daughter. The chart follows the first reading and shows the man as Herod&nbsp;II.</p>
+  <p>Mark and Matthew call Herodias's first husband Philip, and the chart follows them. Josephus names him Herod, the son of Herod the Great by Mariamne II, and says Herodias bore him Salome (<i>Antiquities</i> 18.136). Two readings reconcile this. The first takes Philip as a second name, on the pattern of Herod Antipas and Herod Agrippa, who each carried Herod along with another name; on that reading the Gospels and Josephus describe the same man. The second takes the Gospels to mean Philip the Tetrarch, who later married Herodias's daughter. The chart shows the Gospel name and leaves the identification to this&nbsp;note.</p>
 
   <h3>How the chart is drawn</h3>
   <p>Descent runs downward on solid lines; marriages are dotted. Herod the Great married at least nine times, so his wives hang down a line beneath him instead of spreading across one row, and each wife's children descend from her. This keeps the chart tall rather than wide, which suits a phone. Cousins in this family married each other constantly, so several people belong in two places. Each of them gets one main entry, and a dotted gray box everywhere else that points back to&nbsp;it.</p>
 
   <h3>Dates</h3>
-  <p>Herod's death in 4 BC is the common reckoning, resting on Josephus and on the lunar eclipse he mentions before it. A minority argue for 1 BC. The chart uses 4 BC throughout, and the dates for Archelaus, Antipas and Philip follow from&nbsp;it.</p>
+  <p>Herod died in 4 BC, resting on Josephus and on the lunar eclipse he mentions before it. The chart uses that date throughout, and the dates for Archelaus, Antipas and Philip follow from&nbsp;it.</p>
 
   <h3>Sources</h3>
   <p>Josephus, <i>Antiquities of the Jews</i> 17.19&ndash;22 and 18.109&ndash;137, and <i>War of the Jews</i> 1.552&ndash;563, for the wives, the children and the marriages. The New Testament references are given in&nbsp;full.</p>
 
   <div class="draft">
     <span class="tag">For Jonathan's review, not for publishing as it stands</span>
-    <p>Every sentence of prose on this page is a Claude draft. Points to settle:</p>
+    <p>Every sentence of prose on this page is a Claude draft and still needs your
+      read before it goes out under your name. The five questions this block used
+      to ask are settled:</p>
     <ol>
-      <li>Whether Herodias's first husband is shown as Herod II, as here, or as Philip with Josephus noted.</li>
-      <li>Whether the 1 BC date for Herod's death is mentioned at all, or left out as the Seventy Weeks page handles Anderson and Hoehner.</li>
-      <li>Whether the Scripture references take the verse popups through <code>common.gref()</code>, as the maps do, or stay plain, as the John signs table does.</li>
-      <li>Whether Salome's dance and the death of John belong on the chart in this detail, given who reads the site.</li>
-      <li>Whether the roster is now right, or whether minor figures should come out again to keep it readable.</li>
+      <li>Herodias's first husband is shown as <b>Philip</b>, the Gospel name, with Josephus set out in the note above.</li>
+      <li>The 1 BC reckoning is <b>left out</b>, the way the Seventy Weeks page handles Anderson and Hoehner.</li>
+      <li>Scripture references stay <b>plain</b>, as the John signs table has them. No <code>common.gref()</code> dependency.</li>
+      <li>The <b>full roster stays</b>, minor figures included.</li>
+      <li>Salome's label is now neutral; the account of the dance remains in her entry, where someone has to open it to read it.</li>
     </ol>
   </div>
 </div>
@@ -292,10 +294,10 @@ const T = {
                         ] }] },
 
                     { name:"Herodias", nt:1, yr:"Wife of Antipas", refs:"Matthew 14:3&ndash;11; Mark 6:17&ndash;28; Luke 3:19",
-                      info:"Married her uncle Herod II and bore him a daughter. She then left him for his half brother Antipas, which John the Baptist told Antipas was unlawful. She held it against John and used her daughter's dancing to secure his death. When her brother Agrippa was made king she pressed Antipas to seek the title too, and the emperor banished him instead. She followed him into exile.",
+                      info:"Married her uncle Philip and bore him a daughter. She then left him for his half brother Antipas, which John the Baptist told Antipas was unlawful. She held it against John and used her daughter's dancing to secure his death. When her brother Agrippa was made king she pressed Antipas to seek the title too, and the emperor banished him instead. She followed him into exile.",
                       u:[
-                        { with:{ name:"Herod II", ref:"Mariamne II", info:"Her uncle and first husband. The main entry is under Mariamne II." },
-                          kids:[ { name:"Salome", nt:1, yr:"The girl who danced", refs:"Matthew 14:6&ndash;11; Mark 6:22&ndash;28",
+                        { with:{ name:"Philip", ref:"Mariamne II", info:"Her uncle and first husband. The main entry is under Mariamne II." },
+                          kids:[ { name:"Salome", nt:1, yr:"Herodias's daughter", refs:"Matthew 14:6&ndash;11; Mark 6:22&ndash;28",
                             info:"She danced at Antipas's birthday feast and, prompted by her mother, asked for the head of John the Baptist. The Gospels do not give her name; Josephus does.",
                             u:[{ with:{ name:"Philip the Tetrarch", ref:"Cleopatra", info:"Her first husband and her great-uncle. The main entry is under Cleopatra of Jerusalem." } },
                                 { with:{ name:"Aristobulus of Chalcis", ref:"Herod of Chalcis", info:"Her second husband and her cousin. The main entry is under Herod of Chalcis." } }] } ] },
@@ -319,8 +321,8 @@ const T = {
 
           { with:{ name:"Mariamne II", sp:1, yr:"The high priest's daughter",
               info:"Herod removed the high priest and gave the office to her father Simon in order to marry her. She was set aside after her son was struck from the will." },
-            kids:[ { name:"Herod II", nt:1, yr:"Herodias's first husband", refs:"Matthew 14:3; Mark 6:17",
-              info:"Briefly his father's heir, then dropped from the will days before Herod died, because his mother had known of the poison plot and said nothing. He lived at Rome as a private citizen, which spared him his father's last purges. Josephus calls him simply Herod; Mark and Matthew call Herodias's husband Philip.",
+            kids:[ { name:"Philip", nt:1, yr:"Herodias's first husband", refs:"Matthew 14:3; Mark 6:17",
+              info:"Mark and Matthew call him Philip; Josephus names him simply Herod, the son of Mariamne II, which is why he is often written Herod II. Briefly his father's heir, he was dropped from the will days before Herod died, because his mother had known of the poison plot and said nothing. He lived at Rome as a private citizen, which spared him his father's last purges.",
               u:[{ with:{ name:"Herodias", ref:"Aristobulus IV", info:"His niece and wife. The main entry is under Aristobulus IV, with their daughter Salome." } }] } ] },
 
           { with:{ name:"Malthace", sp:1, yr:"A Samaritan",
