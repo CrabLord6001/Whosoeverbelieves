@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-05VNP2PXN4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-05VNP2PXN4');
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Herodian Dynasty — Whosoever Believes</title>
+  <meta name="description" content="An interactive family tree of the Herods, with every Herodian the New Testament names" />
+  <link rel="stylesheet" href="/fonts/set-1.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="charts.css?v=46d6a0c8" />
+<style>
+/* REVIEW DRAFT — standalone. When this is wired into /charts/, drop this block
+   and map these names onto the site's own variables in styles.css. */
+/* The draft's palette mapped onto the site's own variables, so the chart
+   follows the light and dark themes instead of pinning its own navy. Only the
+   three semantic colours — connector, marriage, executed — are defined here,
+   because styles.css has no equivalent. */
+.ch-main{
+  --navy:var(--bg); --navy-2:var(--surface);
+  --panel:var(--glass);
+  --edge:var(--gold-faint); --edge-soft:var(--glass-border);
+  --gold-bright:var(--gold-light);
+  --text-dim:var(--text-mid);
+  --line:var(--gold); --marr:#6f9a7e; --red:#c25f48;
+}
+:root.light-mode .ch-main{ --marr:#3f6b52; --red:#a33c28; }
+
+h3{font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:1.05rem;color:var(--gold-bright);margin:0 0 .6rem}
+
+/* ---------- frame ---------- */
+
+/* The chart is a plate: it keeps its own dark ground in both themes, the way a
+   printed figure does, and the page around it follows the theme. The node fills
+   are fixed dark hexes, so without pinning these the light theme would put its
+   dark text on a dark box. The legend sits outside the frame, so only its
+   swatches are pinned — its labels follow the theme like the rest of the page. */
+.ch-main .chart{
+  --text:#f2eee4; --text-dim:#cfc7b6;
+  --gold:#d6b25e; --gold-bright:#e8ca84;
+  --edge:rgba(214,178,94,.3); --edge-soft:rgba(255,255,255,.22);
+  --panel:rgba(255,255,255,.06);
+  --navy:#0b1628; --navy-2:#111f36;
+}
+.ch-main .chart{ background:#0b1628; color:var(--text); }
+/* Centred above the table it introduces. The Notes heading below stays left,
+   where its paragraphs start. */
+.ch-main h2.h2-center{ text-align:center; }
+/* Notes sits inside its own panel rather than floating above it, so it needs
+   the panel's top padding taken off its own margin, not added to it. */
+/* Matches the heading over the table; the panel supplies the space above it. */
+.ch-main .hd-notes-h2{ margin-top:.2rem; margin-bottom:1.2rem; }
+
+
+.ch-main .bar{ background:#0e1a2e; }
+.ch-main .k-nt, .ch-main .k-sp, .ch-main .k-ref, .ch-main .k-exec{
+  --edge-soft:rgba(255,255,255,.22);
+}
+.chart{position:relative;background:#0b1628;border:1px solid var(--edge);
+  border-radius:12px;overflow:hidden}
+.chart:fullscreen{border-radius:0;background:var(--navy)}
+.bar{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;padding:.7rem .85rem;
+  border-bottom:1px solid var(--edge-soft);background:#0e1a2e}
+.btn{font-family:'EB Garamond',Georgia,serif;font-size:1rem;color:var(--gold);
+  background:rgba(214,178,94,.1);border:1px solid var(--edge);border-radius:999px;
+  padding:.4rem 1rem;cursor:pointer;line-height:1.2}
+.btn:hover{background:rgba(214,178,94,.22)}
+.btn:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.bar .spacer{flex:1 1 auto}
+.bar .pct{color:var(--text-dim);font-size:.95rem;min-width:3.4rem;text-align:right}
+.viewport{position:relative;height:min(78vh,820px);overflow:hidden;cursor:grab;touch-action:none}
+.chart:fullscreen .viewport{height:calc(100vh - 4.2rem)}
+.viewport.dragging{cursor:grabbing}
+.stage{position:absolute;top:0;left:0;transform-origin:0 0}
+.stage svg{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
+
+/* ---------- nodes ---------- */
+.node{position:absolute;display:block;text-align:center;background:#16233d;
+  border:1px solid var(--edge-soft);border-radius:7px;padding:.42rem .5rem;
+  cursor:pointer;color:inherit;font:inherit;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.node:hover{border-color:var(--gold);background:#1c2d4d}
+.node:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
+.node.nt{border:2px solid var(--gold);background:#241f18}
+.node.exec{border-left:4px solid var(--red)}
+.node.sp{background:#141d30;border-style:dashed;border-color:rgba(111,154,126,.55)}
+.node.ref{background:#0f1726;border-style:dotted;opacity:.9}
+.node.on{border-color:var(--gold-bright);box-shadow:0 0 0 3px rgba(214,178,94,.25),0 2px 8px rgba(0,0,0,.4)}
+.node .nm{display:block;font-family:'Cinzel',Georgia,serif;font-weight:600;font-size:.88rem;
+  line-height:1.22;color:var(--text)}
+.node.nt .nm{color:var(--gold-bright)}
+.node .yr{display:block;color:var(--text-dim);font-size:.78rem;line-height:1.22;margin-top:.1rem}
+.node .b{display:inline-block;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.08em;
+  color:var(--navy);background:var(--gold);border-radius:2px;padding:0 .22rem;margin-top:.18rem}
+
+/* ---------- info card ---------- */
+.card{position:absolute;z-index:40;width:19rem;max-width:calc(100vw - 2.5rem);
+  background:#0d1a2e;border:1px solid var(--gold);border-radius:10px;
+  padding:.85rem 1rem;box-shadow:0 10px 30px rgba(0,0,0,.6);font-size:.98rem;line-height:1.55}
+.card[hidden]{display:none}
+.card h4{font-family:'Cinzel',serif;font-size:1.02rem;color:var(--gold-bright);margin:0 0 .1rem;font-weight:600}
+.card .sub{color:var(--text-dim);font-size:.92rem;margin:0 0 .5rem}
+.card p{margin:0 0 .5rem}
+.card .r{display:block;color:var(--gold);font-size:.93rem}
+.card .r b{color:var(--text-dim);font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;
+  margin-right:.3rem;font-weight:600}
+.card .x{position:absolute;top:.3rem;right:.45rem;background:none;border:0;color:var(--text-dim);
+  font-size:1.2rem;line-height:1;cursor:pointer;padding:.2rem}
+.card .x:hover{color:var(--gold)}
+
+/* ---------- key ---------- */
+.key{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0}
+.key button{display:flex;align-items:center;gap:.5rem;background:var(--panel);
+  border:1px solid var(--edge-soft);border-radius:999px;padding:.4rem .85rem;
+  color:var(--text);font:inherit;font-size:.98rem;cursor:pointer}
+.key button:hover,.key button[aria-expanded="true"]{border-color:var(--gold);background:rgba(214,178,94,.12)}
+.key i{width:1.5rem;height:1rem;flex:0 0 auto;display:block;border-radius:2px}
+.k-child{height:0;border-top:2px solid var(--line)}
+.k-marr{height:0;border-top:2px dotted var(--marr)}
+.k-nt{background:#241f18;border:2px solid var(--gold);height:1.1rem}
+.k-sp{background:#141d30;border:1px dashed rgba(111,154,126,.7);height:1.1rem}
+.k-ref{background:#0f1726;border:1px dotted var(--edge-soft);height:1.1rem}
+.k-exec{background:#16233d;border:1px solid var(--edge-soft);border-left:4px solid var(--red);height:1.1rem}
+.keynote{margin:.7rem 0 0;padding:.75rem 1rem;background:var(--panel);
+  border:1px solid var(--edge);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;color:var(--text)}
+.keynote[hidden]{display:none}
+
+/* ---------- table and notes ---------- */
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:33rem;font-size:1.02rem}
+caption{text-align:left;color:var(--text-dim);padding-bottom:.6rem}
+th,td{padding:.6rem .75rem;border-bottom:1px solid var(--edge-soft);vertical-align:top;text-align:left}
+thead th{font-family:'Cinzel',serif;font-weight:600;font-size:.95rem;color:var(--gold);border-bottom:1px solid var(--gold)}
+tbody th{font-weight:600;color:var(--text);white-space:nowrap}
+td.nw{white-space:nowrap}
+/* Named hd-notes, not notes: charts.css styles `.notes` sitewide as a small
+   footnote block, and that rule turned this panel's heading into a 11px
+   label sitting under its own h3s. */
+.hd-notes{background:var(--panel);border:1px solid var(--edge-soft);border-radius:12px;padding:1.25rem 1.5rem}
+.hd-notes h3{margin-top:1.4rem}
+.hd-notes h3:first-child{margin-top:0}
+.hd-notes p{margin:.5rem 0}
+.draft{border:1px solid var(--gold);background:rgba(214,178,94,.07);border-radius:10px;
+  padding:1rem 1.25rem;margin:1.5rem 0 0}
+.draft .tag{display:inline-block;font-family:'Cinzel',serif;font-size:.8rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:.4rem}
+.draft ol{margin:.4rem 0 0;padding-left:1.4rem}
+.draft li{margin:.5rem 0}
+
+@media (max-width:760px){
+  body{padding:1.25rem .8rem 3rem}
+  h1{font-size:1.7rem}
+  h2{font-size:1.15rem}
+  .hd-notes{padding:1rem}
+  table{min-width:27rem}
+  .card{width:16.5rem}
+}
+</style>
+
+  <!-- SEO metadata -->
+  <link rel="canonical" href="https://whosoeverbelieves.com/charts/herodian-dynasty" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/icon-96.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Whosoever Believes" />
+  <meta property="og:url" content="https://whosoeverbelieves.com/charts/herodian-dynasty" />
+  <meta property="og:title" content="The Herodian Dynasty — Whosoever Believes" />
+  <meta property="og:description" content="An interactive family tree of the Herods, with every Herodian the New Testament names" />
+  <meta property="og:image" content="https://whosoeverbelieves.com/images/charts/bloch-sermon-on-the-mount-900.webp" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Herodian Dynasty — Whosoever Believes" />
+  <meta name="twitter:description" content="An interactive family tree of the Herods, with every Herodian the New Testament names" />
+  <meta name="twitter:image" content="https://whosoeverbelieves.com/images/charts/bloch-sermon-on-the-mount-900.webp" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Whosoever Believes",
+      "item": "https://whosoeverbelieves.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Maps & Charts",
+      "item": "https://whosoeverbelieves.com/charts/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "The Herodian Dynasty",
+      "item": "https://whosoeverbelieves.com/charts/herodian-dynasty"
+    }
+  ]
+}
+</script>
+</head>
+
+
+<body class="page-article">
+<div class="site-wrapper">
+
+  <!-- NAV -->
+<nav>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/articles">Articles</a>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Small Groups</button>
+      <div class="nav-drop-menu">
+        <a href="/studies/titus">Titus Study</a>
+      </div>
+    </div>
+    <div class="nav-drop">
+      <button type="button" class="nav-drop-btn" aria-expanded="false" aria-haspopup="true">Study Tools</button>
+      <div class="nav-drop-menu">
+        <a href="/bible-reading-plans">Bible Reading Plans</a>
+        <a href="/greek/">Biblical Greek Studies</a>
+        <a href="/charts/">Maps &amp; Charts</a>
+        <a href="/discipleship-challenge">Discipleship</a>
+        <a href="/memory-rooms">Bible Memory</a>
+        <a href="/free-grace-glossary">Glossary</a>
+      </div>
+    </div>
+  </div>
+  <form class="nav-search-form" role="search" autocomplete="off" onsubmit="return false">
+    <label for="site-search" class="visually-hidden">Search the site</label>
+    <input type="search" id="site-search" name="q" class="nav-search" placeholder="Search…" oninput="runSearch(this.value)" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" />
+  </form>
+  <div class="nav-tools">
+    <button type="button" onclick="setSize('font-small')" aria-label="Smaller text">A&#8722;</button>
+    <button type="button" onclick="setSize('default')" aria-label="Default text size">A</button>
+    <button type="button" onclick="setSize('font-large')" aria-label="Larger text">A+</button>
+    <button type="button" onclick="setTheme('light')" id="btn-light" title="Light mode" aria-label="Light mode">&#9728;&#65039;</button>
+    <button type="button" onclick="setTheme('dark')" id="btn-dark" title="Dark mode" aria-label="Dark mode">&#127769;</button>
+  </div>
+  <div id="search-results"></div>
+</nav>
+
+<main class="ch-main">
+  <div class="ch-hero">
+    <div class="ch-crumb"><a href="/charts/">Maps &amp; Charts</a> &#8250; Gospels &amp; Acts</div>
+    <h1>The Herodian Dynasty</h1>
+    <p class="ch-standfirst">Five men in this family are called Herod in the New Testament, and three of its women appear by name. Drag to move the chart, pinch or scroll to zoom, and select any name to read about that person.</p>
+  </div>
+
+
+<div class="chart" id="chart">
+  <div class="bar">
+    <button class="btn" id="zoomOut" type="button" aria-label="Zoom out">&minus;</button>
+    <span class="pct" id="pct">100%</span>
+    <button class="btn" id="zoomIn" type="button" aria-label="Zoom in">+</button>
+    <button class="btn" id="fit" type="button">Fit</button>
+    <button class="btn" id="top" type="button">Top</button>
+    <span class="spacer"></span>
+    <button class="btn" id="full" type="button">Full screen</button>
+  </div>
+  <div class="viewport" id="viewport">
+    <div class="stage" id="stage"><svg id="lines"></svg></div>
+    <div class="card" id="card" hidden></div>
+  </div>
+</div>
+
+<div class="key" id="key">
+  <button type="button" aria-expanded="false" data-note="A solid line runs from a parent down to a horizontal bar, and from that bar down into each child. Children of one marriage sit in a row together."><i class="k-child"></i> Child</button>
+  <button type="button" aria-expanded="false" data-note="A dotted line joins husband and wife. Herod the Great married many times, so his wives hang down a line beneath him rather than across a row, and each wife's children descend from her."><i class="k-marr"></i> Marriage</button>
+  <button type="button" aria-expanded="false" data-note="A gold box marks anyone the New Testament names or describes. Open the name to see the passages. The table below the chart lists them all in one place."><i class="k-nt"></i> In the New Testament</button>
+  <button type="button" aria-expanded="false" data-note="A broken green edge marks someone who married into the family rather than being born into it."><i class="k-sp"></i> Married in</button>
+  <button type="button" aria-expanded="false" data-note="A dotted gray box means that person is in the chart twice. Open it and it tells you where to find their main entry."><i class="k-ref"></i> Shown again</button>
+  <button type="button" aria-expanded="false" data-note="A red edge marks the members of his own family Herod the Great put to death: his wife Mariamne I, their sons Alexander and Aristobulus, and Antipater his eldest."><i class="k-exec"></i> Killed by Herod</button>
+</div>
+<div class="keynote" id="keynote" hidden></div>
+
+<h2 class="h2-center">Which Herod is which</h2>
+<div class="tablewrap">
+<table>
+  <caption>Every Herodian the New Testament names or describes, with the passages.</caption>
+  <thead><tr><th scope="col">In the text</th><th scope="col">Who it is</th><th scope="col">Passages</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">Herod the king</th><td>Herod the Great, at the birth of Jesus</td><td>Matthew 2:1&ndash;19; Luke 1:5</td></tr>
+    <tr><th scope="row">Archelaus</th><td>His son by Malthace, reigning in Judea when the family returned from Egypt</td><td class="nw">Matthew 2:22</td></tr>
+    <tr><th scope="row">Herod the tetrarch</th><td>Antipas, his son by Malthace, who killed John the Baptist and questioned Jesus</td><td>Matthew 14:1&ndash;12; Mark 6:14&ndash;29; Luke 3:1, 19&ndash;20; 9:7&ndash;9; 13:31&ndash;32; 23:7&ndash;12; Acts 4:27</td></tr>
+    <tr><th scope="row">Philip his brother</th><td>Herodias's first husband. Josephus names him Herod, the son of Mariamne&nbsp;II.</td><td class="nw">Matthew 14:3; Mark 6:17</td></tr>
+    <tr><th scope="row">Philip the tetrarch</th><td>His son by Cleopatra of Jerusalem, holding Iturea and Trachonitis</td><td class="nw">Luke 3:1</td></tr>
+    <tr><th scope="row">Herodias</th><td>Granddaughter of Herod the Great, wife of Antipas</td><td>Matthew 14:3&ndash;11; Mark 6:17&ndash;28; Luke 3:19</td></tr>
+    <tr><th scope="row">Her daughter</th><td>Salome, named by Josephus and not by the Gospels</td><td class="nw">Matthew 14:6&ndash;11; Mark 6:22&ndash;28</td></tr>
+    <tr><th scope="row">Herod the king</th><td>Agrippa I, who killed James and imprisoned Peter</td><td class="nw">Acts 12:1&ndash;23</td></tr>
+    <tr><th scope="row">King Agrippa</th><td>Agrippa II, before whom Paul made his defense</td><td class="nw">Acts 25:13 to 26:32</td></tr>
+    <tr><th scope="row">Bernice</th><td>Berenice, sister of Agrippa II</td><td class="nw">Acts 25:13, 23; 26:30</td></tr>
+    <tr><th scope="row">Drusilla</th><td>Sister of Agrippa II and wife of Felix</td><td class="nw">Acts 24:24</td></tr>
+    <tr><th scope="row">Felix</th><td>Governor of Judea, who kept Paul in custody at Caesarea</td><td class="nw">Acts 23:24 to 24:27</td></tr>
+    <tr><th scope="row">The Herodians</th><td>A party that supported the dynasty, not members of the family</td><td class="nw">Matthew 22:16; Mark 3:6; 12:13</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="hd-notes">
+  <h2 class="h2-center hd-notes-h2">Notes</h2>
+  <h3>Herodias's first husband</h3>
+  <p>Mark and Matthew call Herodias's first husband Philip, and the chart follows them. Josephus names him Herod, the son of Herod the Great by Mariamne II, and says Herodias bore him Salome (<i>Antiquities</i> 18.136). Christian apologists generally reconcile this issue in two ways. The first takes Philip as a second name, on the pattern of Herod Antipas and Herod Agrippa, who each carried Herod along with another name; on that reading the Gospels and Josephus describe the same man. The second takes the Gospels to mean Philip the Tetrarch, who later married Herodias's daughter. The chart shows the Gospel name and leaves the identification to this&nbsp;note.</p>
+
+  <h3>How the chart is drawn</h3>
+  <p>Descent runs downward on solid lines; marriages are dotted. Herod the Great married at least nine times, so his wives hang down a line beneath him instead of spreading across one row, and each wife's children descend from her. This keeps the chart tall rather than wide, which suits a phone. Cousins in this family married each other constantly, so several people belong in two places. Each of them gets one main entry, and a dotted gray box everywhere else that points back to&nbsp;it.</p>
+
+  <h3>Dates</h3>
+  <p>Herod died in 4 BC, resting on Josephus and on the lunar eclipse he mentions before it. The chart uses that date throughout, and the dates for Archelaus, Antipas and Philip follow from&nbsp;it.</p>
+
+  <h3>Sources</h3>
+  <p>Josephus, <i>Antiquities of the Jews</i> 17.19&ndash;22 and 18.109&ndash;137, and <i>War of the Jews</i> 1.552&ndash;563, for the wives, the children and the marriages. The New Testament references are given in&nbsp;full.</p>
+</div>
+
+
+</main>
+
+  <footer>
+    <span class="greek">πᾶς ὁ πιστεύων εἰς αὐτὸν ἔχῃ ζωὴν αἰώνιον</span>
+    <div class="footer-nav">
+      <a href="/about">About</a>
+      <span>&#183;</span>
+      <a href="/privacy">Privacy</a>
+      <span>© 2026 Whosoever Believes</span>
+    </div>
+  </footer>
+</div><!-- /.site-wrapper -->
+
+
+<script src="../search-index.js"></script>
+<script src="../scripts.js"></script>
+<script src="charts.js?v=46d6a0c8"></script>
+<script src="/auth.js" defer></script>
+<script>
+/* ============================ data ============================
+   p(name, opts) — opts: yr, nt, refs, exec, sp (married in), ref (second
+   appearance), info, u (list of unions: {with: person, kids: [...] })      */
+const T = {
+  name:"Antipater I", yr:"Governor of Idumea",
+  info:"Grandfather of Herod the Great, and the first of the family to hold office. Idumean, from the people whom the Hasmoneans had brought under Jewish rule a generation earlier, which is why his descendants were never counted true Jews by their subjects.",
+  u:[{kids:[{
+    name:"Antipater II", yr:"d. 43 BC",
+    info:"Made himself indispensable to Hyrcanus II and then to Rome, and was appointed governor of Judea by Julius Caesar. He set his own sons over Jerusalem and Galilee while Hyrcanus held the high priesthood. Poisoned in 43 BC.",
+    u:[{ row:1, with:{ name:"Cypros", sp:1, yr:"A Nabatean", info:"Of an Arabian family from Petra. Her marriage secured the family's standing on the desert frontier, and the Nabatean connection held until Antipas discarded his Nabatean wife for Herodias." },
+      kids:[
+
+      /* ---- Phasael's line ---- */
+      { name:"Phasael I", yr:"d. 40 BC",
+        info:"Herod's elder brother, governor of Jerusalem. Taken by the Parthians when they overran Judea, and killed himself in captivity rather than be executed. Herod named the greatest tower of his palace after him.",
+        u:[{ kids:[
+          { name:"Phasael II", info:"Nephew of Herod the Great, and the husband of Herod's own daughter Salampsio.",
+            u:[{ with:{ name:"Salampsio", ref:"Mariamne I", sp:1, info:"Daughter of Herod and Mariamne I. The main entry is under Mariamne I." },
+              kids:[ { name:"Cypros", sp:0, yr:"Wife of Agrippa I",
+                info:"Great-granddaughter of Antipater II on both her father's and her mother's side. She married Agrippa I and stood by him through the years of his debts and disgrace at Rome, before his reign.",
+                u:[{ with:{ name:"Agrippa I", ref:"Aristobulus IV", info:"The main entry is under Aristobulus IV, where their children are shown." } }] } ] }] }
+        ]}]},
+
+      /* ---- Salome's line ---- */
+      { name:"Salome I", yr:"Herod's sister",
+        info:"Died about AD 10. The most dangerous member of the family after Herod himself. She denounced her brother's wife Mariamne I and his sons, and the accusations she carried were behind several of his killings. Augustus left her cities of her own in Herod's will.",
+        u:[
+          { with:{ name:"Joseph", sp:1, info:"Herod's uncle, and Salome's first husband. Herod had him put to death on suspicion over Mariamne I." },
+            kids:[ { name:"Antipater", info:"Son of Salome I. He married his cousin Cypros II, daughter of Herod and Mariamne I." } ] },
+          { with:{ name:"Costobarus", sp:1, info:"An Idumean of priestly family whom Herod made governor of Idumea. Salome divorced him, which was her right under no Jewish law of the time, and Herod executed him." },
+            kids:[ { name:"Berenice", yr:"Wife of Aristobulus IV",
+              info:"Daughter of Salome I, and the mother of Agrippa I and Herodias. Through her the children of Aristobulus IV descend from Antipater II twice over, through a son and through a daughter.",
+              u:[{ with:{ name:"Aristobulus IV", ref:"Mariamne I", info:"The main entry is under Mariamne I, where their children are shown." } }] } ] }
+        ]},
+
+      /* ---- Herod the Great ---- */
+      { name:"Herod the Great", nt:1, yr:"King of Judea, 37 to 4 BC",
+        refs:"Matthew 2:1&ndash;19; Luke 1:5",
+        info:"Given the title king by Rome in 40 BC and took Jerusalem in 37 BC. He rebuilt the temple on a scale that drew comment in the Gospels, founded Caesarea and Sebaste, and held the country for a generation. He also killed his wife Mariamne I, three of his sons, and whoever else he suspected. Matthew places the visit of the magi and the killing of the children at Bethlehem in his last year.",
+        u:[
+          { with:{ name:"Doris", sp:1, yr:"First wife",
+              info:"Married before Herod rose to power, then set aside with her son when he married Mariamne I. Both were recalled after Mariamne's fall." },
+            kids:[ { name:"Antipater III", exec:1, yr:"d. 4 BC",
+              info:"Named his father's heir in 13 BC and worked against his half brothers Alexander and Aristobulus until both were killed. Convicted of plotting to poison his father, and executed days before Herod's own death.",
+              u:[{ with:{ name:"Mariamne III", ref:"Aristobulus IV", info:"His niece. The main entry is under Aristobulus IV." } }] } ] },
+
+          { with:{ name:"Mariamne I", sp:1, exec:1, yr:"The Hasmonean, d. 29 BC",
+              info:"Granddaughter of Hyrcanus II, and the marriage that tied Herod to the old priest-kings. Josephus says he loved her and never recovered from killing her. He had her executed in 29 BC on his sister's accusation, and their two sons twenty-two years later." },
+            kids:[
+              { name:"Alexander", exec:1, yr:"d. 7 BC",
+                info:"Educated at Rome with his brother. Accused of conspiring against their father and strangled at Samaria in 7 BC.",
+                u:[{ with:{ name:"Glaphyra", sp:1, info:"A Cappadocian princess. After Alexander's death she married Juba of Mauretania, and later Alexander's half brother Archelaus, which scandalized Jerusalem." },
+                  kids:[ { name:"Tigranes V", info:"Grandson of Herod, placed on the throne of Armenia by Rome and later put to death there." },
+                         { name:"Alexander", yr:"of Cilicia", info:"Grandson of Herod. His descendants ruled in Cilicia and abandoned the Jewish religion." } ] }] },
+
+              { name:"Aristobulus IV", exec:1, yr:"d. 7 BC",
+                info:"Executed with his brother in 7 BC. Through his children come every Herodian who appears in Acts.",
+                u:[{ with:{ name:"Berenice", ref:"Salome I", info:"His cousin, daughter of Salome I. The main entry is under Salome I." },
+                  kids:[
+                    { name:"Herod Agrippa I", nt:1, yr:"King, AD 37 to 44", refs:"Acts 12:1&ndash;23",
+                      info:"Raised at Rome and friendly with two emperors, he was given Philip's tetrarchy, then Antipas's, then Judea itself, ruling nearly the whole of his grandfather's kingdom. He killed James the brother of John and imprisoned Peter. Luke records his death at Caesarea after he accepted the acclamation of the crowd.",
+                      u:[{ with:{ name:"Cypros", ref:"Phasael I", info:"His cousin, great-granddaughter of Antipater II. The main entry is under Phasael I." },
+                        kids:[
+                          { name:"Herod Agrippa II", nt:1, yr:"King from AD 50", refs:"Acts 25:13 to 26:32",
+                            info:"The last Herodian to rule. He was given oversight of the temple and the appointment of the high priest. Paul made his defense before him at Caesarea, and his answer was that a little more would make a Christian of him. He sided with Rome in the war of AD 66 and died near the end of the century. He never married." },
+                          { name:"Berenice", nt:1, yr:"Sister of Agrippa II", refs:"Acts 25:13, 23; 26:30",
+                            info:"Married first to Marcus Julius Alexander, then to her uncle Herod of Chalcis, and briefly to Polemo of Cilicia. After Chalcis she lived at her brother's court, which fed the gossip Josephus reports. Luke places her beside Agrippa at Paul's hearing. She was later attached to Titus, who took her to Rome and then sent her away.",
+                            u:[{ with:{ name:"Herod of Chalcis", ref:"Aristobulus IV", info:"Her uncle and second husband. The main entry is under Aristobulus IV." } }] },
+                          { name:"Drusilla", nt:1, yr:"Wife of Felix", refs:"Acts 24:24",
+                            info:"Married at fourteen to Azizus of Emesa, then persuaded to leave him for Felix. Luke notes that she was Jewish, and that she was present when Paul reasoned about righteousness, self-control and the judgment to come. Josephus says her son by Felix died at the eruption of Vesuvius.",
+                            u:[{ with:{ name:"Felix", nt:1, sp:1, yr:"Governor of Judea", refs:"Acts 23:24 to 24:27",
+                                info:"Procurator of Judea, a freedman raised to a post usually held by men of rank. He kept Paul in custody at Caesarea for two years, sent for him often hoping for a bribe, and left him in prison to oblige the Jews when Festus replaced him." } }] },
+                          { name:"Mariamne", info:"Daughter of Agrippa I. She married Julius Archelaus and later left him. She does not appear in the New Testament." }
+                        ] }] },
+
+                    { name:"Herodias", nt:1, yr:"Wife of Antipas", refs:"Matthew 14:3&ndash;11; Mark 6:17&ndash;28; Luke 3:19",
+                      info:"Married her uncle Philip and bore him a daughter. She then left him for his half brother Antipas, which John the Baptist told Antipas was unlawful. She held it against John and used her daughter's dancing to secure his death. When her brother Agrippa was made king she pressed Antipas to seek the title too, and the emperor banished him instead. She followed him into exile.",
+                      u:[
+                        { with:{ name:"Philip", ref:"Mariamne II", info:"Her uncle and first husband. The main entry is under Mariamne II." },
+                          kids:[ { name:"Salome", nt:1, yr:"Herodias's daughter", refs:"Matthew 14:6&ndash;11; Mark 6:22&ndash;28",
+                            info:"She danced at Antipas's birthday feast and, prompted by her mother, asked for the head of John the Baptist. The Gospels do not give her name; Josephus does.",
+                            u:[{ with:{ name:"Philip the Tetrarch", ref:"Cleopatra", info:"Her first husband and her great-uncle. The main entry is under Cleopatra of Jerusalem." } },
+                                { with:{ name:"Aristobulus of Chalcis", ref:"Herod of Chalcis", info:"Her second husband and her cousin. The main entry is under Herod of Chalcis." } }] } ] },
+                        { with:{ name:"Herod Antipas", ref:"Malthace", info:"Her second husband and her uncle. The main entry is under Malthace." } }
+                      ] },
+
+                    { name:"Herod of Chalcis", yr:"King of Chalcis, d. AD 48",
+                      info:"Brother of Agrippa I. Rome gave him the small kingdom of Chalcis in the Lebanon and the oversight of the temple, which passed on his death to his nephew Agrippa II.",
+                      u:[{ with:{ name:"Mariamne", sp:1, info:"Daughter of Olympias, and so his cousin." },
+                        kids:[ { name:"Aristobulus of Chalcis", info:"Later king of Lesser Armenia. He married Salome, the daughter of Herodias." } ] }] },
+
+                    { name:"Aristobulus Minor", info:"Brother of Agrippa I. He lived as a private citizen and took no part in ruling." },
+                    { name:"Mariamne III", info:"Sister of Agrippa I. She married Antipater III, her father's half brother, in a match meant to bind the Hasmonean line to Herod's chosen heir." }
+                  ] }] },
+
+              { name:"Salampsio", info:"Daughter of Herod and Mariamne I. She married her cousin Phasael II, and their daughter Cypros married Agrippa I.",
+                u:[{ with:{ name:"Phasael II", ref:"Phasael I", info:"Her cousin. The main entry is under Phasael I." } }] },
+              { name:"Cypros II", info:"Daughter of Herod and Mariamne I. She married Antipater, the son of Herod's sister Salome I.",
+                u:[{ with:{ name:"Antipater", ref:"Salome I", info:"Her cousin, son of Salome I. The main entry is under Salome I." } }] }
+            ] },
+
+          { with:{ name:"Mariamne II", sp:1, yr:"The high priest's daughter",
+              info:"Herod removed the high priest and gave the office to her father Simon in order to marry her. She was set aside after her son was struck from the will." },
+            kids:[ { name:"Philip", nt:1, yr:"Herodias's first husband", refs:"Matthew 14:3; Mark 6:17",
+              info:"Mark and Matthew call him Philip; Josephus names him simply Herod, the son of Mariamne II, which is why he is often written Herod II. Briefly his father's heir, he was dropped from the will days before Herod died, because his mother had known of the poison plot and said nothing. He lived at Rome as a private citizen, which spared him his father's last purges.",
+              u:[{ with:{ name:"Herodias", ref:"Aristobulus IV", info:"His niece and wife. The main entry is under Aristobulus IV, with their daughter Salome." } }] } ] },
+
+          { with:{ name:"Malthace", sp:1, yr:"A Samaritan",
+              info:"Mother of the two sons who divided the south between them after Herod died." },
+            kids:[
+              { name:"Herod Archelaus", nt:1, yr:"Ethnarch, 4 BC to AD 6", refs:"Matthew 2:22",
+                info:"Given Judea, Samaria and Idumea, with the title ethnarch rather than king. He began his reign by killing a crowd of pilgrims at the temple and ruled so badly that Jews and Samaritans together asked Rome to remove him. Augustus deposed him and banished him to Gaul. Matthew records that Joseph, hearing he was reigning, turned aside to Galilee.",
+                u:[{ with:{ name:"Glaphyra", ref:"Alexander", info:"Widow of his half brother Alexander. The main entry is under Alexander." } }] },
+              { name:"Herod Antipas", nt:1, yr:"Tetrarch, 4 BC to AD 39",
+                refs:"Matthew 14:1&ndash;12; Mark 6:14&ndash;29; Luke 3:1, 19&ndash;20; 9:7&ndash;9; 13:31&ndash;32; 23:7&ndash;12; Acts 4:27",
+                info:"The Herod of most of the Gospels, ruling Galilee and Perea, the two regions where Jesus spent nearly all his ministry. He built Tiberias on the lake. He divorced his Nabatean wife to marry Herodias, imprisoned John the Baptist for saying the marriage was unlawful, and had him beheaded at a feast. Jesus called him a fox, and at the trial stood before him and gave him no answer. He died in exile in Gaul.",
+                u:[{ with:{ name:"Phasaelis", sp:1, info:"Daughter of Aretas IV of Nabatea. Antipas divorced her for Herodias, and her father's army later destroyed his, which Josephus says the people took for judgment over John the Baptist." } },
+                    { with:{ name:"Herodias", ref:"Aristobulus IV", info:"His niece and his brother's wife. The main entry is under Aristobulus IV." } }] },
+              { name:"Olympias", info:"Daughter of Malthace. She married her cousin Joseph, and her daughter Mariamne married Herod of Chalcis." }
+            ] },
+
+          { with:{ name:"Cleopatra of Jerusalem", sp:1, yr:"Mother of the northern tetrarch",
+              info:"Little is recorded of her beyond her sons. The name is her own and has nothing to do with the queen of Egypt." },
+            kids:[
+              { name:"Philip the Tetrarch", nt:1, yr:"Tetrarch, 4 BC to AD 34", refs:"Luke 3:1",
+                info:"He ruled the mostly gentile country north and east of the lake, and is remembered as the moderate of the family. He rebuilt Paneas as Caesarea Philippi, where Peter confessed that Jesus is the Christ, and Bethsaida as Julias. Dying without an heir, his territory passed to Syria and then to Agrippa I.",
+                u:[{ with:{ name:"Salome", ref:"Herodias", info:"Daughter of Herodias, and his grand-niece. The main entry is under Herodias." } }] },
+              { name:"Herod", info:"Second son of Cleopatra, named in Josephus's list of Herod's children and nowhere else." }
+            ] },
+
+          { with:{ name:"Pallas", sp:1, info:"One of the later wives, named by Josephus with no further account." },
+            kids:[ { name:"Phasaelus", info:"Son of Pallas. Nothing is recorded of him beyond the name." } ] },
+          { with:{ name:"Phaedra", sp:1, info:"One of the later wives, named by Josephus with no further account." },
+            kids:[ { name:"Roxana", info:"Daughter of Phaedra. Herod left her a dowry in his will." } ] },
+          { with:{ name:"Elpis", sp:1, info:"One of the later wives, named by Josephus with no further account." },
+            kids:[ { name:"Salome", info:"Daughter of Elpis, and not the Salome who danced. Herod left her a dowry in his will." } ] }
+        ] },
+
+      /* ---- the remaining brothers ---- */
+      { name:"Joseph", yr:"Herod's brother",
+        info:"Killed in battle against Antigonus in 38 BC, before Herod had secured Jerusalem. His head was cut off by the enemy.",
+        u:[{ kids:[ { name:"Joseph", yr:"Herod's nephew", info:"He married his cousin Olympias, daughter of Herod and Malthace." } ] }] },
+      { name:"Pheroras", yr:"d. 5 BC",
+        info:"Herod's youngest brother, made tetrarch of Perea. He refused the royal marriage Herod arranged for him and kept his own wife, whom Herod blamed for much of the poison and intrigue of the last years." }
+    ]}]
+  }]}]
+};
+
+/* ============================ build ============================ */
+const NW = 152, NGAP = 20, MGAP = 22, VGEN = 46, VU = 22, INDENT = 104,
+      MAXROW = 1200, VSTACK = 14, SIND = 44;
+const stage = document.getElementById('stage');
+const svg = document.getElementById('lines');
+const viewport = document.getElementById('viewport');
+const card = document.getElementById('card');
+const all = [];
+const links = [];   // {type:'child'|'marr'|'spine', ...}
+
+function nodeEl(p){
+  const el = document.createElement('button');
+  el.type = 'button';
+  el.className = 'node' + (p.nt ? ' nt' : '') + (p.exec ? ' exec' : '')
+    + (p.sp ? ' sp' : '') + (p.ref ? ' ref' : '');
+  el.style.width = NW + 'px';
+  el.innerHTML = '<span class="nm">' + p.name + '</span>'
+    + (p.yr ? '<span class="yr">' + p.yr + '</span>' : '')
+    + (p.ref ? '<span class="yr">shown twice</span>' : '')
+    + (p.nt ? '<span class="b">NT</span>' : '');
+  stage.appendChild(el);
+  p.el = el; p.w = NW; p.h = el.offsetHeight;
+  all.push(p);
+  el.addEventListener('click', e => { e.stopPropagation(); if (!dragMoved) show(p); });
+  return el;
+}
+
+/* register every person and spouse so heights are known before layout */
+function register(p){
+  nodeEl(p);
+  (p.u || []).forEach(u => { if (u.with) register(u.with); (u.kids || []).forEach(register); });
+}
+register(T);
+
+/* A sibling group goes in a row when it is narrow enough, and otherwise
+   stacks down a bracket. Stacking is what keeps the chart taller than wide. */
+function group(kids, forceRow){
+  if (!kids.length) return { mode:'row', w:0, h:0 };
+  const rowW = kids.reduce((a,k) => a + k.bw, 0) + NGAP * (kids.length - 1);
+  if (!forceRow && kids.length > 1 && rowW > MAXROW){
+    return { mode:'stack',
+      w: SIND + Math.max(...kids.map(k => k.bw)),
+      h: kids.reduce((a,k) => a + k.bh, 0) + VSTACK * (kids.length - 1) };
+  }
+  return { mode:'row', w:rowW, h:Math.max(...kids.map(k => k.bh)) };
+}
+
+/* ---- measure: width and height of a person's whole block ---- */
+function measure(p){
+  const us = p.u || [];
+  if (!us.length){ p.headW = p.w; p.bw = p.w; p.bh = p.h; return; }
+  if (us.length === 1){
+    const u = us[0], sp = u.with, kids = u.kids || [];
+    kids.forEach(measure);
+    u.g = group(kids, u.row);
+    p.headW = p.w + (sp ? MGAP + sp.w : 0);
+    p.bw = Math.max(p.headW, u.g.w);
+    p.bh = Math.max(p.h, sp ? sp.h : 0) + (kids.length ? VGEN + u.g.h : 0);
+  } else {
+    let w = p.w, h = p.h;
+    us.forEach(u => {
+      const sp = u.with, kids = u.kids || [];
+      kids.forEach(measure);
+      u.g = group(kids, u.row);
+      u.bw = INDENT + Math.max(sp ? sp.w : 0, u.g.w);
+      u.bh = (sp ? sp.h : 0) + (kids.length ? VGEN + u.g.h : 0);
+      w = Math.max(w, u.bw); h += VU + u.bh;
+    });
+    p.headW = p.w; p.bw = w; p.bh = h;
+  }
+}
+
+/* lay a sibling group out and record its connector */
+function placeKids(u, blockX, blockW, startY, fromX, fromY){
+  const kids = u.kids || [];
+  if (!kids.length) return;
+  if (u.g.mode === 'row'){
+    let cx = blockX + (blockW - u.g.w) / 2;
+    kids.forEach(k => { place(k, cx, startY); cx += k.bw + NGAP; });
+    links.push({ t:'child', from:{ x:fromX, y:fromY }, kids, ky:startY });
+  } else {
+    let cy = startY;
+    kids.forEach(k => { place(k, blockX + SIND, cy); cy += k.bh + VSTACK; });
+    // the bracket drops from inside the left of the head box, not its center
+    links.push({ t:'stack', from:{ x:blockX + 16, y:fromY }, kids });
+  }
+}
+
+/* ---- place: x is the left edge of the block ---- */
+function place(p, x, y){
+  const us = p.u || [];
+  if (!us.length){ p.x = x + p.bw / 2; p.y = y; return; }
+  if (us.length === 1){
+    const u = us[0], sp = u.with, kids = u.kids || [];
+    const headH = Math.max(p.h, sp ? sp.h : 0);
+    const ky = y + headH + VGEN;
+    let hx;
+    if (u.g.mode === 'stack'){
+      hx = x;                                   // the stack hangs off the left
+      let cy = ky;
+      kids.forEach(k => { place(k, x + SIND, cy); cy += k.bh + VSTACK; });
+    } else if (kids.length){
+      // children first, then sit the couple over the middle of them
+      let cx = x + (p.bw - u.g.w) / 2;
+      kids.forEach(k => { place(k, cx, ky); cx += k.bw + NGAP; });
+      const mid = (kids[0].x + kids[kids.length - 1].x) / 2;
+      hx = Math.max(x, Math.min(mid - p.headW / 2, x + p.bw - p.headW));
+    } else {
+      hx = x + (p.bw - p.headW) / 2;
+    }
+    p.x = hx + p.w / 2; p.y = y;
+    if (sp){
+      sp.x = hx + p.w + MGAP + sp.w / 2; sp.y = y + (p.h - sp.h) / 2;
+      links.push({ t:'marr', a:p, b:sp });
+    }
+    if (kids.length){
+      if (u.g.mode === 'stack') links.push({ t:'stack', from:{ x:x + 16, y:y + headH }, kids });
+      else links.push({ t:'child', from:{ x: sp ? (p.x + sp.x) / 2 : p.x, y:y + headH }, kids, ky });
+    }
+  } else {
+    p.x = x + p.w / 2; p.y = y;
+    let cy = y + p.h;
+    const spine = { t:'spine', x:p.x, y0:y + p.h, y1:cy };
+    links.push(spine);
+    us.forEach(u => {
+      cy += VU;
+      const sp = u.with;
+      if (sp){ sp.x = x + INDENT + sp.w / 2; sp.y = cy; links.push({ t:'arm', x0:p.x, b:sp }); }
+      placeKids(u, x + INDENT - (u.g.mode === 'stack' ? 0 : 0), u.bw - INDENT,
+        cy + (sp ? sp.h : 0) + VGEN, sp ? sp.x : p.x, cy + (sp ? sp.h : 0));
+      cy += u.bh;
+      spine.y1 = Math.max(spine.y1, sp ? sp.y + sp.h / 2 : cy);
+    });
+  }
+}
+
+const content = { w:0, h:0 };
+function layout(){
+  links.length = 0;
+  all.forEach(p => { p.h = p.el.offsetHeight; });   // re-read: fonts change box heights
+  measure(T);
+  place(T, 30, 26);
+  all.forEach(p => { p.el.style.left = (p.x - p.w / 2) + 'px'; p.el.style.top = p.y + 'px'; });
+  content.w = Math.max(...all.map(p => p.x + p.w / 2)) + 30;
+  content.h = Math.max(...all.map(p => p.y + p.h)) + 30;
+  stage.style.width = content.w + 'px';
+  stage.style.height = content.h + 'px';
+  draw();
+}
+
+function draw(){
+  svg.setAttribute('width', content.w); svg.setAttribute('height', content.h);
+  svg.setAttribute('viewBox', '0 0 ' + content.w + ' ' + content.h);
+  let solid = '', dot = '';
+  links.forEach(l => {
+    if (l.t === 'marr'){
+      const y = l.a.y + Math.min(l.a.h, l.b.h) / 2;
+      dot += 'M' + (l.a.x + l.a.w / 2) + ' ' + y + 'H' + (l.b.x - l.b.w / 2) + ' ';
+    } else if (l.t === 'spine'){
+      solid += 'M' + l.x + ' ' + l.y0 + 'V' + l.y1 + ' ';
+    } else if (l.t === 'arm'){
+      dot += 'M' + l.x0 + ' ' + (l.b.y + l.b.h / 2) + 'H' + (l.b.x - l.b.w / 2) + ' ';
+    } else if (l.t === 'stack'){
+      const last = l.kids[l.kids.length - 1];
+      solid += 'M' + l.from.x + ' ' + l.from.y + 'V' + (last.y + last.h / 2) + ' ';
+      l.kids.forEach(k => {
+        solid += 'M' + l.from.x + ' ' + (k.y + k.h / 2) + 'H' + (k.x - k.w / 2) + ' ';
+      });
+    } else if (l.t === 'child'){
+      const bar = l.from.y + (l.ky - l.from.y) / 2;
+      solid += 'M' + l.from.x + ' ' + l.from.y + 'V' + bar + ' ';
+      // the bar must also span back to the drop, or a lone child is left floating
+      const xs = l.kids.map(k => k.x).concat([l.from.x]);
+      const x0 = Math.min(...xs), x1 = Math.max(...xs);
+      if (x1 - x0 > .5) solid += 'M' + x0 + ' ' + bar + 'H' + x1 + ' ';
+      l.kids.forEach(k => { solid += 'M' + k.x + ' ' + bar + 'V' + k.y + ' '; });
+    }
+  });
+  svg.innerHTML =
+    '<path d="' + solid + '" fill="none" stroke="var(--line)" stroke-width="2" shape-rendering="crispEdges"/>' +
+    '<path d="' + dot + '" fill="none" stroke="var(--marr)" stroke-width="2" stroke-dasharray="3 5" stroke-linecap="round"/>';
+}
+
+/* ============================ info card ============================ */
+const touch = window.matchMedia('(hover: none)').matches;
+/* The card opens on click and closes on a click anywhere outside it, so it
+   never appears while the reader is only moving the pointer across the tree. */
+function show(p){
+  all.forEach(n => n.el.classList.remove('on'));
+  p.el.classList.add('on');
+  card.innerHTML = '<button class="x" type="button" aria-label="Close">&times;</button>'
+    + '<h4>' + p.name + '</h4>'
+    + (p.yr ? '<p class="sub">' + p.yr + '</p>' : '')
+    + '<p>' + (p.info || '') + '</p>'
+    + (p.refs ? '<span class="r">' + p.refs + '</span>' : '');
+  card.hidden = false;
+  card.querySelector('.x').addEventListener('click', e => { e.stopPropagation(); hide(); });
+  // anchor beside the node, kept inside the frame
+  const r = viewport.getBoundingClientRect();
+  const nx = p.x * scale + tx, ny = p.y * scale + ty;
+  let left = nx + (p.w / 2) * scale + 14;
+  if (left + card.offsetWidth > r.width - 10) left = nx - (p.w / 2) * scale - card.offsetWidth - 14;
+  if (left < 10) left = 10;
+  let top = ny - 10;
+  if (top + card.offsetHeight > r.height - 10) top = r.height - card.offsetHeight - 10;
+  if (top < 10) top = 10;
+  card.style.left = left + 'px'; card.style.top = top + 'px';
+}
+function hide(){ card.hidden = true; all.forEach(n => n.el.classList.remove('on')); }
+/* Node clicks stop propagation, so a click that reaches the document is
+   either outside the card or inside it; only the first closes. */
+document.addEventListener('click', e => {
+  if (!card.hidden && !card.contains(e.target)) hide();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+
+/* ============================ key ============================ */
+const keynote = document.getElementById('keynote');
+document.querySelectorAll('#key button').forEach(b => {
+  const open = () => {
+    const was = b.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('#key button').forEach(o => o.setAttribute('aria-expanded','false'));
+    if (was){ keynote.hidden = true; return; }
+    b.setAttribute('aria-expanded','true');
+    keynote.textContent = b.dataset.note; keynote.hidden = false;
+  };
+  b.addEventListener('click', open);
+  b.addEventListener('mouseenter', () => {
+    if (touch) return;
+    keynote.textContent = b.dataset.note; keynote.hidden = false;
+  });
+});
+document.getElementById('key').addEventListener('mouseleave', () => {
+  if (touch) return;
+  if (![...document.querySelectorAll('#key button')].some(o => o.getAttribute('aria-expanded') === 'true'))
+    keynote.hidden = true;
+});
+
+/* ============================ pan and zoom ============================ */
+let scale = 1, tx = 0, ty = 0, dragMoved = false;
+const pct = document.getElementById('pct');
+function apply(){
+  stage.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + scale + ')';
+  pct.textContent = Math.round(scale * 100) + '%';
+}
+/* Zooming out past the point where the whole chart fits the frame only adds
+   empty space, so that is the floor. It is computed rather than fixed, because
+   the fitting scale depends on the frame, which changes with the window and
+   again in full screen. Fit matches the width, which is a closer view than
+   this floor; the floor is where the minus button and a pinch stop. */
+function minScale(){
+  const r = viewport.getBoundingClientRect();
+  const m = 28;
+  const byWidth  = (r.width  - m * 2) / content.w;
+  const byHeight = (r.height - m * 2) / content.h;
+  return Math.min(1, Math.max(0.02, Math.min(byWidth, byHeight)));
+}
+function setScale(next, cx, cy){
+  next = Math.min(2, Math.max(minScale(), next));
+  const r = viewport.getBoundingClientRect();
+  cx = cx == null ? r.width / 2 : cx; cy = cy == null ? r.height / 2 : cy;
+  tx = cx - (cx - tx) * (next / scale);
+  ty = cy - (cy - ty) * (next / scale);
+  scale = next; apply(); hide();
+}
+/* The chart is tall and narrow, so Fit matches its width and the reader
+   scrolls down it, the way a long page works. */
+function fit(){
+  const r = viewport.getBoundingClientRect();
+  scale = Math.min(1, (r.width - 24) / content.w);
+  tx = Math.max(12, (r.width - content.w * scale) / 2);
+  ty = 12; apply(); hide();
+}
+function topView(){
+  const r = viewport.getBoundingClientRect();
+  tx = Math.max(12, (r.width - content.w * scale) / 2);
+  ty = 12; apply(); hide();
+}
+document.getElementById('zoomIn').onclick = () => setScale(scale * 1.25);
+document.getElementById('zoomOut').onclick = () => setScale(scale / 1.25);
+document.getElementById('fit').onclick = fit;
+document.getElementById('top').onclick = topView;
+document.getElementById('full').onclick = () => {
+  const c = document.getElementById('chart');
+  if (document.fullscreenElement) document.exitFullscreen(); else if (c.requestFullscreen) c.requestFullscreen();
+};
+document.addEventListener('fullscreenchange', () => setTimeout(fit, 60));
+
+const pointers = new Map(); let startDist = 0, startScale = 1, last = null;
+viewport.addEventListener('pointerdown', e => {
+  pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (pointers.size === 1){ last = { x:e.clientX, y:e.clientY }; dragMoved = false; }
+  if (pointers.size === 2){
+    const p = [...pointers.values()];
+    startDist = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); startScale = scale;
+  }
+});
+viewport.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if (pointers.size === 2){
+    const p = [...pointers.values()];
+    const d = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+    const r = viewport.getBoundingClientRect();
+    setScale(startScale * (d / startDist), (p[0].x + p[1].x) / 2 - r.left, (p[0].y + p[1].y) / 2 - r.top);
+    dragMoved = true; return;
+  }
+  if (!last) return;
+  const dx = e.clientX - last.x, dy = e.clientY - last.y;
+  if (Math.abs(dx) + Math.abs(dy) > 4){ dragMoved = true; viewport.classList.add('dragging'); hide(); }
+  tx += dx; ty += dy; last = { x:e.clientX, y:e.clientY }; apply();
+});
+const release = e => { pointers.delete(e.pointerId);
+  if (!pointers.size){ last = null; viewport.classList.remove('dragging'); } };
+viewport.addEventListener('pointerup', release);
+viewport.addEventListener('pointercancel', release);
+viewport.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r = viewport.getBoundingClientRect();
+  setScale(scale * (e.deltaY < 0 ? 1.12 : 1 / 1.12), e.clientX - r.left, e.clientY - r.top);
+}, { passive:false });
+
+function boot(){ layout(); fit(); }
+boot();
+window.addEventListener('resize', () => { hide(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot);
+</script>
+</body>
+</html>

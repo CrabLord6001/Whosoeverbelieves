@@ -542,6 +542,13 @@ const searchIndex = [
     content: "Gospel of John eight signs water into wine Lazarus believe eternal life John 20:31 Passover feasts Galilee Jerusalem Samaria"
   },
   {
+    title: "The Herodian Dynasty",
+    excerpt: "An interactive family tree of the Herods, with every Herodian the New Testament names",
+    url: "/charts/herodian-dynasty",
+    tags: ["Bible Charts"],
+    content: "Herod the Great Antipas Archelaus Agrippa Herodias Salome Berenice Drusilla Philip the Tetrarch Herodian dynasty family tree Josephus Matthew 2 Luke 3 Acts 12 Acts 25"
+  },
+  {
     title: "When Paul Wrote His Letters",
     excerpt: "Paul's thirteen letters placed in Acts and his life",
     url: "/charts/pauls-letters",
