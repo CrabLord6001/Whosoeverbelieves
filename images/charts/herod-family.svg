@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1740 820" width="1740" height="820" role="img" aria-label="Family chart of the Herodian dynasty, from Herod the Great to Agrippa II">
+<title>The Herodian Dynasty</title>
+<rect width="1740" height="820" fill="var(--chart-bg, #0b1628)"/>
+<text x="870.0" y="26" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="11" letter-spacing="3" fill="var(--chart-dim, #cfc7b6)">THE HERODIAN DYNASTY</text>
+<path d="M1080 125V156 M590 156H1570 M590 156V187 M880 156V187 M1225 156V187 M1570 156V187" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<path d="M590 227V258 M590 258V289" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<path d="M880 227V258 M880 258V289" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<path d="M1225 227V258 M1110 258H1340 M1110 258V289 M1340 258V289" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<path d="M1570 227V258 M1570 258V289" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<path d="M590 406V437 M360 437H820 M360 437V468 M820 437V468" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<path d="M360 567V598 M130 598H590 M130 598V629 M360 598V629 M590 598V629" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<path d="M820 567V598 M820 598V629" fill="none" stroke="var(--chart-line, #b8995a)" stroke-width="2" shape-rendering="crispEdges"/>
+<rect x="975" y="44" width="210" height="81" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="1080" y="70" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Herod the Great</text>
+<text x="1080" y="92" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">King of Judea, 37 to 4 BC</text>
+<text x="1080" y="111" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Matthew 2:1–19; Luke 1:5</text>
+<rect x="500" y="187" width="180" height="40" rx="20" fill="var(--chart-box, #16233d)" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="590" y="204" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="14.5" font-weight="600" fill="var(--chart-text, #f2eee4)">Mariamne I</text>
+<text x="590" y="219" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="12.5" fill="var(--chart-dim, #cfc7b6)">the Hasmonean</text>
+<rect x="790" y="187" width="180" height="40" rx="20" fill="var(--chart-box, #16233d)" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="880" y="204" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="14.5" font-weight="600" fill="var(--chart-text, #f2eee4)">Mariamne II</text>
+<text x="880" y="219" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="12.5" fill="var(--chart-dim, #cfc7b6)">the high priest's daughter</text>
+<rect x="1135" y="187" width="180" height="40" rx="20" fill="var(--chart-box, #16233d)" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="1225" y="204" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="14.5" font-weight="600" fill="var(--chart-text, #f2eee4)">Malthace</text>
+<text x="1225" y="219" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="12.5" fill="var(--chart-dim, #cfc7b6)">a Samaritan</text>
+<rect x="1480" y="187" width="180" height="40" rx="20" fill="var(--chart-box, #16233d)" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="1570" y="204" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="14.5" font-weight="600" fill="var(--chart-text, #f2eee4)">Cleopatra</text>
+<text x="1570" y="219" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="12.5" fill="var(--chart-dim, #cfc7b6)">of Jerusalem</text>
+<rect x="485" y="289" width="210" height="117" rx="9" fill="var(--chart-box, #16233d)" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1"/>
+<text x="590" y="315" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-text, #f2eee4)">Aristobulus IV</text>
+<text x="590" y="337" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">d. 7 BC</text>
+<rect x="775" y="289" width="210" height="117" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="880" y="315" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Philip</text>
+<text x="880" y="337" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Herodias's first husband</text>
+<text x="880" y="356" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Matthew 14:3; Mark 6:17</text>
+<rect x="1005" y="289" width="210" height="117" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="1110" y="315" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Herod Archelaus</text>
+<text x="1110" y="337" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Ethnarch, 4 BC to AD 6</text>
+<text x="1110" y="356" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Matthew 2:22</text>
+<rect x="1235" y="289" width="210" height="117" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="1340" y="315" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Herod Antipas</text>
+<text x="1340" y="337" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Tetrarch, 4 BC to AD 39</text>
+<text x="1340" y="356" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Matthew 14:1–12; Mark 6:14–29;</text>
+<text x="1340" y="374" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Luke 3:1, 19–20; 9:7–9;</text>
+<text x="1340" y="392" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">13:31–32; 23:7–12; Acts 4:27</text>
+<rect x="1465" y="289" width="210" height="117" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="1570" y="315" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Philip the Tetrarch</text>
+<text x="1570" y="337" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Tetrarch, 4 BC to AD 34</text>
+<text x="1570" y="356" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Luke 3:1</text>
+<rect x="255" y="468" width="210" height="99" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="360" y="494" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Herod Agrippa I</text>
+<text x="360" y="516" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">King, AD 37 to 44</text>
+<text x="360" y="535" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Acts 12:1–23</text>
+<rect x="715" y="468" width="210" height="99" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="820" y="494" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Herodias</text>
+<text x="820" y="516" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Wife of Antipas</text>
+<text x="820" y="535" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Matthew 14:3–11; Mark 6:17–28;</text>
+<text x="820" y="553" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Luke 3:19</text>
+<rect x="25" y="629" width="210" height="81" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="130" y="655" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Herod Agrippa II</text>
+<text x="130" y="677" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">King from AD 50</text>
+<text x="130" y="696" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Acts 25:13 to 26:32</text>
+<rect x="255" y="629" width="210" height="81" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="360" y="655" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Berenice</text>
+<text x="360" y="677" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Sister of Agrippa II</text>
+<text x="360" y="696" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Acts 25:13, 23; 26:30</text>
+<rect x="485" y="629" width="210" height="81" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="590" y="655" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Drusilla</text>
+<text x="590" y="677" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Wife of Felix</text>
+<text x="590" y="696" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Acts 24:24</text>
+<rect x="715" y="629" width="210" height="81" rx="9" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="820" y="655" text-anchor="middle" font-family="Cinzel, 'EB Garamond', Georgia, serif" font-size="17" font-weight="600" fill="var(--chart-gold-bright, #e8ca84)">Salome</text>
+<text x="820" y="677" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13.5" fill="var(--chart-dim, #cfc7b6)">Herodias's daughter</text>
+<text x="820" y="696" text-anchor="middle" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-gold, #d6b25e)">Matthew 14:6–11; Mark 6:22–28</text>
+<rect x="40" y="736" width="1660" height="46" rx="8" fill="none" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1"/>
+<rect x="70" y="748" width="34" height="22" rx="4" fill="var(--chart-box-nt, #241f18)" stroke="var(--chart-gold, #d6b25e)" stroke-width="2"/>
+<text x="114" y="764" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="14.5" fill="var(--chart-text, #f2eee4)">Named or described in the New Testament</text>
+<rect x="456.4" y="748" width="34" height="22" rx="4" fill="var(--chart-box, #16233d)" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1"/>
+<text x="500.4" y="764" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="14.5" fill="var(--chart-text, #f2eee4)">Known from Josephus only</text>
+<rect x="728.8" y="748" width="34" height="22" rx="11" fill="var(--chart-box, #16233d)" stroke="var(--chart-edge, rgba(255,255,255,.28))" stroke-width="1" stroke-dasharray="4 4"/>
+<text x="772.8" y="764" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="14.5" fill="var(--chart-text, #f2eee4)">A wife of Herod the Great</text>
+<text x="1670" y="764" text-anchor="end" font-family="'EB Garamond', 'Cormorant Garamond', Georgia, serif" font-size="13" fill="var(--chart-dim, #cfc7b6)">Josephus, Antiquities 17–18; War 1</text>
+</svg>

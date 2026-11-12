@@ -543,7 +543,7 @@ const searchIndex = [
   },
   {
     title: "The Herodian Dynasty",
-    excerpt: "An interactive family tree of the Herods, with every Herodian the New Testament names",
+    excerpt: "A family tree of the Herods, with every Herodian the New Testament names",
     url: "/charts/herodian-dynasty",
     tags: ["Bible Charts"],
     content: "Herod the Great Antipas Archelaus Agrippa Herodias Salome Berenice Drusilla Philip the Tetrarch Herodian dynasty family tree Josephus Matthew 2 Luke 3 Acts 12 Acts 25"
