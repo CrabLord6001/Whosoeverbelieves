@@ -25,6 +25,7 @@
 */
 
 const siteUpdates = [
+  { date: "2026-11-14", text: "James 3:1 Article Published",              url: "/articles/greater-judgment-of-teachers" },
   { date: "2026-11-08", text: "Greek Verb Parsing Chart Game",          url: "/greek/parsing-flowchart" },
   { date: "2026-11-03", text: "Word-by-Word Greek Audio",                 url: "/greek/james/" },
   { date: "2026-11-02", text: "Oneness Pentecostalism Article Published", url: "/articles/oneness-pentecostalism-and-john-17" },
