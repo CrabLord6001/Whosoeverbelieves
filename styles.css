@@ -1297,14 +1297,21 @@ body.page-article .header-ornament {
 /* Links that LEAVE the page take the blue; scripture refs stay gold and
    reveal a verse in place. Both selectors out-specify `.article-body a`
    above, which otherwise wins on source order at equal specificity. */
-.article-body a:not(.scripture-ref):not(.at-btn):not([href^="#"]) {
+.article-body a:not(.scripture-ref):not(.at-btn):not(.hp-btn):not([href^="#"]) {
   color: var(--link-nav);
   text-decoration-color: var(--link-nav-rule);
 }
 
-.article-body a:not(.scripture-ref):not(.at-btn):not([href^="#"]):hover {
+.article-body a:not(.scripture-ref):not(.at-btn):not(.hp-btn):not([href^="#"]):hover {
   color: var(--link-nav-hover);
 }
+
+/* A .hp-btn inside an article body: the rules above are (0,1,1) and (0,4,1),
+   both of which out-specify .hp-btn (0,1,0), so the gold CTA was being
+   repainted as an underlined blue link. Qualify it the same way.
+   Used on /sisa. */
+.article-body a.hp-btn { color: #0d1117; text-decoration: none; }
+.article-body a.hp-btn:hover { color: #0d1117; }
 
 .article-body a.scripture-ref:hover {
   color: var(--gold-light);
@@ -1455,6 +1462,10 @@ body.page-article .header-ornament {
   padding-left: 2rem;
   margin: 1rem 0;
 }
+
+/* li never picked up the 1.85 line-height that .article-body p gets,
+   so body lists read tighter than the prose around them. */
+.article-body li { line-height: 1.85; margin-bottom: 0.55rem; }
 
 /* ── BIBLIOGRAPHY & FOOTNOTES ────────────────────────────────────────────── */
 
