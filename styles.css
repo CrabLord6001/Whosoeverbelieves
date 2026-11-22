@@ -2599,20 +2599,39 @@ section.hp-subscribe {
    so the card's own colour rules are written to out-rank both. */
 .dl-shelf { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin: 2.5rem 0; }
 
-.article-body a.dl-card, .article-body a.dl-card:hover {
+.dl-card {
   display: block; flex: 0 1 420px; max-width: 420px; min-width: 0;
   background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 12px; overflow: hidden; color: inherit; text-decoration: none;
+  border-radius: 12px; overflow: hidden;
   transition: border-color 0.2s, transform 0.2s;
 }
-.article-body a.dl-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-2px); }
+.dl-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-2px); }
+
+/* The lower half is the download link. `.article-body a` (0,1,1) would
+   underline it, so the override is qualified to out-rank that. Colour is
+   carried by the spans inside, which no anchor rule reaches. */
+.article-body a.dl-who, .article-body a.dl-who:hover { text-decoration: none; }
+.article-body a.dl-who:hover .dl-name { text-decoration: underline; }
+
+.dl-vid { width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
+.dl-play {
+  position: absolute; right: 14px; bottom: 14px;
+  width: 52px; height: 52px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center;
+  background: rgba(10,12,17,0.62); color: #f3efe6;
+  box-shadow: 0 0 0 2px rgba(243,239,230,0.55);
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.dl-play svg { width: 26px; height: 26px; margin-left: 3px; }
+.dl-card:hover .dl-play { background: var(--gold); color: #0d1117; box-shadow: 0 0 0 2px var(--gold-light); }
+.dl-card.playing .dl-play { display: none; }
 
 .dl-plate {
   position: relative; display: flex; align-items: center; justify-content: center;
-  height: 240px; padding: 14px; background: rgba(0,0,0,0.25);
+  height: 240px; padding: 0; background: rgba(0,0,0,0.25);
   border-bottom: 1px solid var(--glass-border);
 }
-.dl-plate img { width: 196px; height: 196px; display: block; }
+
 
 .dl-veil {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
@@ -2627,4 +2646,4 @@ section.hp-subscribe {
 .dl-name { display: block; font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 600; line-height: 1.35; color: var(--gold); }
 .dl-note { display: block; margin-top: 4px; font-size: 0.84rem; color: var(--text-mid); }
 
-@media (max-width: 480px) { .dl-plate { height: 210px; } .dl-plate img { width: 168px; height: 168px; } }
+@media (max-width: 480px) { .dl-plate { height: 200px; } }

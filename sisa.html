@@ -125,17 +125,19 @@
     <p style="font-size: 0.86rem; color: var(--text-mid);">The program isn&#8217;t code-signed, so Windows SmartScreen will warn you the first time you launch it &#8212; choose <strong>More info</strong>, then <strong>Run anyway</strong>. The YouTube input is rate-limited on YouTube&#8217;s side, so several reports in a short time can return a 429 error. It clears on its own, usually within the hour.</p>
 
     <div class="dl-shelf">
-      <a class="dl-card" href="https://pub-c4105367c474429f812253bea5afdc20.r2.dev/SISA/SISA.zip">
+      <div class="dl-card">
         <span class="dl-plate">
-          <img src="/images/sisa-icon-384.png" alt="" width="196" height="196" />
-          <span class="dl-veil">Download</span>
+          <video class="dl-vid" src="/videos/sisa-trailer.mp4" poster="/images/sisa-trailer-poster.jpg" preload="none" playsinline></video>
+          <button type="button" class="dl-play" aria-label="Play the SISA trailer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          </button>
         </span>
-        <span class="dl-who">
+        <a class="dl-who" href="https://pub-c4105367c474429f812253bea5afdc20.r2.dev/SISA/SISA.zip">
           <span class="dl-name">SISA</span>
           <span class="dl-note">Super Intelligent Sermon Analyzer. Click to Download!</span>
           <span class="dl-note">Windows &#183; ZIP archive, 44&#160;MB</span>
-        </span>
-      </a>
+        </a>
+      </div>
     </div>
 
   </article>
@@ -159,6 +161,23 @@
   }
   document.addEventListener('focusin', function (e) { if (e.target.id === 'site-search') load(); });
   window.addEventListener('load', function () { setTimeout(load, 0); });
+})();
+</script>
+
+<script>
+/* The trailer plays in place. The button hides on play and comes back when
+   the clip ends, so the poster frame is never left behind a dead control. */
+(function () {
+  document.querySelectorAll(".dl-card").forEach(function (card) {
+    var vid = card.querySelector(".dl-vid"), btn = card.querySelector(".dl-play");
+    if (!vid || !btn) return;
+    btn.addEventListener("click", function () {
+      card.classList.add("playing"); vid.controls = true; vid.play();
+    });
+    vid.addEventListener("ended", function () {
+      card.classList.remove("playing"); vid.controls = false; vid.load();
+    });
+  });
 })();
 </script>
 <script src="scripts.js"></script>
