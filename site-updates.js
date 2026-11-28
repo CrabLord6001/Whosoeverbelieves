@@ -25,6 +25,8 @@
 */
 
 const siteUpdates = [
+  { date: "2026-11-24", text: "Debate Format Runner",                     url: "/debate" },
+  { date: "2026-11-21", text: "Sermon Analyzer Download Added",           url: "/sisa" },
   { date: "2026-11-14", text: "James 3:1 Article Published",              url: "/articles/greater-judgment-of-teachers" },
   { date: "2026-11-08", text: "Greek Verb Parsing Chart Game",          url: "/greek/parsing-flowchart" },
   { date: "2026-11-03", text: "Word-by-Word Greek Audio",                 url: "/greek/james/" },
